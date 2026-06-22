@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CardioSalud — Dashboard</title>
+<style>
+:root{--p:#1565C0;--pd:#0D47A1;--pl:#1976D2;--acc:#42A5F5;--bg:#EEF2F7;--surf:#fff;--border:#BBDEFB;--txt:#1A237E;--txt2:#546E7A;--ok:#2E7D32;--ok-bg:#E8F5E9;--warn:#E65100;--warn-bg:#FFF3E0;--err:#B71C1C;--err-bg:#FFEBEE;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#263238;min-height:100vh}
+header{background:linear-gradient(135deg,var(--pd),var(--pl));color:#fff;padding:0 28px;display:flex;align-items:center;gap:14px;height:62px;box-shadow:0 3px 10px rgba(13,71,161,.4)}
+header h1{font-size:1.2rem;font-weight:700}.hdr-sub{font-size:.78rem;opacity:.75;margin-top:2px}
+.hdr-info{display:flex;flex-direction:column}.hdr-right{margin-left:auto;font-size:.8rem;opacity:.8;text-align:right;line-height:1.6}
+main{max-width:1340px;margin:0 auto;padding:20px;display:grid;gap:20px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.card{background:var(--surf);border-radius:12px;padding:18px 20px;box-shadow:0 2px 8px rgba(21,101,192,.08);border:1px solid var(--border);display:flex;align-items:center;gap:14px}
+.ci{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0}
+.ci-b{background:#E3F2FD;color:var(--p)}.ci-t{background:#E0F2F1;color:#00695C}.ci-v{background:#EDE7F6;color:#4527A0}.ci-r{background:#FFEBEE;color:#B71C1C}
+.lbl{font-size:.72rem;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.val{font-size:1.8rem;font-weight:800;color:var(--txt);line-height:1.1;margin-top:2px}.sub{font-size:.72rem;color:var(--txt2);margin-top:2px}
+.content{display:grid;grid-template-columns:1fr 355px;gap:18px;align-items:start}
+@media(max-width:960px){.content{grid-template-columns:1fr}}
+.section{background:var(--surf);border-radius:12px;box-shadow:0 2px 8px rgba(21,101,192,.08);border:1px solid var(--border);overflow:hidden}
+.sec-hdr{background:var(--p);color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.sec-hdr h2{font-size:.9rem;font-weight:700;letter-spacing:.3px}
+.sec-body{padding:16px 18px}
+.srch{position:relative;margin-bottom:12px}
+.srch input{width:100%;padding:8px 12px 8px 36px;border:1.5px solid var(--border);border-radius:8px;font-size:.86rem;outline:none;transition:.2s}
+.srch input:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(66,165,245,.15)}
+.srch svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--txt2)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{background:#E3F2FD;color:var(--p);font-weight:700;padding:9px 11px;text-align:left;cursor:pointer;user-select:none;white-space:nowrap;font-size:.72rem;text-transform:uppercase;letter-spacing:.4px}
+th:hover{background:#BBDEFB}
+td{padding:9px 11px;border-bottom:1px solid #EEF2F7;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#F5F9FF}
+.trunc{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:default}
+.lnk{background:none;border:none;color:var(--p);cursor:pointer;font-size:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px;padding:0;text-align:left}
+.lnk:hover{color:var(--pd)}
+.btn-del{background:none;border:none;cursor:pointer;color:#B0BEC5;padding:2px 5px;border-radius:5px;transition:.2s;font-size:.82rem}
+.btn-del:hover{color:var(--err);background:var(--err-bg)}
+.empty{text-align:center;color:var(--txt2);padding:28px;font-size:.88rem}
+.prv{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.7rem;font-weight:700}
+.prv-lo{background:var(--ok-bg);color:var(--ok)}.prv-ib{background:#FFF9C4;color:#827717}
+.prv-im{background:var(--warn-bg);color:var(--warn)}.prv-hi{background:var(--err-bg);color:var(--err)}
+.det-td{padding:0!important;background:#EEF7FF!important;border-bottom:2px solid var(--border)!important}
+.det-panel{padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 16px}
+.dp-lbl{font-size:.68rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.dp-val{font-size:.84rem;color:#263238;line-height:1.5;white-space:pre-wrap}
+.det-ecg{grid-column:1/-1;display:flex;align-items:flex-start;gap:12px;border-top:1px solid var(--border);padding-top:10px;margin-top:4px;flex-wrap:wrap}
+.det-ecg img{max-height:110px;max-width:240px;border-radius:8px;border:1px solid var(--border);background:#111;object-fit:contain}
+.no-ecg{color:var(--txt2);font-size:.82rem;font-style:italic;align-self:center}
+.det-close{margin-left:auto;background:none;border:1px solid var(--border);cursor:pointer;color:var(--txt2);padding:3px 10px;border-radius:6px;font-size:.8rem}
+.det-close:hover{background:var(--err-bg);color:var(--err)}
+.form-tabs{display:flex;margin-bottom:14px;border-radius:8px;overflow:hidden;border:1.5px solid var(--border)}
+.tab-btn{flex:1;padding:8px;background:#F5F9FF;border:none;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--txt2);transition:.15s}
+.tab-btn.active{background:var(--p);color:#fff}
+.fg{margin-bottom:11px}
+label{display:block;font-size:.72rem;font-weight:700;color:var(--txt);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:.86rem;outline:none;transition:.2s;font-family:inherit;color:#263238}
+textarea{resize:vertical;min-height:52px;line-height:1.4}
+input:focus,select:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(66,165,245,.15)}
+input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;cursor:pointer;color:var(--txt2);font-size:.82rem}
+.btn-p{width:100%;padding:10px;background:var(--p);color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;transition:.2s;margin-top:4px}
+.btn-p:hover{background:var(--pd)}
+.msg-ok{background:var(--ok-bg);color:var(--ok);border-radius:8px;padding:8px 12px;font-size:.82rem;font-weight:600;margin-top:8px;display:none}
+.prv-calc{border:1.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;background:#F5F9FF}
+.calc-hdr{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.calc-hdr strong{font-size:.78rem;color:var(--p);text-transform:uppercase;letter-spacing:.4px}
+.prv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.prv-grid .fg{margin-bottom:0}
+.prv-res{margin-top:10px;padding:10px;border-radius:8px;text-align:center;display:none}
+.prv-res .rpct{font-size:1.5rem;font-weight:800}.prv-res .rcat{font-size:.8rem;font-weight:700;margin-top:2px}
+.dlist{display:flex;flex-direction:column;gap:9px}
+.dr .drh{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:3px;color:var(--txt)}
+.dr .drh span:last-child{font-weight:700;color:var(--p)}
+.bar-t{background:#E3F2FD;border-radius:99px;height:7px;overflow:hidden}
+.bar-f{background:linear-gradient(90deg,var(--p),var(--acc));height:100%;border-radius:99px;transition:width .5s ease}
+.ftbl{width:100%;border-collapse:collapse;font-size:.82rem}
+.ftbl th{background:#E3F2FD;color:var(--p);padding:7px 10px;font-size:.72rem;text-transform:uppercase;letter-spacing:.4px;text-align:left}
+.ftbl td{padding:7px 10px;border-bottom:1px solid #EEF2F7}
+.ftbl tr:last-child td{border-bottom:none}
+.fv-lo{color:var(--err);font-weight:700}.fv-mi{color:var(--warn);font-weight:700}.fv-hi{color:var(--ok);font-weight:700}
+/* CALENDAR */
+.top-row{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start}
+@media(max-width:960px){.top-row{grid-template-columns:1fr}}
+.cal-card{background:var(--surf);border-radius:12px;box-shadow:0 2px 8px rgba(21,101,192,.08);border:1px solid var(--border);overflow:hidden;min-width:248px}
+.cal-hdr{background:var(--p);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.cal-hdr button{background:none;border:none;cursor:pointer;color:#fff;font-size:1rem;padding:2px 8px;border-radius:4px;line-height:1}
+.cal-hdr button:hover{background:rgba(255,255,255,.2)}.cal-hdr span{font-size:.88rem;font-weight:700}
+.cal-body{padding:10px 8px 6px}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cdh{text-align:center;font-size:.6rem;font-weight:700;color:var(--txt2);padding:4px 0;text-transform:uppercase}
+.cd{text-align:center;font-size:.78rem;padding:5px 2px;border-radius:5px;cursor:default;color:#ccc;min-width:0}
+.cd.cm{color:#263238}.cd.hc{background:var(--p);color:#fff!important;cursor:pointer;font-weight:700}
+.cd.hc:hover{background:var(--pd)}.cd.td{box-shadow:0 0 0 2px var(--acc)}.cd.sl{background:var(--pd)!important;color:#fff!important}
+.cal-det{padding:10px 12px;border-top:1px solid var(--border);display:none}
+.csd-hd{font-size:.7rem;font-weight:700;color:var(--txt2);text-transform:uppercase;margin-bottom:7px;letter-spacing:.4px}
+.csd-it{padding:6px 8px;background:#F5F9FF;border-radius:6px;margin-bottom:4px;font-size:.78rem;line-height:1.4}
+.csd-it:last-child{margin-bottom:0}.csd-nm{font-weight:700;color:var(--p)}
+.filter-bar{display:none;align-items:center;gap:8px;background:#E3F2FD;border:1px solid var(--border);border-radius:7px;padding:7px 12px;margin-bottom:10px;font-size:.82rem;color:var(--p)}
+.filter-bar strong{font-weight:700}.btn-clr{background:none;border:1px solid var(--border);color:var(--txt2);cursor:pointer;padding:2px 10px;border-radius:5px;font-size:.78rem;margin-left:auto;white-space:nowrap}
+.btn-clr:hover{background:var(--err-bg);color:var(--err);border-color:var(--err)}
+/* INSTITUTION SCREEN */
+.isc{position:fixed;inset:0;background:var(--bg);z-index:2000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;overflow-y:auto}
+.isc-logo{display:flex;align-items:center;gap:14px;margin-bottom:8px}.isc-logo h1{font-size:2rem;font-weight:800;color:var(--p)}
+.isc-sub{color:var(--txt2);font-size:.95rem;margin-bottom:36px;text-align:center}
+.isc-cards{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;max-width:740px}
+.ic{background:#fff;border:2px solid var(--border);border-radius:16px;padding:28px 22px;min-width:168px;cursor:pointer;text-align:center;transition:.2s;box-shadow:0 2px 12px rgba(21,101,192,.08)}
+.ic:hover{border-color:var(--p);box-shadow:0 6px 24px rgba(21,101,192,.2);transform:translateY(-3px)}
+.ic .ic-i{font-size:2.5rem;margin-bottom:10px}.ic .ic-n{font-size:.95rem;font-weight:700;color:var(--p)}.ic .ic-s{font-size:.72rem;color:var(--txt2);margin-top:4px}
+.ic-add{background:none;border:2px dashed var(--border);border-radius:16px;padding:28px 22px;min-width:168px;cursor:pointer;text-align:center;color:var(--txt2);font-size:.88rem;font-weight:600;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:10px}
+.ic-add:hover{border-color:var(--p);color:var(--p)}.ic-add .ic-ai{font-size:2rem}
+.inst-bdg{background:rgba(255,255,255,.2);border-radius:6px;padding:3px 10px;font-size:.78rem;font-weight:700;margin-left:16px}
+.btn-back{background:none;border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:7px;padding:5px 12px;cursor:pointer;font-size:.8rem;transition:.2s;white-space:nowrap;margin-left:8px}
+.btn-back:hover{background:rgba(255,255,255,.2)}
+/* DRILLDOWN */
+.dr{cursor:pointer;border-radius:5px;padding:2px 0;transition:.1s}.dr:hover{background:#F0F7FF}
+.dr-pts{display:flex;flex-wrap:wrap;gap:4px;padding:4px 0 7px 0}
+.dr-pt{background:#E3F2FD;color:var(--p);border:none;border-radius:4px;padding:3px 9px;font-size:.72rem;cursor:pointer;font-weight:600}
+.dr-pt:hover{background:var(--p);color:#fff}
+/* PAT FILTER */
+.pfb{display:none;align-items:center;gap:8px;background:var(--ok-bg);border:1px solid #A5D6A7;border-radius:7px;padding:7px 12px;margin-bottom:10px;font-size:.82rem;color:var(--ok)}
+.pfb strong{font-weight:700}
+/* EDIT + IMAGE GALLERY */
+.btn-edit{background:var(--p);color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-weight:600}
+.btn-edit:hover{background:var(--pd)}.btn-save{background:var(--ok)!important}.btn-save:hover{filter:brightness(.9)}
+.dp-badge{background:#E3F2FD;color:var(--p);border-radius:4px;padding:2px 7px;font-size:.72rem;font-weight:700}
+.det-hdr{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.det-hdr .det-ttl{font-weight:700;color:var(--p);font-size:.9rem;flex:1}
+.det-imgs{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:14px;border-top:1px solid var(--border);padding-top:10px;margin-top:4px}
+@media(max-width:680px){.det-imgs{grid-template-columns:1fr}}
+.img-sec-hdr{font-size:.76rem;font-weight:700;color:var(--p);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.btn-add-img{background:var(--ok-bg);color:var(--ok);border:1px solid #A5D6A7;border-radius:4px;padding:2px 8px;font-size:.7rem;cursor:pointer;font-weight:600;display:inline-flex;align-items:center}
+.btn-add-img:hover{background:var(--ok);color:#fff}.btn-add-img input{display:none;position:absolute}
+.img-gallery{display:flex;flex-wrap:wrap;gap:6px;min-height:24px;align-items:flex-start}
+.img-thumb{position:relative;flex-shrink:0}
+.img-thumb img{width:80px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:zoom-in;background:#eee;transition:.15s}
+.img-thumb img:hover{border-color:var(--p);opacity:.88}
+.img-del{position:absolute;top:-5px;right:-5px;background:var(--err);color:#fff;border:none;border-radius:50%;width:17px;height:17px;cursor:pointer;font-size:.6rem;line-height:17px;text-align:center;padding:0}
+/* FAB + REFERENCIAS */
+.fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;background:var(--p);color:#fff;border:none;border-radius:50%;cursor:pointer;box-shadow:0 4px 18px rgba(13,71,161,.35);font-size:1.4rem;display:flex;align-items:center;justify-content:center;z-index:1000;transition:.2s}
+.fab:hover{background:var(--pd)}
+.ref-panel{position:fixed;bottom:86px;right:24px;width:640px;max-height:76vh;background:var(--surf);border-radius:14px;box-shadow:0 8px 32px rgba(13,71,161,.2);border:1px solid var(--border);z-index:999;display:none;flex-direction:column;overflow:hidden}
+@media(max-width:680px){.ref-panel{width:calc(100vw - 48px);right:16px}}
+.ref-panel.open{display:flex}.ref-ph{background:var(--p);color:#fff;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ref-ph h3{font-size:.9rem;font-weight:700}.ref-ph button{background:none;border:none;color:#fff;cursor:pointer;font-size:1rem;padding:3px 8px;border-radius:4px;flex-shrink:0}.ref-ph button:hover{background:rgba(255,255,255,.2)}
+.ref-body{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ref-sec{border:1px solid var(--border);border-radius:8px;overflow:visible}.ref-sec-h{background:#F5F9FF;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.84rem;font-weight:700;color:var(--txt);border:none;width:100%;text-align:left;user-select:none}.ref-sec-h:hover{background:#E3F2FD}.ref-sec-b{padding:12px 14px;display:none;overflow-x:auto}.ref-sec-b.on{display:block;overflow-x:auto}.ref-sec-b.crm{overflow-x:auto;display:block}
+.rtbl{width:100%;border-collapse:collapse;font-size:.76rem;min-width:500px}.rtbl2{width:100%;border-collapse:collapse;font-size:.76rem;min-width:420px}.rtbl2{margin-top:10px}.rtbl2:first-child{margin-top:0}
+.rtbl th,.rtbl2 th{background:#E3F2FD;color:var(--p);padding:6px 8px;font-size:.68rem;text-transform:uppercase;letter-spacing:.4px;text-align:left;cursor:default}.rtbl th:hover,.rtbl2 th:hover{background:#E3F2FD}
+.rtbl td,.rtbl2 td{padding:5px 8px;border-bottom:1px solid #EEF2F7;vertical-align:top;line-height:1.45}
+.rtbl2 caption{display:block;font-size:.78rem;font-weight:700;color:var(--p);padding:6px 0 3px;letter-spacing:.3px}
+.r-lo{color:var(--ok)!important}.r-mi{color:var(--warn)!important}.r-hi{color:var(--err)!important}
+.btn-plus{background:var(--p);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:.75rem;line-height:1;cursor:pointer;margin-left:4px;vertical-align:middle;flex-shrink:0}
+.btn-plus:hover{background:var(--pd)}
+.btn-prob{padding:3px 9px;border-radius:12px;border:1.5px solid #B0BEC5;background:transparent;color:var(--txt2);font-size:.74rem;cursor:pointer}
+.btn-prob.activo{border-color:#B71C1C;background:#FFEBEE;color:#B71C1C;font-weight:700}
+.prob-name{color:var(--err);font-weight:700}
+.ac-avk{color:#6A1B9A;background:#F3E5F5;padding:1px 7px;border-radius:10px;font-size:.77rem}
+.ac-daco{color:var(--p);background:#E3F2FD;padding:1px 7px;border-radius:10px;font-size:.77rem}
+.ac-amb{color:var(--warn);background:var(--warn-bg);padding:1px 7px;border-radius:10px;font-size:.77rem}
+.ac-nin{color:var(--txt2);background:#ECEFF1;padding:1px 7px;border-radius:10px;font-size:.77rem}
+/* CALC FAB + PANEL */
+.fab-calc{position:fixed;bottom:24px;right:84px;width:52px;height:52px;background:var(--p);color:#fff;border:none;border-radius:50%;cursor:pointer;box-shadow:0 4px 18px rgba(13,71,161,.35);font-size:1.4rem;display:flex;align-items:center;justify-content:center;z-index:1000;transition:.2s}
+.fab-calc:hover{background:var(--pd)}
+.calc-panel{position:fixed;bottom:86px;right:84px;width:640px;max-height:76vh;background:var(--surf);border-radius:14px;box-shadow:0 8px 32px rgba(13,71,161,.2);border:1px solid var(--border);z-index:999;display:none;flex-direction:column;overflow:hidden}
+@media(max-width:680px){.calc-panel{width:calc(100vw - 48px);right:16px}}
+.calc-panel.open{display:flex}
+.cp-body{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.calc-sec{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.calc-sec-h{background:#F5F9FF;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.84rem;font-weight:700;color:var(--txt);border:none;width:100%;text-align:left;user-select:none}
+.calc-sec-h:hover{background:#E3F2FD}
+.calc-sec-b{padding:12px 14px;display:none}
+.calc-sec-b.on{display:block}
+.csub{border:1px solid var(--border);border-radius:7px;margin-bottom:8px;overflow:hidden}
+.csub:last-child{margin-bottom:0}
+.csub-h{background:#F5F9FF;padding:8px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.78rem;font-weight:700;color:var(--txt);border:none;width:100%;text-align:left;user-select:none}
+.csub-h:hover{background:#E3F2FD}
+.csub-b{padding:10px 12px;display:none}
+.csub-b.on{display:block}
+.cp-res{margin-top:10px;padding:10px;border-radius:8px;text-align:center;display:none}
+.cp-res .rpct{font-size:1.4rem;font-weight:800}
+.cp-res .rcat{font-size:.8rem;font-weight:700;margin-top:2px}
+.cp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.cp-grid .fg{margin-bottom:0}
+.cp-full{grid-column:1/-1}
+.edm-item{margin-bottom:8px}
+.edm-item label{font-size:.78rem;font-weight:700;color:var(--txt);margin-bottom:3px;display:block}
+.edm-item select{font-size:.8rem;padding:5px 8px}
+/* SEARCH STATS */
+@keyframes ssf{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+#search-stats{background:#EEF7FF;border-left:3px solid var(--p);border-radius:7px;padding:8px 12px;font-size:.8rem;color:var(--txt);margin-bottom:10px;animation:ssf .2s ease;line-height:1.6}
+#search-stats .ss-term{font-weight:700;color:var(--p)}
+#search-stats .ss-fields{display:flex;flex-wrap:wrap;gap:3px 10px;margin-top:4px}
+#search-stats .ss-field{font-size:.74rem;color:var(--txt2)}
+#search-stats .ss-field strong{color:var(--txt)}
+#search-stats .ss-insts{margin-top:4px;font-size:.74rem;color:var(--txt2)}
+#search-stats .ss-insts strong{color:var(--txt)}
+</style>
+</head>
+<body>
+<header>
+  <svg width="32" height="32" viewBox="0 0 34 34" fill="none" style="flex-shrink:0">
+    <path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="#fff" opacity=".9"/>
+    <path d="M10 17h3l2-5 3 8 2-4h4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </svg>
+  <div class="hdr-info"><h1>CardioSalud</h1><span class="hdr-sub">Dr. M. Dos Santos</span></div>
+  <span id="inst-bdg" class="inst-bdg" style="display:none"></span>
+  <button id="btn-back" class="btn-back" onclick="exitInst()" style="display:none">← Cambiar institución</button>
+  <div class="hdr-right" id="clock"></div>
+</header>
+
+<main>
+  <div class="top-row">
+    <div class="stats">
+      <div class="card"><div class="ci ci-b">👥</div><div><div class="lbl">Pacientes</div><div class="val" id="s-total">0</div><div class="sub">Total registrados</div></div></div>
+      <div class="card"><div class="ci ci-t">📅</div><div style="width:100%"><div class="lbl" style="display:flex;align-items:center;gap:4px">Consultas del mes<button onclick="prevStatsM()" style="background:none;border:none;cursor:pointer;color:var(--p);padding:0 2px;font-size:.85rem">◀</button><button onclick="nextStatsM()" style="background:none;border:none;cursor:pointer;color:var(--p);padding:0 2px;font-size:.85rem">▶</button></div><div class="val" id="s-month">0</div><div class="sub" id="s-mlbl"></div></div></div>
+      <div class="card"><div class="ci ci-v">🫀</div><div><div class="lbl">Diagnóstico frecuente</div><div class="val" style="font-size:.92rem;margin-top:4px" id="s-diag">—</div><div class="sub" id="s-dcount"></div></div></div>
+      <div class="card"><div class="ci ci-r">🚨</div><div><div class="lbl">Riesgo CV Alto</div><div class="val" id="s-high">0</div><div class="sub">PREVENT ≥ 20%</div></div></div>
+    </div>
+    <div class="cal-card">
+      <div class="cal-hdr">
+        <button onclick="prevM()">◀</button>
+        <span id="cal-month"></span>
+        <button onclick="nextM()">▶</button>
+      </div>
+      <div class="cal-body"><div class="cg" id="cal-grid"></div></div>
+      <div class="cal-det" id="cal-det"></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section">
+      <div class="sec-hdr"><h2>Consultas</h2><span style="font-size:.74rem;opacity:.8" id="pt-count"></span><button id="btn-toggle-tbl" onclick="toggleTbl()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-weight:600;margin-left:8px">▼ Expandir</button></div>
+      <div class="sec-body">
+        <div class="filter-bar" id="filter-bar">
+          <span>📅 Consultas del <strong id="filter-date"></strong></span>
+          <button class="btn-clr" onclick="clearDateFilter()">✕ Mostrar todos</button>
+        </div>
+        <div class="pfb" id="pfb">👤 Paciente: <strong id="pfb-name"></strong><button class="btn-clr" onclick="clearPatFilter()">✕ Mostrar todos</button></div>
+        <div class="srch">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input id="search" type="text" placeholder="Buscar por nombre, diagnóstico, antecedentes…" oninput="render()">
+        </div>
+        <div id="search-stats" style="display:none"></div>
+        <div class="tbl-wrap" id="tbl-wrap" style="display:none"><table>
+          <thead><tr>
+            <th onclick="srt('name')">Nombre ⇅</th><th onclick="srt('age')">Edad ⇅</th>
+            <th onclick="srt('date')">Fecha ⇅</th><th onclick="srt('background')">Antecedentes ⇅</th>
+            <th onclick="srt('prevent')">PREVENT ⇅</th><th onclick="srt('diagnosis')">Diagnóstico ⇅</th>
+            <th></th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div class="empty" id="empty" style="display:none">No se encontraron consultas.</div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div class="section">
+        <div class="sec-hdr"><h2>Nueva Consulta</h2></div>
+        <div class="sec-body">
+          <div class="form-tabs">
+            <button class="tab-btn active" id="tab-new" onclick="switchTab('new')">Nuevo paciente</button>
+            <button class="tab-btn" id="tab-ex" onclick="switchTab('existing')">Paciente existente</button>
+          </div>
+          <div id="block-new">
+            <div class="fg"><label>Nombre completo</label><input type="text" id="f-name" placeholder="Ej. Ana Torres"></div>
+            <div class="fg"><label>Edad</label><input type="number" id="f-age" min="1" max="120" placeholder="Ej. 58"></div>
+            <div class="fg"><label>Cédula de identidad</label><input type="text" id="f-ci" placeholder="Ej. 1.234.567-8"></div>
+            <div class="fg"><label>Matrícula médica</label><input type="text" id="f-mat" placeholder="Ej. 12345"></div>
+            <div class="fg"><label>Historia Clínica</label><input type="text" id="f-hc" placeholder="Ej. HC-00123"></div>
+          </div>
+          <div id="block-ex" style="display:none">
+            <div class="fg"><label>Buscar paciente</label>
+              <select id="f-pid"><option value="">Seleccionar paciente…</option></select>
+            </div>
+          </div>
+          <div class="fg"><label>Fecha de consulta</label><input type="date" id="f-date"></div>
+          <div class="fg"><label>Diagnóstico</label>
+            <select id="f-diag"><option value="">Seleccionar…</option>
+              <option>Hipertensión arterial</option><option>Insuficiencia cardíaca</option>
+              <option>Fibrilación auricular</option><option>Infarto agudo de miocardio</option>
+              <option>Angina de pecho</option><option>Cardiopatía isquémica</option>
+              <option>Miocardiopatía dilatada</option><option>Valvulopatía</option>
+              <option>Taquicardia ventricular</option><option>Otro</option>
+            </select>
+          </div>
+          <div class="fg"><label>Antecedentes</label><textarea id="f-bg" placeholder="HTA, DM2, Tabaquismo…"></textarea></div>
+          <div class="fg"><label>Tratamientos</label><textarea id="f-tx" placeholder="Enalapril 10mg, AAS 100mg…"></textarea></div>
+          <div class="fg"><label>ETT / Ecocardiograma</label><textarea id="f-ett" placeholder="FEVI 55%, HVI leve…"></textarea></div>
+          <div class="fg"><label>Conducta</label><textarea id="f-conduct" placeholder="Internación, derivación, control…"></textarea></div>
+          <div class="fg"><label>ECG (imagen)</label><input type="file" id="f-ecg" accept="image/*"></div>
+
+          <div class="prv-calc">
+            <div class="calc-hdr" onclick="toggleCalc()">
+              <strong>🧮 Calculadora PREVENT 2023 AHA</strong>
+              <span id="calc-arrow" style="font-size:.82rem;color:var(--p)">▼ Desplegar</span>
+            </div>
+            <div id="calc-body" style="display:none">
+              <div class="prv-grid">
+                <div class="fg"><label>Sexo</label><select id="c-sex" oninput="calcLive()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+                <div class="fg"><label>Edad</label><input type="number" id="c-age" min="30" max="79" placeholder="55" oninput="calcLive()"></div>
+                <div class="fg"><label>Colesterol total (mg/dL)</label><input type="number" id="c-tc" placeholder="200" oninput="calcLive()"></div>
+                <div class="fg"><label>HDL-C (mg/dL)</label><input type="number" id="c-hdl" placeholder="50" oninput="calcLive()"></div>
+                <div class="fg"><label>PA sistólica (mmHg)</label><input type="number" id="c-sbp" placeholder="130" oninput="calcLive()"></div>
+                <div class="fg"><label>Creatinina (mg/dL)</label><input type="number" id="c-creat" step="0.01" placeholder="1.0" oninput="calcCKDEPI()"></div>
+                <div class="fg"><label>eGFR (mL/min/1.73m²)</label><input type="number" id="c-egfr" placeholder="75" oninput="calcLive()"></div>
+                <div class="fg"><label>uACR (mg/g)</label><input type="number" id="c-uacr" placeholder="10" oninput="calcLive()"></div>
+                <div></div>
+                <div class="fg"><label>Tto antihipertensivo</label><select id="c-htn" oninput="calcLive()"><option value="0">No</option><option value="1">Sí</option></select></div>
+                <div class="fg"><label>Diabetes</label><select id="c-dm" oninput="calcLive()"><option value="0">No</option><option value="1">Sí</option></select></div>
+                <div class="fg"><label>Tabaquismo</label><select id="c-smoke" oninput="calcLive()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              </div>
+              <div class="prv-res" id="prv-res"><div class="rpct" id="rpct">—</div><div class="rcat" id="rcat">—</div></div>
+            </div>
+          </div>
+
+          <button class="btn-p" onclick="submitForm()">+ Guardar Consulta</button>
+          <div class="msg-ok" id="msg-ok">✓ Consulta guardada correctamente</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr"><h2>Diagnósticos Frecuentes</h2></div>
+        <div class="sec-body"><div class="dlist" id="diag-list"></div></div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr"><h2>Distribución FEVI</h2></div>
+        <div class="sec-body" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Categoría</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="fevi-body"></tbody></table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr"><h2>Anticoagulantes</h2></div>
+        <div class="sec-body" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="antcoag-body"></tbody></table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr"><h2>Dispositivos Implantados</h2></div>
+        <div class="sec-body" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Dispositivo</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="device-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="isc" class="isc"></div>
+<button class="fab-calc" onclick="toggleCalcPanel()" title="Calculadoras clínicas">🧮</button>
+<button class="fab" onclick="toggleRef()" title="Referencias clínicas">📖</button>
+<div class="calc-panel" id="calc-panel">
+  <div class="ref-ph"><h3>🧮 Calculadoras Clínicas</h3><button onclick="toggleCalcPanel()">✕</button></div>
+  <div class="cp-body">
+    <div class="calc-sec">
+      <button class="calc-sec-h" onclick="toggleCpSec(0)"><span>📊 SCORE2 / SCORE2-OP — Riesgo CV</span><span id="cpa0">▼</span></button>
+      <div class="calc-sec-b" id="cps0">
+        <div id="score2-label" style="font-size:.75rem;color:var(--p);font-weight:700;margin-bottom:8px;padding:4px 8px;background:#E3F2FD;border-radius:5px">Ingresá la edad para determinar escala</div>
+        <div class="cp-grid">
+          <div class="fg"><label>Sexo</label><select id="s2-sex" oninput="calcScore2()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+          <div class="fg"><label>Edad</label><input type="number" id="s2-age" min="40" max="89" placeholder="65" oninput="calcScore2()"></div>
+          <div class="fg"><label>Colesterol total (mg/dL)</label><input type="number" id="s2-tc" placeholder="200" oninput="calcScore2()"></div>
+          <div class="fg"><label>HDL-C (mg/dL)</label><input type="number" id="s2-hdl" placeholder="50" oninput="calcScore2()"></div>
+          <div class="fg"><label>PA sistólica (mmHg)</label><input type="number" id="s2-sbp" placeholder="130" oninput="calcScore2()"></div>
+          <div class="fg"><label>Tabaquismo</label><select id="s2-smoke" oninput="calcScore2()"><option value="0">No</option><option value="1">Sí</option></select></div>
+          <div class="fg cp-full" id="s2-dm-wrap" style="display:none"><label>Diabetes (solo SCORE2-OP)</label><select id="s2-dm" oninput="calcScore2()"><option value="0">No</option><option value="1">Sí</option></select></div>
+        </div>
+        <div class="cp-res" id="s2-res"><div class="rpct" id="s2-pct">—</div><div class="rcat" id="s2-cat">—</div></div>
+      </div>
+    </div>
+    <div class="calc-sec">
+      <button class="calc-sec-h" onclick="toggleCpSec(1)"><span>🔪 Riesgo Quirúrgico</span><span id="cpa1">▼</span></button>
+      <div class="calc-sec-b" id="cps1">
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(0)"><span>EuroSCORE II</span><span id="csuba0">▼</span></button>
+          <div class="csub-b" id="csubb0">
+            <div class="cp-grid">
+              <div class="fg"><label>Edad</label><input type="number" id="eu-age" placeholder="65" oninput="calcEuro()"></div>
+              <div class="fg"><label>Sexo</label><select id="eu-sex" oninput="calcEuro()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+              <div class="fg"><label>Creatinina (mg/dL)</label><input type="number" id="eu-creat" step="0.1" placeholder="1.0" oninput="calcEuro()"></div>
+              <div class="fg"><label>Diálisis</label><select id="eu-dial" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>FEVI</label><select id="eu-fevi" oninput="calcEuro()"><option value="0">&gt;50%</option><option value="1">31–50%</option><option value="2">21–30%</option><option value="3">≤20%</option></select></div>
+              <div class="fg"><label>HTP (mmHg)</label><select id="eu-htp" oninput="calcEuro()"><option value="0">No / &lt;31</option><option value="1">31–55</option><option value="2">&gt;55</option></select></div>
+              <div class="fg"><label>Endocarditis activa</label><select id="eu-endo" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Estado crítico preop</label><select id="eu-crit" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Angina inestable</label><select id="eu-angi" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>EPOC</label><select id="eu-epoc" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Arteriopatía extracardíaca</label><select id="eu-art" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Deterioro neurológico</label><select id="eu-neuro" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Cirugía cardíaca previa</label><select id="eu-prev" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>DM con insulina</label><select id="eu-dm" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>IAM reciente (&lt;90d)</label><select id="eu-iam" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Cirugía aorta torácica</label><select id="eu-aorta" oninput="calcEuro()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Urgencia</label><select id="eu-urg" oninput="calcEuro()"><option value="0">Electiva</option><option value="1">Urgente</option><option value="2">Emergencia</option><option value="3">Salvamento</option></select></div>
+              <div class="fg"><label>Tipo procedimiento</label><select id="eu-proc" oninput="calcEuro()"><option value="0">CABG aislado</option><option value="1">Único no-CABG</option><option value="2">2 procedimientos</option><option value="3">3 o más</option></select></div>
+            </div>
+            <div class="cp-res" id="eu-res"><div class="rpct" id="eu-pct">—</div><div class="rcat" id="eu-cat">—</div></div>
+          </div>
+        </div>
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(1)"><span>STS PROM (cirugía convencional)</span><span id="csuba1">▼</span></button>
+          <div class="csub-b" id="csubb1">
+            <div class="cp-grid">
+              <div class="fg"><label>Edad</label><input type="number" id="sts-age" placeholder="65" oninput="calcSTS()"></div>
+              <div class="fg"><label>Sexo</label><select id="sts-sex" oninput="calcSTS()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+              <div class="fg"><label>Procedimiento</label><select id="sts-proc" oninput="calcSTS()"><option value="0">CABG</option><option value="1">RVAo</option><option value="2">RVMi</option><option value="3">CABG + válvula</option></select></div>
+              <div class="fg"><label>FEVI (%)</label><input type="number" id="sts-fevi" placeholder="55" oninput="calcSTS()"></div>
+              <div class="fg"><label>Creatinina (mg/dL)</label><input type="number" id="sts-creat" step="0.1" placeholder="1.0" oninput="calcSTS()"></div>
+              <div class="fg"><label>Diabetes</label><select id="sts-dm" oninput="calcSTS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>EPOC</label><select id="sts-epoc" oninput="calcSTS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Enf. vascular periférica</label><select id="sts-evp" oninput="calcSTS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Cirugía cardíaca previa</label><select id="sts-prev" oninput="calcSTS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Urgencia</label><select id="sts-urg" oninput="calcSTS()"><option value="0">Electiva</option><option value="1">Urgente</option><option value="2">Emergencia</option></select></div>
+              <div class="fg cp-full"><label>IAM &lt;21 días</label><select id="sts-iam" oninput="calcSTS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            </div>
+            <div class="cp-res" id="sts-res"><div class="rpct" id="sts-pct">—</div><div class="rcat" id="sts-cat">—</div></div>
+          </div>
+        </div>
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(2)"><span>STS PROM TAVI</span><span id="csuba2">▼</span></button>
+          <div class="csub-b" id="csubb2">
+            <div class="cp-grid">
+              <div class="fg"><label>Edad</label><input type="number" id="tv-age" placeholder="80" oninput="calcTAVI()"></div>
+              <div class="fg"><label>Sexo</label><select id="tv-sex" oninput="calcTAVI()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+              <div class="fg"><label>AVA (cm²)</label><input type="number" id="tv-ava" step="0.1" placeholder="0.8" oninput="calcTAVI()"></div>
+              <div class="fg"><label>Gradiente medio (mmHg)</label><input type="number" id="tv-grad" placeholder="40" oninput="calcTAVI()"></div>
+              <div class="fg"><label>FEVI (%)</label><input type="number" id="tv-fevi" placeholder="55" oninput="calcTAVI()"></div>
+              <div class="fg"><label>Creatinina (mg/dL)</label><input type="number" id="tv-creat" step="0.1" placeholder="1.0" oninput="calcTAVI()"></div>
+              <div class="fg"><label>Diabetes</label><select id="tv-dm" oninput="calcTAVI()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>EPOC</label><select id="tv-epoc" oninput="calcTAVI()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>HTP</label><select id="tv-htp" oninput="calcTAVI()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>FA</label><select id="tv-fa" oninput="calcTAVI()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Enfermedad coronaria</label><select id="tv-cor" oninput="calcTAVI()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Cirugía cardíaca previa</label><select id="tv-prev" oninput="calcTAVI()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg cp-full"><label>Fragilidad</label><select id="tv-frag" oninput="calcTAVI()"><option value="0">Normal</option><option value="1">Leve</option><option value="2">Moderada</option><option value="3">Severa</option></select></div>
+            </div>
+            <div class="cp-res" id="tv-res"><div class="rpct" id="tv-pct">—</div><div class="rcat" id="tv-cat">—</div></div>
+          </div>
+        </div>
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(3)"><span>Edmonton Frailty Scale</span><span id="csuba3">▼</span></button>
+          <div class="csub-b" id="csubb3">
+            <div class="edm-item"><label>1. Cognición: ¿Qué fecha es hoy?</label><select id="edm0" oninput="calcEdm()"><option value="0">Correcto (0)</option><option value="1">Error día o mes (1)</option><option value="2">Error año (2)</option></select></div>
+            <div class="edm-item"><label>2. Salud general: hospitalizaciones último año</label><select id="edm1" oninput="calcEdm()"><option value="0">Ninguna (0)</option><option value="1">1–2 (1)</option><option value="2">≥3 (2)</option></select></div>
+            <div class="edm-item"><label>3. Independencia funcional: AVD dependientes de 10</label><select id="edm2" oninput="calcEdm()"><option value="0">0–1 (0)</option><option value="1">2–4 (1)</option><option value="2">≥5 (2)</option></select></div>
+            <div class="edm-item"><label>4. Soporte social: ¿Cuenta con ayuda?</label><select id="edm3" oninput="calcEdm()"><option value="0">Siempre (0)</option><option value="1">A veces (1)</option><option value="2">Nunca (2)</option></select></div>
+            <div class="edm-item"><label>5a. Medicamentos: ¿Usa ≥5 medicamentos?</label><select id="edm4" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>5b. Medicamentos: ¿Olvida tomarlos?</label><select id="edm5" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>6. Nutrición: ¿Perdió peso sin querer?</label><select id="edm6" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>7. Humor: ¿Se siente triste o deprimido?</label><select id="edm7" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>8. Continencia: ¿Pérdidas involuntarias de orina?</label><select id="edm8" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>9. TUG (Timed Up and Go)</label><select id="edm9" oninput="calcEdm()"><option value="0">&lt;10 seg (0)</option><option value="1">10–20 seg (1)</option><option value="2">&gt;20 seg / No puede (2)</option></select></div>
+            <div class="cp-res" id="edm-res" style="display:block;background:var(--ok-bg);color:var(--ok)">
+              <div class="rpct" id="edm-score">0 / 17</div>
+              <div class="rcat" id="edm-cat">No frágil</div>
+              <div style="font-size:.74rem;margin-top:4px" id="edm-interp">Candidato adecuado para TAVI. Bajo riesgo por fragilidad.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ref-panel" id="ref-panel"><div class="ref-ph"><h3>📖 Referencias Clínicas Rápidas</h3><button onclick="toggleRef()">✕</button></div><div class="ref-body" id="ref-body"></div></div>
+
+<script>
+const MO=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+const SAMPLE=[
+  {id:1,name:'Carlos Mendoza',age:68,consultations:[
+    {id:101,date:'2026-06-10',background:'HTA, Diabetes tipo 2',prevent:{pct:18,cat:'Intermedio'},diagnosis:'Hipertensión arterial',treatment:'Amlodipina 5mg, Metformina 850mg',conduct:'Control mensual, ajuste AHT',ett:'FEVI 55%, HVI leve, sin valvulopatías',ecgUrl:null},
+    {id:112,date:'2025-12-10',background:'HTA, Diabetes tipo 2',prevent:{pct:16,cat:'Intermedio'},diagnosis:'Hipertensión arterial',treatment:'Enalapril 10mg, Metformina 850mg',conduct:'Ajuste medicación',ett:'FEVI 57%, HVI leve',ecgUrl:null}
+  ]},
+  {id:2,name:'María Rodríguez',age:74,consultations:[
+    {id:102,date:'2026-06-12',background:'IC, HTA, Fibrilación auricular',prevent:{pct:32,cat:'Alto'},diagnosis:'Insuficiencia cardíaca',treatment:'Furosemida 40mg, Enalapril 10mg, Digoxina 0.25mg',conduct:'Internación por descompensación IC',ett:'FEVI 28%, IT moderada, dilatación VI',ecgUrl:null}
+  ]},
+  {id:3,name:'Jorge Ríos',age:55,consultations:[
+    {id:103,date:'2026-06-14',background:'Tabaquismo, Hipertiroidismo',prevent:{pct:12,cat:'Intermedio'},diagnosis:'Fibrilación auricular',treatment:'Warfarina 5mg, Bisoprolol 2.5mg',conduct:'Ajuste anticoagulación, Holter 24hs',ett:'FEVI 60%, dilatación AI, IT leve',ecgUrl:null}
+  ]},
+  {id:4,name:'Luisa Gómez',age:61,consultations:[
+    {id:104,date:'2026-06-15',background:'HTA, Obesidad',prevent:{pct:7,cat:'Intermedio bajo'},diagnosis:'Hipertensión arterial',treatment:'Losartán 50mg, Hidroclorotiazida 12.5mg',conduct:'Control semestral, dieta hiposódica',ett:'FEVI 58%, HVI concéntrica',ecgUrl:null}
+  ]},
+  {id:5,name:'Roberto Sánchez',age:80,consultations:[
+    {id:105,date:'2026-06-17',background:'IAM previo, DM2, HTA, Dislipemia',prevent:{pct:28,cat:'Alto'},diagnosis:'Cardiopatía isquémica',treatment:'AAS 100mg, Atorvastatina 40mg, Metoprolol 25mg',conduct:'Internación UCC, cinecoronariografía',ett:'FEVI 38%, aquinesia inferolateral, IM leve',ecgUrl:null}
+  ]},
+  {id:6,name:'Elena Vargas',age:52,consultations:[
+    {id:106,date:'2026-05-28',background:'Fiebre reumática en infancia',prevent:{pct:4,cat:'Bajo'},diagnosis:'Valvulopatía',treatment:'Warfarina 5mg, Amoxicilina profiláctica',conduct:'Derivación cirugía cardíaca valvular',ett:'FEVI 62%, EM moderada, IT trivial',ecgUrl:null}
+  ]},
+  {id:7,name:'Antonio Pérez',age:65,consultations:[
+    {id:107,date:'2026-05-30',background:'HTA, Dislipemia, Ex tabaquista',prevent:{pct:14,cat:'Intermedio'},diagnosis:'Hipertensión arterial',treatment:'Enalapril 20mg, Rosuvastatina 10mg',conduct:'Control anual, laboratorio',ett:'FEVI 65%, HVI leve',ecgUrl:null}
+  ]},
+  {id:8,name:'Carmen Díaz',age:70,consultations:[
+    {id:108,date:'2026-06-19',background:'Cardiopatía isquémica, DM2',prevent:{pct:22,cat:'Alto'},diagnosis:'Angina de pecho',treatment:'Nitroglicerina SL, AAS 100mg, Isosorbide 20mg',conduct:'Derivación hemodinamia para ACTP',ett:'FEVI 48%, hipoquinesia anterior, IM leve',ecgUrl:null}
+  ]},
+  {id:9,name:'Héctor Luna',age:58,consultations:[
+    {id:109,date:'2026-06-20',background:'Tabaquismo, HTA, Dislipemia',prevent:{pct:25,cat:'Alto'},diagnosis:'Infarto agudo de miocardio',treatment:'AAS 300mg, Clopidogrel 300mg, Heparina IV',conduct:'Internación urgente, trombolisis/ACTP',ett:'FEVI 32%, aquinesia anterior extensa, IM moderada',ecgUrl:null}
+  ]},
+  {id:10,name:'Patricia Mora',age:63,consultations:[
+    {id:110,date:'2026-06-01',background:'MCD idiopática',prevent:{pct:19,cat:'Intermedio'},diagnosis:'Miocardiopatía dilatada',treatment:'Carvedilol 6.25mg, Espironolactona 25mg, Sacubitril/Valsartán',conduct:'Derivación evaluación trasplante',ett:'FEVI 22%, dilatación VI severa, IT moderada',ecgUrl:null}
+  ]},
+];
+let patients=[];
+
+let nextPid=11, nextCid=200, sortKey='date', sortDir=-1, openDetail=new Set(), openEdit=null, calcOpen=false, lastPRV=null, activeTab='new', activeInst=null, filterPatient=null, openDiag=null, openFevi=null, openAntcoag=null, openDevice=null, diagSorted=[], feviData=[], anticoagData=[], deviceData=[], currentRows=[], tablExpanded=false;
+function toggleTbl(){
+  tablExpanded=!tablExpanded;
+  const wrap=document.getElementById('tbl-wrap'),btn=document.getElementById('btn-toggle-tbl');
+  wrap.style.display=tablExpanded?'':'none';
+  btn.textContent=tablExpanded?'▲ Minimizar':'▼ Expandir';
+  if(tablExpanded)render();
+}
+let statsMonthY, statsMonthM;
+
+// ── UTILS ─────────────────────────────────────────────────────────
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const fmtDate=d=>{if(!d)return'—';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`};
+function flatRows(){const r=[];patients.forEach(p=>p.consultations.forEach(c=>r.push({...c,name:p.name,age:p.age,pid:p.id,ci:p.ci||'',matricula:p.matricula||'',hc:p.hc||'',problema:!!p.problema})));return r;}
+
+// ── PREVENT 2023 (PCE base + PREVENT kidney modifier) ─────────────
+function calcPREVENT({sex,age,tc,hdl,sbp,htn,dm,smoke,egfr,uacr}){
+  const ln=Math.log,a=+age,t=+tc,h=+hdl,s=+sbp;
+  if(!a||!t||!h||!s)return null;
+  let lp,base,mean;
+  if(sex==='F'){
+    lp=-7.1062*ln(a)+1.2831*ln(t)-1.8723*ln(h)+(htn?1.9905:1.8203)*ln(s)+(htn?.1115:0)+.6855*(dm?1:0)+1.3268*(smoke?1:0);
+    base=.9665;mean=-29.799;
+  }else{
+    lp=12.344*ln(a)+11.853*ln(t)-2.664*ln(a)*ln(t)-7.990*ln(h)+1.769*ln(a)*ln(h)+(htn?1.797:1.764)*ln(s)+7.837*(smoke?1:0)-1.795*ln(a)*(smoke?1:0)+.661*(dm?1:0);
+    base=.9144;mean=61.18;
+  }
+  let risk=1-Math.pow(base,Math.exp(lp-mean));
+  const ef=+(egfr||90),ua=+(uacr||0);
+  if(ef<30)risk*=1.30;else if(ef<60)risk*=1.15;else if(ef<90)risk*=1.05;
+  if(ua>300)risk*=1.20;else if(ua>30)risk*=1.10;
+  risk=Math.max(0,Math.min(1,risk));
+  const pct=Math.round(risk*100);
+  const cat=pct>=20?'Alto':pct>=10?'Intermedio':pct>=5?'Intermedio bajo':'Bajo';
+  return{pct,cat};
+}
+
+function prvCls(cat){return{Alto:'prv-hi',Intermedio:'prv-im','Intermedio bajo':'prv-ib',Bajo:'prv-lo'}[cat]||'prv-lo';}
+function prvBadge(p){if(!p)return'<span class="prv" style="color:var(--txt2)">—</span>';return`<span class="prv ${prvCls(p.cat)}">${p.pct}% — ${p.cat}</span>`;}
+
+function toggleCalc(){
+  calcOpen=!calcOpen;
+  document.getElementById('calc-body').style.display=calcOpen?'':'none';
+  document.getElementById('calc-arrow').textContent=calcOpen?'▲ Cerrar':'▼ Desplegar';
+}
+
+function calcLive(){
+  const g=id=>document.getElementById(id).value;
+  const r=calcPREVENT({sex:g('c-sex'),age:g('c-age'),tc:g('c-tc'),hdl:g('c-hdl'),sbp:g('c-sbp'),htn:+g('c-htn'),dm:+g('c-dm'),smoke:+g('c-smoke'),egfr:g('c-egfr'),uacr:g('c-uacr')});
+  const el=document.getElementById('prv-res');
+  if(!r){el.style.display='none';lastPRV=null;return;}
+  lastPRV=r; el.style.display='block';
+  const bg={Alto:'var(--err-bg)',Intermedio:'var(--warn-bg)','Intermedio bajo':'#FFF9C4',Bajo:'var(--ok-bg)'};
+  const cl={Alto:'var(--err)',Intermedio:'var(--warn)','Intermedio bajo':'#827717',Bajo:'var(--ok)'};
+  el.style.background=bg[r.cat]; el.style.color=cl[r.cat];
+  document.getElementById('rpct').textContent=r.pct+'%';
+  document.getElementById('rcat').textContent=r.cat+' — riesgo CV a 10 años';
+}
+
+// ── TABS ─────────────────────────────────────────────────────────
+function switchTab(t){
+  activeTab=t;
+  document.getElementById('tab-new').className='tab-btn'+(t==='new'?' active':'');
+  document.getElementById('tab-ex').className='tab-btn'+(t==='existing'?' active':'');
+  document.getElementById('block-new').style.display=t==='new'?'':'none';
+  document.getElementById('block-ex').style.display=t==='existing'?'':'none';
+  refreshSel();
+}
+function refreshSel(){
+  const s=document.getElementById('f-pid');
+  s.innerHTML='<option value="">Seleccionar paciente…</option>';
+  patients.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=`${p.name} (${p.age} años)`;s.appendChild(o);});
+}
+
+// ── SORT / DETAIL ─────────────────────────────────────────────────
+function srt(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=1;}render();}
+function toggleDetail(cid){if(openDetail.has(cid))openDetail.delete(cid);else openDetail.add(cid);openEdit=null;render();}
+function closeDetail(cid){openDetail.delete(cid);openEdit=null;render();}
+
+function detailHTML(r){
+  if(openEdit===r.id)return editFormHTML(r);
+  const f=(l,v)=>`<div><div class="dp-lbl">${l}</div><div class="dp-val">${esc(v||'—')}</div></div>`;
+  const ecgs=r.ecgs||[],imgs=r.images||[];
+  const addBtn=(field,lbl)=>`<label class="btn-add-img">${lbl}<input type="file" accept="image/*" multiple onchange="addImg(${r.pid},${r.id},'${field}',this)"></label>`;
+  const gallery=(arr,field)=>arr.length?arr.map((u,i)=>`<div class="img-thumb"><img src="${u}" onclick="viewImg(this.src)"><button class="img-del" onclick="delImg(${r.pid},${r.id},'${field}',${i})">✕</button></div>`).join(''):'<span class="no-ecg">Sin imágenes</span>';
+  return`<div class="det-panel">
+    <div class="det-hdr">
+      <span class="det-ttl">${r.problema?'⭐ ':''}${esc(r.name)}, ${r.age} años</span>
+      ${r.ci?`<span class="dp-badge">CI: ${esc(r.ci)}</span>`:''}${r.matricula?`<span class="dp-badge">Mat: ${esc(r.matricula)}</span>`:''}${r.hc?`<span class="dp-badge">HC: ${esc(r.hc)}</span>`:''}
+      <button class="btn-prob${r.problema?' activo':''}" onclick="toggleProblema(${r.pid})">${r.problema?'✓ Quitar problema':'⭐ Marcar como problema'}</button>
+      <button class="btn-edit" onclick="editDetail(${r.id})">✏️ Editar</button>
+      <button class="det-close" onclick="closeDetail(${r.id})">✕ Cerrar</button>
+    </div>
+    ${f('Cédula de identidad',r.ci)}${f('Matrícula médica',r.matricula)}${f('Historia Clínica',r.hc)}
+    ${f('Diagnóstico',r.diagnosis)}${f('PREVENT 2023',r.prevent?`${r.prevent.pct}% — ${r.prevent.cat}`:'No calculado')}
+    ${f('ETT / Ecocardiograma',r.ett)}${f('Antecedentes',r.background)}
+    ${f('Tratamientos',r.treatment)}${f('Conducta',r.conduct)}
+    <div class="det-imgs">
+      <div><div class="img-sec-hdr">🫀 ECG ${addBtn('ecgs','+ Agregar')}</div><div class="img-gallery">${gallery(ecgs,'ecgs')}</div></div>
+      <div><div class="img-sec-hdr">🖼️ Imágenes ${addBtn('images','+ Agregar')}</div><div class="img-gallery">${gallery(imgs,'images')}</div></div>
+    </div>
+  </div>`;
+}
+
+// ── SEARCH STATS ─────────────────────────────────────────────────
+function updateSearchStats(q){
+  const el=document.getElementById('search-stats');
+  if(!q||q.length<2){el.style.display='none';return;}
+  const qLow=q.toLowerCase();
+  const allRows=flatRows();
+  const queryRows=allRows.filter(r=>
+    r.name.toLowerCase().includes(qLow)||(r.diagnosis||'').toLowerCase().includes(qLow)||
+    (r.background||'').toLowerCase().includes(qLow)||(r.treatment||'').toLowerCase().includes(qLow)||
+    (r.conduct||'').toLowerCase().includes(qLow)||(r.ett||'').toLowerCase().includes(qLow)||
+    (r.ci||'').includes(qLow)||(r.matricula||'').toLowerCase().includes(qLow)||(r.hc||'').toLowerCase().includes(qLow)
+  );
+  const matchedPids=new Set(queryRows.map(r=>r.pid));
+  const totalPats=patients.length,uniq=matchedPids.size;
+  const pct=totalPats>0?Math.round(uniq/totalPats*100):0;
+  const fieldDefs=[
+    {label:'Nombre',fn:r=>r.name.toLowerCase().includes(qLow)},
+    {label:'Diagnóstico',fn:r=>(r.diagnosis||'').toLowerCase().includes(qLow)},
+    {label:'Antecedentes',fn:r=>(r.background||'').toLowerCase().includes(qLow)},
+    {label:'Tratamiento',fn:r=>(r.treatment||'').toLowerCase().includes(qLow)},
+    {label:'ETT',fn:r=>(r.ett||'').toLowerCase().includes(qLow)},
+    {label:'Conducta',fn:r=>(r.conduct||'').toLowerCase().includes(qLow)},
+    {label:'CI',fn:r=>(r.ci||'').includes(qLow)},
+    {label:'HC',fn:r=>(r.hc||'').toLowerCase().includes(qLow)},
+  ];
+  const fieldCounts=fieldDefs.map(f=>({label:f.label,n:new Set(queryRows.filter(r=>f.fn(r)).map(r=>r.pid)).size})).filter(f=>f.n>0);
+  const insts=getInsts();
+  const instData=insts.map(inst=>{
+    const raw=localStorage.getItem('crd_d_'+inst.id);if(!raw)return null;
+    let d;try{d=JSON.parse(raw);}catch(e){return null;}
+    const pats=d.patients||[];if(!pats.length)return null;
+    const rows2=[];pats.forEach(p=>p.consultations.forEach(c=>rows2.push({name:p.name,pid:p.id,ci:p.ci||'',hc:p.hc||'',...c})));
+    const mPids=new Set(rows2.filter(r=>
+      r.name.toLowerCase().includes(qLow)||(r.diagnosis||'').toLowerCase().includes(qLow)||
+      (r.background||'').toLowerCase().includes(qLow)||(r.treatment||'').toLowerCase().includes(qLow)||
+      (r.ett||'').toLowerCase().includes(qLow)||(r.conduct||'').toLowerCase().includes(qLow)||
+      (r.ci||'').includes(qLow)||(r.hc||'').toLowerCase().includes(qLow)
+    ).map(r=>r.pid));
+    return{label:`${inst.icon} ${inst.label}`,matched:mPids.size,total:pats.length};
+  }).filter(d=>d&&d.total>0);
+  const showInsts=instData.length>1;
+  let html=`🔍 "<span class="ss-term">${esc(q)}</span>" — <strong>${uniq}</strong> de ${totalPats} paciente${totalPats!==1?'s':''} (${pct}%)`;
+  if(fieldCounts.length)html+=`<div class="ss-fields">${fieldCounts.map(f=>`<span class="ss-field"><strong>${f.n}</strong> en ${f.label}</span>`).join(' · ')}</div>`;
+  if(showInsts)html+=`<div class="ss-insts">${instData.map(d=>`${d.label}: <strong>${d.matched}</strong>/${d.total} (${Math.round(d.matched/d.total*100)}%)`).join(' &nbsp;·&nbsp; ')}</div>`;
+  el.innerHTML=html;el.style.display='';
+}
+
+// ── RENDER ───────────────────────────────────────────────────────
+function clearDateFilter(){selD=null;render();}
+
+function render(){
+  const q=document.getElementById('search').value.toLowerCase();
+  if(q&&!tablExpanded){tablExpanded=true;document.getElementById('tbl-wrap').style.display='';document.getElementById('btn-toggle-tbl').textContent='▲ Minimizar';}
+  let rows=flatRows().filter(r=>{
+    if(q.includes('prob')||q==='⭐')return r.problema;
+    return r.name.toLowerCase().includes(q)||r.diagnosis.toLowerCase().includes(q)||
+    (r.background||'').toLowerCase().includes(q)||(r.treatment||'').toLowerCase().includes(q)||
+    (r.conduct||'').toLowerCase().includes(q)||(r.ett||'').toLowerCase().includes(q)||
+    (r.ci||'').includes(q)||(r.matricula||'').toLowerCase().includes(q)||(r.hc||'').toLowerCase().includes(q);
+  });
+  if(selD) rows=rows.filter(r=>r.date===selD);
+  const fb=document.getElementById('filter-bar');
+  if(tablExpanded&&selD){const[y,m,day]=selD.split('-');document.getElementById('filter-date').textContent=`${day}/${m}/${y}`;fb.style.display='flex';}
+  else fb.style.display='none';
+  if(filterPatient!==null)rows=rows.filter(r=>r.pid===filterPatient);
+  const pfb=document.getElementById('pfb');
+  if(tablExpanded&&filterPatient!==null){const p=patients.find(x=>x.id===filterPatient);document.getElementById('pfb-name').textContent=p?p.name:'—';pfb.style.display='flex';}
+  else pfb.style.display='none';
+  rows.sort((a,b)=>{
+    const va=sortKey==='prevent'?(a.prevent?.pct??-1):sortKey==='age'?+a[sortKey]:a[sortKey]||'';
+    const vb=sortKey==='prevent'?(b.prevent?.pct??-1):sortKey==='age'?+b[sortKey]:b[sortKey]||'';
+    return va<vb?-sortDir:va>vb?sortDir:0;
+  });
+  currentRows=rows;
+  document.getElementById('pt-count').textContent=`${rows.length} consulta${rows.length!==1?'s':''}`;
+  updateSearchStats(q);
+  updateStats(rows);updateDiags(rows);updateFEVI(rows);updateAntcoag();updateDevice();renderCal();
+  if(!tablExpanded)return;
+  const tbody=document.getElementById('tbody'),empty=document.getElementById('empty');
+  if(!rows.length){tbody.innerHTML='';empty.style.display='';return;}
+  empty.style.display='none';
+  tbody.innerHTML=rows.map(r=>{
+    const det=openDetail.has(r.id)?`<tr><td class="det-td" colspan="7">${detailHTML(r)}</td></tr>`:'';
+    const nameStyle=r.problema?' style="color:#B71C1C;font-weight:700"':'';
+    return`<tr>
+      <td><button class="lnk" onclick="toggleDetail(${r.id})">${r.problema?'⭐ ':''}<span${nameStyle}>${esc(r.name)}</span></button><button class="btn-plus" onclick="event.stopPropagation();addConsultaRapida(${r.pid})" title="Agregar consulta">+</button></td>
+      <td>${r.age} años</td>
+      <td><button class="lnk" onclick="toggleDetail(${r.id})">${fmtDate(r.date)}</button></td>
+      <td><div class="trunc" title="${esc(r.background)}">${r.background||'—'}</div></td>
+      <td>${prvBadge(r.prevent)}</td>
+      <td>${r.diagnosis}</td>
+      <td><button class="btn-del" onclick="delC(${r.pid},${r.id})" title="Eliminar">✕</button></td>
+    </tr>${det}`;
+  }).join('');
+}
+
+// ── DELETE ───────────────────────────────────────────────────────
+function delC(pid,cid){
+  if(!confirm('¿Eliminar esta consulta?'))return;
+  openDetail.delete(cid);
+  const p=patients.find(x=>x.id===pid);
+  if(!p)return;
+  p.consultations=p.consultations.filter(c=>c.id!==cid);
+  if(!p.consultations.length)patients=patients.filter(x=>x.id!==pid);
+  render();saveInst();
+}
+
+// ── STATS ────────────────────────────────────────────────────────
+function prevStatsM(){statsMonthM--;if(statsMonthM<0){statsMonthM=11;statsMonthY--;}render();}
+function nextStatsM(){statsMonthM++;if(statsMonthM>11){statsMonthM=0;statsMonthY++;}render();}
+function updateStats(rows){
+  const ym=`${statsMonthY}-${String(statsMonthM+1).padStart(2,'0')}`;
+  document.getElementById('s-total').textContent=new Set(rows.map(r=>r.pid)).size;
+  document.getElementById('s-month').textContent=rows.filter(r=>r.date?.startsWith(ym)).length;
+  document.getElementById('s-mlbl').textContent=`${MO[statsMonthM]} ${statsMonthY}`;
+  document.getElementById('s-high').textContent=rows.filter(r=>r.prevent?.pct>=20).length;
+  const freq={};rows.forEach(r=>{freq[r.diagnosis]=(freq[r.diagnosis]||0)+1;});
+  const top=Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('s-diag').textContent=top?top[0]:'—';
+  document.getElementById('s-dcount').textContent=top?`${top[1]} caso${top[1]!==1?'s':''}` :'';
+}
+function updateDiags(rows){
+  const freq={},pmap={};
+  rows.forEach(r=>{if(r.diagnosis)freq[r.diagnosis]=(freq[r.diagnosis]||0)+1;});
+  flatRows().forEach(r=>{if(r.diagnosis){if(!pmap[r.diagnosis])pmap[r.diagnosis]=new Map();pmap[r.diagnosis].set(r.pid,r.name);}});
+  diagSorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const max=diagSorted[0]?.[1]||1,tot=rows.length||1;
+  document.getElementById('diag-list').innerHTML=diagSorted.map(([d,c],i)=>{
+    const open=openDiag===d,pts=pmap[d]?[...pmap[d].entries()]:[];
+    return`<div class="dr" onclick="toggleDiag(${i})"><div class="drh"><span>${d}</span><span>${c} (${Math.round(c/tot*100)}%) ${open?'▲':'▼'}</span></div>
+    <div class="bar-t"><div class="bar-f" style="width:${Math.round(c/max*100)}%"></div></div>
+    ${open?`<div class="dr-pts">${pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div>`:''}</div>`;
+  }).join('')||'<div class="empty">Sin datos</div>';
+}
+function parseFEVI(s){const m=(s||'').match(/FEVI\s*(\d+)/i);return m?+m[1]:null;}
+function updateFEVI(rows){
+  const tot=rows.length||1,nd=rows.filter(r=>parseFEVI(r.ett)===null).length;
+  feviData=[{l:'< 35%',c:'fv-lo',mn:0,mx:34},{l:'35–49%',c:'fv-mi',mn:35,mx:49},{l:'≥ 50%',c:'fv-hi',mn:50,mx:999}];
+  feviData.forEach(f=>{
+    f.n=rows.filter(r=>{const v=parseFEVI(r.ett);return v!==null&&v>=f.mn&&v<=f.mx;}).length;
+    const pm=new Map();flatRows().filter(r=>{const v=parseFEVI(r.ett);return v!==null&&v>=f.mn&&v<=f.mx;}).forEach(r=>pm.set(r.pid,r.name));f.pts=[...pm.entries()];
+  });
+  document.getElementById('fevi-body').innerHTML=feviData.map((f,i)=>{
+    const open=openFevi===f.l,pcts=Math.round(f.n/tot*100);
+    return`<tr onclick="toggleFevi(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.n}</td><td>${pcts}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+  }).join('')+`<tr><td style="color:var(--txt2);font-style:italic">Sin dato</td><td>${nd}</td><td>${Math.round(nd/tot*100)}%</td></tr>`;
+}
+
+function isAVK(tx){return/warfarin[a]?|acenocumarol|sintrom/i.test(tx||'');}
+function isDACO(tx){return/apixab[aá]n|rivaroxab[aá]n|dabigatr[aá]n|edoxab[aá]n|pradaxa|xarelto|eliquis|lixiana/i.test(tx||'');}
+function updateAntcoag(){
+  const avkPts=new Map(),dacoPts=new Map(),ambPts=new Map(),ningPts=new Map();
+  patients.forEach(p=>{
+    const avk=p.consultations.some(c=>isAVK(c.treatment));
+    const daco=p.consultations.some(c=>isDACO(c.treatment));
+    if(avk&&daco)ambPts.set(p.id,p.name);
+    else if(avk)avkPts.set(p.id,p.name);
+    else if(daco)dacoPts.set(p.id,p.name);
+    else ningPts.set(p.id,p.name);
+  });
+  const tot=patients.length||1;
+  anticoagData=[
+    {l:'AVK',pts:[...avkPts.entries()],c:'ac-avk'},
+    {l:'DACO',pts:[...dacoPts.entries()],c:'ac-daco'},
+    {l:'Ambos',pts:[...ambPts.entries()],c:'ac-amb'},
+    {l:'Sin anticoag.',pts:[...ningPts.entries()],c:'ac-nin'},
+  ];
+  document.getElementById('antcoag-body').innerHTML=anticoagData.map((f,i)=>{
+    const open=openAntcoag===f.l,pct=Math.round(f.pts.length/tot*100);
+    return`<tr onclick="toggleAntcoag(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+  }).join('');
+}
+function toggleAntcoag(i){openAntcoag=openAntcoag===anticoagData[i]?.l?null:anticoagData[i]?.l;updateAntcoag();}
+function isMCP(tx){return/marcapasos?|pacemaker|\bmcp\b/i.test(tx||'');}
+function isCDI(tx){return/cardiodesfibrilador|desfibrilador|\bcdi\b|\bicd\b/i.test(tx||'');}
+function isTRC(tx){return/resincronizaci[oó]n|resincronizador|\btrc\b|\bcrt\b/i.test(tx||'');}
+function updateDevice(){
+  const mcpPts=new Map(),cdiPts=new Map(),trcPts=new Map();
+  patients.forEach(p=>{
+    if(p.consultations.some(c=>isMCP(c.treatment)))mcpPts.set(p.id,p.name);
+    if(p.consultations.some(c=>isCDI(c.treatment)))cdiPts.set(p.id,p.name);
+    if(p.consultations.some(c=>isTRC(c.treatment)))trcPts.set(p.id,p.name);
+  });
+  const tot=patients.length||1;
+  deviceData=[
+    {l:'MCP — Marcapaso',pts:[...mcpPts.entries()]},
+    {l:'CDI — Cardiodesfibrilador',pts:[...cdiPts.entries()]},
+    {l:'TRC — Resincronizador',pts:[...trcPts.entries()]},
+  ];
+  document.getElementById('device-body').innerHTML=deviceData.map((f,i)=>{
+    const open=openDevice===f.l,pct=Math.round(f.pts.length/tot*100);
+    return`<tr onclick="toggleDevice(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+  }).join('');
+}
+function toggleDevice(i){openDevice=openDevice===deviceData[i]?.l?null:deviceData[i]?.l;updateDevice();}
+// ── SUBMIT ───────────────────────────────────────────────────────
+function submitForm(){
+  const date=document.getElementById('f-date').value;
+  const diag=document.getElementById('f-diag').value;
+  if(!date||!diag){alert('Completá al menos fecha y diagnóstico.');return;}
+  let target=null;
+  if(activeTab==='new'){
+    const name=document.getElementById('f-name').value.trim(),age=+document.getElementById('f-age').value;
+    if(!name||!age){alert('Ingresá nombre y edad del nuevo paciente.');return;}
+    target={isNew:true,name,age,ci:document.getElementById('f-ci').value.trim(),matricula:document.getElementById('f-mat').value.trim(),hc:document.getElementById('f-hc').value.trim()};
+  }else{
+    const pid=+document.getElementById('f-pid').value;
+    if(!pid){alert('Seleccioná un paciente existente.');return;}
+    target={isNew:false,pid};
+  }
+  const c={id:nextCid++,date,diagnosis:diag,
+    background:document.getElementById('f-bg').value.trim(),
+    treatment:document.getElementById('f-tx').value.trim(),
+    ett:document.getElementById('f-ett').value.trim(),
+    conduct:document.getElementById('f-conduct').value.trim(),
+    prevent:lastPRV,ecgs:[],images:[]};
+  const save=()=>{
+    if(target.isNew)patients.push({id:nextPid++,name:target.name,age:target.age,ci:target.ci||'',matricula:target.matricula||'',hc:target.hc||'',problema:false,consultations:[c]});
+    else patients.find(p=>p.id===target.pid).consultations.push(c);
+    render();resetForm();refreshSel();saveInst();
+    const m=document.getElementById('msg-ok');m.style.display='block';setTimeout(()=>m.style.display='none',2800);
+  };
+  const file=document.getElementById('f-ecg').files[0];
+  if(file){const fr=new FileReader();fr.onload=ev=>{c.ecgs=[ev.target.result];save();};fr.readAsDataURL(file);}
+  else save();
+}
+
+function resetForm(){
+  ['f-name','f-age','f-ci','f-mat','f-hc','f-bg','f-tx','f-ett','f-conduct'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('f-diag').value='';document.getElementById('f-ecg').value='';
+  document.getElementById('f-date').valueAsDate=new Date();
+  lastPRV=null;document.getElementById('prv-res').style.display='none';
+  ['c-age','c-tc','c-hdl','c-sbp','c-egfr','c-uacr'].forEach(id=>document.getElementById(id).value='');
+}
+
+// ── EDIT / IMAGES ────────────────────────────────────────────────
+function editDetail(cid){openEdit=openEdit===cid?null:cid;render();}
+function cancelEdit(){openEdit=null;render();}
+function editFormHTML(r){
+  const p=patients.find(x=>x.id===r.pid)||{};
+  const diags=['Hipertensión arterial','Insuficiencia cardíaca','Fibrilación auricular','Infarto agudo de miocardio','Angina de pecho','Cardiopatía isquémica','Miocardiopatía dilatada','Valvulopatía','Taquicardia ventricular','Otro'];
+  const inp=(id,val,type='text')=>`<input type="${type}" id="${id}" value="${esc(String(val||''))}" style="width:100%;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit">`;
+  const ta=(id,val)=>`<textarea id="${id}" style="width:100%;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem;min-height:38px;resize:vertical;font-family:inherit">${esc(val||'')}</textarea>`;
+  return`<div class="det-panel">
+    <div class="det-hdr">
+      <span class="det-ttl">✏️ Editar consulta</span>
+      <button class="btn-edit btn-save" onclick="saveEdit(${r.pid},${r.id})">💾 Guardar cambios</button>
+      <button class="det-close" onclick="cancelEdit()">✕ Cancelar</button>
+    </div>
+    <div><div class="dp-lbl">Nombre</div>${inp('ed-nm',p.name||r.name)}</div>
+    <div><div class="dp-lbl">Edad</div>${inp('ed-ag',r.age,'number')}</div>
+    <div><div class="dp-lbl">Cédula</div>${inp('ed-ci',p.ci||'')}</div>
+    <div><div class="dp-lbl">Matrícula</div>${inp('ed-ma',p.matricula||'')}</div>
+    <div><div class="dp-lbl">Historia Clínica</div>${inp('ed-hc',p.hc||'')}</div>
+    <div style="grid-column:1/-1"><div class="dp-lbl">Paciente problema</div><label style="display:flex;align-items:center;gap:6px;font-size:.82rem"><input type="checkbox" id="ed-prob" ${p.problema?'checked':''}> Marcar como paciente problema</label></div>
+    <div style="grid-column:1/-1"><div class="dp-lbl">Diagnóstico</div><select id="ed-dg" style="width:100%;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem">${diags.map(d=>`<option${d===r.diagnosis?' selected':''}>${d}</option>`).join('')}</select></div>
+    <div><div class="dp-lbl">Riesgo PREVENT %</div>${inp('ed-prv-pct',r.prevent?.pct??'','number')}</div>
+    <div><div class="dp-lbl">Categoría PREVENT</div><select id="ed-prv-cat" style="width:100%;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem">${['Bajo','Intermedio bajo','Intermedio','Alto'].map(c=>`<option${c===(r.prevent?.cat||'')?' selected':''}>${c}</option>`).join('')}</select></div>
+    <div style="grid-column:1/-1"><div class="dp-lbl">Antecedentes</div>${ta('ed-bg',r.background)}</div>
+    <div style="grid-column:1/-1"><div class="dp-lbl">Tratamientos</div>${ta('ed-tx',r.treatment)}</div>
+    <div style="grid-column:1/-1"><div class="dp-lbl">ETT / Ecocardiograma</div>${ta('ed-et',r.ett)}</div>
+    <div style="grid-column:1/-1"><div class="dp-lbl">Conducta</div>${ta('ed-ct',r.conduct)}</div>
+  </div>`;
+}
+function saveEdit(pid,cid){
+  const p=patients.find(x=>x.id===pid);if(!p)return;
+  const c=p.consultations.find(x=>x.id===cid);if(!c)return;
+  p.name=document.getElementById('ed-nm').value.trim()||p.name;
+  p.age=+document.getElementById('ed-ag').value||p.age;
+  p.ci=document.getElementById('ed-ci').value.trim();
+  p.matricula=document.getElementById('ed-ma').value.trim();
+  p.hc=document.getElementById('ed-hc').value.trim();
+  p.problema=document.getElementById('ed-prob').checked;
+  c.diagnosis=document.getElementById('ed-dg').value;
+  const prvPct=+document.getElementById('ed-prv-pct').value;
+  const prvCat=document.getElementById('ed-prv-cat').value;
+  c.prevent=prvPct?{pct:prvPct,cat:prvCat}:null;
+  c.background=document.getElementById('ed-bg').value.trim();
+  c.treatment=document.getElementById('ed-tx').value.trim();
+  c.ett=document.getElementById('ed-et').value.trim();
+  c.conduct=document.getElementById('ed-ct').value.trim();
+  openEdit=null;saveInst();render();
+}
+function addImg(pid,cid,field,input){
+  const files=[...input.files];if(!files.length)return;
+  const p=patients.find(x=>x.id===pid),c=p?.consultations.find(x=>x.id===cid);if(!c)return;
+  if(!Array.isArray(c[field]))c[field]=[];
+  let n=0;files.forEach(f=>{const fr=new FileReader();fr.onload=e=>{c[field].push(e.target.result);if(++n===files.length){saveInst();render();}};fr.readAsDataURL(f);});
+}
+function delImg(pid,cid,field,idx){
+  const p=patients.find(x=>x.id===pid),c=p?.consultations.find(x=>x.id===cid);if(!c)return;
+  c[field].splice(idx,1);saveInst();render();
+}
+function viewImg(url){
+  const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:3000;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+  const img=document.createElement('img');img.src=url;img.style.cssText='max-width:92vw;max-height:92vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)';
+  d.onclick=()=>document.body.removeChild(d);d.appendChild(img);document.body.appendChild(d);
+}
+function migrateConsultations(pats){pats.forEach(p=>{if(!p.ci)p.ci='';if(!p.matricula)p.matricula='';if(p.hc===undefined)p.hc='';if(p.problema===undefined)p.problema=false;p.consultations.forEach(c=>{if(!c.ecgs)c.ecgs=c.ecgUrl?[c.ecgUrl]:[];if(!c.images)c.images=[];delete c.ecgUrl;});});}
+// ── CALENDAR ─────────────────────────────────────────────────────
+let calY,calM,selD=null;
+function initCal(){const n=new Date();calY=n.getFullYear();calM=n.getMonth();}
+function prevM(){calM--;if(calM<0){calM=11;calY--;}selD=null;render();}
+function nextM(){calM++;if(calM>11){calM=0;calY++;}selD=null;render();}
+function selDate(d){selD=selD===d?null:d;render();}
+function renderCal(){
+  const dmap={};
+  patients.forEach(p=>p.consultations.forEach(c=>{if(c.date){if(!dmap[c.date])dmap[c.date]=[];dmap[c.date].push({name:p.name,age:p.age,diag:c.diagnosis});}}));
+  const now=new Date(),today=now.toISOString().slice(0,10);
+  const fd=new Date(calY,calM,1),ld=new Date(calY,calM+1,0),dow=(fd.getDay()+6)%7;
+  document.getElementById('cal-month').textContent=MO[calM]+' '+calY;
+  let h=['Lu','Ma','Mi','Ju','Vi','Sa','Do'].map(d=>`<div class="cdh">${d}</div>`).join('');
+  for(let i=0;i<dow;i++)h+='<div class="cd"></div>';
+  for(let d=1;d<=ld.getDate();d++){
+    const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hc=!!dmap[ds],cls=['cd','cm',hc&&'hc',ds===today&&'td',ds===selD&&'sl'].filter(Boolean).join(' ');
+    h+=`<div class="${cls}"${hc?` onclick="selDate('${ds}')"`:''} >${d}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML=h;
+  document.getElementById('cal-det').style.display='none';
+}
+
+// ── INSTITUCIONES ────────────────────────────────────────────────
+const DEFAULT_INSTS=[{id:'mutualista',label:'Mutualista',icon:'🏥'},{id:'hospital',label:'Hospital',icon:'🏨'},{id:'particulares',label:'Particulares',icon:'👤'}];
+function getInsts(){return JSON.parse(localStorage.getItem('crd_insts')||'null')||DEFAULT_INSTS.map(i=>({...i}));}
+function saveInsts(a){localStorage.setItem('crd_insts',JSON.stringify(a));}
+function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JSON.stringify({patients,nextPid,nextCid}));}
+function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');if(d){patients=d.patients;nextPid=d.nextPid;nextCid=d.nextCid;}else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}migrateConsultations(patients);}
+function buildInstScreen(){
+  const insts=getInsts();
+  document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al dashboard</p><div class="isc-cards">${insts.map((inst,i)=>`<div class="ic" onclick="enterInst(${i})"><div class="ic-i">${inst.icon}</div><div class="ic-n">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
+  document.getElementById('isc').style.display='flex';
+  ['inst-bdg','btn-back'].forEach(id=>document.getElementById(id).style.display='none');
+}
+function enterInst(i){
+  const insts=getInsts();loadInst(insts[i]);
+  document.getElementById('isc').style.display='none';
+  const b=document.getElementById('inst-bdg');b.textContent=activeInst.icon+' '+activeInst.label;b.style.display='';
+  document.getElementById('btn-back').style.display='';
+  selD=null;filterPatient=null;openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openDetail=new Set();refreshSel();initCal();render();
+}
+function exitInst(){saveInst();activeInst=null;patients=[];buildInstScreen();}
+function addInst(){const name=(prompt('Nombre de la nueva institución:')||'').trim();if(!name)return;const insts=getInsts();const icons=['🏥','🏨','👤','🏢','🩺','🏫'];insts.push({id:'c_'+Math.random().toString(36).slice(2),label:name,icon:icons[insts.length%icons.length]});saveInsts(insts);buildInstScreen();}
+// ── FILTROS / DRILLDOWN ───────────────────────────────────────────
+function filterByPat(pid){filterPatient=filterPatient===pid?null:pid;selD=null;openDetail=new Set();openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;render();}
+function clearPatFilter(){filterPatient=null;render();}
+function toggleDiag(i){openDiag=openDiag===diagSorted[i]?.[0]?null:diagSorted[i]?.[0];updateDiags(currentRows);}
+function toggleFevi(i){openFevi=openFevi===feviData[i]?.l?null:feviData[i]?.l;updateFEVI(currentRows);}
+// ── REFERENCIAS CLÍNICAS ──────────────────────────────────────────
+const RQTBL=`<table class="rtbl"><tr><th class="r-lo">Bajo &lt;1%</th><th class="r-mi">Intermedio 1–5%</th><th class="r-hi">Alto &gt;5%</th></tr><tr><td>Mama · Dental · Endocrina · Ocular · Ginecológica menor · Ortopédica menor · Reconstructiva · Superficial · Urológica menor · CTAV menor</td><td>Carotídea asintomática · Endovascular aneurisma · Cabeza y cuello · Intraperitoneal · Intratorácica · Ortopédica mayor · Angioplastia periférica · Trasplante renal · Uroginecológica mayor</td><td>Res. suprarrenal · Aórtica/Vascular mayor · Carotídea sintomática · Duodeno/Páncreas · Res. hígado · Esofagectomía · Revasc. abierta · Neumonectomía · Trasplante pulm./hepático · Perforación intestinal · Cistectomía total</td></tr></table>`;
+const RHTBL=`<table class="rtbl"><tr><th>Muy bajo</th><th class="r-mi">Bajo</th><th class="r-hi">Alto</th></tr><tr><td>Cataratas · Dental simple · Endoscopia sin biopsia · Superficial</td><td>Abdominal simple · Mama · Endoscopia con biopsia · Ortopédica menor</td><td>Abdominal c/ biopsia hepática · Oncológica extensa · Neuroaxial · Neurocirugía · Ortopédica mayor · Torácica · Urológica mayor · Vascular mayor</td></tr></table>`;
+const RATBL=`<table class="rtbl2"><caption>Dabigatrán — horas a suspender antes de cirugía</caption><tr><th>TFG (ml/min)</th><th>R. Bajo</th><th>R. Alto</th></tr><tr><td>≥80</td><td>≥24h</td><td>≥48h</td></tr><tr><td>50–79</td><td>≥36h</td><td>≥72h</td></tr><tr><td>30–49</td><td>≥48h</td><td>≥96h</td></tr><tr><td>15–29</td><td colspan="2" style="color:var(--err)">No indicado</td></tr></table><table class="rtbl2"><caption>Apixabán / Rivaroxabán / Edoxabán</caption><tr><th>TFG (ml/min)</th><th>R. Bajo</th><th>R. Alto</th></tr><tr><td>≥30</td><td>≥24h</td><td>≥48h</td></tr><tr><td>15–29</td><td>≥36h</td><td>—</td></tr><tr><td>&lt;15</td><td colspan="2" style="color:var(--err)">Sin indicación formal</td></tr></table>`;
+const RCRMTBL=`<table class="rtbl2" style="font-size:.68rem;table-layout:fixed;width:100%"><caption>Síndrome Cardio-Reno-Metabólico (CRM) — AHA 2023</caption><colgroup><col style="width:10%"><col style="width:32%"><col style="width:28%"><col style="width:30%"></colgroup><tr><th>Estadio</th><th>Características</th><th>Biomarcadores</th><th>Terapéutica</th></tr><tr><td style="color:var(--ok);font-weight:700">E-0</td><td style="word-break:break-word">Sin factores de riesgo cardiometabólico ni ERC/ECV</td><td>Normales</td><td>Prevención primaria · Estilo de vida</td></tr><tr><td style="color:var(--ok);font-weight:700">E-1</td><td style="word-break:break-word">FR cardiometabólicos (obesidad, HTA, dislipemia, prediabetes) sin daño orgánico</td><td>Glucemia/PA/LDL levemente alterados</td><td>Estilo de vida · Farmacoterapia según FR</td></tr><tr><td style="color:var(--warn);font-weight:700">E-2</td><td style="word-break:break-word">ERC o ECV establecida con factores metabólicos</td><td>TFG 30–60 · Albuminuria moderada · Troponinas · NT-proBNP</td><td>IECA/ARA-II · Estatinas · SGLT-2i · Manejo ECV</td></tr><tr><td style="color:var(--warn);font-weight:700">E-3</td><td style="word-break:break-word">ERC avanzada (TFG &lt;60) o IC con factores metabólicos</td><td>TFG &lt;30–60 · BNP ↑ · TnT · Albuminuria severa</td><td>SGLT-2i · ARM · Optimizar diuresis · Restricción proteica</td></tr><tr><td style="color:var(--err);font-weight:700">E-4</td><td style="word-break:break-word">ECV muy alto riesgo + ERC avanzada y/o DM</td><td>Biomarcadores crónicamente ↑ · TFG &lt;30</td><td>Terapia máxima · Trasplante/Diálisis · Paliativo</td></tr></table>`;
+const REFS=[{t:'🫀 Riesgo Quirúrgico',h:RQTBL},{t:'🩸 Riesgo Hemorrágico',h:RHTBL},{t:'💊 Anticoagulantes y Cirugía',h:RATBL},{t:'🩺 Síndrome CRM-AHA',h:RCRMTBL}];
+document.getElementById('ref-body').innerHTML=REFS.map((r,i)=>`<div class="ref-sec"><button class="ref-sec-h" onclick="toggleSec(${i})"><span>${r.t}</span><span id="ra${i}">▼</span></button><div class="ref-sec-b${i===REFS.length-1?' crm':''}" id="rs${i}">${r.h}</div></div>`).join('');
+function toggleRef(){document.getElementById('ref-panel').classList.toggle('open');}
+function toggleSec(i){
+  const isOpen=document.getElementById('rs'+i).classList.contains('on');
+  REFS.forEach((_,j)=>{document.getElementById('rs'+j).classList.remove('on');document.getElementById('ra'+j).textContent='▼';});
+  if(!isOpen){document.getElementById('rs'+i).classList.add('on');document.getElementById('ra'+i).textContent='▲';document.getElementById('ref-body').scrollTop=0;}
+}
+// ── MISC FUNCTIONS ───────────────────────────────────────────────
+function addConsultaRapida(pid){
+  switchTab('existing');
+  const s=document.getElementById('f-pid');s.value=pid;
+  s.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function calcCKDEPI(){
+  const sex=document.getElementById('c-sex').value;
+  const age=+document.getElementById('c-age').value;
+  const creat=+document.getElementById('c-creat').value;
+  if(!creat||!age)return;
+  const k=sex==='F'?0.7:0.9,a=sex==='F'?-0.241:-0.302;
+  const ratio=creat/k;
+  const egfr=Math.round(142*Math.pow(Math.min(ratio,1),a)*Math.pow(Math.max(ratio,1),-1.200)*Math.pow(0.9938,age)*(sex==='F'?1.012:1));
+  const el=document.getElementById('c-egfr');el.value=egfr;el.style.background='#FFFDE7';
+  calcLive();
+}
+function toggleProblema(pid){
+  const p=patients.find(x=>x.id===pid);if(!p)return;
+  p.problema=!p.problema;saveInst();render();
+}
+// ── CLOCK ─────────────────────────────────────────────────────────
+function clock(){
+  const n=new Date(),pad=v=>String(v).padStart(2,'0');
+  document.getElementById('clock').innerHTML=`${MO[n.getMonth()]} ${n.getDate()}, ${n.getFullYear()}<br>${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;
+}
+// ── CALC PANEL ────────────────────────────────────────────────────
+function toggleCalcPanel(){document.getElementById('calc-panel').classList.toggle('open');}
+let cpSecOpen=null,csubOpen=null;
+function toggleCpSec(i){
+  const isOpen=cpSecOpen===i;
+  [0,1].forEach(j=>{document.getElementById('cps'+j).classList.remove('on');document.getElementById('cpa'+j).textContent='▼';});
+  if(!isOpen){document.getElementById('cps'+i).classList.add('on');document.getElementById('cpa'+i).textContent='▲';}
+  cpSecOpen=isOpen?null:i;
+}
+function toggleCsub(i){
+  const isOpen=csubOpen===i;
+  [0,1,2,3].forEach(j=>{document.getElementById('csubb'+j).classList.remove('on');document.getElementById('csuba'+j).textContent='▼';});
+  if(!isOpen){document.getElementById('csubb'+i).classList.add('on');document.getElementById('csuba'+i).textContent='▲';}
+  csubOpen=isOpen?null:i;
+}
+
+// ── SCORE2 / SCORE2-OP ────────────────────────────────────────────
+function calcScore2(){
+  const sex=document.getElementById('s2-sex').value;
+  const age=+document.getElementById('s2-age').value;
+  const tc=+document.getElementById('s2-tc').value;
+  const hdl=+document.getElementById('s2-hdl').value;
+  const sbp=+document.getElementById('s2-sbp').value;
+  const smoke=+document.getElementById('s2-smoke').value;
+  const dm=+document.getElementById('s2-dm').value;
+  const dmWrap=document.getElementById('s2-dm-wrap');
+  const lbl=document.getElementById('score2-label');
+  const el=document.getElementById('s2-res');
+  if(!age){lbl.textContent='Ingresá la edad para determinar escala';dmWrap.style.display='none';el.style.display='none';return;}
+  const useOP=age>=70;
+  dmWrap.style.display=useOP?'':'none';
+  lbl.textContent=useOP?'Usando: SCORE2-OP (edad ≥70)':'Usando: SCORE2 (edad <70)';
+  if(!tc||!hdl||!sbp){el.style.display='none';return;}
+  const non_hdl=(tc-hdl)/38.67;
+  let lp,risk;
+  if(!useOP){
+    const age_s=(age-60)/5,sbp_s=(sbp-120)/20,chol_s=non_hdl-3.9;
+    if(sex==='M'){lp=0.3742*age_s+0.6012*smoke+0.2777*sbp_s+0.6457*chol_s-0.1173*age_s*sbp_s-0.1521*age_s*chol_s;risk=1-Math.pow(0.9605,Math.exp(lp));}
+    else{lp=0.4648*age_s+0.7744*smoke+0.3131*sbp_s+0.8096*chol_s-0.1318*age_s*sbp_s-0.1323*age_s*chol_s;risk=1-Math.pow(0.9776,Math.exp(lp));}
+  }else{
+    const age_s=(age-73)/5,sbp_s=(sbp-150)/20,chol_s=non_hdl-3.9;
+    if(sex==='M'){lp=0.5390*age_s+0.4774*smoke+0.2775*sbp_s+0.4682*chol_s+0.0672*dm;risk=1-Math.pow(0.9605,Math.exp(lp));}
+    else{lp=0.5222*age_s+0.5019*smoke+0.2972*sbp_s+0.4443*chol_s+0.0738*dm;risk=1-Math.pow(0.9776,Math.exp(lp));}
+  }
+  risk=Math.max(0,Math.min(1,risk));
+  const pct=Math.round(risk*1000)/10;
+  let cat,bg,cl;
+  if(!useOP){
+    if(pct<5){cat='Bajo (<5%)';bg='var(--ok-bg)';cl='var(--ok)';}
+    else if(pct<10){cat='Moderado (5–9%)';bg='#FFF9C4';cl='#827717';}
+    else{cat='Alto (≥10%)';bg='var(--err-bg)';cl='var(--err)';}
+  }else{
+    if(pct<7.5){cat='Bajo (<7.5%)';bg='var(--ok-bg)';cl='var(--ok)';}
+    else if(pct<15){cat='Moderado (7.5–14.9%)';bg='var(--warn-bg)';cl='var(--warn)';}
+    else{cat='Alto (≥15%)';bg='var(--err-bg)';cl='var(--err)';}
+  }
+  el.style.display='block';el.style.background=bg;el.style.color=cl;
+  document.getElementById('s2-pct').textContent=pct+'%';
+  document.getElementById('s2-cat').textContent=cat;
+}
+
+// ── EUROSCORE II ──────────────────────────────────────────────────
+function calcEuro(){
+  const age=+document.getElementById('eu-age').value;
+  const el=document.getElementById('eu-res');
+  if(!age){el.style.display='none';return;}
+  const sex=document.getElementById('eu-sex').value;
+  const creat=+document.getElementById('eu-creat').value||0;
+  const dial=+document.getElementById('eu-dial').value;
+  const fevi=+document.getElementById('eu-fevi').value;
+  const htp=+document.getElementById('eu-htp').value;
+  const endo=+document.getElementById('eu-endo').value;
+  const crit=+document.getElementById('eu-crit').value;
+  const angi=+document.getElementById('eu-angi').value;
+  const epoc=+document.getElementById('eu-epoc').value;
+  const art=+document.getElementById('eu-art').value;
+  const neuro=+document.getElementById('eu-neuro').value;
+  const prev=+document.getElementById('eu-prev').value;
+  const dm=+document.getElementById('eu-dm').value;
+  const iam=+document.getElementById('eu-iam').value;
+  const aorta=+document.getElementById('eu-aorta').value;
+  const urg=+document.getElementById('eu-urg').value;
+  const proc=+document.getElementById('eu-proc').value;
+  let lp=-5.324537;
+  lp+=0.0666354*age;
+  if(sex==='F')lp+=0.3304052;
+  if(creat>2.26||dial)lp+=0.6521653;
+  if(art)lp+=0.5360268;
+  if(prev)lp+=1.118599;
+  if(endo)lp+=0.6194522;
+  if(crit)lp+=1.086517;
+  if(dm)lp+=0.3542749;
+  if(angi)lp+=0.2226147;
+  if(fevi===1)lp+=0.3150652;else if(fevi===2)lp+=0.8084096;else if(fevi===3)lp+=0.9346919;
+  if(iam)lp+=0.1528943;
+  if(htp===1)lp+=0.1788899;else if(htp===2)lp+=0.3491475;
+  if(epoc)lp+=0.1886564;
+  if(neuro)lp+=0.2407181;
+  if(aorta)lp+=0.6527205;
+  if(urg===1)lp+=0.3174673;else if(urg===2)lp+=0.7039121;else if(urg===3)lp+=1.362947;
+  if(proc===1)lp+=0.0062118;else if(proc===2)lp+=0.5521478;else if(proc===3)lp+=0.9724533;
+  const risk=Math.exp(lp)/(1+Math.exp(lp))*100;
+  const pct=Math.round(risk*10)/10;
+  let cat,bg,cl;
+  if(pct<2){cat='Bajo (<2%)';bg='var(--ok-bg)';cl='var(--ok)';}
+  else if(pct<5){cat='Moderado (2–5%)';bg='var(--warn-bg)';cl='var(--warn)';}
+  else{cat='Alto (>5%)';bg='var(--err-bg)';cl='var(--err)';}
+  el.style.display='block';el.style.background=bg;el.style.color=cl;
+  document.getElementById('eu-pct').textContent=pct+'%';
+  document.getElementById('eu-cat').textContent=cat;
+}
+
+// ── STS PROM (simplificado) ───────────────────────────────────────
+function calcSTS(){
+  const age=+document.getElementById('sts-age').value;
+  const el=document.getElementById('sts-res');
+  if(!age){el.style.display='none';return;}
+  const sex=document.getElementById('sts-sex').value;
+  const proc=+document.getElementById('sts-proc').value;
+  const fevi=+document.getElementById('sts-fevi').value||60;
+  const creat=+document.getElementById('sts-creat').value||1;
+  const dm=+document.getElementById('sts-dm').value;
+  const epoc=+document.getElementById('sts-epoc').value;
+  const evp=+document.getElementById('sts-evp').value;
+  const prev_cs=+document.getElementById('sts-prev').value;
+  const urg=+document.getElementById('sts-urg').value;
+  const iam=+document.getElementById('sts-iam').value;
+  let lp=-6.1;
+  lp+=0.0625*(age-60);
+  if(sex==='F')lp+=0.25;
+  lp+=(creat-1.0)*0.4;
+  if(dm)lp+=0.35;if(epoc)lp+=0.40;if(evp)lp+=0.35;if(prev_cs)lp+=0.80;
+  if(fevi<=20)lp+=1.20;else if(fevi<=30)lp+=0.80;else if(fevi<=50)lp+=0.40;
+  if(urg===1)lp+=0.60;else if(urg===2)lp+=1.40;
+  if(iam)lp+=0.40;
+  if(proc===1)lp+=0.20;else if(proc===2)lp+=0.40;else if(proc===3)lp+=0.60;
+  const risk=Math.exp(lp)/(1+Math.exp(lp))*100;
+  const pct=Math.round(risk*10)/10;
+  let cat,bg,cl;
+  if(pct<2){cat='Bajo (<2%)';bg='var(--ok-bg)';cl='var(--ok)';}
+  else if(pct<5){cat='Moderado (2–5%)';bg='#FFF9C4';cl='#827717';}
+  else if(pct<10){cat='Alto (5–10%)';bg='var(--warn-bg)';cl='var(--warn)';}
+  else{cat='Muy alto (>10%)';bg='var(--err-bg)';cl='var(--err)';}
+  el.style.display='block';el.style.background=bg;el.style.color=cl;
+  document.getElementById('sts-pct').textContent=pct+'%';
+  document.getElementById('sts-cat').textContent=cat;
+}
+
+// ── STS PROM TAVI ─────────────────────────────────────────────────
+function calcTAVI(){
+  const age=+document.getElementById('tv-age').value;
+  const el=document.getElementById('tv-res');
+  if(!age){el.style.display='none';return;}
+  const sex=document.getElementById('tv-sex').value;
+  const ava=+document.getElementById('tv-ava').value||0;
+  const grad=+document.getElementById('tv-grad').value||40;
+  const fevi=+document.getElementById('tv-fevi').value||60;
+  const creat=+document.getElementById('tv-creat').value||1;
+  const dm=+document.getElementById('tv-dm').value;
+  const epoc=+document.getElementById('tv-epoc').value;
+  const htp=+document.getElementById('tv-htp').value;
+  const fa=+document.getElementById('tv-fa').value;
+  const cor=+document.getElementById('tv-cor').value;
+  const prev=+document.getElementById('tv-prev').value;
+  const frag=+document.getElementById('tv-frag').value;
+  let lp=-5.5;
+  lp+=0.05*(age-75);
+  if(sex==='F')lp-=0.10;
+  if(ava>0&&ava<0.6)lp+=0.30;else if(ava>0&&ava<0.8)lp+=0.15;
+  if(grad>0&&grad<30)lp+=0.25;
+  if(fevi<=20)lp+=0.90;else if(fevi<=30)lp+=0.60;else if(fevi<=50)lp+=0.40;
+  lp+=(creat-1.0)*0.35;
+  if(dm)lp+=0.30;if(epoc)lp+=0.35;if(htp)lp+=0.30;if(fa)lp+=0.20;if(cor)lp+=0.20;if(prev)lp+=0.40;
+  if(frag===1)lp+=0.30;else if(frag===2)lp+=0.70;else if(frag===3)lp+=1.20;
+  const risk=Math.exp(lp)/(1+Math.exp(lp))*100;
+  const pct=Math.round(risk*10)/10;
+  let cat,bg,cl;
+  if(pct<4){cat='Bajo (<4%)';bg='var(--ok-bg)';cl='var(--ok)';}
+  else if(pct<8){cat='Moderado (4–8%)';bg='var(--warn-bg)';cl='var(--warn)';}
+  else{cat='Alto (>8%)';bg='var(--err-bg)';cl='var(--err)';}
+  el.style.display='block';el.style.background=bg;el.style.color=cl;
+  document.getElementById('tv-pct').textContent=pct+'%';
+  document.getElementById('tv-cat').textContent=cat;
+}
+
+// ── EDMONTON FRAILTY SCALE ────────────────────────────────────────
+function calcEdm(){
+  let total=0;
+  for(let i=0;i<10;i++)total+=+document.getElementById('edm'+i).value;
+  const el=document.getElementById('edm-res');
+  el.style.display='block';
+  document.getElementById('edm-score').textContent=total+' / 17';
+  let cat,bg,cl,interp;
+  if(total<=5){cat='No frágil';bg='var(--ok-bg)';cl='var(--ok)';interp='Candidato adecuado para TAVI. Bajo riesgo atribuible a fragilidad.';}
+  else if(total<=7){cat='Vulnerable';bg='#FFF9C4';cl='#827717';interp='Optimizar estado funcional y nutricional previo a TAVI. Riesgo levemente incrementado.';}
+  else if(total<=9){cat='Fragilidad leve';bg='var(--warn-bg)';cl='var(--warn)';interp='Riesgo aumentado. Considerar rehabilitación preoperatoria y equipo multidisciplinario.';}
+  else if(total<=11){cat='Fragilidad moderada';bg='#FF6F00';cl='#fff';interp='Riesgo elevado. Discutir beneficio real del TAVI con paciente y familia. Alta precaución.';}
+  else{cat='Fragilidad severa';bg='var(--err)';cl='#fff';interp='Riesgo muy alto. Considerar manejo conservador o paliativo sobre TAVI.';}
+  el.style.background=bg;el.style.color=cl;
+  document.getElementById('edm-cat').textContent=cat;
+  document.getElementById('edm-interp').textContent=interp;
+}
+
+document.getElementById('f-date').valueAsDate=new Date();
+(()=>{const n=new Date();statsMonthY=n.getFullYear();statsMonthM=n.getMonth();})();
+setInterval(clock,1000);clock();buildInstScreen();
+</script>
+</body>
+</html>
