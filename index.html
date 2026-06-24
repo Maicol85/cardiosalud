@@ -169,18 +169,18 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
 @media(max-width:680px){.calc-panel{width:calc(100vw - 48px);right:16px}}
 .calc-panel.open{display:flex}
 .cp-body{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
-.calc-sec{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.calc-sec{border:1px solid var(--border);border-radius:8px;overflow:visible}
 .calc-sec-h{background:#F5F9FF;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.84rem;font-weight:700;color:var(--txt);border:none;width:100%;text-align:left;user-select:none}
 .calc-sec-h:hover{background:#E3F2FD}
 .calc-sec-b{padding:12px 14px;display:none}
 .calc-sec-b.on{display:block}
-.csub{border:1px solid var(--border);border-radius:7px;margin-bottom:8px;overflow:hidden}
+.csub{border:1px solid var(--border);border-radius:7px;margin-bottom:8px;overflow:visible}
 .csub:last-child{margin-bottom:0}
 .csub-h{background:#F5F9FF;padding:8px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.78rem;font-weight:700;color:var(--txt);border:none;width:100%;text-align:left;user-select:none}
 .csub-h:hover{background:#E3F2FD}
 .csub-b{padding:10px 12px;display:none}
 .csub-b.on{display:block}
-.cp-res{margin-top:10px;padding:10px;border-radius:8px;text-align:center;display:none}.cp-res.show{display:block!important}
+.cp-res{margin-top:10px;padding:10px;border-radius:8px;text-align:center;display:none}.cp-res.show{display:block!important}.cp-res.visible{display:block!important;margin-top:10px}
 .cp-res .rpct{font-size:1.4rem;font-weight:800}
 .cp-res .rcat{font-size:.8rem;font-weight:700;margin-top:2px}
 .cp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
@@ -445,6 +445,7 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
               <div class="fg"><label>Urgencia</label><select id="eu-urg" oninput="calcEuro()"><option value="0">Electiva</option><option value="1">Urgente</option><option value="2">Emergencia</option><option value="3">Salvamento</option></select></div>
               <div class="fg"><label>Tipo procedimiento</label><select id="eu-proc" oninput="calcEuro()"><option value="0">CABG aislado</option><option value="1">Único no-CABG</option><option value="2">2 procedimientos</option><option value="3">3 o más</option></select></div>
             </div>
+            <button onclick="calcEuro()" style="width:100%;margin-top:10px;padding:8px;background:#1565C0;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">= Calcular EuroSCORE II</button>
             <div class="cp-res" id="eu-res"><div class="rpct" id="eu-pct">—</div><div class="rcat" id="eu-cat">—</div></div>
           </div>
         </div>
@@ -464,6 +465,7 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
               <div class="fg"><label>Urgencia</label><select id="sts-urg" oninput="calcSTS()"><option value="0">Electiva</option><option value="1">Urgente</option><option value="2">Emergencia</option></select></div>
               <div class="fg cp-full"><label>IAM &lt;21 días</label><select id="sts-iam" oninput="calcSTS()"><option value="0">No</option><option value="1">Sí</option></select></div>
             </div>
+            <button onclick="calcSTS()" style="width:100%;margin-top:10px;padding:8px;background:#1565C0;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">= Calcular STS PROM</button>
             <div class="cp-res" id="sts-res"><div class="rpct" id="sts-pct">—</div><div class="rcat" id="sts-cat">—</div></div>
           </div>
         </div>
@@ -485,6 +487,7 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
               <div class="fg"><label>Cirugía cardíaca previa</label><select id="tv-prev" oninput="calcTAVI()"><option value="0">No</option><option value="1">Sí</option></select></div>
               <div class="fg cp-full"><label>Fragilidad</label><select id="tv-frag" oninput="calcTAVI()"><option value="0">Normal</option><option value="1">Leve</option><option value="2">Moderada</option><option value="3">Severa</option></select></div>
             </div>
+            <button onclick="calcTAVI()" style="width:100%;margin-top:10px;padding:8px;background:#1565C0;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">= Calcular STS TAVI</button>
             <div class="cp-res" id="tv-res"><div class="rpct" id="tv-pct">—</div><div class="rcat" id="tv-cat">—</div></div>
           </div>
         </div>
@@ -506,6 +509,89 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
               <div class="rcat" id="edm-cat">No frágil</div>
               <div style="font-size:.74rem;margin-top:4px" id="edm-interp">Candidato adecuado para TAVI. Bajo riesgo por fragilidad.</div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="calc-sec">
+      <button class="calc-sec-h" onclick="toggleCpSec(2)"><span>❤️ Fibrilación Auricular / Anticoagulación</span><span id="cpa2">▼</span></button>
+      <div class="calc-sec-b" id="cps2">
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(4)"><span>CHA₂DS₂-VASc (riesgo tromboembólico)</span><span id="csuba4">▼</span></button>
+          <div class="csub-b" id="csubb4">
+            <div class="cp-grid">
+              <div class="fg"><label>Edad</label><input type="number" id="ch-age" placeholder="65" oninput="calcCHADS()"></div>
+              <div class="fg"><label>Sexo</label><select id="ch-sex" oninput="calcCHADS()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+              <div class="fg"><label>IC / Disfunción VI</label><select id="ch-ic" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>HTA</label><select id="ch-hta" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Diabetes</label><select id="ch-dm" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>ACV / AIT / TEP previo</label><select id="ch-acv" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg cp-full"><label>Enf. vascular (IAM / AOP / placa aórtica)</label><select id="ch-vasc" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            </div>
+            <div class="cp-res" id="ch-res"><div class="rpct" id="ch-pct">—</div><div class="rcat" id="ch-cat">—</div></div>
+          </div>
+        </div>
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(5)"><span>HAS-BLED (riesgo de sangrado)</span><span id="csuba5">▼</span></button>
+          <div class="csub-b" id="csubb5">
+            <div class="cp-grid">
+              <div class="fg"><label>HTA no controlada (PAS &gt;160)</label><select id="hb-hta" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Fx renal (diálisis / Cr &gt;2.26)</label><select id="hb-renal" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Fx hepática (cirrosis / bilirrubina &gt;2×)</label><select id="hb-hepat" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>ACV previo</label><select id="hb-acv" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Sangrado previo / predisposición</label><select id="hb-bleed" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>INR lábil (TTR &lt;60%)</label><select id="hb-inr" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Edad &gt;65 años</label><select id="hb-age" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Antiagregantes / AINEs</label><select id="hb-drug" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg cp-full"><label>Alcohol (≥8 unidades/semana)</label><select id="hb-alc" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            </div>
+            <div class="cp-res" id="hb-res"><div class="rpct" id="hb-pct">—</div><div class="rcat" id="hb-cat">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="calc-sec">
+      <button class="calc-sec-h" onclick="toggleCpSec(3)"><span>💔 IC / Capacidad Funcional</span><span id="cpa3">▼</span></button>
+      <div class="calc-sec-b" id="cps3">
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(6)"><span>MAGGIC (IC — mortalidad)</span><span id="csuba6">▼</span></button>
+          <div class="csub-b" id="csubb6">
+            <div class="cp-grid">
+              <div class="fg"><label>FEVI (%)</label><input type="number" id="mg-fevi" placeholder="35" oninput="calcMAGGIC()"></div>
+              <div class="fg"><label>Edad</label><input type="number" id="mg-age" placeholder="65" oninput="calcMAGGIC()"></div>
+              <div class="fg"><label>PAS (mmHg)</label><input type="number" id="mg-sbp" placeholder="120" oninput="calcMAGGIC()"></div>
+              <div class="fg"><label>IMC (kg/m²)</label><input type="number" id="mg-bmi" placeholder="25" oninput="calcMAGGIC()"></div>
+              <div class="fg"><label>Creatinina (mg/dL)</label><input type="number" id="mg-creat" step="0.1" placeholder="1.0" oninput="calcMAGGIC()"></div>
+              <div class="fg"><label>Clase NYHA</label><select id="mg-nyha" oninput="calcMAGGIC()"><option value="1">I</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option></select></div>
+              <div class="fg"><label>Sexo</label><select id="mg-sex" oninput="calcMAGGIC()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+              <div class="fg"><label>Tabaquismo activo</label><select id="mg-smoke" oninput="calcMAGGIC()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Diabetes</label><select id="mg-dm" oninput="calcMAGGIC()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>EPOC</label><select id="mg-epoc" oninput="calcMAGGIC()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Diagnóstico IC &lt;18 meses</label><select id="mg-new" oninput="calcMAGGIC()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Sin betabloqueante</label><select id="mg-nobb" oninput="calcMAGGIC()"><option value="0">Con BB</option><option value="1">Sin BB</option></select></div>
+              <div class="fg cp-full"><label>Sin IECA / ARA II</label><select id="mg-noace" oninput="calcMAGGIC()"><option value="0">Con IECA/ARA</option><option value="1">Sin IECA/ARA</option></select></div>
+            </div>
+            <button onclick="calcMAGGIC()" style="width:100%;margin-top:10px;padding:8px;background:#1565C0;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">= Calcular MAGGIC</button>
+            <div class="cp-res" id="mg-res"><div class="rpct" id="mg-pct">—</div><div class="rcat" id="mg-cat">—</div></div>
+          </div>
+        </div>
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(7)"><span>DASI (capacidad funcional perioperatoria)</span><span id="csuba7">▼</span></button>
+          <div class="csub-b" id="csubb7">
+            <div style="font-size:.72rem;color:var(--txt2);margin-bottom:8px">Marque Sí si el paciente puede realizar la actividad sin angina ni disnea.</div>
+            <div class="edm-item"><label>1. Cuidado personal (comer, bañarse, vestirse)</label><select id="dasi0" oninput="calcDASI()"><option value="0">No (0)</option><option value="2.75">Sí (2.75)</option></select></div>
+            <div class="edm-item"><label>2. Caminar en interiores</label><select id="dasi1" oninput="calcDASI()"><option value="0">No (0)</option><option value="1.75">Sí (1.75)</option></select></div>
+            <div class="edm-item"><label>3. Caminar 1–2 cuadras en terreno plano</label><select id="dasi2" oninput="calcDASI()"><option value="0">No (0)</option><option value="2.75">Sí (2.75)</option></select></div>
+            <div class="edm-item"><label>4. Subir una escalera o cuesta</label><select id="dasi3" oninput="calcDASI()"><option value="0">No (0)</option><option value="5.5">Sí (5.5)</option></select></div>
+            <div class="edm-item"><label>5. Correr una distancia corta</label><select id="dasi4" oninput="calcDASI()"><option value="0">No (0)</option><option value="8">Sí (8.0)</option></select></div>
+            <div class="edm-item"><label>6. Tareas del hogar livianas (lavar, barrer)</label><select id="dasi5" oninput="calcDASI()"><option value="0">No (0)</option><option value="2.7">Sí (2.7)</option></select></div>
+            <div class="edm-item"><label>7. Tareas del hogar moderadas (aspirar)</label><select id="dasi6" oninput="calcDASI()"><option value="0">No (0)</option><option value="3.5">Sí (3.5)</option></select></div>
+            <div class="edm-item"><label>8. Tareas del hogar pesadas (fregar, mover muebles)</label><select id="dasi7" oninput="calcDASI()"><option value="0">No (0)</option><option value="8">Sí (8.0)</option></select></div>
+            <div class="edm-item"><label>9. Jardinería (rastrillar, desmalezar)</label><select id="dasi8" oninput="calcDASI()"><option value="0">No (0)</option><option value="4.5">Sí (4.5)</option></select></div>
+            <div class="edm-item"><label>10. Actividad sexual</label><select id="dasi9" oninput="calcDASI()"><option value="0">No (0)</option><option value="5.25">Sí (5.25)</option></select></div>
+            <div class="edm-item"><label>11. Deporte moderado (golf, bowling, tenis dobles)</label><select id="dasi10" oninput="calcDASI()"><option value="0">No (0)</option><option value="6">Sí (6.0)</option></select></div>
+            <div class="edm-item"><label>12. Deporte intenso (natación, tenis individual, fútbol)</label><select id="dasi11" oninput="calcDASI()"><option value="0">No (0)</option><option value="7.5">Sí (7.5)</option></select></div>
+            <div class="cp-res" id="dasi-res"><div class="rpct" id="dasi-pct">—</div><div class="rcat" id="dasi-cat">—</div></div>
           </div>
         </div>
       </div>
@@ -816,20 +902,18 @@ function updateFEVI(rows){
 function isAVK(tx){return/warfarin[a]?|acenocumarol|sintrom/i.test(tx||'');}
 function isDACO(tx){return/apixab[aá]n|rivaroxab[aá]n|dabigatr[aá]n|edoxab[aá]n|pradaxa|xarelto|eliquis|lixiana/i.test(tx||'');}
 function updateAntcoag(){
-  const avkPts=new Map(),dacoPts=new Map(),ambPts=new Map(),ningPts=new Map();
+  const avkPts=new Map(),dacoPts=new Map(),ningPts=new Map();
   patients.forEach(p=>{
     const avk=p.consultations.some(c=>isAVK(c.treatment));
     const daco=p.consultations.some(c=>isDACO(c.treatment));
-    if(avk&&daco)ambPts.set(p.id,p.name);
-    else if(avk)avkPts.set(p.id,p.name);
-    else if(daco)dacoPts.set(p.id,p.name);
-    else ningPts.set(p.id,p.name);
+    if(avk)avkPts.set(p.id,p.name);
+    if(daco)dacoPts.set(p.id,p.name);
+    if(!avk&&!daco)ningPts.set(p.id,p.name);
   });
   const tot=patients.length||1;
   anticoagData=[
     {l:'AVK',pts:[...avkPts.entries()],c:'ac-avk'},
     {l:'DACO',pts:[...dacoPts.entries()],c:'ac-daco'},
-    {l:'Ambos',pts:[...ambPts.entries()],c:'ac-amb'},
     {l:'Sin anticoag.',pts:[...ningPts.entries()],c:'ac-nin'},
   ];
   document.getElementById('antcoag-body').innerHTML=anticoagData.map((f,i)=>{
@@ -1306,13 +1390,13 @@ function generatePDF(){
 let cpSecOpen=null,csubOpen=null;
 function toggleCpSec(i){
   const isOpen=cpSecOpen===i;
-  [0,1].forEach(j=>{document.getElementById('cps'+j).classList.remove('on');document.getElementById('cpa'+j).textContent='▼';});
+  [0,1,2,3].forEach(j=>{document.getElementById('cps'+j).classList.remove('on');document.getElementById('cpa'+j).textContent='▼';});
   if(!isOpen){document.getElementById('cps'+i).classList.add('on');document.getElementById('cpa'+i).textContent='▲';}
   cpSecOpen=isOpen?null:i;
 }
 function toggleCsub(i){
   const isOpen=csubOpen===i;
-  [0,1,2,3].forEach(j=>{document.getElementById('csubb'+j).classList.remove('on');document.getElementById('csuba'+j).textContent='▼';});
+  [0,1,2,3,4,5,6,7].forEach(j=>{document.getElementById('csubb'+j).classList.remove('on');document.getElementById('csuba'+j).textContent='▼';});
   if(!isOpen){document.getElementById('csubb'+i).classList.add('on');document.getElementById('csuba'+i).textContent='▲';}
   csubOpen=isOpen?null:i;
 }
@@ -1366,7 +1450,7 @@ function calcScore2(){
 function calcEuro(){
   const age=+document.getElementById('eu-age').value;
   const el=document.getElementById('eu-res');
-  if(!age){el.style.display='none';return;}
+  if(!age){el.classList.remove('visible');return;}
   const sex=document.getElementById('eu-sex').value;
   const creat=+document.getElementById('eu-creat').value||0;
   const dial=+document.getElementById('eu-dial').value;
@@ -1408,16 +1492,17 @@ function calcEuro(){
   if(pct<2){cat='Bajo (<2%)';bg='var(--ok-bg)';cl='var(--ok)';}
   else if(pct<5){cat='Moderado (2–5%)';bg='var(--warn-bg)';cl='var(--warn)';}
   else{cat='Alto (>5%)';bg='var(--err-bg)';cl='var(--err)';}
-  el.classList.add('show');el.style.background=bg;el.style.color=cl;
+  el.classList.add('visible');el.style.background=bg;el.style.color=cl;
   document.getElementById('eu-pct').textContent=pct+'%';
   document.getElementById('eu-cat').textContent=cat;
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
 }
 
 // ── STS PROM (simplificado) ───────────────────────────────────────
 function calcSTS(){
   const age=+document.getElementById('sts-age').value;
   const el=document.getElementById('sts-res');
-  if(!age){el.style.display='none';return;}
+  if(!age){el.classList.remove('visible');return;}
   const sex=document.getElementById('sts-sex').value;
   const proc=+document.getElementById('sts-proc').value;
   const fevi=+document.getElementById('sts-fevi').value||60;
@@ -1444,16 +1529,17 @@ function calcSTS(){
   else if(pct<5){cat='Moderado (2–5%)';bg='#FFF9C4';cl='#827717';}
   else if(pct<10){cat='Alto (5–10%)';bg='var(--warn-bg)';cl='var(--warn)';}
   else{cat='Muy alto (>10%)';bg='var(--err-bg)';cl='var(--err)';}
-  el.classList.add('show');el.style.background=bg;el.style.color=cl;
+  el.classList.add('visible');el.style.background=bg;el.style.color=cl;
   document.getElementById('sts-pct').textContent=pct+'%';
   document.getElementById('sts-cat').textContent=cat;
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
 }
 
 // ── STS PROM TAVI ─────────────────────────────────────────────────
 function calcTAVI(){
   const age=+document.getElementById('tv-age').value;
   const el=document.getElementById('tv-res');
-  if(!age){el.style.display='none';return;}
+  if(!age){el.classList.remove('visible');return;}
   const sex=document.getElementById('tv-sex').value;
   const ava=+document.getElementById('tv-ava').value||0;
   const grad=+document.getElementById('tv-grad').value||40;
@@ -1481,9 +1567,10 @@ function calcTAVI(){
   if(pct<4){cat='Bajo (<4%)';bg='var(--ok-bg)';cl='var(--ok)';}
   else if(pct<8){cat='Moderado (4–8%)';bg='var(--warn-bg)';cl='var(--warn)';}
   else{cat='Alto (>8%)';bg='var(--err-bg)';cl='var(--err)';}
-  el.classList.add('show');el.style.background=bg;el.style.color=cl;
+  el.classList.add('visible');el.style.background=bg;el.style.color=cl;
   document.getElementById('tv-pct').textContent=pct+'%';
   document.getElementById('tv-cat').textContent=cat;
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
 }
 
 // ── EDMONTON FRAILTY SCALE ────────────────────────────────────────
@@ -1502,6 +1589,125 @@ function calcEdm(){
   el.style.background=bg;el.style.color=cl;
   document.getElementById('edm-cat').textContent=cat;
   document.getElementById('edm-interp').textContent=interp;
+}
+
+// ── CHA₂DS₂-VASc ─────────────────────────────────────────────────
+function calcCHADS(){
+  const age=+document.getElementById('ch-age').value;
+  const el=document.getElementById('ch-res');
+  if(!age){el.classList.remove('visible');return;}
+  const sex=document.getElementById('ch-sex').value;
+  const ic=+document.getElementById('ch-ic').value;
+  const hta=+document.getElementById('ch-hta').value;
+  const dm=+document.getElementById('ch-dm').value;
+  const acv=+document.getElementById('ch-acv').value;
+  const vasc=+document.getElementById('ch-vasc').value;
+  let score=0;
+  if(ic)score+=1;
+  if(hta)score+=1;
+  if(age>=75)score+=2;else if(age>=65)score+=1;
+  if(dm)score+=1;
+  if(acv)score+=2;
+  if(vasc)score+=1;
+  if(sex==='F')score+=1;
+  let cat,bg,cl;
+  const isM=(sex==='M');
+  if((isM&&score===0)||(!isM&&score<=1)){cat='Sin indicación de anticoagulación';bg='var(--ok-bg)';cl='var(--ok)';}
+  else if(isM&&score===1){cat='Considerar anticoagulación';bg='var(--warn-bg)';cl='var(--warn)';}
+  else{cat='Anticoagulación recomendada';bg='var(--err-bg)';cl='var(--err)';}
+  el.classList.add('visible');el.style.background=bg;el.style.color=cl;
+  document.getElementById('ch-pct').textContent='Score: '+score;
+  document.getElementById('ch-cat').textContent=cat;
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
+}
+
+// ── HAS-BLED ──────────────────────────────────────────────────────
+function calcHASBLED(){
+  const el=document.getElementById('hb-res');
+  const hta=+document.getElementById('hb-hta').value;
+  const renal=+document.getElementById('hb-renal').value;
+  const hepat=+document.getElementById('hb-hepat').value;
+  const acv=+document.getElementById('hb-acv').value;
+  const bleed=+document.getElementById('hb-bleed').value;
+  const inr=+document.getElementById('hb-inr').value;
+  const age=+document.getElementById('hb-age').value;
+  const drug=+document.getElementById('hb-drug').value;
+  const alc=+document.getElementById('hb-alc').value;
+  const score=hta+renal+hepat+acv+bleed+inr+age+drug+alc;
+  let cat,bg,cl;
+  if(score<=1){cat='Riesgo bajo de sangrado';bg='var(--ok-bg)';cl='var(--ok)';}
+  else if(score===2){cat='Riesgo moderado de sangrado';bg='var(--warn-bg)';cl='var(--warn)';}
+  else{cat='Riesgo alto — revisar factores corregibles';bg='var(--err-bg)';cl='var(--err)';}
+  el.classList.add('visible');el.style.background=bg;el.style.color=cl;
+  document.getElementById('hb-pct').textContent='Score: '+score;
+  document.getElementById('hb-cat').textContent=cat;
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
+}
+
+// ── MAGGIC ────────────────────────────────────────────────────────
+function calcMAGGIC(){
+  const fevi=+document.getElementById('mg-fevi').value;
+  const age=+document.getElementById('mg-age').value;
+  const el=document.getElementById('mg-res');
+  if(!fevi||!age){el.classList.remove('visible');return;}
+  const sbp=+document.getElementById('mg-sbp').value||120;
+  const bmi=+document.getElementById('mg-bmi').value||25;
+  const creat=+document.getElementById('mg-creat').value||1.0;
+  const nyha=+document.getElementById('mg-nyha').value||1;
+  const sex=document.getElementById('mg-sex').value;
+  const smoke=+document.getElementById('mg-smoke').value;
+  const dm=+document.getElementById('mg-dm').value;
+  const epoc=+document.getElementById('mg-epoc').value;
+  const newHF=+document.getElementById('mg-new').value;
+  const nobb=+document.getElementById('mg-nobb').value;
+  const noace=+document.getElementById('mg-noace').value;
+  let score=0;
+  const lowEF=(fevi<30);
+  if(lowEF){
+    if(age<30)score+=0;else if(age<40)score+=3;else if(age<50)score+=5;else if(age<60)score+=8;else if(age<70)score+=11;else if(age<80)score+=14;else score+=17;
+  } else {
+    if(age<30)score+=0;else if(age<40)score+=0;else if(age<50)score+=1;else if(age<60)score+=4;else if(age<70)score+=8;else if(age<80)score+=12;else score+=16;
+    if(fevi<35)score+=4;else if(fevi<40)score+=3;else if(fevi<45)score+=2;else if(fevi<50)score+=1;
+  }
+  if(sbp<110)score+=5;else if(sbp<120)score+=4;else if(sbp<130)score+=3;else if(sbp<140)score+=2;else if(sbp<150)score+=1;
+  if(bmi<15)score+=6;else if(bmi<20)score+=5;else if(bmi<25)score+=3;else if(bmi<30)score+=2;
+  const crU=creat*88.4;
+  if(crU>=210)score+=6;else if(crU>=170)score+=5;else if(crU>=150)score+=4;else if(crU>=130)score+=3;else if(crU>=110)score+=2;else if(crU>=90)score+=1;
+  if(nyha===2)score+=2;else if(nyha===3)score+=6;else if(nyha===4)score+=8;
+  if(sex==='M')score+=1;
+  if(smoke)score+=1;
+  if(dm)score+=3;
+  if(epoc)score+=2;
+  if(newHF)score+=2;
+  if(nobb)score+=3;
+  if(noace)score+=1;
+  let cat,bg,cl,mort1yr;
+  if(score<=18){cat='Riesgo bajo';mort1yr='~8%';bg='var(--ok-bg)';cl='var(--ok)';}
+  else if(score<=24){cat='Riesgo moderado';mort1yr='~18%';bg='var(--warn-bg)';cl='var(--warn)';}
+  else if(score<=30){cat='Riesgo alto';mort1yr='~35%';bg='var(--err-bg)';cl='var(--err)';}
+  else{cat='Riesgo muy alto';mort1yr='>50%';bg='var(--err)';cl='#fff';}
+  el.classList.add('visible');el.style.background=bg;el.style.color=cl;
+  document.getElementById('mg-pct').textContent='Score: '+score+' | Mort. 1a: '+mort1yr;
+  document.getElementById('mg-cat').textContent=cat;
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
+}
+
+// ── DASI ──────────────────────────────────────────────────────────
+function calcDASI(){
+  let score=0;
+  for(let i=0;i<12;i++)score+=parseFloat(document.getElementById('dasi'+i).value)||0;
+  const vo2=0.43*score+9.6;
+  const mets=vo2/3.5;
+  const el=document.getElementById('dasi-res');
+  let cat,bg,cl;
+  if(mets>=10){cat='Excelente capacidad funcional (≥10 METs)';bg='var(--ok-bg)';cl='var(--ok)';}
+  else if(mets>=7){cat='Buena capacidad funcional (7–10 METs)';bg='#E8F5E9';cl='#1B5E20';}
+  else if(mets>=4){cat='Capacidad moderada (4–7 METs)';bg='var(--warn-bg)';cl='var(--warn)';}
+  else{cat='Capacidad reducida (<4 METs) — alto riesgo perioperatorio';bg='var(--err-bg)';cl='var(--err)';}
+  el.classList.add('visible');el.style.background=bg;el.style.color=cl;
+  document.getElementById('dasi-pct').textContent='DASI: '+Math.round(score*10)/10+' | '+Math.round(mets*10)/10+' METs';
+  document.getElementById('dasi-cat').textContent=cat;
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
 }
 
 document.getElementById('f-date').valueAsDate=new Date();
