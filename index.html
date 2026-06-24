@@ -198,6 +198,39 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
 #search-stats .ss-field strong{color:var(--txt)}
 #search-stats .ss-insts{margin-top:4px;font-size:.74rem;color:var(--txt2)}
 #search-stats .ss-insts strong{color:var(--txt)}
+/* PDF Modal */
+#pdf-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:3000;align-items:center;justify-content:center}
+#pdf-modal-overlay.open{display:flex}
+#pdf-modal{background:var(--surf);border-radius:14px;box-shadow:0 8px 32px rgba(13,71,161,.25);padding:24px;width:440px;max-width:calc(100vw - 32px);max-height:80vh;overflow-y:auto}
+#pdf-modal h3{color:var(--p);font-size:1rem;font-weight:700;margin-bottom:16px}
+.pdf-sec-lbl{font-size:.78rem;font-weight:700;color:var(--txt2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.pdf-section{margin-bottom:16px}
+.pdf-section label{display:flex;align-items:center;gap:8px;font-size:.84rem;margin-bottom:6px;cursor:pointer}
+.pdf-section input[type=radio],.pdf-section input[type=checkbox]{accent-color:var(--p);cursor:pointer;flex-shrink:0}
+#pdf-pat-list{max-height:150px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:4px;display:none;display:flex;flex-direction:column;gap:4px}
+#pdf-pat-list{display:none}
+#pdf-date-range{display:none;gap:10px;margin-top:6px}
+#pdf-date-range.show{display:flex}
+.pdf-actions{display:flex;gap:8px;margin-top:20px}
+.pdf-actions button{flex:1;padding:9px;border:none;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:700}
+#pdf-gen-btn{background:var(--p);color:#fff}
+#pdf-cancel-btn{background:#F5F5F5;color:var(--txt);border:1px solid var(--border)}
+/* Print area */
+#print-area{display:none}
+@media print{
+  body>*:not(#print-area){display:none!important}
+  #print-area{display:block!important;font-family:Arial,sans-serif;font-size:11pt;color:#000}
+  .print-patient{page-break-after:always;padding:20px}
+  .print-patient:last-child{page-break-after:avoid}
+  .print-name{font-size:16pt;font-weight:bold;border-bottom:2px solid #000;margin-bottom:8px}
+  .print-consult{margin-bottom:12px;border-left:3px solid #1565C0;padding-left:10px}
+  .print-consult-date{font-weight:bold;font-size:12pt;color:#1565C0}
+  .print-field{margin:3px 0}
+  .print-field strong{display:inline-block;min-width:120px}
+  .print-img-title{font-weight:bold;font-size:10pt;margin-top:8px;color:#333}
+  .print-imgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .print-imgs img{max-width:180px;max-height:140px;border:1px solid #ccc;border-radius:4px;object-fit:contain}
+}
 </style>
 </head>
 <body>
@@ -233,13 +266,14 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
 
   <div class="content">
     <div class="section">
-      <div class="sec-hdr"><h2>Consultas</h2><span style="font-size:.74rem;opacity:.8" id="pt-count"></span><button id="btn-toggle-tbl" onclick="toggleTbl()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-weight:600;margin-left:8px">▼ Expandir</button></div>
+      <div class="sec-hdr"><h2>Consultas</h2><span style="font-size:.74rem;opacity:.8" id="pt-count"></span><button id="btn-toggle-tbl" onclick="toggleTbl()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-weight:600;margin-left:8px">▼ Expandir</button><button onclick="openPDFModal()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-weight:600;margin-left:6px">📄 Exportar PDF</button></div>
       <div class="sec-body">
         <div class="filter-bar" id="filter-bar">
           <span>📅 Consultas del <strong id="filter-date"></strong></span>
           <button class="btn-clr" onclick="clearDateFilter()">✕ Mostrar todos</button>
         </div>
         <div class="pfb" id="pfb">👤 Paciente: <strong id="pfb-name"></strong><button class="btn-clr" onclick="clearPatFilter()">✕ Mostrar todos</button></div>
+        <div id="drb" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:7px 12px;background:#E3F2FD;border:1px solid var(--border);border-radius:7px;margin-bottom:8px;font-size:.82rem"><span style="color:var(--p);font-weight:700">📅 Rango:</span><input type="date" id="f-desde" style="border:1px solid var(--border);border-radius:5px;padding:2px 6px;font-size:.78rem;color:var(--txt)"><span style="color:var(--txt2);font-size:.78rem">—</span><input type="date" id="f-hasta" style="border:1px solid var(--border);border-radius:5px;padding:2px 6px;font-size:.78rem;color:var(--txt)"><button onclick="applyDateRange()" style="background:var(--p);color:#fff;border:none;border-radius:5px;padding:3px 10px;cursor:pointer;font-size:.78rem;font-weight:700">Filtrar</button><button id="btn-clr-range" class="btn-clr" onclick="clearDateRange()" style="display:none">✕ Limpiar</button></div>
         <div class="srch">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           <input id="search" type="text" placeholder="Buscar por nombre, diagnóstico, antecedentes…" oninput="render()">
@@ -250,7 +284,7 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
             <th onclick="srt('name')">Nombre ⇅</th><th onclick="srt('age')">Edad ⇅</th>
             <th onclick="srt('date')">Fecha ⇅</th><th onclick="srt('background')">Antecedentes ⇅</th>
             <th onclick="srt('prevent')">PREVENT ⇅</th><th onclick="srt('diagnosis')">Diagnóstico ⇅</th>
-            <th></th>
+            <th>FEVI</th><th></th>
           </tr></thead>
           <tbody id="tbody"></tbody>
         </table>
@@ -349,6 +383,14 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
         <div class="sec-body" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Dispositivo</th><th>N</th><th>%</th></tr></thead>
           <tbody id="device-body"></tbody></table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr"><h2>Fibrilación Auricular</h2></div>
+        <div class="sec-body" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="fa-body"></tbody></table>
         </div>
       </div>
     </div>
@@ -510,7 +552,7 @@ const SAMPLE=[
 ];
 let patients=[];
 
-let nextPid=11, nextCid=200, sortKey='date', sortDir=-1, openDetail=new Set(), openEdit=null, calcOpen=false, lastPRV=null, activeTab='new', activeInst=null, filterPatient=null, openDiag=null, openFevi=null, openAntcoag=null, openDevice=null, diagSorted=[], feviData=[], anticoagData=[], deviceData=[], currentRows=[], tablExpanded=false;
+let nextPid=11, nextCid=200, sortKey='date', sortDir=-1, openDetail=new Set(), openEdit=null, calcOpen=false, lastPRV=null, activeTab='new', activeInst=null, filterPatient=null, filterDesde=null, filterHasta=null, openDiag=null, openFevi=null, openAntcoag=null, openDevice=null, openFA=null, diagSorted=[], feviData=[], anticoagData=[], deviceData=[], faData=[], currentRows=[], tablExpanded=false;
 function toggleTbl(){
   tablExpanded=!tablExpanded;
   const wrap=document.getElementById('tbl-wrap'),btn=document.getElementById('btn-toggle-tbl');
@@ -597,9 +639,9 @@ function detailHTML(r){
   const gallery=(arr,field)=>arr.length?arr.map((u,i)=>`<div class="img-thumb"><img src="${u}" onclick="viewImg(this.src)"><button class="img-del" onclick="delImg(${r.pid},${r.id},'${field}',${i})">✕</button></div>`).join(''):'<span class="no-ecg">Sin imágenes</span>';
   return`<div class="det-panel">
     <div class="det-hdr">
-      <span class="det-ttl">${r.problema?'⭐ ':''}${esc(r.name)}, ${r.age} años</span>
+      <span class="det-ttl">${esc(r.name)}, ${r.age} años</span>
       ${r.ci?`<span class="dp-badge">CI: ${esc(r.ci)}</span>`:''}${r.matricula?`<span class="dp-badge">Mat: ${esc(r.matricula)}</span>`:''}${r.hc?`<span class="dp-badge">HC: ${esc(r.hc)}</span>`:''}
-      <button class="btn-prob${r.problema?' activo':''}" onclick="toggleProblema(${r.pid})">${r.problema?'✓ Quitar problema':'⭐ Marcar como problema'}</button>
+      <button class="btn-prob${r.problema?' activo':''}" onclick="toggleProblema(${r.pid})">${r.problema?'✓ Quitar pendiente':'Marcar como pendiente'}</button>
       <button class="btn-edit" onclick="editDetail(${r.id})">✏️ Editar</button>
       <button class="det-close" onclick="closeDetail(${r.id})">✕ Cerrar</button>
     </div>
@@ -607,6 +649,10 @@ function detailHTML(r){
     ${f('Diagnóstico',r.diagnosis)}${f('PREVENT 2023',r.prevent?`${r.prevent.pct}% — ${r.prevent.cat}`:'No calculado')}
     ${f('ETT / Ecocardiograma',r.ett)}${f('Antecedentes',r.background)}
     ${f('Tratamientos',r.treatment)}${f('Conducta',r.conduct)}
+    <div style="margin:10px 0 4px;font-size:.8rem;font-weight:700;color:var(--p)">📝 Notas rápidas</div>
+    <div id="note-saved-${r.id}" style="font-size:.82rem;font-style:italic;color:var(--txt2);padding:6px 10px;background:#F5F9FF;border-radius:6px;margin-bottom:6px;${r.note?'':'display:none'}">${esc(r.note||'')}</div>
+    <textarea id="note-${r.id}" rows="3" placeholder="Agregar nota rápida..." style="width:100%;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;resize:vertical;box-sizing:border-box">${esc(r.note||'')}</textarea>
+    <button onclick="saveNote(${r.pid},${r.id})" style="margin-top:4px;margin-bottom:10px;padding:4px 14px;background:var(--p);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:700">Guardar nota</button>
     <div class="det-imgs">
       <div><div class="img-sec-hdr">🫀 ECG ${addBtn('ecgs','+ Agregar')}</div><div class="img-gallery">${gallery(ecgs,'ecgs')}</div></div>
       <div><div class="img-sec-hdr">🖼️ Imágenes ${addBtn('images','+ Agregar')}</div><div class="img-gallery">${gallery(imgs,'images')}</div></div>
@@ -679,6 +725,9 @@ function render(){
   if(tablExpanded&&selD){const[y,m,day]=selD.split('-');document.getElementById('filter-date').textContent=`${day}/${m}/${y}`;fb.style.display='flex';}
   else fb.style.display='none';
   if(filterPatient!==null)rows=rows.filter(r=>r.pid===filterPatient);
+  if(filterDesde)rows=rows.filter(r=>r.date>=filterDesde);
+  if(filterHasta)rows=rows.filter(r=>r.date<=filterHasta);
+  document.getElementById('btn-clr-range').style.display=(filterDesde||filterHasta)?'':'none';
   const pfb=document.getElementById('pfb');
   if(tablExpanded&&filterPatient!==null){const p=patients.find(x=>x.id===filterPatient);document.getElementById('pfb-name').textContent=p?p.name:'—';pfb.style.display='flex';}
   else pfb.style.display='none';
@@ -690,21 +739,22 @@ function render(){
   currentRows=rows;
   document.getElementById('pt-count').textContent=`${rows.length} consulta${rows.length!==1?'s':''}`;
   updateSearchStats(q);
-  updateStats(rows);updateDiags(rows);updateFEVI(rows);updateAntcoag();updateDevice();renderCal();
+  updateStats(rows);updateDiags(rows);updateFEVI(rows);updateAntcoag();updateDevice();updateFA();renderCal();
   if(!tablExpanded)return;
   const tbody=document.getElementById('tbody'),empty=document.getElementById('empty');
   if(!rows.length){tbody.innerHTML='';empty.style.display='';return;}
   empty.style.display='none';
   tbody.innerHTML=rows.map(r=>{
-    const det=openDetail.has(r.id)?`<tr><td class="det-td" colspan="7">${detailHTML(r)}</td></tr>`:'';
+    const det=openDetail.has(r.id)?`<tr><td class="det-td" colspan="8">${detailHTML(r)}</td></tr>`:'';
     const nameStyle=r.problema?' style="color:#B71C1C;font-weight:700"':'';
     return`<tr>
-      <td><button class="lnk" onclick="toggleDetail(${r.id})">${r.problema?'⭐ ':''}<span${nameStyle}>${esc(r.name)}</span></button><button class="btn-plus" onclick="event.stopPropagation();addConsultaRapida(${r.pid})" title="Agregar consulta">+</button></td>
+      <td><button class="lnk" onclick="toggleDetail(${r.id})"><span${nameStyle}>${esc(r.name)}</span></button><button class="btn-plus" onclick="event.stopPropagation();addConsultaRapida(${r.pid})" title="Agregar consulta">+</button></td>
       <td>${r.age} años</td>
       <td><button class="lnk" onclick="toggleDetail(${r.id})">${fmtDate(r.date)}</button></td>
       <td><div class="trunc" title="${esc(r.background)}">${r.background||'—'}</div></td>
       <td>${prvBadge(r.prevent)}</td>
       <td>${r.diagnosis}</td>
+      ${feviCell(r.ett)}
       <td><button class="btn-del" onclick="delC(${r.pid},${r.id})" title="Eliminar">✕</button></td>
     </tr>${det}`;
   }).join('');
@@ -749,6 +799,7 @@ function updateDiags(rows){
   }).join('')||'<div class="empty">Sin datos</div>';
 }
 function parseFEVI(s){const m=(s||'').match(/FEVI\s*(\d+)/i);return m?+m[1]:null;}
+function feviCell(s){const m=(s||'').match(/(?:fevi|fe|fracci[oó]n de eyecci[oó]n)[^\d]*(\d{2,3})/i);if(!m)return`<td style="color:var(--txt2)">—</td>`;const v=+m[1];const c=v>=50?'var(--ok)':v>=40?'var(--warn)':'var(--err)';return`<td style="color:${c};font-weight:700">${v}%</td>`;}
 function updateFEVI(rows){
   const tot=rows.length||1,nd=rows.filter(r=>parseFEVI(r.ett)===null).length;
   feviData=[{l:'< 35%',c:'fv-lo',mn:0,mx:34},{l:'35–49%',c:'fv-mi',mn:35,mx:49},{l:'≥ 50%',c:'fv-hi',mn:50,mx:999}];
@@ -809,6 +860,16 @@ function updateDevice(){
   }).join('');
 }
 function toggleDevice(i){openDevice=openDevice===deviceData[i]?.l?null:deviceData[i]?.l;updateDevice();}
+function isFA(diag){return/fibrilaci[oó]n auricular|flutter auricular|\bFA\b|\bFAA\b|\bflutter\b/i.test(diag||'');}
+function updateFA(){
+  const faPts=new Map();
+  patients.forEach(p=>{if(p.consultations.some(c=>isFA(c.diagnosis)))faPts.set(p.id,p.name);});
+  const tot=patients.length||1;
+  faData=[{l:'FA / Flutter',pts:[...faPts.entries()]}];
+  const open=openFA==='fa',pct=Math.round(faPts.size/tot*100);
+  document.getElementById('fa-body').innerHTML=`<tr onclick="toggleFA()" style="cursor:pointer"><td>FA / Flutter ${open?'▲':'▼'}</td><td>${faPts.size}</td><td>${pct}%</td></tr>${open&&faPts.size?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${faData[0].pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+}
+function toggleFA(){openFA=openFA==='fa'?null:'fa';updateFA();}
 // ── SUBMIT ───────────────────────────────────────────────────────
 function submitForm(){
   const date=document.getElementById('f-date').value;
@@ -868,7 +929,7 @@ function editFormHTML(r){
     <div><div class="dp-lbl">Cédula</div>${inp('ed-ci',p.ci||'')}</div>
     <div><div class="dp-lbl">Matrícula</div>${inp('ed-ma',p.matricula||'')}</div>
     <div><div class="dp-lbl">Historia Clínica</div>${inp('ed-hc',p.hc||'')}</div>
-    <div style="grid-column:1/-1"><div class="dp-lbl">Paciente problema</div><label style="display:flex;align-items:center;gap:6px;font-size:.82rem"><input type="checkbox" id="ed-prob" ${p.problema?'checked':''}> Marcar como paciente problema</label></div>
+    <div style="grid-column:1/-1"><div class="dp-lbl">Paciente pendiente</div><label style="display:flex;align-items:center;gap:6px;font-size:.82rem"><input type="checkbox" id="ed-prob" ${p.problema?'checked':''}> Marcar como paciente pendiente</label></div>
     <div style="grid-column:1/-1"><div class="dp-lbl">Diagnóstico</div><select id="ed-dg" style="width:100%;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem">${diags.map(d=>`<option${d===r.diagnosis?' selected':''}>${d}</option>`).join('')}</select></div>
     <div><div class="dp-lbl">Riesgo PREVENT %</div>${inp('ed-prv-pct',r.prevent?.pct??'','number')}</div>
     <div><div class="dp-lbl">Categoría PREVENT</div><select id="ed-prv-cat" style="width:100%;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem">${['Bajo','Intermedio bajo','Intermedio','Alto'].map(c=>`<option${c===(r.prevent?.cat||'')?' selected':''}>${c}</option>`).join('')}</select></div>
@@ -912,7 +973,7 @@ function viewImg(url){
   const img=document.createElement('img');img.src=url;img.style.cssText='max-width:92vw;max-height:92vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)';
   d.onclick=()=>document.body.removeChild(d);d.appendChild(img);document.body.appendChild(d);
 }
-function migrateConsultations(pats){pats.forEach(p=>{if(!p.ci)p.ci='';if(!p.matricula)p.matricula='';if(p.hc===undefined)p.hc='';if(p.problema===undefined)p.problema=false;p.consultations.forEach(c=>{if(!c.ecgs)c.ecgs=c.ecgUrl?[c.ecgUrl]:[];if(!c.images)c.images=[];delete c.ecgUrl;});});}
+function migrateConsultations(pats){pats.forEach(p=>{if(!p.ci)p.ci='';if(!p.matricula)p.matricula='';if(p.hc===undefined)p.hc='';if(p.problema===undefined)p.problema=false;p.consultations.forEach(c=>{if(!c.ecgs)c.ecgs=c.ecgUrl?[c.ecgUrl]:[];if(!c.images)c.images=[];if(c.note===undefined)c.note='';delete c.ecgUrl;});});}
 // ── CALENDAR ─────────────────────────────────────────────────────
 let calY,calM,selD=null;
 function initCal(){const n=new Date();calY=n.getFullYear();calM=n.getMonth();}
@@ -953,13 +1014,33 @@ function enterInst(i){
   document.getElementById('isc').style.display='none';
   const b=document.getElementById('inst-bdg');b.textContent=activeInst.icon+' '+activeInst.label;b.style.display='';
   document.getElementById('btn-back').style.display='';
-  selD=null;filterPatient=null;openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openDetail=new Set();refreshSel();initCal();render();
+  selD=null;filterPatient=null;filterDesde=null;filterHasta=null;openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openFA=null;openDetail=new Set();refreshSel();initCal();render();
 }
 function exitInst(){saveInst();activeInst=null;patients=[];buildInstScreen();}
 function addInst(){const name=(prompt('Nombre de la nueva institución:')||'').trim();if(!name)return;const insts=getInsts();const icons=['🏥','🏨','👤','🏢','🩺','🏫'];insts.push({id:'c_'+Math.random().toString(36).slice(2),label:name,icon:icons[insts.length%icons.length]});saveInsts(insts);buildInstScreen();}
 // ── FILTROS / DRILLDOWN ───────────────────────────────────────────
-function filterByPat(pid){filterPatient=filterPatient===pid?null:pid;selD=null;openDetail=new Set();openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;render();}
+function filterByPat(pid){filterPatient=filterPatient===pid?null:pid;selD=null;filterDesde=null;filterHasta=null;openDetail=new Set();openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openFA=null;render();}
 function clearPatFilter(){filterPatient=null;render();}
+function saveNote(pid,cid){
+  const p=patients.find(x=>x.id===pid);if(!p)return;
+  const c=p.consultations.find(x=>x.id===cid);if(!c)return;
+  c.note=document.getElementById('note-'+cid).value.trim();
+  saveInst();
+  const nd=document.getElementById('note-saved-'+cid);
+  if(nd){nd.textContent=c.note;nd.style.display=c.note?'':'none';}
+}
+function applyDateRange(){
+  filterDesde=document.getElementById('f-desde').value||null;
+  filterHasta=document.getElementById('f-hasta').value||null;
+  if(!tablExpanded){tablExpanded=true;document.getElementById('tbl-wrap').style.display='';document.getElementById('btn-toggle-tbl').textContent='▲ Minimizar';}
+  render();
+}
+function clearDateRange(){
+  filterDesde=null;filterHasta=null;
+  document.getElementById('f-desde').value='';
+  document.getElementById('f-hasta').value='';
+  render();
+}
 function toggleDiag(i){openDiag=openDiag===diagSorted[i]?.[0]?null:diagSorted[i]?.[0];updateDiags(currentRows);}
 function toggleFevi(i){openFevi=openFevi===feviData[i]?.l?null:feviData[i]?.l;updateFEVI(currentRows);}
 // ── REFERENCIAS CLÍNICAS ──────────────────────────────────────────
@@ -967,8 +1048,167 @@ const RQTBL=`<table class="rtbl"><tr><th class="r-lo">Bajo &lt;1%</th><th class=
 const RHTBL=`<table class="rtbl"><tr><th>Muy bajo</th><th class="r-mi">Bajo</th><th class="r-hi">Alto</th></tr><tr><td>Cataratas · Dental simple · Endoscopia sin biopsia · Superficial</td><td>Abdominal simple · Mama · Endoscopia con biopsia · Ortopédica menor</td><td>Abdominal c/ biopsia hepática · Oncológica extensa · Neuroaxial · Neurocirugía · Ortopédica mayor · Torácica · Urológica mayor · Vascular mayor</td></tr></table>`;
 const RATBL=`<table class="rtbl2"><caption>Dabigatrán — horas a suspender antes de cirugía</caption><tr><th>TFG (ml/min)</th><th>R. Bajo</th><th>R. Alto</th></tr><tr><td>≥80</td><td>≥24h</td><td>≥48h</td></tr><tr><td>50–79</td><td>≥36h</td><td>≥72h</td></tr><tr><td>30–49</td><td>≥48h</td><td>≥96h</td></tr><tr><td>15–29</td><td colspan="2" style="color:var(--err)">No indicado</td></tr></table><table class="rtbl2"><caption>Apixabán / Rivaroxabán / Edoxabán</caption><tr><th>TFG (ml/min)</th><th>R. Bajo</th><th>R. Alto</th></tr><tr><td>≥30</td><td>≥24h</td><td>≥48h</td></tr><tr><td>15–29</td><td>≥36h</td><td>—</td></tr><tr><td>&lt;15</td><td colspan="2" style="color:var(--err)">Sin indicación formal</td></tr></table>`;
 const RCRMTBL=`<table class="rtbl2" style="font-size:.68rem;table-layout:fixed;width:100%"><caption>Síndrome Cardio-Reno-Metabólico (CRM) — AHA 2023</caption><colgroup><col style="width:10%"><col style="width:32%"><col style="width:28%"><col style="width:30%"></colgroup><tr><th>Estadio</th><th>Características</th><th>Biomarcadores</th><th>Terapéutica</th></tr><tr><td style="color:var(--ok);font-weight:700">E-0</td><td style="word-break:break-word">Sin factores de riesgo cardiometabólico ni ERC/ECV</td><td>Normales</td><td>Prevención primaria · Estilo de vida</td></tr><tr><td style="color:var(--ok);font-weight:700">E-1</td><td style="word-break:break-word">FR cardiometabólicos (obesidad, HTA, dislipemia, prediabetes) sin daño orgánico</td><td>Glucemia/PA/LDL levemente alterados</td><td>Estilo de vida · Farmacoterapia según FR</td></tr><tr><td style="color:var(--warn);font-weight:700">E-2</td><td style="word-break:break-word">ERC o ECV establecida con factores metabólicos</td><td>TFG 30–60 · Albuminuria moderada · Troponinas · NT-proBNP</td><td>IECA/ARA-II · Estatinas · SGLT-2i · Manejo ECV</td></tr><tr><td style="color:var(--warn);font-weight:700">E-3</td><td style="word-break:break-word">ERC avanzada (TFG &lt;60) o IC con factores metabólicos</td><td>TFG &lt;30–60 · BNP ↑ · TnT · Albuminuria severa</td><td>SGLT-2i · ARM · Optimizar diuresis · Restricción proteica</td></tr><tr><td style="color:var(--err);font-weight:700">E-4</td><td style="word-break:break-word">ECV muy alto riesgo + ERC avanzada y/o DM</td><td>Biomarcadores crónicamente ↑ · TFG &lt;30</td><td>Terapia máxima · Trasplante/Diálisis · Paliativo</td></tr></table>`;
-const REFS=[{t:'🫀 Riesgo Quirúrgico',h:RQTBL},{t:'🩸 Riesgo Hemorrágico',h:RHTBL},{t:'💊 Anticoagulantes y Cirugía',h:RATBL},{t:'🩺 Síndrome CRM-AHA',h:RCRMTBL}];
-document.getElementById('ref-body').innerHTML=REFS.map((r,i)=>`<div class="ref-sec"><button class="ref-sec-h" onclick="toggleSec(${i})"><span>${r.t}</span><span id="ra${i}">▼</span></button><div class="ref-sec-b${i===REFS.length-1?' crm':''}" id="rs${i}">${r.h}</div></div>`).join('');
+const RVALVTBL=`
+<div style="display:flex;flex-direction:column;gap:10px">
+
+<div>
+<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="width:100%;text-align:left;background:#E3F2FD;border:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:.82rem">🔴 Estenosis Aórtica</button>
+<div style="display:none;margin-top:6px">
+<div style="background:#EEF7FF;border-left:3px solid #1565C0;border-radius:7px;padding:10px 14px;margin-bottom:8px;font-size:.78rem">
+<strong>Indicaciones quirúrgicas (ESC 2021):</strong><br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> Sintomáticos con EA severa (disnea, síncope, angina)<br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> FEVI &lt;50% con EA severa, independiente de síntomas<br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> EA severa sometida a otra cirugía cardíaca<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> EA severa asintomática con deterioro al ejercicio o caída de PA<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> EA severa asintomática con FEVI 50-55% o Vm &gt;5.5 m/s<br>
+<span style="color:#616161;font-weight:700">Clase IIb:</span> EA moderada en paciente que va a cirugía de bypass<br>
+<em>Fuente: Guías ESC/EACTS 2021</em>
+</div>
+<table class="rtbl"><thead><tr><th>Parámetro</th><th style="background:#E8F5E9;color:#2E7D32">Leve</th><th style="background:#FFF9C4;color:#827717">Moderada</th><th style="background:#FFEBEE;color:#C62828">Severa</th></tr></thead><tbody>
+<tr><td>Velocidad máxima (m/s)</td><td>&lt;3.0</td><td>3.0–4.0</td><td>&gt;4.0</td></tr>
+<tr><td>Gradiente medio (mmHg)</td><td>&lt;25</td><td>25–40</td><td>&gt;40</td></tr>
+<tr><td>AVA (cm²)</td><td>&gt;1.5</td><td>1.0–1.5</td><td>&lt;1.0</td></tr>
+<tr><td>AVA indexada (cm²/m²)</td><td>&gt;0.85</td><td>0.60–0.85</td><td>&lt;0.60</td></tr>
+<tr><td>Relación de velocidades</td><td>&gt;0.50</td><td>0.25–0.50</td><td>&lt;0.25</td></tr>
+</tbody></table></div></div>
+
+<div>
+<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="width:100%;text-align:left;background:#E3F2FD;border:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:.82rem">🔵 Insuficiencia Aórtica</button>
+<div style="display:none;margin-top:6px">
+<div style="background:#EEF7FF;border-left:3px solid #1565C0;border-radius:7px;padding:10px 14px;margin-bottom:8px;font-size:.78rem">
+<strong>Indicaciones quirúrgicas (ESC 2021):</strong><br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> IA severa sintomática (cualquier FEVI)<br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> IA severa asintomática con FEVI ≤50%<br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> IA severa sometida a otra cirugía cardíaca<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> IA severa asintomática FEVI 50-55% o DTDVI &gt;70mm o DTSVI &gt;50mm<br>
+<span style="color:#616161;font-weight:700">Clase IIb:</span> IA severa asintomática con dilatación progresiva del VI<br>
+<em>Fuente: Guías ESC/EACTS 2021</em>
+</div>
+<table class="rtbl"><thead><tr><th>Parámetro</th><th style="background:#E8F5E9;color:#2E7D32">Leve</th><th style="background:#FFF9C4;color:#827717">Moderada</th><th style="background:#FFEBEE;color:#C62828">Severa</th></tr></thead><tbody>
+<tr><td>Vena contracta (mm)</td><td>&lt;3</td><td>3–6</td><td>&gt;6</td></tr>
+<tr><td>Fracción regurgitante (%)</td><td>&lt;30</td><td>30–50</td><td>&gt;50</td></tr>
+<tr><td>Volumen regurgitante (mL)</td><td>&lt;30</td><td>30–60</td><td>&gt;60</td></tr>
+<tr><td>EROA (cm²)</td><td>&lt;0.10</td><td>0.10–0.29</td><td>≥0.30</td></tr>
+<tr><td>DTDVI (mm)</td><td>—</td><td>—</td><td>≥65</td></tr>
+</tbody></table></div></div>
+
+<div>
+<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="width:100%;text-align:left;background:#E3F2FD;border:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:.82rem">🟡 Estenosis Mitral</button>
+<div style="display:none;margin-top:6px">
+<div style="background:#EEF7FF;border-left:3px solid #1565C0;border-radius:7px;padding:10px 14px;margin-bottom:8px;font-size:.78rem">
+<strong>Indicaciones (ESC 2021):</strong><br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> EM severa sintomática — CMVP si anatomía favorable<br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> EM severa sintomática con anatomía desfavorable: cirugía<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> EM severa asintomática con PSAP &gt;50 mmHg o FA nueva<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> EM moderada en paciente que va a cirugía cardíaca<br>
+<em>Fuente: Guías ESC/EACTS 2021</em>
+</div>
+<table class="rtbl"><thead><tr><th>Parámetro</th><th style="background:#E8F5E9;color:#2E7D32">Leve</th><th style="background:#FFF9C4;color:#827717">Moderada</th><th style="background:#FFEBEE;color:#C62828">Severa</th></tr></thead><tbody>
+<tr><td>Área valvular (cm²)</td><td>&gt;1.5</td><td>1.0–1.5</td><td>&lt;1.0</td></tr>
+<tr><td>Gradiente medio (mmHg)</td><td>&lt;5</td><td>5–10</td><td>&gt;10</td></tr>
+<tr><td>PSAP (mmHg)</td><td>&lt;30</td><td>30–50</td><td>&gt;50</td></tr>
+<tr><td>Tiempo hemipresión (ms)</td><td>&lt;100</td><td>100–220</td><td>&gt;220</td></tr>
+</tbody></table></div></div>
+
+<div>
+<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="width:100%;text-align:left;background:#E3F2FD;border:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:.82rem">🟠 Insuficiencia Mitral</button>
+<div style="display:none;margin-top:6px">
+<div style="background:#EEF7FF;border-left:3px solid #1565C0;border-radius:7px;padding:10px 14px;margin-bottom:8px;font-size:.78rem">
+<strong>Indicaciones (ESC 2021):</strong><br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> IM severa primaria sintomática con FEVI &gt;30%<br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> IM severa primaria asintomática FEVI 30-60% o DTSVI ≥40mm<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> IM severa primaria asintomática FEVI &gt;60% DTSVI &lt;40mm si reparación durable<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> IM severa secundaria con CRM y FEVI &gt;30%<br>
+<span style="color:#616161;font-weight:700">Clase IIb:</span> IM severa secundaria refractaria — TEER si anatomía favorable<br>
+<em>Fuente: Guías ESC/EACTS 2021</em>
+</div>
+<table class="rtbl"><thead><tr><th>Parámetro</th><th style="background:#E8F5E9;color:#2E7D32">Leve</th><th style="background:#FFF9C4;color:#827717">Moderada</th><th style="background:#FFEBEE;color:#C62828">Severa</th></tr></thead><tbody>
+<tr><td>Vena contracta (mm)</td><td>&lt;3</td><td>3–6.9</td><td>≥7</td></tr>
+<tr><td>Fracción regurgitante (%)</td><td>&lt;30</td><td>30–49</td><td>≥50</td></tr>
+<tr><td>Volumen regurgitante (mL)</td><td>&lt;30</td><td>30–59</td><td>≥60</td></tr>
+<tr><td>EROA (cm²)</td><td>&lt;0.20</td><td>0.20–0.39</td><td>≥0.40</td></tr>
+</tbody></table></div></div>
+
+<div>
+<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="width:100%;text-align:left;background:#E3F2FD;border:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:.82rem">🟢 Insuficiencia Tricuspídea</button>
+<div style="display:none;margin-top:6px">
+<div style="background:#EEF7FF;border-left:3px solid #1565C0;border-radius:7px;padding:10px 14px;margin-bottom:8px;font-size:.78rem">
+<strong>Indicaciones (ESC 2021):</strong><br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> IT severa sintomática sin disfunción severa VD<br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> IT severa en paciente que va a cirugía izquierda<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> IT moderada con anillo ≥40mm en paciente que va a cirugía izquierda<br>
+<span style="color:#616161;font-weight:700">Clase IIb:</span> IT severa aislada asintomática con dilatación VD progresiva<br>
+<em>Fuente: Guías ESC/EACTS 2021</em>
+</div>
+<table class="rtbl"><thead><tr><th>Parámetro</th><th style="background:#E8F5E9;color:#2E7D32">Leve</th><th style="background:#FFF9C4;color:#827717">Moderada</th><th style="background:#FFEBEE;color:#C62828">Severa</th></tr></thead><tbody>
+<tr><td>Vena contracta (mm)</td><td>&lt;3</td><td>3–6.9</td><td>≥7</td></tr>
+<tr><td>Densidad jet CW</td><td>Leve/incompleto</td><td>Denso</td><td>Muy denso/triangular</td></tr>
+<tr><td>VCI</td><td>Normal</td><td>Dilatada</td><td>Dilatada sin colapso</td></tr>
+<tr><td>Dilatación VD</td><td>No</td><td>Leve</td><td>Moderada-severa</td></tr>
+</tbody></table></div></div>
+
+<div>
+<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="width:100%;text-align:left;background:#E3F2FD;border:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:.82rem">🟣 Estenosis Tricuspídea</button>
+<div style="display:none;margin-top:6px">
+<div style="background:#EEF7FF;border-left:3px solid #1565C0;border-radius:7px;padding:10px 14px;margin-bottom:8px;font-size:.78rem">
+<strong>Indicaciones (ESC 2021):</strong><br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> ET severa sintomática en paciente que va a cirugía izquierda<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> ET severa aislada sintomática no candidata a intervención percutánea<br>
+<em>Fuente: Guías ESC/EACTS 2021</em>
+</div>
+<table class="rtbl"><thead><tr><th>Parámetro</th><th style="background:#FFEBEE;color:#C62828">Criterio significativo</th></tr></thead><tbody>
+<tr><td>Área valvular (cm²)</td><td>&lt;1.0</td></tr>
+<tr><td>Gradiente medio (mmHg)</td><td>≥5</td></tr>
+<tr><td>Tiempo hemipresión (ms)</td><td>&gt;190</td></tr>
+<tr><td>Dilatación AD</td><td>Presente</td></tr>
+</tbody></table></div></div>
+
+<div>
+<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="width:100%;text-align:left;background:#E3F2FD;border:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:.82rem">⚪ Estenosis Pulmonar</button>
+<div style="display:none;margin-top:6px">
+<div style="background:#EEF7FF;border-left:3px solid #1565C0;border-radius:7px;padding:10px 14px;margin-bottom:8px;font-size:.78rem">
+<strong>Indicaciones (ESC 2021):</strong><br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> EP severa sintomática — valvuloplastia percutánea si anatomía favorable<br>
+<span style="color:#2E7D32;font-weight:700">Clase I:</span> EP severa asintomática con gradiente &gt;64 mmHg o disfunción VD<br>
+<span style="color:#E65100;font-weight:700">Clase IIa:</span> EP moderada-severa con síntomas o deterioro funcional<br>
+<em>Fuente: Guías ESC/EACTS 2021</em>
+</div>
+<table class="rtbl"><thead><tr><th>Parámetro</th><th style="background:#E8F5E9;color:#2E7D32">Leve</th><th style="background:#FFF9C4;color:#827717">Moderada</th><th style="background:#FFEBEE;color:#C62828">Severa</th></tr></thead><tbody>
+<tr><td>Velocidad máxima (m/s)</td><td>&lt;3.0</td><td>3.0–4.0</td><td>&gt;4.0</td></tr>
+<tr><td>Gradiente máximo (mmHg)</td><td>&lt;36</td><td>36–64</td><td>&gt;64</td></tr>
+<tr><td>Gradiente medio (mmHg)</td><td>&lt;25</td><td>25–45</td><td>&gt;45</td></tr>
+<tr><td>Área valvular (cm²)</td><td>&gt;1.0</td><td>0.5–1.0</td><td>&lt;0.5</td></tr>
+</tbody></table></div></div>
+
+</div>`;
+
+const RCARBOTBL=`<div style="font-size:.82rem;line-height:1.6">
+<p style="margin-bottom:8px"><strong>Indicación:</strong> Déficit de hierro en IC crónica sintomática (NYHA II-III) con:</p>
+<ul style="margin:0 0 10px 16px">
+<li>Ferritina &lt;100 ng/mL, <strong>o</strong></li>
+<li>Ferritina 100–299 ng/mL + saturación de transferrina &lt;20%</li>
+</ul>
+<p style="margin-bottom:6px">Independientemente de si hay anemia. <strong style="color:#2E7D32">Clase IIa, nivel A — ESC 2021 IC.</strong></p>
+<p style="margin-bottom:4px"><em>Evidencia: FAIR-HF, CONFIRM-HF, AFFIRM-AHF, HEART-FID 2023</em></p>
+<hr style="margin:10px 0;border-color:var(--border)">
+<strong>Dosis según peso y hemoglobina:</strong>
+<table class="rtbl" style="margin-top:8px"><thead><tr><th>Peso corporal</th><th>Hb &lt;10 g/dL</th><th>Hb 10–14 g/dL</th></tr></thead><tbody>
+<tr><td>&lt;70 kg</td><td>1500 mg</td><td>1000 mg</td></tr>
+<tr><td>≥70 kg</td><td>2000 mg</td><td>1500 mg</td></tr>
+</tbody></table>
+<hr style="margin:10px 0;border-color:var(--border)">
+<strong>Administración:</strong>
+<ul style="margin:6px 0 10px 16px">
+<li>Dosis máxima por infusión: <strong>1000 mg</strong></li>
+<li>Si dosis total &gt;1000 mg → dividir en 2 sesiones separadas ≥7 días</li>
+<li>IV en 15–60 minutos diluida en SF 0.9%</li>
+<li><strong>No</strong> administrar IM</li>
+</ul>
+<strong>Seguimiento:</strong> Repetir ferritina y saturación de transferrina a las 4–12 semanas. Redosificar si déficit persiste.
+</div>`;
+
+const REFS=[{t:'🫀 Riesgo Quirúrgico',h:RQTBL},{t:'🩸 Riesgo Hemorrágico',h:RHTBL},{t:'💊 Anticoagulantes y Cirugía',h:RATBL},{t:'🩺 Síndrome CRM-AHA',h:RCRMTBL},{t:'🫀 Criterios Severidad — Valvulopatías',h:RVALVTBL},{t:'💉 Carboximaltosa Férrica en IC',h:RCARBOTBL}];
+document.getElementById('ref-body').innerHTML=REFS.map((r,i)=>`<div class="ref-sec"><button class="ref-sec-h" onclick="toggleSec(${i})"><span>${r.t}</span><span id="ra${i}">▼</span></button><div class="ref-sec-b" id="rs${i}">${r.h}</div></div>`).join('');
 function toggleRef(){document.getElementById('ref-panel').classList.toggle('open');}
 function toggleSec(i){
   const isOpen=document.getElementById('rs'+i).classList.contains('on');
@@ -1003,6 +1243,66 @@ function clock(){
 }
 // ── CALC PANEL ────────────────────────────────────────────────────
 function toggleCalcPanel(){document.getElementById('calc-panel').classList.toggle('open');}
+// ── PDF EXPORT ────────────────────────────────────────────────────
+function openPDFModal(){
+  if(!activeInst){alert('Seleccioná una institución primero.');return;}
+  const wrap=document.getElementById('pdf-opt-current-wrap');
+  if(filterPatient!==null){
+    const p=patients.find(x=>x.id===filterPatient);
+    document.getElementById('pdf-current-name').textContent=p?p.name:'';
+    wrap.style.display='flex';
+    document.getElementById('pdf-opt-current').checked=true;
+  }else{
+    wrap.style.display='none';
+    document.getElementById('pdf-opt-all').checked=true;
+  }
+  const list=document.getElementById('pdf-pat-list');
+  list.innerHTML=patients.map(p=>`<label style="display:flex;align-items:center;gap:6px;font-size:.82rem;cursor:pointer"><input type="checkbox" class="pdf-pat-cb" value="${p.id}" style="accent-color:var(--p);cursor:pointer"> ${esc(p.name)} (${p.age} a.)</label>`).join('');
+  document.getElementById('pdf-date-all').checked=true;
+  document.getElementById('pdf-date-range').classList.remove('show');
+  document.getElementById('pdf-pat-list').style.display='none';
+  document.getElementById('pdf-modal-overlay').classList.add('open');
+  document.querySelectorAll('input[name="pdf-pat"]').forEach(r=>{r.onchange=()=>{document.getElementById('pdf-pat-list').style.display=r.value==='select'?'block':'none';};});
+  document.querySelectorAll('input[name="pdf-date"]').forEach(r=>{r.onchange=()=>{document.getElementById('pdf-date-range').classList.toggle('show',r.value==='range');};});
+}
+function closePDFModal(){document.getElementById('pdf-modal-overlay').classList.remove('open');}
+function generatePDF(){
+  const patMode=document.querySelector('input[name="pdf-pat"]:checked')?.value||'all';
+  let selPats=[];
+  if(patMode==='current'&&filterPatient!==null){selPats=patients.filter(p=>p.id===filterPatient);}
+  else if(patMode==='select'){const ids=[...document.querySelectorAll('.pdf-pat-cb:checked')].map(c=>+c.value);selPats=patients.filter(p=>ids.includes(p.id));}
+  else{selPats=[...patients];}
+  if(!selPats.length){alert('Seleccioná al menos un paciente.');return;}
+  const dateMode=document.querySelector('input[name="pdf-date"]:checked')?.value||'all';
+  const from=dateMode==='range'?document.getElementById('pdf-from').value:null;
+  const to=dateMode==='range'?document.getElementById('pdf-to').value:null;
+  const instLabel=activeInst?.label||'';
+  const today=new Date().toLocaleDateString('es-AR');
+  const html=selPats.map(p=>{
+    let consults=p.consultations.slice().sort((a,b)=>a.date>b.date?-1:1);
+    if(from)consults=consults.filter(c=>c.date>=from);
+    if(to)consults=consults.filter(c=>c.date<=to);
+    if(!consults.length)return'';
+    const meta=[p.ci?`CI: ${p.ci}`:'',p.matricula?`Matrícula: ${p.matricula}`:'',p.hc?`HC: ${p.hc}`:''].filter(Boolean).join('  |  ');
+    const rows=consults.map(c=>[
+      `<div class="print-consult-date">${fmtDate(c.date)}</div>`,
+      `<div class="print-field"><strong>Antecedentes:</strong> ${esc(c.background||'—')}</div>`,
+      `<div class="print-field"><strong>Diagnóstico:</strong> ${esc(c.diagnosis||'—')}</div>`,
+      `<div class="print-field"><strong>Tratamiento:</strong> ${esc(c.treatment||'—')}</div>`,
+      `<div class="print-field"><strong>Conducta:</strong> ${esc(c.conduct||'—')}</div>`,
+      c.ett?`<div class="print-field"><strong>ETT/Eco:</strong> ${esc(c.ett)}</div>`:'',
+      c.prevent?`<div class="print-field"><strong>PREVENT 2023:</strong> ${c.prevent.pct}% — ${esc(c.prevent.cat)}</div>`:'',
+      c.note?`<div class="print-field"><strong>Notas:</strong> <em>${esc(c.note)}</em></div>`:'',
+      c.ecgs&&c.ecgs.length?`<div class="print-img-title">ECG</div><div class="print-imgs">${c.ecgs.map(u=>`<img src="${u}">`).join('')}</div>`:'',
+      c.images&&c.images.length?`<div class="print-img-title">Imágenes</div><div class="print-imgs">${c.images.map(u=>`<img src="${u}">`).join('')}</div>`:'',
+    ].filter(Boolean).join('')).map(r=>`<div class="print-consult">${r}</div>`).join('');
+    return`<div class="print-patient"><div class="print-name">${esc(p.name)} &mdash; ${p.age} años</div>${meta?`<div style="font-size:10pt;margin-bottom:6px;color:#555">${meta}</div>`:''}<div style="font-size:10pt;color:#555;margin-bottom:14px">${instLabel?`Institución: ${esc(instLabel)} &nbsp;&nbsp;`:''}Exportado: ${today}</div>${rows}</div>`;
+  }).filter(Boolean).join('');
+  if(!html){alert('No hay consultas en el período seleccionado.');return;}
+  document.getElementById('print-area').innerHTML=html;
+  closePDFModal();
+  setTimeout(()=>window.print(),150);
+}
 let cpSecOpen=null,csubOpen=null;
 function toggleCpSec(i){
   const isOpen=cpSecOpen===i;
@@ -1208,5 +1508,31 @@ document.getElementById('f-date').valueAsDate=new Date();
 (()=>{const n=new Date();statsMonthY=n.getFullYear();statsMonthM=n.getMonth();})();
 setInterval(clock,1000);clock();buildInstScreen();
 </script>
+<div id="pdf-modal-overlay">
+  <div id="pdf-modal">
+    <h3>📄 Exportar consultas a PDF</h3>
+    <div class="pdf-section">
+      <div class="pdf-sec-lbl">Pacientes</div>
+      <label id="pdf-opt-current-wrap" style="display:none"><input type="radio" name="pdf-pat" value="current" id="pdf-opt-current"> Paciente actual: <em id="pdf-current-name" style="font-style:normal;font-weight:700"></em></label>
+      <label><input type="radio" name="pdf-pat" value="select" id="pdf-opt-select"> Seleccionar pacientes</label>
+      <div id="pdf-pat-list"></div>
+      <label><input type="radio" name="pdf-pat" value="all" id="pdf-opt-all" checked> Todos los pacientes</label>
+    </div>
+    <div class="pdf-section">
+      <div class="pdf-sec-lbl">Período</div>
+      <label><input type="radio" name="pdf-date" value="all" id="pdf-date-all" checked> Todas las fechas</label>
+      <label><input type="radio" name="pdf-date" value="range" id="pdf-date-range-opt"> Rango de fechas</label>
+      <div id="pdf-date-range">
+        <div class="fg"><label style="font-size:.78rem;font-weight:700">Desde</label><input type="date" id="pdf-from"></div>
+        <div class="fg"><label style="font-size:.78rem;font-weight:700">Hasta</label><input type="date" id="pdf-to"></div>
+      </div>
+    </div>
+    <div class="pdf-actions">
+      <button id="pdf-gen-btn" onclick="generatePDF()">Generar PDF</button>
+      <button id="pdf-cancel-btn" onclick="closePDFModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+<div id="print-area"></div>
 </body>
 </html>
