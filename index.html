@@ -695,6 +695,7 @@ main{padding-bottom:100px}
     </div>
   </div>
 </div>
+<div id="login-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#0D47A1,#1976D2);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px"><div style="background:#fff;border-radius:16px;padding:36px 32px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center"><div style="font-size:2.5rem;margin-bottom:12px">🫀</div><h1 style="font-size:1.4rem;font-weight:800;color:#1A237E;margin-bottom:4px">CardioSalud</h1><p style="font-size:.84rem;color:#546E7A;margin-bottom:24px">Ingresá la contraseña para acceder</p><input type="password" id="login-input" placeholder="••••••••" style="width:100%;padding:11px 14px;border:1.5px solid #BBDEFB;border-radius:8px;font-size:.95rem;outline:none;margin-bottom:12px;font-family:inherit;text-align:center;letter-spacing:2px" onkeydown="if(event.key==='Enter')checkLogin()"><button onclick="checkLogin()" style="width:100%;padding:11px;background:linear-gradient(135deg,#0D47A1,#1976D2);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer">Ingresar</button><div id="login-error" style="color:#C62828;font-size:.8rem;margin-top:6px;display:none">Contraseña incorrecta</div></div></div>
 <div class="fab-menu-wrap">
   <div class="fab-items" id="fab-items">
     <div class="fab-item"><span class="fab-item-lbl">Calculadoras clínicas</span><button class="fab-item-btn" onclick="toggleCalcPanel();toggleFabMenu()" title="Calculadoras">🧮</button></div>
@@ -5700,6 +5701,9 @@ function calcDASI(){
 
 document.getElementById('f-date').valueAsDate=new Date();
 (()=>{const n=new Date();statsMonthY=n.getFullYear();statsMonthM=n.getMonth();})();
+const APP_PASS='maicolcardio1';
+function checkLogin(){const val=document.getElementById('login-input').value;if(val===APP_PASS){document.getElementById('login-screen').style.display='none';localStorage.setItem('cs_auth','1');}else{document.getElementById('login-error').style.display='block';document.getElementById('login-input').value='';document.getElementById('login-input').focus();}}
+(function initLogin(){if(localStorage.getItem('cs_auth')==='1'){document.getElementById('login-screen').style.display='none';}else{setTimeout(()=>document.getElementById('login-input')?.focus(),300);}})();
 setInterval(clock,1000);clock();buildInstScreen();
 setTimeout(initTutorial,800);
 setTimeout(updateControlList,500);
