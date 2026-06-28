@@ -647,12 +647,27 @@ main{padding-bottom:100px}
         </div>
       </div>
 
+      <div class="section">
+        <div class="sec-hdr"><h2>Cirugía Cardíaca</h2></div>
+        <div class="sec-body" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Procedimiento</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="cirugia-body"></tbody></table>
+        </div>
+      </div>
 
       <div class="section">
         <div class="sec-hdr"><h2>Fibrilación Auricular</h2></div>
         <div class="sec-body" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
           <tbody id="fa-body"></tbody></table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr"><h2>Antiagregación</h2></div>
+        <div class="sec-body" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Régimen</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="antiagr-body"></tbody></table>
         </div>
       </div>
 
@@ -731,6 +746,7 @@ main{padding-bottom:100px}
   <div class="dt-tabs" style="flex-shrink:0;border-bottom:1.5px solid var(--border)">
     <button class="dt-tab active" id="vad-tab-farmacos" onclick="switchVadTab('farmacos',this)">💊 Fármacos</button>
     <button class="dt-tab" id="vad-tab-embarazo" onclick="switchVadTab('embarazo',this)">🤰 CV en Embarazo</button>
+    <button class="dt-tab" id="vad-tab-interacciones" onclick="switchVadTab('interacciones',this)">⚠️ Interacciones</button>
   </div>
   <div class="vad-body">
     <div id="vad-content-farmacos">
@@ -744,6 +760,9 @@ main{padding-bottom:100px}
         <span style="font-size:.7rem">🟢 Considerado seguro · 🟡 Datos limitados/precaución · 🔴 Contraindicado · 🔵 Datos conflictivos/desconocidos</span>
       </div>
       <div id="vad-emb-content"></div>
+    </div>
+    <div id="vad-content-interacciones" style="display:none">
+      <div id="vad-inter-content"></div>
     </div>
   </div>
 </div>
@@ -1285,7 +1304,7 @@ const SAMPLE=[
 ];
 let patients=[];
 
-let nextPid=11, nextCid=200, sortKey='date', sortDir=-1, openDetail=new Set(), openEdit=null, calcOpen=false, lastPRV=null, activeTab='new', activeInst=null, filterPatient=null, filterDesde=null, filterHasta=null, openDiag=null, openFevi=null, openAntcoag=null, openDevice=null, openFA=null, diagSorted=[], feviData=[], anticoagData=[], deviceData=[], faData=[], currentRows=[], tablExpanded=false;
+let nextPid=11, nextCid=200, sortKey='date', sortDir=-1, openDetail=new Set(), openEdit=null, calcOpen=false, lastPRV=null, activeTab='new', activeInst=null, filterPatient=null, filterDesde=null, filterHasta=null, openDiag=null, openFevi=null, openAntcoag=null, openDevice=null, openFA=null, openCirugia=null, openAntiagregacion=null, diagSorted=[], feviData=[], anticoagData=[], deviceData=[], faData=[], cirugiaData=[], antiagregData=[], currentRows=[], tablExpanded=false;
 function toggleTbl(){
   tablExpanded=!tablExpanded;
   const wrap=document.getElementById('tbl-wrap'),btn=document.getElementById('btn-toggle-tbl');
@@ -1489,7 +1508,7 @@ function render(){
   currentRows=rows;
   document.getElementById('pt-count').textContent=`${rows.length} consulta${rows.length!==1?'s':''}`;
   updateSearchStats(q);
-  updateStats(rows);updateDiags(rows);updateFEVI(rows);updateAntcoag();updateDevice();updateFA();renderCal();
+  updateStats(rows);updateDiags(rows);updateFEVI(rows);updateCirugia();updateAntiagregacion();updateAntcoag();updateDevice();updateFA();renderCal();
   if(!tablExpanded)return;
   const tbody=document.getElementById('tbody'),empty=document.getElementById('empty');
   if(!rows.length){tbody.innerHTML='';empty.style.display='';return;}
@@ -1562,14 +1581,18 @@ function parseFEVI(s){const m=(s||'').match(/FEVI\s*(\d+)/i);return m?+m[1]:null
 function feviCell(s){const m=(s||'').match(/(?:fevi|fe|fracci[oó]n de eyecci[oó]n)[^\d]*(\d{2,3})/i);if(!m)return`<td style="color:var(--txt2)">—</td>`;const v=+m[1];const c=v>=50?'var(--ok)':v>=40?'var(--warn)':'var(--err)';return`<td style="color:${c};font-weight:700">${v}%</td>`;}
 function updateFEVI(rows){
   const tot=rows.length||1,nd=rows.filter(r=>parseFEVI(r.ett)===null).length;
-  feviData=[{l:'< 35%',c:'fv-lo',mn:0,mx:34},{l:'35–49%',c:'fv-mi',mn:35,mx:49},{l:'≥ 50%',c:'fv-hi',mn:50,mx:999}];
+  feviData=[
+    {l:'FEVI < 35%',c:'fv-lo',mn:0,mx:34},
+    {l:'FEVI 35–50%',c:'fv-mi',mn:35,mx:50},
+    {l:'FEVI > 50%',c:'fv-hi',mn:51,mx:999}
+  ];
   feviData.forEach(f=>{
     f.n=rows.filter(r=>{const v=parseFEVI(r.ett);return v!==null&&v>=f.mn&&v<=f.mx;}).length;
     const pm=new Map();flatRows().filter(r=>{const v=parseFEVI(r.ett);return v!==null&&v>=f.mn&&v<=f.mx;}).forEach(r=>pm.set(r.pid,r.name));f.pts=[...pm.entries()];
   });
   document.getElementById('fevi-body').innerHTML=feviData.map((f,i)=>{
-    const pct=Math.round(f.n/tot*100);
-    return `<tr><td>${f.l}</td><td>${f.n}</td><td>${pct}%</td></tr>`;
+    const open=openFevi===f.l,pct=Math.round(f.n/tot*100);
+    return`<tr onclick="toggleFevi(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.n}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('')+`<tr style="border-top:2px solid var(--border)"><td><strong>No registrada</strong></td><td>${nd}</td><td>${Math.round(nd/tot*100)}%</td></tr>`;
 }
 
@@ -1628,6 +1651,63 @@ function updateFA(){
   document.getElementById('fa-body').innerHTML=`<tr onclick="toggleFA()" style="cursor:pointer"><td>FA / Flutter ${open?'▲':'▼'}</td><td>${faPts.size}</td><td>${pct}%</td></tr>${open&&faPts.size?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${faData[0].pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
 }
 function toggleFA(){openFA=openFA==='fa'?null:'fa';updateFA();}
+function isCRM(s){return/\bCRM\b|by[- ]?pass\s+coronario|revascularizaci[oó]n\s+mioc[aá]rdica|bypass\s+coronario/i.test(s||'');}
+function isSVM(s){return/\bSVM\b|plastia\s+mitral|cirug[ií]a.*mitral|prótesis\s+mitral|mitral.*prótesis|reemplaz.*mitral/i.test(s||'');}
+function isSVA(s){return/\bSVA\b|cirug[ií]a.*a[oó]rtica|prótesis.*a[oó]rtica|a[oó]rtica.*prótesis|reemplaz.*a[oó]rtic/i.test(s||'');}
+function isTAVI2(s){return/\bTAVI\b|\bTAVR\b/i.test(s||'');}
+function updateCirugia(){
+  const crmPts=new Map(),svmPts=new Map(),svaPts=new Map(),taviPts=new Map(),crmsvPts=new Map(),ninPts=new Map();
+  patients.forEach(p=>{
+    const s=p.consultations.map(c=>(c.background||'')+' '+(c.conduct||'')+' '+(c.ett||'')).join(' ');
+    const crm=isCRM(s),svm=isSVM(s),sva=isSVA(s),tavi=isTAVI2(s),sv=svm||sva||tavi;
+    if(crm&&sv)crmsvPts.set(p.id,p.name);
+    else if(crm)crmPts.set(p.id,p.name);
+    else if(svm)svmPts.set(p.id,p.name);
+    else if(sva)svaPts.set(p.id,p.name);
+    else if(tavi)taviPts.set(p.id,p.name);
+    else ninPts.set(p.id,p.name);
+  });
+  const tot=patients.length||1;
+  cirugiaData=[
+    {l:'CRM',pts:[...crmPts.entries()]},
+    {l:'CRM + SV',pts:[...crmsvPts.entries()]},
+    {l:'SV — SVM',pts:[...svmPts.entries()]},
+    {l:'SV — SVA',pts:[...svaPts.entries()]},
+    {l:'TAVI',pts:[...taviPts.entries()]},
+    {l:'Sin cirugía',pts:[...ninPts.entries()]},
+  ];
+  document.getElementById('cirugia-body').innerHTML=cirugiaData.map((f,i)=>{
+    const open=openCirugia===f.l,pct=Math.round(f.pts.length/tot*100);
+    return`<tr onclick="toggleCirugia(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+  }).join('');
+}
+function toggleCirugia(i){openCirugia=openCirugia===cirugiaData[i]?.l?null:cirugiaData[i]?.l;updateCirugia();}
+function hasAAS(tx){return/\bAAS\b|aspirina|[áa]cido\s+acetilsalic[ií]lico/i.test(tx||'');}
+function hasP2Y12(tx){return/clopidogrel|ticagrelor|prasugrel/i.test(tx||'');}
+function hasACO(tx){return isAVK(tx)||isDACO(tx);}
+function updateAntiagregacion(){
+  const daptPts=new Map(),aasacoPts=new Map(),monoPts=new Map(),ninPts=new Map();
+  patients.forEach(p=>{
+    const tx=p.consultations.map(c=>c.treatment||'').join(' ');
+    const aas=hasAAS(tx),p2y12=hasP2Y12(tx),aco=hasACO(tx);
+    if(aas&&p2y12)daptPts.set(p.id,p.name);
+    else if((aas||p2y12)&&aco)aasacoPts.set(p.id,p.name);
+    else if(aas||p2y12)monoPts.set(p.id,p.name);
+    else ninPts.set(p.id,p.name);
+  });
+  const tot=patients.length||1;
+  antiagregData=[
+    {l:'DAPT',pts:[...daptPts.entries()]},
+    {l:'AAS + ACO',pts:[...aasacoPts.entries()]},
+    {l:'AAS o Clopidogrel',pts:[...monoPts.entries()]},
+    {l:'Sin antiagregación',pts:[...ninPts.entries()]},
+  ];
+  document.getElementById('antiagr-body').innerHTML=antiagregData.map((f,i)=>{
+    const open=openAntiagregacion===f.l,pct=Math.round(f.pts.length/tot*100);
+    return`<tr onclick="toggleAntiagregacion(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+  }).join('');
+}
+function toggleAntiagregacion(i){openAntiagregacion=openAntiagregacion===antiagregData[i]?.l?null:antiagregData[i]?.l;updateAntiagregacion();}
 // ── SUBMIT ───────────────────────────────────────────────────────
 function submitForm(){
   const date=document.getElementById('f-date').value;
@@ -1778,12 +1858,12 @@ function enterInst(i){
   document.getElementById('isc').style.display='none';
   const b=document.getElementById('inst-bdg');b.textContent=activeInst.icon+' '+activeInst.label;b.style.display='';
   document.getElementById('btn-back').style.display='';
-  selD=null;filterPatient=null;filterDesde=null;filterHasta=null;openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openFA=null;openDetail=new Set();refreshSel();initCal();render();
+  selD=null;filterPatient=null;filterDesde=null;filterHasta=null;openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openFA=null;openCirugia=null;openAntiagregacion=null;openDetail=new Set();refreshSel();initCal();render();
 }
 function exitInst(){saveInst();activeInst=null;patients=[];buildInstScreen();}
 function addInst(){const name=(prompt('Nombre de la nueva institución:')||'').trim();if(!name)return;const insts=getInsts();const icons=['🏥','🏨','👤','🏢','🩺','🏫'];insts.push({id:'c_'+Math.random().toString(36).slice(2),label:name,icon:icons[insts.length%icons.length]});saveInsts(insts);buildInstScreen();}
 // ── FILTROS / DRILLDOWN ───────────────────────────────────────────
-function filterByPat(pid){filterPatient=filterPatient===pid?null:pid;selD=null;filterDesde=null;filterHasta=null;openDetail=new Set();openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openFA=null;render();}
+function filterByPat(pid){filterPatient=filterPatient===pid?null:pid;selD=null;filterDesde=null;filterHasta=null;openDetail=new Set();openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openFA=null;openCirugia=null;openAntiagregacion=null;render();}
 function clearPatFilter(){filterPatient=null;render();}
 function saveNote(pid,cid){
   const p=patients.find(x=>x.id===pid);if(!p)return;
@@ -3948,6 +4028,80 @@ function switchVadTab(tab,btn){
   const emb=document.getElementById('vad-content-embarazo');
   emb.style.display=tab==='embarazo'?'':'none';
   if(tab==='embarazo'&&!emb.dataset.built){emb.dataset.built='1';renderVadEmbarazo();}
+  const inter=document.getElementById('vad-content-interacciones');
+  inter.style.display=tab==='interacciones'?'':'none';
+  if(tab==='interacciones'&&!inter.dataset.built){inter.dataset.built='1';renderVadInteracciones();}
+}
+
+const VAD_INTER_DATA=[
+  {cat:'⚡ Antiarrítmicos',items:[
+    {f1:'Amiodarona',f2:'Warfarina',sev:'alta',efecto:'INR ↑↑ (duplica efecto anticoagulante)',manejo:'Reducir dosis warfarina 30–50% al iniciar amiodarona; monitorear INR c/1–2 semanas'},
+    {f1:'Amiodarona',f2:'Digoxina',sev:'alta',efecto:'Niveles digoxina ↑↑ (duplica)',manejo:'Reducir dosis digoxina a la mitad; monitorear niveles y ECG'},
+    {f1:'Amiodarona',f2:'Estatinas',sev:'moderada',efecto:'Miopatía / rabdomiolisis (inhibe CYP3A4)',manejo:'Evitar simvastatina >20 mg; preferir rosuvastatina o atorvastatina dosis moderada'},
+    {f1:'Sotalol',f2:'Diuréticos',sev:'alta',efecto:'Hipopotasemia → riesgo Torsades de pointes ↑↑',manejo:'Corregir K+ y Mg++ antes y durante tratamiento; meta K+ >4.0 mEq/L'},
+    {f1:'Flecainida',f2:'Amiodarona',sev:'alta',efecto:'Niveles flecainida ↑~50% → toxicidad',manejo:'Reducir dosis flecainida 50%; vigilar síntomas (diplopia, mareos, proarritmia)'},
+    {f1:'Clase Ia',f2:'Clase III',sev:'alta',efecto:'Prolongación QT aditiva → Torsades de pointes',manejo:'Evitar combinación salvo casos muy seleccionados con monitoreo estricto'},
+    {f1:'Digoxina',f2:'Verapamilo',sev:'alta',efecto:'Niveles digoxina ↑ 60–80%',manejo:'Reducir dosis digoxina; monitorear niveles y FC'},
+    {f1:'Quinidina',f2:'Digoxina',sev:'alta',efecto:'Niveles digoxina ↑↑ (duplica)',manejo:'Reducir dosis digoxina a la mitad'},
+  ]},
+  {cat:'🩸 Anticoagulantes',items:[
+    {f1:'Warfarina',f2:'Amiodarona',sev:'alta',efecto:'INR ↑↑ (inhibición CYP2C9)',manejo:'Reducir warfarina 30–50%; INR semanal hasta estabilizar'},
+    {f1:'Warfarina',f2:'Antibióticos',sev:'moderada',efecto:'INR ↑ (alteración flora + inhibición vitamina K)',manejo:'Monitorear INR 48–72h tras inicio y fin de antibiótico'},
+    {f1:'Warfarina',f2:'AINEs',sev:'alta',efecto:'Riesgo hemorrágico ↑↑ (desplazamiento proteico + daño mucosa)',manejo:'Evitar combinación; usar paracetamol como analgésico alternativo'},
+    {f1:'Dabigatrán',f2:'Verapamilo',sev:'moderada',efecto:'Niveles dabigatrán ↑ 12–20% (inhibición P-gp)',manejo:'Considerar reducción de dosis en ERC moderada; vigilar sangrado'},
+    {f1:'Rivaroxabán',f2:'Ketoconazol',sev:'alta',efecto:'Niveles rivaroxabán ↑↑ (inhibición CYP3A4 + P-gp)',manejo:'Contraindicado: evitar antifúngicos azólicos sistémicos'},
+    {f1:'ACOD',f2:'Rifampicina',sev:'alta',efecto:'Niveles ACOD ↓↓ (inducción CYP3A4 + P-gp)',manejo:'Evitar combinación; warfarina como alternativa con monitoreo INR'},
+    {f1:'ACOD',f2:'AINEs',sev:'moderada',efecto:'Riesgo sangrado GI ↑',manejo:'Evitar AINEs crónicos; usar IBP si necesario; paracetamol como alternativa'},
+  ]},
+  {cat:'💊 Estatinas',items:[
+    {f1:'Simvastatina',f2:'Amlodipina 10mg',sev:'moderada',efecto:'Niveles simvastatina ↑ → miopatía',manejo:'Límite: simvastatina 20 mg con amlodipina; preferir atorvastatina/rosuvastatina'},
+    {f1:'Estatinas',f2:'Fibratos',sev:'moderada',efecto:'Miopatía aditiva (↑ riesgo rabdomiolisis)',manejo:'Monitorear CK; preferir fenofibrato (menor interacción que gemfibrozil)'},
+    {f1:'Estatinas',f2:'Macrólidos/Azoles',sev:'alta',efecto:'Niveles atorvastatina/simvastatina ↑↑ (inhibición CYP3A4)',manejo:'Suspender estatina durante curso corto de claritromicina; usar azitromicina o estatina no metabolizada (rosuvastatina)'},
+    {f1:'Rosuvastatina',f2:'Warfarina',sev:'moderada',efecto:'INR ↑ leve (mecanismo incierto)',manejo:'Monitorear INR al iniciar o cambiar dosis de rosuvastatina'},
+  ]},
+  {cat:'❤️ Betabloqueantes / Calcioantagonistas',items:[
+    {f1:'Betabloqueante',f2:'Verapamilo/Diltiazem',sev:'alta',efecto:'Bradicardia severa / BAV completo (efecto cronotrópico negativo aditivo)',manejo:'Contraindicada combinación IV; extrema precaución oral; monitorear FC y conducción'},
+    {f1:'Betabloqueante',f2:'Digoxina',sev:'moderada',efecto:'Bradicardia aditiva / BAV',manejo:'Monitorear FC y ECG; objetivo FC 50–70 lpm en IC'},
+    {f1:'Metoprolol',f2:'Fluoxetina',sev:'moderada',efecto:'Niveles metoprolol ↑↑ (inhibición CYP2D6) → bradicardia intensa',manejo:'Reducir dosis metoprolol; monitorear FC; preferir bisoprolol (no CYP2D6)'},
+    {f1:'Amlodipina',f2:'Ciclosporina',sev:'moderada',efecto:'Niveles ciclosporina ↑ (inhibición CYP3A4)',manejo:'Monitorear niveles de ciclosporina al iniciar/cambiar amlodipina'},
+  ]},
+  {cat:'🫀 Antiagregantes',items:[
+    {f1:'AAS',f2:'ACO (ACOD/AVK)',sev:'alta',efecto:'Riesgo hemorragia mayor ↑↑ (terapia combinada)',manejo:'Indicar solo si beneficio claro (SCA+FA); mínima duración posible; IBP siempre'},
+    {f1:'Clopidogrel',f2:'Omeprazol',sev:'moderada',efecto:'Efecto antiagregante de clopidogrel ↓ (inhibición CYP2C19)',manejo:'Preferir pantoprazol o rabeprazol como IBP; evidencia clínica de impacto discutida'},
+    {f1:'Ticagrelor',f2:'Inhibidores CYP3A4',sev:'alta',efecto:'Niveles ticagrelor ↑↑ → toxicidad (disnea, bradicardia)',manejo:'Contraindicado con ketoconazol/itraconazol/claritromicina; precaución con diltiazem'},
+  ]},
+  {cat:'🩺 IECA / ARA-II / Diuréticos',items:[
+    {f1:'IECA/ARA-II',f2:'AINEs',sev:'alta',efecto:'Reducción efecto antihipertensivo + riesgo IRA',manejo:'Evitar AINEs crónicos; usar paracetamol; monitorear creatinina y PA'},
+    {f1:'IECA + ARA-II',f2:'Combinación',sev:'alta',efecto:'Hiperpotasemia, IRA, hipotensión (doble bloqueo SRAA)',manejo:'Contraindicada la combinación (ONTARGET); exception: protocolo IC muy selecto'},
+    {f1:'IECA/ARA-II',f2:'Diuréticos ahorradores K+',sev:'moderada',efecto:'Hiperpotasemia (K+ >5.5 mEq/L)',manejo:'Monitorear K+ a la semana, al mes y periódicamente; ajustar dosis según función renal'},
+    {f1:'Diuréticos',f2:'Antiarrítmicos QT',sev:'alta',efecto:'Hipopotasemia/hipomagnesemia → Torsades de pointes',manejo:'Mantener K+ >4.0 y Mg++ >0.85 en pacientes con riesgo QT; preferir diuréticos ahorradores K+'},
+  ]},
+];
+
+function renderVadInteracciones(){
+  const el=document.getElementById('vad-inter-content');
+  if(!el)return;
+  const sevBadge={alta:'background:#FFEBEE;color:#B71C1C',moderada:'background:#FFF9C4;color:#827717',baja:'background:#E8F5E9;color:#2E7D32'};
+  el.innerHTML='<div style="font-size:.76rem;color:var(--txt2);margin-bottom:10px;background:#FFF9C4;border-radius:7px;padding:8px 12px;line-height:1.5;border-left:3px solid #F9A825"><strong style="color:#827717">⚠️ Referencia clínica:</strong> Interacciones farmacológicas más relevantes en cardiología. Consultar fichas individuales de cada fármaco para detalle completo.</div>'+VAD_INTER_DATA.map(g=>`
+    <div style="margin-bottom:14px">
+      <div style="font-weight:700;color:var(--p);font-size:.82rem;margin-bottom:5px;padding:4px 8px;background:var(--surf);border-radius:5px;border-left:3px solid var(--acc)">${g.cat}</div>
+      <table style="width:100%;border-collapse:collapse;font-size:.72rem">
+        <thead><tr style="background:#F5F9FF">
+          <th style="padding:4px 6px;text-align:left;border-bottom:1px solid var(--border)">Fármaco 1</th>
+          <th style="padding:4px 6px;text-align:left;border-bottom:1px solid var(--border)">Fármaco 2</th>
+          <th style="padding:4px 6px;text-align:center;border-bottom:1px solid var(--border)">Severidad</th>
+          <th style="padding:4px 6px;text-align:left;border-bottom:1px solid var(--border)">Efecto / Riesgo</th>
+          <th style="padding:4px 6px;text-align:left;border-bottom:1px solid var(--border)">Manejo</th>
+        </tr></thead>
+        <tbody>${g.items.map((r,i)=>`<tr style="background:${i%2?'transparent':'rgba(0,0,0,.018)'}">
+          <td style="padding:4px 6px;font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap">${r.f1}</td>
+          <td style="padding:4px 6px;font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap">${r.f2}</td>
+          <td style="padding:4px 6px;text-align:center;border-bottom:1px solid var(--border)"><span style="padding:2px 7px;border-radius:10px;font-weight:700;font-size:.68rem;${sevBadge[r.sev]||sevBadge.baja}">${r.sev}</span></td>
+          <td style="padding:4px 6px;color:var(--txt);border-bottom:1px solid var(--border)">${r.efecto}</td>
+          <td style="padding:4px 6px;color:var(--txt2);border-bottom:1px solid var(--border)">${r.manejo}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`).join('');
 }
 
 const VAD_EMB_DATA=[
@@ -4250,6 +4404,30 @@ const VAD_DRUGS=[
    ea:['Cinconismo (acúfenos, cefalea, visión borrosa)','Torsades de pointes','Trombocitopenia','Diarrea','Lupus-like'],
    inter:['Digoxina — duplica niveles','Warfarina — potencia anticoagulación','Amiodarona — QT aditivo'],
    perla:'Uso muy limitado actualmente. Nicho específico: Brugada sintomático cuando el CDI no es viable, y SQTC. Monitorizar QTc estrictamente.'},
+
+  {gen:'Procainamida',trade:'Pronestyl',clase:'Antiarrítmico clase Ia',grupo:'Antiarrítmicos',
+   ind:['TV monomórfica sostenida hemodinámicamente estable (Clase I)','FA con preexcitación WPW (de elección en emergencia)','Cardioversión farmacológica de FA/Flutter (IV)'],
+   contra:['LES activo o antecedente','Agranulocitosis previa por procainamida','BAV 2°-3° sin marcapaso','IC severa','QTc >500ms'],
+   dosis:[{ind:'TV/FA IV',inicio:'20–50 mg/min hasta cese arritmia',mant:'1–4 mg/min infusión continua',max:'17 mg/kg dosis total'}],
+   ea:['Hipotensión (infusión rápida)','Lupus farmacológico (uso crónico >6 meses)','Agranulocitosis','QT prolongado / Torsades de pointes','Bloqueo AV'],
+   inter:['Amiodarona — QT aditivo, aumentar precaución','Cimetidina/Ranitidina — reducen eliminación renal','Quinidina — efecto antiarrítmico aditivo'],
+   perla:'Fármaco de elección en TV monomórfica sostenida estable cuando se desconoce cardiopatía estructural. Preferir sobre lidocaína en TV hemodinámicamente estable. FA con preexcitación (WPW): primera línea IV. Uso actual casi exclusivamente hospitalario IV.'},
+
+  {gen:'Propafenona',trade:'Rytmonorm',clase:'Antiarrítmico clase Ic',grupo:'Antiarrítmicos',
+   ind:['FA paroxística — mantenimiento de ritmo sinusal (corazón sin cardiopatía)','TSV recurrente','Estrategia pill-in-pocket para FA paroxística aislada'],
+   contra:['IC con FEVI <40%','Post-IAM / Cardiopatía isquémica','Cardiopatía estructural significativa','Asma/EPOC severo (efecto beta-bloqueante leve)','BAV 2°-3° sin marcapaso'],
+   dosis:[{ind:'FA oral',inicio:'150 mg c/8h',mant:'150–300 mg c/8–12h',max:'900 mg/día'},{ind:'Pill-in-pocket FA',inicio:'450–600 mg dosis única',mant:'Según episodio',max:'600 mg/episodio'}],
+   ea:['Disgeusia (sabor metálico característico)','Náuseas / vómitos','Visión borrosa','Flutter auricular con conducción 1:1 (proarrítmico)','Broncoespasmo (acción BB leve)'],
+   inter:['Digoxina — aumenta niveles 30–40% (reducir dosis)','Warfarina — potencia anticoagulación','BB — bradicardia aditiva','Amiodarona — interacción compleja, evitar combinación'],
+   perla:'Solo para corazón estructuralmente normal (CAST: ↑ mortalidad post-IAM). Siempre asociar BB o verapamilo para evitar conducción 1:1 de flutter. Pill-in-pocket: 600 mg dosis única para FA paroxística bien tolerada — iniciar con supervisión médica.'},
+
+  {gen:'Flecainida',trade:'Tambocor',clase:'Antiarrítmico clase Ic',grupo:'Antiarrítmicos',
+   ind:['FA paroxística — mantenimiento de RS (sin cardiopatía estructural)','TSV refractaria','TV idiopática del tracto de salida VD (TSVD)'],
+   contra:['IC con FEVI <40%','Post-IAM / Cardiopatía isquémica','Flutter auricular (riesgo conducción 1:1)','Disfunción sinusal sin marcapaso','Bloqueo de rama si no hay marcapaso'],
+   dosis:[{ind:'FA oral',inicio:'50 mg c/12h',mant:'50–150 mg c/12h',max:'300 mg/día'},{ind:'Pill-in-pocket FA',inicio:'200–300 mg dosis única',mant:'Según episodio',max:'300 mg/episodio'}],
+   ea:['Diplopia / visión borrosa (dosis-dependiente)','Mareos / cefalea','Flutter con conducción 1:1 (proarrítmico)','Empeoramiento IC','Efecto proarrítmico en cardiopatía estructural'],
+   inter:['Amiodarona — aumenta niveles de flecainida ~50%','BB / Diltiazem / Verapamilo — bradicardia aditiva','Digoxina — aumento leve de niveles','Inhibidores CYP2D6 (fluoxetina, quinidina) — aumentan niveles'],
+   perla:'Solo corazón estructuralmente normal (CAST: ↑ mortalidad post-IAM). Siempre asociar BB o bloqueante nodal para evitar conducción 1:1 del flutter. Útil en TV idiopática del TSVD en jóvenes sin cardiopatía. Puede emplearse como test diagnóstico de Brugada IV.'},
 
   {gen:'Adenosina',trade:'Adenocor',clase:'Endógeno — nodo AV',grupo:'Antiarrítmicos',
    ind:['TSVP — diagnóstico y cardioversión (Clase I)','Diagnóstico diferencial TV vs TSV con aberrancia'],
