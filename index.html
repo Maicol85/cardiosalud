@@ -496,6 +496,7 @@ main{padding-bottom:100px}
   <div class="hdr-info"><h1>CardioSalud</h1><span class="hdr-sub" id="hdr-doctor-lbl" onclick="editDoctorName()" title="Click para editar" style="cursor:pointer">Dr. M. Dos Santos ✏️</span></div>
   <span id="inst-bdg" class="inst-bdg" style="display:none"></span>
   <button id="btn-back" class="btn-back" onclick="exitInst()" style="display:none">← Cambiar institución</button>
+  <button id="btn-edit-centros" onclick="openCentrosModal()" title="Editar centros" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">✏️ Editar centros</button>
   <div class="hdr-search" id="hdr-search-wrap">
     <span class="hdr-search-icon">🔍</span>
     <input type="text" id="hdr-search-input" placeholder="Buscar paciente, fármaco, referencia..." oninput="globalSearch(this.value)" onfocus="if(this.value)globalSearch(this.value)" autocomplete="off">
@@ -635,53 +636,53 @@ main{padding-bottom:100px}
       </div>
 
       <div class="section">
-        <div class="sec-hdr"><h2>Diagnósticos Frecuentes</h2></div>
-        <div class="sec-body"><div class="dlist" id="diag-list"></div></div>
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('diag')"><h2>Diagnósticos Frecuentes</h2><span id="sti-diag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-diag"><div class="dlist" id="diag-list"></div></div>
       </div>
 
       <div class="section">
-        <div class="sec-hdr"><h2>Distribución FEVI</h2></div>
-        <div class="sec-body" style="padding:12px 14px">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fevi')"><h2>Distribución FEVI</h2><span id="sti-fevi" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-fevi" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Categoría</th><th>N</th><th>%</th></tr></thead>
           <tbody id="fevi-body"></tbody></table>
         </div>
       </div>
 
       <div class="section">
-        <div class="sec-hdr"><h2>Cirugía Cardíaca</h2></div>
-        <div class="sec-body" style="padding:12px 14px">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('cirugia')"><h2>Cirugía Cardíaca</h2><span id="sti-cirugia" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-cirugia" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Procedimiento</th><th>N</th><th>%</th></tr></thead>
           <tbody id="cirugia-body"></tbody></table>
         </div>
       </div>
 
       <div class="section">
-        <div class="sec-hdr"><h2>Fibrilación Auricular</h2></div>
-        <div class="sec-body" style="padding:12px 14px">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fa')"><h2>Fibrilación Auricular</h2><span id="sti-fa" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-fa" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
           <tbody id="fa-body"></tbody></table>
         </div>
       </div>
 
       <div class="section">
-        <div class="sec-hdr"><h2>Antiagregación</h2></div>
-        <div class="sec-body" style="padding:12px 14px">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antiagr')"><h2>Antiagregación</h2><span id="sti-antiagr" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-antiagr" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Régimen</th><th>N</th><th>%</th></tr></thead>
           <tbody id="antiagr-body"></tbody></table>
         </div>
       </div>
 
       <div class="section">
-        <div class="sec-hdr"><h2>Anticoagulantes</h2></div>
-        <div class="sec-body" style="padding:12px 14px">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antcoag')"><h2>Anticoagulantes</h2><span id="sti-antcoag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-antcoag" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
           <tbody id="antcoag-body"></tbody></table>
         </div>
       </div>
 
       <div class="section">
-        <div class="sec-hdr"><h2>Dispositivos Implantados</h2></div>
-        <div class="sec-body" style="padding:12px 14px">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('devices')"><h2>Dispositivos Implantados</h2><span id="sti-devices" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-devices" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Dispositivo</th><th>N</th><th>%</th></tr></thead>
           <tbody id="device-body"></tbody></table>
         </div>
@@ -719,6 +720,7 @@ main{padding-bottom:100px}
     <div class="fab-item"><span class="fab-item-lbl">Dolor Torácico</span><button class="fab-item-btn" onclick="toggleDTPanel();toggleFabMenu()" title="Dolor Torácico">🫀</button></div>
     <div class="fab-item"><span class="fab-item-lbl">ECG Rápido</span><button class="fab-item-btn" onclick="toggleECGPanel();toggleFabMenu()" title="ECG Rápido">⚡</button></div>
     <div class="fab-item"><span class="fab-item-lbl">Segmentación cardíaca</span><button class="fab-item-btn" onclick="toggleEyePanel();toggleFabMenu()" title="Bull's Eye">🎯</button></div>
+    <div class="fab-item"><span class="fab-item-lbl">Biblioteca de Guías</span><button class="fab-item-btn" onclick="toggleLibPanel();toggleFabMenu()" title="Biblioteca de Guías">📚</button></div>
   </div>
   <button class="fab-main" id="fab-main" onclick="toggleFabMenu()" title="Herramientas clínicas">＋</button>
 </div>
@@ -1004,6 +1006,46 @@ main{padding-bottom:100px}
   <div class="ref-ph"><h3>🧮 Calculadoras Clínicas</h3><div style="display:flex;gap:4px"><button class="btn-max" onclick="toggleMaxPanel('calc-panel',this)" title="Maximizar">⛶</button><button onclick="toggleCalcPanel()">✕</button></div></div>
   <div class="cp-body">
     <div class="calc-sec">
+      <button class="calc-sec-h" onclick="toggleCpSec(6)"><span>❤️‍🔥 PREVENT 2023 — Riesgo CV e IC</span><span id="cpa6">▼</span></button>
+      <div class="calc-sec-b" id="cps6">
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(8)"><span>PREVENT 2023 (riesgo CV a 10 años)</span><span id="csuba8">▼</span></button>
+          <div class="csub-b" id="csubb8">
+            <div class="cp-grid">
+              <div class="fg"><label>Sexo</label><select id="p3-sex" oninput="calcPRV3()"><option value="F">Femenino</option><option value="M">Masculino</option></select></div>
+              <div class="fg"><label>Edad (años)</label><input type="number" id="p3-age" placeholder="55" oninput="calcPRV3()"></div>
+              <div class="fg"><label>Colesterol total (mg/dL)</label><input type="number" id="p3-tc" placeholder="200" oninput="calcPRV3()"></div>
+              <div class="fg"><label>HDL (mg/dL)</label><input type="number" id="p3-hdl" placeholder="50" oninput="calcPRV3()"></div>
+              <div class="fg"><label>PAS (mmHg)</label><input type="number" id="p3-sbp" placeholder="130" oninput="calcPRV3()"></div>
+              <div class="fg"><label>En tratamiento HTA</label><select id="p3-htn" oninput="calcPRV3()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Diabetes</label><select id="p3-dm" oninput="calcPRV3()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Tabaquismo actual</label><select id="p3-smoke" oninput="calcPRV3()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>eGFR (mL/min/1.73m²)</label><input type="number" id="p3-egfr" placeholder="90" oninput="calcPRV3()"></div>
+              <div class="fg"><label>Alb/Creat urinaria (mg/g)</label><input type="number" id="p3-uacr" placeholder="0" oninput="calcPRV3()"></div>
+            </div>
+            <button onclick="calcPRV3()" style="width:100%;margin-top:10px;padding:8px;background:#1565C0;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">= Calcular PREVENT 2023</button>
+            <div class="cp-res" id="p3-res" style="display:none"><div class="rpct" id="p3-pct">—</div><div class="rcat" id="p3-cat">—</div></div>
+          </div>
+        </div>
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(9)"><span>PREVENT-HF (riesgo de IC a 10 años)</span><span id="csuba9">▼</span></button>
+          <div class="csub-b" id="csubb9">
+            <div class="cp-grid">
+              <div class="fg"><label>Sexo</label><select id="phf-sex" oninput="calcPHF()"><option value="F">Femenino</option><option value="M">Masculino</option></select></div>
+              <div class="fg"><label>Edad (años)</label><input type="number" id="phf-age" placeholder="55" oninput="calcPHF()"></div>
+              <div class="fg"><label>PAS (mmHg)</label><input type="number" id="phf-sbp" placeholder="130" oninput="calcPHF()"></div>
+              <div class="fg"><label>IMC (kg/m²)</label><input type="number" id="phf-bmi" step="0.1" placeholder="27" oninput="calcPHF()"></div>
+              <div class="fg"><label>Diabetes</label><select id="phf-dm" oninput="calcPHF()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Tabaquismo actual</label><select id="phf-smoke" oninput="calcPHF()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>eGFR (mL/min/1.73m²)</label><input type="number" id="phf-egfr" placeholder="90" oninput="calcPHF()"></div>
+            </div>
+            <button onclick="calcPHF()" style="width:100%;margin-top:10px;padding:8px;background:#1565C0;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">= Calcular PREVENT-HF</button>
+            <div class="cp-res" id="phf-res" style="display:none"><div class="rpct" id="phf-pct">—</div><div class="rcat" id="phf-cat">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="calc-sec">
       <button class="calc-sec-h" onclick="toggleCpSec(0)"><span>📊 SCORE2 / SCORE2-OP — Riesgo CV</span><span id="cpa0">▼</span></button>
       <div class="calc-sec-b" id="cps0">
         <div id="score2-label" style="font-size:.75rem;color:var(--p);font-weight:700;margin-bottom:8px;padding:4px 8px;background:#E3F2FD;border-radius:5px">Ingresá la edad para determinar escala</div>
@@ -1142,6 +1184,69 @@ main{padding-bottom:100px}
       </div>
     </div>
     <div class="calc-sec">
+      <button class="calc-sec-h" onclick="toggleCpSec(7)"><span>🫁 TEP — Tromboembolismo Pulmonar</span><span id="cpa7">▼</span></button>
+      <div class="calc-sec-b" id="cps7">
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(10)"><span>Score de Wells (probabilidad pre-test)</span><span id="csuba10">▼</span></button>
+          <div class="csub-b" id="csubb10">
+            <div class="edm-item"><label>Signos clínicos de TVP (edema, dolor en pantorrilla) +3</label><select id="wl-dvt" oninput="calcWells()"><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>TEP más probable que diagnóstico alternativo +3</label><select id="wl-altdx" oninput="calcWells()"><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>FC &gt;100 lpm +1.5</label><select id="wl-hr" oninput="calcWells()"><option value="0">No</option><option value="1.5">Sí</option></select></div>
+            <div class="edm-item"><label>Inmovilización ≥3 días o cirugía &lt;4 semanas +1.5</label><select id="wl-immob" oninput="calcWells()"><option value="0">No</option><option value="1.5">Sí</option></select></div>
+            <div class="edm-item"><label>TVP o TEP previo +1.5</label><select id="wl-prev" oninput="calcWells()"><option value="0">No</option><option value="1.5">Sí</option></select></div>
+            <div class="edm-item"><label>Hemoptisis +1</label><select id="wl-hemo" oninput="calcWells()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>Cáncer activo (tratado en últimos 6 meses o paliativo) +1</label><select id="wl-cancer" oninput="calcWells()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="cp-res" id="wl-res" style="display:block;background:var(--ok-bg);color:var(--ok)">
+              <div class="rpct" id="wl-score">0 puntos</div>
+              <div class="rcat" id="wl-cat">Probabilidad baja</div>
+              <div style="font-size:.74rem;margin-top:4px" id="wl-interp">&lt;2 puntos: prevalencia ~5%. D-dímero puede descartar TEP.</div>
+            </div>
+          </div>
+        </div>
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(11)"><span>Geneva Revisado (probabilidad pre-test)</span><span id="csuba11">▼</span></button>
+          <div class="csub-b" id="csubb11">
+            <div class="edm-item"><label>TVP o TEP previo +3</label><select id="gv-prev" oninput="calcGeneva()"><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>Edad &gt;65 años +1</label><select id="gv-age" oninput="calcGeneva()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>Cirugía/fractura en el último mes +2</label><select id="gv-surgery" oninput="calcGeneva()"><option value="0">No</option><option value="2">Sí</option></select></div>
+            <div class="edm-item"><label>Neoplasia activa +2</label><select id="gv-cancer" oninput="calcGeneva()"><option value="0">No</option><option value="2">Sí</option></select></div>
+            <div class="edm-item"><label>Dolor unilateral de miembro inferior +3</label><select id="gv-pain" oninput="calcGeneva()"><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>Dolor a palpación profunda y edema unilateral +4</label><select id="gv-edema" oninput="calcGeneva()"><option value="0">No</option><option value="4">Sí</option></select></div>
+            <div class="edm-item"><label>FC 75–94 lpm +3</label><select id="gv-hr1" oninput="calcGeneva()"><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>FC ≥95 lpm +5</label><select id="gv-hr2" oninput="calcGeneva()"><option value="0">No</option><option value="5">Sí</option></select></div>
+            <div class="edm-item"><label>Hemoptisis +2</label><select id="gv-hemo" oninput="calcGeneva()"><option value="0">No</option><option value="2">Sí</option></select></div>
+            <div class="cp-res" id="gv-res" style="display:block;background:var(--ok-bg);color:var(--ok)">
+              <div class="rpct" id="gv-score">0 puntos</div>
+              <div class="rcat" id="gv-cat">Probabilidad baja</div>
+              <div style="font-size:.74rem;margin-top:4px" id="gv-interp">≤3 puntos: baja probabilidad (~8%).</div>
+            </div>
+          </div>
+        </div>
+        <div class="csub">
+          <button class="csub-h" onclick="toggleCsub(12)"><span>Criterios HESTIA (tratamiento ambulatorio)</span><span id="csuba12">▼</span></button>
+          <div class="csub-b" id="csubb12">
+            <p style="font-size:.78rem;color:var(--txt2);margin:0 0 8px">Si algún criterio es <strong>Sí</strong>, el paciente <strong>requiere hospitalización</strong>.</p>
+            <div class="edm-item"><label>1. Inestabilidad hemodinámica (PAS &lt;100 + FC &gt;100)</label><select id="hs1" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>2. Trombolisis o embolectomía necesaria</label><select id="hs2" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>3. Sangrado activo o alto riesgo de sangrado</label><select id="hs3" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>4. Necesita &gt;24h de O₂ para SatO₂ &gt;90%</label><select id="hs4" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>5. TEP diagnosticado bajo anticoagulación</label><select id="hs5" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>6. Dolor severo que requiere opiáceos IV</label><select id="hs6" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>7. Razón médica o social para hospitalización ≥24h</label><select id="hs7" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>8. Clearance creatinina &lt;30 mL/min (Cockcroft-Gault)</label><select id="hs8" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>9. Trombocitopenia severa (&lt;75.000/µL)</label><select id="hs9" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>10. Embarazo</label><select id="hs10" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>11. Historia documentada de TIH</label><select id="hs11" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="cp-res" id="hs-res" style="display:block;background:var(--ok-bg);color:var(--ok)">
+              <div class="rpct" id="hs-score">0 criterios positivos</div>
+              <div class="rcat" id="hs-cat">Tratamiento ambulatorio posible</div>
+              <div style="font-size:.74rem;margin-top:4px" id="hs-interp">Ningún criterio de hospitalización presente.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="calc-sec">
       <button class="calc-sec-h" onclick="toggleCpSec(4)"><span>🫘 Función Renal — CG / CKD-EPI</span><span id="cpa4">▼</span></button>
       <div class="calc-sec-b" id="cps4">
         <div class="cp-grid">
@@ -1265,6 +1370,67 @@ main{padding-bottom:100px}
   </div>
 </div>
 <div class="ref-panel" id="ref-panel"><div class="ref-ph"><h3>📖 Referencias Clínicas Rápidas</h3><div style="display:flex;gap:4px"><button class="btn-max" onclick="toggleMaxPanel('ref-panel',this)" title="Maximizar">⛶</button><button onclick="toggleRef()">✕</button></div></div><div class="ref-body" id="ref-body"></div></div>
+<div class="ref-panel" id="lib-panel">
+  <div class="ref-ph"><h3>📚 Biblioteca de Guías</h3><div style="display:flex;gap:4px"><button class="btn-max" onclick="toggleMaxPanel('lib-panel',this)" title="Maximizar">⛶</button><button onclick="toggleLibPanel()">✕</button></div></div>
+  <div class="ref-body">
+    <div class="ref-sec">
+      <button class="ref-sec-h" onclick="toggleLibSec('ic')"><span>💔 Insuficiencia Cardíaca</span><span id="lba-ic">▼</span></button>
+      <div class="ref-sec-b" id="lbs-ic">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Heart Failure 2021</span><a href="https://doi.org/10.1093/eurheartj/ehab368" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ACC/AHA Heart Failure Guidelines 2022</span><a href="https://doi.org/10.1016/j.jacc.2021.12.012" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">Consenso CCS/CHFS Heart Failure 2024</span><a href="https://doi.org/10.1016/j.cjca.2023.11.005" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+      </div>
+    </div>
+    <div class="ref-sec">
+      <button class="ref-sec-h" onclick="toggleLibSec('fa')"><span>💜 Fibrilación Auricular</span><span id="lba-fa">▼</span></button>
+      <div class="ref-sec-b" id="lbs-fa">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Atrial Fibrillation 2020</span><a href="https://doi.org/10.1093/eurheartj/ehaa612" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ACC/AHA Atrial Fibrillation Guidelines 2023</span><a href="https://doi.org/10.1016/j.jacc.2023.08.017" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+      </div>
+    </div>
+    <div class="ref-sec">
+      <button class="ref-sec-h" onclick="toggleLibSec('val')"><span>🫀 Valvulopatías</span><span id="lba-val">▼</span></button>
+      <div class="ref-sec-b" id="lbs-val">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Valvular Heart Disease 2021</span><a href="https://doi.org/10.1093/eurheartj/ehab395" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ACC/AHA Valvular Heart Disease Guidelines 2021</span><a href="https://doi.org/10.1016/j.jacc.2021.02.037" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+      </div>
+    </div>
+    <div class="ref-sec">
+      <button class="ref-sec-h" onclick="toggleLibSec('ci')"><span>🩺 Cardiopatía Isquémica</span><span id="lba-ci">▼</span></button>
+      <div class="ref-sec-b" id="lbs-ci">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Chronic Coronary Syndromes 2019</span><a href="https://doi.org/10.1093/eurheartj/ehz425" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for ACS without ST Elevation 2023</span><a href="https://doi.org/10.1093/eurheartj/ehad191" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for STEMI 2023</span><a href="https://doi.org/10.1093/eurheartj/ehad191" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ACC/AHA Chest Pain Guidelines 2021</span><a href="https://doi.org/10.1016/j.jacc.2021.07.053" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+      </div>
+    </div>
+    <div class="ref-sec">
+      <button class="ref-sec-h" onclick="toggleLibSec('hta')"><span>🩸 Hipertensión Arterial</span><span id="lba-hta">▼</span></button>
+      <div class="ref-sec-b" id="lbs-hta">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC/ESH Guidelines for Hypertension 2023</span><a href="https://doi.org/10.1093/eurheartj/ehad303" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ACC/AHA Hypertension Guidelines 2017</span><a href="https://doi.org/10.1161/HYP.0000000000000065" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+      </div>
+    </div>
+    <div class="ref-sec">
+      <button class="ref-sec-h" onclick="toggleLibSec('arr')"><span>⚡ Dispositivos y Arritmias</span><span id="lba-arr">▼</span></button>
+      <div class="ref-sec-b" id="lbs-arr">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Cardiac Pacing 2021</span><a href="https://doi.org/10.1093/eurheartj/ehab364" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Ventricular Arrhythmias 2022</span><a href="https://doi.org/10.1093/eurheartj/ehac262" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ACC/AHA Guidelines for ICD/CRT 2018</span><a href="https://doi.org/10.1016/j.hrthm.2018.10.037" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+      </div>
+    </div>
+    <div class="ref-sec">
+      <button class="ref-sec-h" onclick="toggleLibSec('misc')"><span>🌐 Miscelánea Cardiovascular</span><span id="lba-misc">▼</span></button>
+      <div class="ref-sec-b" id="lbs-misc">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Pulmonary Hypertension 2022</span><a href="https://doi.org/10.1093/eurheartj/ehac237" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Cardiomyopathies 2023</span><a href="https://doi.org/10.1093/eurheartj/ehad194" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Infective Endocarditis 2023</span><a href="https://doi.org/10.1093/eurheartj/ehad193" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Cardiovascular Prevention 2021</span><a href="https://doi.org/10.1093/eurheartj/ehab484" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0"><span style="font-size:.79rem;line-height:1.45;color:var(--txt)">ESC Guidelines for Aortic Disease 2014</span><a href="https://doi.org/10.1093/eurheartj/ehu281" target="_blank" rel="noopener" style="flex-shrink:0;padding:4px 9px;background:#E3F2FD;color:var(--p);border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap">🔗 Abrir</a></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 const MO=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -1843,7 +2009,14 @@ function renderCal(){
 
 // ── INSTITUCIONES ────────────────────────────────────────────────
 const DEFAULT_INSTS=[{id:'mutualista',label:'Mutualista',icon:'🏥'},{id:'hospital',label:'Hospital',icon:'🏨'},{id:'particulares',label:'Particulares',icon:'👤'}];
-function getInsts(){return JSON.parse(localStorage.getItem('crd_insts')||'null')||DEFAULT_INSTS.map(i=>({...i}));}
+function getInsts(){
+  const centros=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null');
+  if(centros&&centros.some(c=>c.trim())){
+    const icons=['🏥','🏨','👤','🏢'];
+    return centros.reduce((a,c,i)=>{if(c.trim())a.push({id:'centro_'+i,label:c.trim(),icon:icons[i]});return a;},[]);
+  }
+  return JSON.parse(localStorage.getItem('crd_insts')||'null')||DEFAULT_INSTS.map(i=>({...i}));
+}
 function saveInsts(a){localStorage.setItem('crd_insts',JSON.stringify(a));}
 function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JSON.stringify({patients,nextPid,nextCid}));}
 function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');if(d){patients=d.patients;nextPid=d.nextPid;nextCid=d.nextCid;}else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}migrateConsultations(patients);}
@@ -3921,6 +4094,8 @@ function toggleDiagLibre(inputId, select){
   if(select.value!=='Otro (especificar)')input.value='';
 }
 function toggleRef(){document.getElementById('ref-panel').classList.toggle('open');}
+function toggleLibPanel(){document.getElementById('lib-panel').classList.toggle('open');}
+function toggleLibSec(k){var b=document.getElementById('lbs-'+k);var a=document.getElementById('lba-'+k);if(!b)return;var o=!b.classList.contains('on');b.classList.toggle('on');if(a)a.textContent=o?'▲':'▼';}
 function toggleSec(i){
   const isOpen=document.getElementById('rs'+i).classList.contains('on');
   REFS.forEach((_,j)=>{document.getElementById('rs'+j).classList.remove('on');document.getElementById('ra'+j).textContent='▼';});
@@ -5510,7 +5685,7 @@ function generatePDF(){
 let cpSecOpen=null,csubOpen=null;
 function toggleCpSec(i){
   const isOpen=document.getElementById('cps'+i).classList.contains('on');
-  [0,1,2,3,4,5].forEach(j=>{
+  [0,1,2,3,4,5,6,7].forEach(j=>{
     const b=document.getElementById('cps'+j);
     const a=document.getElementById('cpa'+j);
     if(b)b.classList.remove('on');
@@ -5524,7 +5699,7 @@ function toggleCpSec(i){
 }
 function toggleCsub(i){
   const isOpen=csubOpen===i;
-  [0,1,2,3,4,5,6,7,8].forEach(j=>{const b=document.getElementById('csubb'+j);const a=document.getElementById('csuba'+j);if(b)b.classList.remove('on');if(a)a.textContent='▼';});
+  [0,1,2,3,4,5,6,7,8,9,10,11,12].forEach(j=>{const b=document.getElementById('csubb'+j);const a=document.getElementById('csuba'+j);if(b)b.classList.remove('on');if(a)a.textContent='▼';});
   if(!isOpen){document.getElementById('csubb'+i).classList.add('on');document.getElementById('csuba'+i).textContent='▲';}
   csubOpen=isOpen?null:i;
 }
@@ -5885,6 +6060,174 @@ function checkLogin(){const val=document.getElementById('login-input').value;if(
 setInterval(clock,1000);clock();buildInstScreen();
 setTimeout(initTutorial,800);
 setTimeout(updateControlList,500);
+
+// ── PREVENT 2023 — panel calculadora ─────────────────────────
+function calcPRV3(){
+  const g=id=>document.getElementById(id).value;
+  const r=calcPREVENT({sex:g('p3-sex'),age:g('p3-age'),tc:g('p3-tc'),hdl:g('p3-hdl'),sbp:g('p3-sbp'),htn:+g('p3-htn'),dm:+g('p3-dm'),smoke:+g('p3-smoke'),egfr:g('p3-egfr'),uacr:g('p3-uacr')});
+  const el=document.getElementById('p3-res');
+  if(!r){el.style.display='none';return;}
+  const bg={Alto:'var(--err-bg)',Intermedio:'var(--warn-bg)','Intermedio bajo':'#FFF9C4',Bajo:'var(--ok-bg)'};
+  const cl={Alto:'var(--err)',Intermedio:'var(--warn)','Intermedio bajo':'#827717',Bajo:'var(--ok)'};
+  el.style.display='block';el.style.background=bg[r.cat];el.style.color=cl[r.cat];
+  document.getElementById('p3-pct').textContent=r.pct+'%';
+  document.getElementById('p3-cat').textContent=r.cat+' — riesgo CV a 10 años';
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
+}
+
+// ── PREVENT-HF 2023 ───────────────────────────────────────────
+function calcPHF(){
+  const g=id=>document.getElementById(id).value;
+  const sex=g('phf-sex'),age=+g('phf-age'),sbp=+g('phf-sbp'),bmi=+g('phf-bmi'),dm=+g('phf-dm'),smoke=+g('phf-smoke'),egfr=+(g('phf-egfr')||90);
+  const el=document.getElementById('phf-res');
+  if(!age||!sbp||!bmi){el.style.display='none';return;}
+  const ln=Math.log;
+  let lp,base;
+  if(sex==='F'){
+    lp=0.9245*ln(age/50)+(sbp>=120?0.6714*ln(sbp/120):-0.5070*ln(120/sbp))+0.5173*(dm?1:0)+0.2889*(smoke?1:0)+0.0740*((bmi-25)/5)-(egfr<90?0.3444*ln(egfr/90):0);
+    base=0.9782;
+  }else{
+    lp=0.7782*ln(age/50)+(sbp>=120?0.4887*ln(sbp/120):-0.3648*ln(120/sbp))+0.5319*(dm?1:0)+0.2440*(smoke?1:0)+0.1098*((bmi-25)/5)-(egfr<90?0.3124*ln(egfr/90):0);
+    base=0.9732;
+  }
+  const risk=Math.max(0,Math.min(1,1-Math.pow(base,Math.exp(lp))));
+  const pct=Math.round(risk*100);
+  const cat=pct<5?'Bajo':pct<10?'Intermedio bajo':pct<20?'Intermedio':'Alto';
+  const bg={Alto:'var(--err-bg)',Intermedio:'var(--warn-bg)','Intermedio bajo':'#FFF9C4',Bajo:'var(--ok-bg)'};
+  const cl={Alto:'var(--err)',Intermedio:'var(--warn)','Intermedio bajo':'#827717',Bajo:'var(--ok)'};
+  el.style.display='block';el.style.background=bg[cat];el.style.color=cl[cat];
+  document.getElementById('phf-pct').textContent=pct+'%';
+  document.getElementById('phf-cat').textContent=cat+' — riesgo de IC a 10 años';
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
+}
+
+// ── Wells TEP ─────────────────────────────────────────────────
+function calcWells(){
+  const g=id=>+document.getElementById(id).value;
+  const score=g('wl-dvt')+g('wl-altdx')+g('wl-hr')+g('wl-immob')+g('wl-prev')+g('wl-hemo')+g('wl-cancer');
+  let cat,interp,bg,cl;
+  if(score>=5){cat='Probabilidad alta';interp='≥5 puntos: prevalencia ~66%. TC angiopulmonar indicada.';bg='var(--err-bg)';cl='var(--err)';}
+  else if(score>=2){cat='Probabilidad moderada';interp='2–4 puntos: prevalencia ~28%. D-dímero o imagen según contexto.';bg='var(--warn-bg)';cl='var(--warn)';}
+  else{cat='Probabilidad baja';interp='<2 puntos: prevalencia ~5%. D-dímero puede descartar TEP.';bg='var(--ok-bg)';cl='var(--ok)';}
+  const el=document.getElementById('wl-res');
+  el.style.background=bg;el.style.color=cl;
+  document.getElementById('wl-score').textContent=score+' puntos';
+  document.getElementById('wl-cat').textContent=cat;
+  document.getElementById('wl-interp').textContent=interp;
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
+}
+
+// ── Geneva Revisado TEP ───────────────────────────────────────
+function calcGeneva(){
+  const g=id=>+document.getElementById(id).value;
+  const score=g('gv-prev')+g('gv-age')+g('gv-surgery')+g('gv-cancer')+g('gv-pain')+g('gv-edema')+g('gv-hr1')+g('gv-hr2')+g('gv-hemo');
+  let cat,interp,bg,cl;
+  if(score>=11){cat='Probabilidad alta';interp='≥11 puntos: prevalencia ~74%. TC angiopulmonar indicada.';bg='var(--err-bg)';cl='var(--err)';}
+  else if(score>=4){cat='Probabilidad intermedia';interp='4–10 puntos: prevalencia ~28%. Evaluar con D-dímero o imagen.';bg='var(--warn-bg)';cl='var(--warn)';}
+  else{cat='Probabilidad baja';interp='≤3 puntos: prevalencia ~8%. D-dímero negativo descarta TEP.';bg='var(--ok-bg)';cl='var(--ok)';}
+  const el=document.getElementById('gv-res');
+  el.style.background=bg;el.style.color=cl;
+  document.getElementById('gv-score').textContent=score+' puntos';
+  document.getElementById('gv-cat').textContent=cat;
+  document.getElementById('gv-interp').textContent=interp;
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
+}
+
+// ── HESTIA ────────────────────────────────────────────────────
+function calcHESTIA(){
+  let pos=0;
+  for(let i=1;i<=11;i++)pos+=+document.getElementById('hs'+i).value;
+  const el=document.getElementById('hs-res');
+  if(pos>0){
+    el.style.background='var(--err-bg)';el.style.color='var(--err)';
+    document.getElementById('hs-score').textContent=pos+' criterio'+(pos>1?'s':'')+' positivo'+(pos>1?'s':'');
+    document.getElementById('hs-cat').textContent='Hospitalización requerida';
+    document.getElementById('hs-interp').textContent='Criterio HESTIA positivo: no apto para tratamiento ambulatorio.';
+  }else{
+    el.style.background='var(--ok-bg)';el.style.color='var(--ok)';
+    document.getElementById('hs-score').textContent='0 criterios positivos';
+    document.getElementById('hs-cat').textContent='Tratamiento ambulatorio posible';
+    document.getElementById('hs-interp').textContent='Ningún criterio de hospitalización presente.';
+  }
+  const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
+}
+
+// ── Editar centros ────────────────────────────────────────────
+function openCentrosModal(){
+  const saved=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null');
+  const vals=saved||(DEFAULT_INSTS.slice(0,3).map(i=>i.label).concat(['']));
+  for(let i=1;i<=4;i++)document.getElementById('ct'+i).value=vals[i-1]||'';
+  document.getElementById('centros-modal-overlay').style.display='flex';
+  setTimeout(()=>document.getElementById('ct1').focus(),50);
+}
+function saveCentros(){
+  const centros=[1,2,3,4].map(i=>document.getElementById('ct'+i).value.trim());
+  if(!centros.some(c=>c)){alert('Ingresá al menos un centro.');return;}
+  localStorage.setItem('cardiosalud_centros',JSON.stringify(centros));
+  document.getElementById('centros-modal-overlay').style.display='none';
+  buildInstScreen();
+}
+function closeCentrosModal(){
+  document.getElementById('centros-modal-overlay').style.display='none';
+}
+
+// ── Colapso/expansión de secciones de estadísticas ──────────
+(function initStatCollapse(){
+  var KEYS=['diag','fevi','cirugia','fa','antiagr','antcoag','devices'];
+  KEYS.forEach(function(k){
+    var body=document.getElementById('scb-'+k);
+    var icon=document.getElementById('sti-'+k);
+    if(!body) return;
+    // Store natural computed padding before touching anything
+    var cs=getComputedStyle(body);
+    body.dataset.padTop=cs.paddingTop;
+    body.dataset.padBot=cs.paddingBottom;
+    var open=(localStorage.getItem('stat-sec-'+k)==='open');
+    body.style.transition='max-height .35s ease, padding .35s ease';
+    if(open){
+      body.dataset.statOpen='1';
+      if(icon) icon.textContent='▲';
+    } else {
+      body.style.overflow='hidden';
+      body.style.maxHeight='0';
+      body.style.paddingTop='0';
+      body.style.paddingBottom='0';
+      body.dataset.statOpen='0';
+      if(icon) icon.textContent='▼';
+    }
+  });
+})();
+
+function toggleStatSec(k){
+  var body=document.getElementById('scb-'+k);
+  var icon=document.getElementById('sti-'+k);
+  if(!body) return;
+  var opening=(body.dataset.statOpen!=='1');
+  body.style.transition='max-height .35s ease, padding .35s ease';
+  if(opening){
+    // Restore padding, then animate height open
+    body.style.paddingTop=body.dataset.padTop;
+    body.style.paddingBottom=body.dataset.padBot;
+    body.style.overflow='hidden';
+    body.style.maxHeight='800px';
+    setTimeout(function(){body.style.maxHeight='none';body.style.overflow='';},380);
+    body.dataset.statOpen='1';
+    if(icon) icon.textContent='▲';
+    localStorage.setItem('stat-sec-'+k,'open');
+  } else {
+    // Lock current height, then animate to zero (incl. padding)
+    body.style.overflow='hidden';
+    body.style.maxHeight=body.scrollHeight+'px';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      body.style.maxHeight='0';
+      body.style.paddingTop='0';
+      body.style.paddingBottom='0';
+    });});
+    body.dataset.statOpen='0';
+    if(icon) icon.textContent='▼';
+    localStorage.setItem('stat-sec-'+k,'collapsed');
+  }
+}
 </script>
 <div id="pdf-modal-overlay">
   <div id="pdf-modal">
@@ -5915,5 +6258,24 @@ setTimeout(updateControlList,500);
   </div>
 </div>
 <div id="print-area"></div>
+<div id="centros-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8000;align-items:center;justify-content:center">
+  <div style="background:var(--bg);border-radius:14px;padding:28px 24px;width:100%;max-width:340px;box-shadow:0 12px 40px rgba(0,0,0,.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <h3 style="font-size:1rem;font-weight:700;color:var(--txt);margin:0">✏️ Editar centros</h3>
+      <button onclick="closeCentrosModal()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--txt2);padding:2px 6px;line-height:1;border-radius:4px">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+      <div><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Centro 1</label><input type="text" id="ct1" placeholder="Ej: Mutualista" maxlength="40" onkeydown="if(event.key==='Enter')saveCentros()" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:.86rem;outline:none;font-family:inherit;color:var(--txt);background:var(--bg);box-sizing:border-box"></div>
+      <div><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Centro 2</label><input type="text" id="ct2" placeholder="Ej: Hospital" maxlength="40" onkeydown="if(event.key==='Enter')saveCentros()" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:.86rem;outline:none;font-family:inherit;color:var(--txt);background:var(--bg);box-sizing:border-box"></div>
+      <div><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Centro 3</label><input type="text" id="ct3" placeholder="Ej: Particulares" maxlength="40" onkeydown="if(event.key==='Enter')saveCentros()" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:.86rem;outline:none;font-family:inherit;color:var(--txt);background:var(--bg);box-sizing:border-box"></div>
+      <div><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Centro 4</label><input type="text" id="ct4" placeholder="Ej: Clínica Privada" maxlength="40" onkeydown="if(event.key==='Enter')saveCentros()" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:.86rem;outline:none;font-family:inherit;color:var(--txt);background:var(--bg);box-sizing:border-box"></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onclick="saveCentros()" style="flex:1;padding:10px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer">Guardar</button>
+      <button onclick="closeCentrosModal()" style="padding:10px 16px;background:var(--border);color:var(--txt);border:none;border-radius:8px;font-size:.88rem;font-weight:600;cursor:pointer">Cancelar</button>
+    </div>
+    <p style="font-size:.72rem;color:var(--txt2);margin:12px 0 0;text-align:center">Los campos vacíos no aparecen en el selector</p>
+  </div>
+</div>
 </body>
 </html>
