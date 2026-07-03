@@ -688,8 +688,402 @@ main{padding-bottom:100px}
         </div>
       </div>
     </div>
+
+    <!-- ═══════════ VALORACIÓN PREOPERATORIA — CIRUGÍA NO CARDIACA ═══════════ -->
+    <div class="section" id="preop-section" style="grid-column:1;">
+      <style>
+        #preop-section .po-blk-h{background:#F5F9FF;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.82rem;font-weight:700;color:var(--txt);border:none;width:100%;text-align:left;user-select:none;border-radius:8px;margin-bottom:6px}
+        [data-theme="dark"] #preop-section .po-blk-h{background:var(--surf)}
+        #preop-section .po-blk-b{padding:6px 4px 14px;display:none}
+        #preop-section .po-fg{display:flex;flex-direction:column;gap:3px;margin-bottom:9px}
+        #preop-section .po-fg>label{font-size:.7rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px}
+        #preop-section .po-fg input,#preop-section .po-fg select,#preop-section .po-fg textarea{padding:7px 9px;border:1.5px solid var(--border);border-radius:7px;font-size:.82rem;color:var(--txt);background:var(--surf);font-family:inherit;outline:none;width:100%}
+        #preop-section .po-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+        #preop-section .po-chk{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--txt);margin:3px 0;cursor:pointer}
+        #preop-section .po-chk input{width:15px;height:15px;flex-shrink:0}
+        #preop-section .po-sub{font-size:.72rem;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.4px;margin:12px 0 4px}
+        #preop-section .po-alert{background:var(--err-bg);border:1px solid var(--err);color:var(--err);border-radius:8px;padding:9px 12px;font-size:.8rem;font-weight:700;margin:8px 0}
+        #preop-section .po-recbox{background:#F5F9FF;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.78rem;line-height:1.6;color:var(--txt);margin-bottom:10px}
+        [data-theme="dark"] #preop-section .po-recbox{background:var(--surf)}
+        #preop-section .po-recbox b{color:var(--p)}
+        #preop-section .po-recbox ul{margin:4px 0 0 16px}
+        #preop-section .po-apt{border-radius:10px;padding:12px;text-align:center;font-size:1rem;font-weight:800;margin:8px 0}
+        #preop-section .po-btn{padding:9px 16px;border:none;border-radius:8px;font-size:.84rem;font-weight:700;cursor:pointer;background:var(--p);color:#fff;font-family:inherit}
+        #preop-section .po-btn.sec{background:var(--border);color:var(--txt)}
+        #preop-section .po-tbl{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:6px}
+        #preop-section .po-tbl th,#preop-section .po-tbl td{border:1px solid var(--border);padding:4px 6px;text-align:center}
+        #preop-section .po-tbl th{background:#E3F2FD;color:var(--p)}
+        @media print{ body *{visibility:hidden} #po-print-area,#po-print-area *{visibility:visible} #po-print-area{position:absolute;left:0;top:0;width:100%;padding:24px;white-space:pre-wrap;font-family:'Segoe UI',sans-serif;color:#000;font-size:13px;line-height:1.6} }
+      </style>
+
+      <div class="sec-hdr" style="cursor:pointer" onclick="preopTog('preop-body','preop-arrow')"><h2>🏥 Valoración PreOperatoria — Cirugía No Cardiaca</h2><span id="preop-arrow" style="font-size:.9rem;flex-shrink:0">▼</span></div>
+      <div class="sec-body" id="preop-body" style="display:none;padding:14px">
+
+        <!-- BLOQUE 1 -->
+        <button class="po-blk-h" onclick="preopTog('po-b1','po-a1')"><span>1 · Datos del paciente y cirugía</span><span id="po-a1">▼</span></button>
+        <div class="po-blk-b" id="po-b1">
+          <div class="po-row">
+            <div class="po-fg"><label>Edad (años)</label><input type="number" id="po-edad" min="1" max="120" placeholder="Ej. 68" oninput="preopUpdate()"><span id="po-edad-cat" style="font-size:.72rem;font-weight:700;color:var(--txt2)"></span></div>
+            <div class="po-fg"><label>Urgencia de la cirugía</label><select id="po-urgencia" onchange="preopUpdate()"><option>Electiva</option><option>Prioritaria</option><option>Urgente</option><option>Inmediata</option></select></div>
+          </div>
+          <div class="po-fg"><label>Tipo de cirugía (ESC 2022)</label>
+            <select id="po-cirugia" onchange="preopUpdate()">
+              <option value="">Seleccionar…</option>
+              <optgroup label="Riesgo Bajo (<1%)">
+                <option value="bajo|Mama">Mama</option><option value="bajo|Dental">Dental</option><option value="bajo|Endocrina (tiroides)">Endocrina — tiroides</option><option value="bajo|Ocular">Ocular</option><option value="bajo|Ginecológica menor">Ginecológica menor</option><option value="bajo|Ortopédica menor (meniscectomía)">Ortopédica menor — meniscectomía</option><option value="bajo|Reconstructiva">Reconstructiva</option><option value="bajo|Superficial">Superficial</option><option value="bajo|Urológica menor (RTU próstata)">Urológica menor — RTU próstata</option><option value="bajo|CTAV menor">CTAV menor</option>
+              </optgroup>
+              <optgroup label="Riesgo Intermedio (1-5%)">
+                <option value="intermedio|Carotídea asintomática (endarterectomía o stent)">Carotídea asintomática — endarterectomía/stent</option><option value="intermedio|Carotídea sintomática (endarterectomía)">Carotídea sintomática — endarterectomía</option><option value="intermedio|Reparación endovascular de aneurisma aórtico">Reparación endovascular aneurisma aórtico</option><option value="intermedio|Cabeza y cuello">Cabeza y cuello</option><option value="intermedio|Intraperitoneal (esplenectomía/hernia de hiato/colecistectomía)">Intraperitoneal — esplenectomía/hernia hiato/colecistectomía</option><option value="intermedio|Intratorácica no mayor">Intratorácica no mayor</option><option value="intermedio|Neurológica u ortopédica mayor (cadera y columna)">Neurológica/ortopédica mayor — cadera y columna</option><option value="intermedio|Angioplastia arterial periférica">Angioplastia arterial periférica</option><option value="intermedio|Trasplante renal">Trasplante renal</option><option value="intermedio|Urológica o ginecológica mayor">Urológica/ginecológica mayor</option>
+              </optgroup>
+              <optgroup label="Riesgo Alto (>5%)">
+                <option value="alto|Resección de glándulas suprarrenales">Resección glándulas suprarrenales</option><option value="alto|Cirugía aórtica y vascular mayor">Cirugía aórtica y vascular mayor</option><option value="alto|Carotídea sintomática (stent)">Carotídea sintomática — stent</option><option value="alto|Duodeno y páncreas">Duodeno y páncreas</option><option value="alto|Hígado y vías biliares">Hígado y vías biliares</option><option value="alto|Esofagectomía">Esofagectomía</option><option value="alto|Revascularización abierta de MMII (isquemia aguda) o amputación">Revascularización abierta MMII / amputación</option><option value="alto|Neumonectomía">Neumonectomía</option><option value="alto|Trasplante pulmonar o hepático">Trasplante pulmonar/hepático</option><option value="alto|Reparación de perforación intestinal">Reparación perforación intestinal</option><option value="alto|Cistectomía total">Cistectomía total</option>
+              </optgroup>
+            </select>
+            <div style="margin-top:5px" id="po-cirugia-badge"></div>
+          </div>
+          <div class="po-sub">Condición cardíaca inestable</div>
+          <label class="po-chk"><input type="checkbox" class="po-unstable" id="po-uns-sca" onchange="preopUpdate()"> SCA activo (&lt;30 días)</label>
+          <label class="po-chk"><input type="checkbox" class="po-unstable" id="po-uns-ic" onchange="preopUpdate()"> IC descompensada (NYHA IV)</label>
+          <label class="po-chk"><input type="checkbox" class="po-unstable" id="po-uns-arr" onchange="preopUpdate()"> Arritmia grave no controlada</label>
+          <label class="po-chk"><input type="checkbox" class="po-unstable" id="po-uns-eao" onchange="preopUpdate()"> Estenosis aórtica severa sintomática</label>
+          <label class="po-chk"><input type="checkbox" class="po-unstable" id="po-uns-htp" onchange="preopUpdate()"> HTP severa</label>
+          <div id="po-uns-alert"></div>
+          <div class="po-sub">Síntomas actuales</div>
+          <label class="po-chk"><input type="checkbox" id="po-si-asint" onchange="preopUpdate()"> Asintomático</label>
+          <label class="po-chk"><input type="checkbox" id="po-si-angorest" onchange="preopUpdate()"> Angor estable</label>
+          <label class="po-chk"><input type="checkbox" id="po-si-angorinest" onchange="preopUpdate()"> Angor inestable</label>
+          <label class="po-chk"><input type="checkbox" id="po-si-disnea12" onchange="preopUpdate()"> Disnea CF I-II</label>
+          <label class="po-chk"><input type="checkbox" id="po-si-disnea34" onchange="preopUpdate()"> Disnea CF III-IV</label>
+          <label class="po-chk"><input type="checkbox" id="po-si-edema" onchange="preopUpdate()"> Edema periférico</label>
+          <label class="po-chk"><input type="checkbox" id="po-si-sincope" onchange="preopUpdate()"> Síncope</label>
+          <label class="po-chk"><input type="checkbox" id="po-si-palp" onchange="preopUpdate()"> Palpitaciones</label>
+          <div class="po-fg" style="margin-top:10px"><label>Clase funcional</label><select id="po-cf" onchange="preopUpdate()"><option value="buena">&gt;4 METs — buena</option><option value="reducida">≤4 METs — reducida</option><option value="noeval">No evaluable</option></select></div>
+          <div class="po-sub">RCRI — Índice de Lee</div>
+          <label class="po-chk"><input type="checkbox" class="po-rcri" id="po-rcri-isq" onchange="preopUpdate()"> Cardiopatía isquémica</label>
+          <label class="po-chk"><input type="checkbox" class="po-rcri" id="po-rcri-ic" onchange="preopUpdate()"> Insuficiencia cardíaca</label>
+          <label class="po-chk"><input type="checkbox" class="po-rcri" id="po-rcri-ecv" onchange="preopUpdate()"> ECV / AIT previo</label>
+          <label class="po-chk"><input type="checkbox" class="po-rcri" id="po-rcri-dm" onchange="preopUpdate()"> DM insulino-requirente</label>
+          <label class="po-chk"><input type="checkbox" class="po-rcri" id="po-rcri-irc" onchange="preopUpdate()"> IRC (creat &gt;2 mg/dl o TFG &lt;60)</label>
+          <label class="po-chk"><input type="checkbox" class="po-rcri" id="po-rcri-cx" onchange="preopUpdate()" disabled> Cirugía de alto riesgo <span style="font-size:.68rem;color:var(--txt2)">(automático)</span></label>
+          <div id="po-rcri-res" style="margin-top:8px"></div>
+        </div>
+
+        <!-- BLOQUE 2 -->
+        <button class="po-blk-h" onclick="preopTog('po-b2','po-a2')"><span>2 · Examen físico y paraclínica</span><span id="po-a2">▼</span></button>
+        <div class="po-blk-b" id="po-b2">
+          <div class="po-row">
+            <div class="po-fg"><label>PA</label><input type="text" id="po-pa" placeholder="120/80"></div>
+            <div class="po-fg"><label>FC (lpm)</label><input type="number" id="po-fc" placeholder="72"></div>
+          </div>
+          <div class="po-row">
+            <div class="po-fg"><label>Ritmo</label><select id="po-ritmo" onchange="preopUpdate()"><option value="Sinusal">Sinusal</option><option value="FA">FA</option><option value="Otra arritmia">Otra arritmia</option></select></div>
+            <div class="po-fg"><label>Soplo</label><select id="po-soplo" onchange="preopUpdate()"><option value="No">No</option><option value="No significativo">Sí — no significativo</option><option value="Significativo">Sí — significativo</option><option value="A evaluar con ETT">Sí — a evaluar con ETT</option></select></div>
+          </div>
+          <div class="po-row">
+            <div class="po-fg"><label>Signos de IC</label><select id="po-ic-signos" onchange="preopUpdate()"><option value="No">No</option><option value="Sí">Sí</option></select></div>
+            <div class="po-fg"><label>Sexo (para anemia)</label><select id="po-sexo"><option value="H">Hombre</option><option value="M">Mujer</option></select></div>
+          </div>
+          <div class="po-row">
+            <div class="po-fg"><label>Hemoglobina (g/dl)</label><input type="number" step="0.1" id="po-hb" placeholder="13" oninput="preopUpdate()"><span id="po-hb-alert" style="font-size:.72rem;font-weight:700;color:var(--err)"></span></div>
+            <div class="po-fg"><label>Plaquetas</label><select id="po-plaq"><option value="Normal">Normal</option><option value="Trombocitopenia">Trombocitopenia</option></select></div>
+          </div>
+          <div class="po-row">
+            <div class="po-fg"><label>Crasis</label><select id="po-crasis"><option value="Normal">Normal</option><option value="Alterada">Alterada</option></select></div>
+            <div class="po-fg"><label>Creatinina (mg/dl)</label><input type="number" step="0.01" id="po-creat" placeholder="0.9"></div>
+          </div>
+          <div class="po-row">
+            <div class="po-fg"><label>TFG (ml/min)</label><input type="number" id="po-tfg" placeholder="90" oninput="preopUpdate()"></div>
+            <div class="po-fg"><label>HbA1c (%)</label><input type="number" step="0.1" id="po-hba1c" placeholder="6.5" oninput="preopUpdate()"><span id="po-hba1c-alert" style="font-size:.72rem;font-weight:700;color:var(--err)"></span></div>
+          </div>
+          <div class="po-fg"><label>ECG</label><select id="po-ecg" onchange="preopUpdate()"><option value="No disponible">No disponible</option><option value="Normal">Normal</option><option value="FA">FA</option><option value="BRI">BRI</option><option value="BRD">BRD</option><option value="Onda Q">Onda Q</option><option value="HVI">HVI</option><option value="QT largo">QT largo</option><option value="Otras alteraciones">Otras alteraciones</option></select></div>
+          <div class="po-row">
+            <div class="po-fg"><label>ETT — FEVI</label><select id="po-fevi" onchange="preopUpdate()"><option value="No disponible">No disponible</option><option value="≥50%">≥50%</option><option value="40-49%">40-49%</option><option value="<40%">&lt;40%</option></select></div>
+            <div class="po-fg"><label>Valvulopatías</label><select id="po-valv" onchange="preopUpdate()"><option value="No">No</option><option value="No significativa">No significativa</option><option value="Significativa">Significativa (especificar)</option></select></div>
+          </div>
+          <div class="po-fg" id="po-valv-libre-wrap" style="display:none"><label>¿Cuál valvulopatía?</label><input type="text" id="po-valv-libre" placeholder="Ej. Estenosis aórtica moderada"></div>
+          <div class="po-row">
+            <div class="po-fg"><label>Troponinas</label><select id="po-tropo"><option value="No disponible">No disponible</option><option value="Normal">Normal</option><option value="Elevada">Elevada</option></select></div>
+            <div class="po-fg"><label>BNP / NT-proBNP</label><select id="po-bnp" onchange="preopUpdate()"><option value="No disponible">No disponible</option><option value="Normal">Normal</option><option value="Elevado">Elevado</option></select></div>
+          </div>
+        </div>
+
+        <!-- BLOQUE 3 -->
+        <button class="po-blk-h" onclick="preopTog('po-b3','po-a3')"><span>3 · Tratamiento actual y plan</span><span id="po-a3">▼</span></button>
+        <div class="po-blk-b" id="po-b3">
+          <div class="po-fg"><label>Anticoagulantes</label><select id="po-aco" onchange="preopUpdate()"><option value="Ninguno">Ninguno</option><option value="AVK">AVK (warfarina/acenocumarol)</option><option value="Apixabán">Apixabán</option><option value="Rivaroxabán">Rivaroxabán</option><option value="Dabigatrán">Dabigatrán</option><option value="Edoxabán">Edoxabán</option></select></div>
+          <div class="po-fg" id="po-inr-wrap" style="display:none"><label>INR actual</label><input type="number" step="0.1" id="po-inr" placeholder="2.5"></div>
+          <div class="po-fg"><label>Antiagregantes</label><select id="po-aap" onchange="preopUpdate()"><option value="Ninguno">Ninguno</option><option value="AAS solo">AAS solo</option><option value="Clopidogrel solo">Clopidogrel solo</option><option value="TAPD AAS+Clopidogrel">TAPD AAS+Clopidogrel</option><option value="TAPD AAS+Ticagrelor">TAPD AAS+Ticagrelor</option><option value="TAPD AAS+Prasugrel">TAPD AAS+Prasugrel</option></select></div>
+          <div class="po-fg"><label>Stent previo</label><select id="po-stent" onchange="preopUpdate()"><option value="No">No</option><option value="SM">SM (metálico)</option><option value="SFA">SFA (farmacoactivo)</option></select></div>
+          <div id="po-stent-wrap" style="display:none">
+            <div class="po-row">
+              <div class="po-fg"><label>Fecha de implante</label><input type="date" id="po-stent-fecha" oninput="preopUpdate()"></div>
+              <div class="po-fg"><label>Contexto</label><select id="po-stent-ctx" onchange="preopUpdate()"><option value="Electivo">Electivo</option><option value="SCA">SCA</option></select></div>
+            </div>
+            <div id="po-stent-meses" style="font-size:.74rem;font-weight:700;color:var(--p)"></div>
+          </div>
+          <div class="po-sub">Otros fármacos</div>
+          <label class="po-chk"><input type="checkbox" id="po-fx-bb" onchange="preopUpdate()"> Betabloqueante</label>
+          <label class="po-chk"><input type="checkbox" id="po-fx-ieca" onchange="preopUpdate()"> IECA / ARA-II</label>
+          <div class="po-fg" id="po-ieca-wrap" style="display:none;margin-left:22px"><label>Indicación</label><select id="po-ieca-ind" onchange="preopUpdate()"><option value="IC">IC</option><option value="HTA">HTA</option><option value="ambas">Ambas</option></select></div>
+          <label class="po-chk"><input type="checkbox" id="po-fx-diur" onchange="preopUpdate()"> Diuréticos</label>
+          <label class="po-chk"><input type="checkbox" id="po-fx-sglt2" onchange="preopUpdate()"> SGLT-2</label>
+          <label class="po-chk"><input type="checkbox" id="po-fx-insu" onchange="preopUpdate()"> Insulina</label>
+          <label class="po-chk"><input type="checkbox" id="po-fx-est" onchange="preopUpdate()"> Estatinas</label>
+          <div class="po-fg" style="margin-top:10px"><label>Dispositivo implantable</label><select id="po-disp" onchange="preopUpdate()"><option value="Ninguno">Ninguno</option><option value="Marcapaso unicameral">Marcapaso unicameral</option><option value="Marcapaso bicameral">Marcapaso bicameral</option><option value="CDI bicameral">CDI bicameral</option><option value="TRC-D tricameral">TRC-D tricameral</option><option value="TRC-P">TRC-P</option></select></div>
+          <div id="po-disp-wrap" style="display:none">
+            <div class="po-row">
+              <div class="po-fg"><label>Dependencia de MP</label><select id="po-disp-dep" onchange="preopUpdate()"><option value="Dependiente">Dependiente</option><option value="No dependiente">No dependiente</option><option value="A determinar">A determinar</option></select></div>
+              <div class="po-fg"><label>Posición</label><select id="po-disp-pos"><option value="Subclavicular izquierda habitual">Subclavicular izquierda habitual</option><option value="Otra">Otra</option></select></div>
+            </div>
+            <div class="po-fg"><label>Ubicación de la cirugía (riesgo IEM)</label><select id="po-disp-ubi" onchange="preopUpdate()"><option value="Infraumbilical">Infraumbilical</option><option value="Supraumbilical">Supraumbilical</option><option value="Cabeza-cuello">Cabeza-cuello</option><option value="MMII">MMII</option><option value="Otro">Otro</option></select></div>
+          </div>
+        </div>
+
+        <!-- BLOQUE 4 -->
+        <button class="po-blk-h" onclick="preopTog('po-b4','po-a4')"><span>4 · Recomendaciones automáticas</span><span id="po-a4">▼</span></button>
+        <div class="po-blk-b" id="po-b4">
+          <div id="po-rec-para" class="po-recbox"></div>
+          <div id="po-rec-farma" class="po-recbox"></div>
+          <div id="po-rec-antitromb" class="po-recbox"></div>
+          <div id="po-rec-disp" class="po-recbox" style="display:none"></div>
+          <div id="po-apt-box"></div>
+        </div>
+
+        <!-- BLOQUE 5 -->
+        <button class="po-blk-h" onclick="preopTog('po-b5','po-a5')"><span>5 · Nota clínica</span><span id="po-a5">▼</span></button>
+        <div class="po-blk-b" id="po-b5">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+            <button class="po-btn" onclick="preopGenNota()">📝 Generar nota clínica</button>
+            <button class="po-btn sec" onclick="preopPrintNota()">🖨️ Imprimir nota</button>
+          </div>
+          <textarea id="po-nota" style="width:100%;min-height:260px;padding:10px;border:1.5px solid var(--border);border-radius:8px;font-size:.82rem;color:var(--txt);background:var(--surf);font-family:inherit;line-height:1.5" placeholder="Presioná 'Generar nota clínica' para autocompletar…"></textarea>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
+
+<div id="po-print-area" style="display:none"></div>
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function pv(id){ var e=$(id); return e?e.value:''; }
+  function pc(id){ var e=$(id); return !!(e&&e.checked); }
+  function poBadge(kind,txt){ var m={ok:['var(--ok-bg)','var(--ok)'],warn:['var(--warn-bg)','var(--warn)'],err:['var(--err-bg)','var(--err)'],p:['#E3F2FD','var(--p)']}; var c=m[kind]||m.p; return '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:.74rem;font-weight:700;background:'+c[0]+';color:'+c[1]+'">'+txt+'</span>'; }
+  function cirRiesgo(){ var val=pv('po-cirugia'); return val?val.split('|')[0]:''; }
+  function cirNombre(){ var val=pv('po-cirugia'); return val?val.split('|')[1]:''; }
+
+  window.preopTog=function(bodyId,arrId){ var b=$(bodyId); if(!b)return; var open=b.style.display!=='none'; b.style.display=open?'none':'block'; var a=$(arrId); if(a)a.textContent=open?'▼':'▲'; };
+
+  window.preopUpdate=function(){
+    // Edad
+    var edad=parseFloat(pv('po-edad'));
+    $('po-edad-cat').textContent = isNaN(edad)?'' : (edad<65?'< 65 años':'≥ 65 años');
+    // Riesgo quirúrgico
+    var r=cirRiesgo();
+    $('po-cirugia-badge').innerHTML = r==='bajo'?poBadge('ok','Riesgo bajo (<1%)') : r==='intermedio'?poBadge('warn','Riesgo intermedio (1-5%)') : r==='alto'?poBadge('err','Riesgo alto (>5%)') : '';
+    // Cirugía alto riesgo → RCRI auto
+    var cxAlta = r==='alto';
+    if($('po-rcri-cx')) $('po-rcri-cx').checked = cxAlta;
+    // Condición inestable
+    var uns = pc('po-uns-sca')||pc('po-uns-ic')||pc('po-uns-arr')||pc('po-uns-eao')||pc('po-uns-htp');
+    $('po-uns-alert').innerHTML = uns ? '<div class="po-alert">⚠️ DIFERIR CIRUGÍA ELECTIVA — Estabilizar condición activa</div>' : '';
+    // RCRI
+    var rcri = ['po-rcri-isq','po-rcri-ic','po-rcri-ecv','po-rcri-dm','po-rcri-irc','po-rcri-cx'].reduce(function(a,id){return a+(pc(id)?1:0);},0);
+    var mace = rcri===0?'4%':rcri===1?'6%':rcri===2?'10%':'15%';
+    var rk = rcri<=1?'ok':rcri===2?'warn':'err';
+    $('po-rcri-res').innerHTML = 'Score de Lee: <b>'+rcri+'</b> · '+poBadge(rk,'MACE 30 días '+mace);
+    // Anemia
+    var hb=parseFloat(pv('po-hb')), sexo=pv('po-sexo');
+    var hbLow = !isNaN(hb) && ((sexo==='H'&&hb<10)||(sexo==='M'&&hb<9));
+    $('po-hb-alert').textContent = hbLow?'⚠️ Anemia — corregir/estudiar':'';
+    // HbA1c
+    var a1c=parseFloat(pv('po-hba1c'));
+    $('po-hba1c-alert').textContent = (!isNaN(a1c)&&a1c>=8.5)?'⚠️ ≥8.5% — diferir cirugía electiva':'';
+    // Toggles dependientes
+    $('po-valv-libre-wrap').style.display = pv('po-valv')==='Significativa'?'block':'none';
+    $('po-inr-wrap').style.display = pv('po-aco')==='AVK'?'block':'none';
+    $('po-stent-wrap').style.display = (pv('po-stent')!=='No')?'block':'none';
+    $('po-ieca-wrap').style.display = pc('po-fx-ieca')?'block':'none';
+    $('po-disp-wrap').style.display = (pv('po-disp')!=='Ninguno')?'block':'none';
+    // Meses de stent
+    var fecha=pv('po-stent-fecha'), meses=null;
+    if(fecha){ var d=new Date(fecha), n=new Date(); meses=(n.getFullYear()-d.getFullYear())*12+(n.getMonth()-d.getMonth()); $('po-stent-meses').textContent='Transcurridos ~'+meses+' meses desde el implante.'; }
+    else $('po-stent-meses').textContent='';
+    preopRecs(edad,r,rcri,mace,uns,a1c,meses);
+  };
+
+  function preopRecs(edad,r,rcri,mace,uns,a1c,stentMeses){
+    var ri = r==='intermedio'||r==='alto';
+    var fr = pc('po-rcri-isq')||pc('po-rcri-ic')||pc('po-rcri-ecv')||pc('po-rcri-dm')||pc('po-rcri-irc');
+    var ecv = pc('po-rcri-isq')||pc('po-rcri-ecv')||pc('po-rcri-ic');
+    var mayor65 = !isNaN(edad)&&edad>=65;
+    var dm = pc('po-rcri-dm')||pc('po-fx-insu');
+    var disnea = pc('po-si-disnea12')||pc('po-si-disnea34')||pc('po-si-edema');
+    var cf = pv('po-cf');
+    var pend=[];
+    // ── Paraclínica ──
+    var para='<b>🔬 Paraclínica recomendada</b><ul>';
+    if((mayor65||fr||ecv)&&ri){ para+='<li>ECG — <b>Clase I</b></li>'; if(pv('po-ecg')==='No disponible')pend.push('ECG'); }
+    else if(!mayor65&&r==='alto'){ para+='<li>ECG — considerar</li>'; }
+    if((ecv||fr||mayor65)&&ri){ para+='<li>Troponinas ultrasensibles — <b>Clase I</b> (pre y 24-48h post)</li>'; if(pv('po-tropo')==='No disponible')pend.push('troponinas ultrasensibles'); }
+    if(disnea) para+='<li>BNP/NT-proBNP — <b>Clase I</b> (disnea/edema)</li>';
+    else if((ecv||fr||mayor65)&&ri){ para+='<li>BNP/NT-proBNP — <b>IIa</b></li>'; }
+    if(pv('po-bnp')==='No disponible'&&(disnea||((ecv||fr||mayor65)&&ri))) pend.push('BNP/NT-proBNP');
+    if(pv('po-soplo')==='Significativo'||pv('po-soplo')==='A evaluar con ETT') { para+='<li>ETT — <b>Clase I</b> (soplo significativo)</li>'; if(pv('po-fevi')==='No disponible')pend.push('ETT'); }
+    else if(disnea&&pv('po-bnp')==='Elevado'){ para+='<li>ETT — <b>Clase I</b> (disnea + BNP elevado)</li>'; if(pv('po-fevi')==='No disponible')pend.push('ETT'); }
+    else if(r==='alto'){ para+='<li>ETT — considerar</li>'; }
+    // Prueba de estrés
+    if(r==='bajo') para+='<li>Prueba de estrés — no indicada (cirugía de bajo riesgo)</li>';
+    else if(ri&&cf==='reducida'&&rcri<2) para+='<li>Prueba de estrés — considerar (CF ≤4 METs, RCRI &lt;2)</li>';
+    else if(r==='alto'&&cf==='reducida'&&rcri>=2){ para+='<li>Prueba de estrés — <b>recomendada</b> (CF ≤4 METs, RCRI ≥2)</li>'; pend.push('prueba funcional de estrés'); }
+    if(ri){ para+='<li>Hemoglobina — siempre</li>'; if(!pv('po-hb'))pend.push('hemograma'); }
+    if(dm){ para+='<li>HbA1c — obligatoria (DM)</li>'; if(!pv('po-hba1c'))pend.push('HbA1c'); }
+    para+='</ul>';
+    $('po-rec-para').innerHTML=para;
+    // ── Farmacológicas ──
+    var far='<b>💊 Recomendaciones farmacológicas</b><ul>';
+    if(pc('po-fx-bb')) far+='<li>Betabloqueante: <b>continuar</b>.</li>';
+    else if(r==='alto'&&rcri>=1) far+='<li>Betabloqueante: <b>iniciar</b> bisoprolol o atenolol 1 semana a 1 mes antes.</li>';
+    var vascular = /vascular|aórtic|carotíd|MMII|periférica|aneurisma/i.test(cirNombre());
+    if(vascular) far+='<li>Estatina: <b>iniciar</b> 2 semanas antes (cirugía vascular).</li>';
+    if(pc('po-fx-est')) far+='<li>Estatina: <b>continuar</b> siempre.</li>';
+    if(pc('po-fx-ieca')){ var ind=pv('po-ieca-ind'); if(ind==='IC'||ind==='ambas') far+='<li>IECA/ARA-II: <b>mantener</b> (IC con disfunción sistólica).</li>'; else far+='<li>IECA/ARA-II: <b>suspender</b> el día de la cirugía (HTA sin IC).</li>'; }
+    if(pc('po-fx-diur')) far+='<li>Diuréticos: <b>suspender</b> el día de la cirugía.</li>';
+    if(pc('po-fx-sglt2')) far+='<li>SGLT-2: <b>suspender</b> ≥3 días antes.</li>';
+    if(!isNaN(a1c)&&a1c>=8.5) far+='<li><b>HbA1c ≥8.5% → diferir cirugía electiva.</b></li>';
+    far+='</ul>';
+    $('po-rec-farma').innerHTML=far;
+    // ── Antitrombótico ──
+    var at='<b>🩸 Plan antitrombótico</b><ul>';
+    var stent=pv('po-stent'), ctx=pv('po-stent-ctx'), aap=pv('po-aap'), aco=pv('po-aco');
+    if(stent==='No'&&aap==='AAS solo') at+='<li>Sin stent + AAS solo + riesgo hemorrágico alto → suspender AAS ≥3 días antes.</li>';
+    if(stent==='SM'){ if(stentMeses!=null&&stentMeses<1) at+='<li>SM &lt;4 semanas → <b>diferir</b>.</li>'; else at+='<li>SM ≥4 semanas → operar manteniendo AAS.</li>'; }
+    if(stent==='SFA'&&ctx==='Electivo'){ if(stentMeses!=null&&stentMeses<6) at+='<li>SFA electivo &lt;6 meses → <b>diferir</b>.</li>'; else at+='<li>SFA electivo ≥6 meses → puede operar.</li>'; }
+    if(ctx==='SCA'&&stent!=='No'){ if(stentMeses!=null&&stentMeses<12) at+='<li>SCA &lt;12 meses → <b>diferir</b> cirugía electiva.</li>'; }
+    if(/Ticagrelor/.test(aap)) at+='<li>Suspender ticagrelor 3-5 días antes.</li>';
+    if(/Clopidogrel/.test(aap)) at+='<li>Suspender clopidogrel 5 días antes.</li>';
+    if(/Prasugrel/.test(aap)) at+='<li>Suspender prasugrel 7 días antes.</li>';
+    if(aco==='AVK'){ at+='<li>AVK bajo riesgo trombótico → suspender 3-5 días sin puente. Alto riesgo (CHA₂DS₂-VASc &gt;6, válvula mecánica con FR, ictus &lt;3m) → puente con HBPM.</li>'; }
+    if(aco&&aco!=='Ninguno'&&aco!=='AVK'){
+      var tfg=parseFloat(pv('po-tfg'));
+      var tab='<table class="po-tbl"><tr><th>NACO</th><th>TFG (ml/min)</th><th>Última dosis (RB / RA)</th></tr>';
+      if(aco==='Dabigatrán'){ tab+='<tr><td>Dabigatrán</td><td>≥80</td><td>24h / 48h</td></tr><tr><td></td><td>50-79</td><td>36h / 72h</td></tr><tr><td></td><td>30-49</td><td>48h / 96h</td></tr>'; }
+      else { tab+='<tr><td>'+aco+'</td><td>≥80</td><td>24h / 48h</td></tr><tr><td></td><td>50-79</td><td>24h / 48h</td></tr><tr><td></td><td>30-49</td><td>36h / 48h</td></tr>'; }
+      tab+='</table>';
+      at+='<li>NACO ('+aco+'): no requiere puente. Timing según función renal'+(isNaN(tfg)?'':' — TFG '+tfg+' ml/min')+':</li>'+tab+'<div style="font-size:.72rem;color:var(--txt2);margin-top:4px">Reinicio: ≥6h post si hemostasia rápida; ≥48-72h si alto riesgo hemorrágico.</div>';
+    }
+    at+='</ul>';
+    $('po-rec-antitromb').innerHTML=at;
+    // ── Dispositivo ──
+    var disp=pv('po-disp');
+    if(disp!=='Ninguno'){
+      $('po-rec-disp').style.display='block';
+      var dep=pv('po-disp-dep'), ubi=pv('po-disp-ubi');
+      var altoIEM = (ubi==='Supraumbilical'||ubi==='Cabeza-cuello'); // aproximación por ubicación
+      var esCDI = /CDI|TRC-D/.test(disp);
+      var d='<b>🔌 Manejo del dispositivo</b><ul>';
+      if(esCDI){
+        if(altoIEM){ d+='<li>CDI + alto riesgo IEM → <b>desactivar detección TV/FV</b> (imán o reprogramación), desfibrilador externo y monitoreo continuo obligatorio.'+(dep==='Dependiente'?' Además, MP-dependiente: reprogramar a asincrónico (VOO/DOO).':'')+'</li>'; }
+        else d+='<li>CDI + bajo riesgo IEM → sin desactivar detección, monitoreo.</li>';
+      } else {
+        if(dep==='Dependiente'){
+          if(altoIEM) d+='<li>MP dependiente + alto riesgo IEM → reprogramar a modo asincrónico (VOO/DOO) preoperatoriamente, electrobisturí bipolar, desfibrilador externo disponible, derivar al equipo implantador.</li>';
+          else d+='<li>MP dependiente + bajo riesgo IEM → electrobisturí bipolar, monitoreo continuo, parche de desfibrilación externo disponible.</li>';
+        } else {
+          if(altoIEM) d+='<li>MP no dependiente + alto riesgo IEM → considerar imán intraoperatorio, electrobisturí bipolar, monitoreo.</li>';
+          else d+='<li>MP no dependiente + bajo riesgo IEM → electrobisturí bipolar preferible, monitoreo continuo.</li>';
+        }
+      }
+      d+='</ul><b>📋 Seguimiento postoperatorio</b><ul>';
+      d+='<li>Si se reprogramó → volver al modo original lo antes posible tras la cirugía.</li>';
+      if(esCDI) d+='<li>Si se desactivó el CDI → reactivar en sala de recuperación con monitoreo hasta la reactivación.</li>';
+      d+='<li>Informar al equipo implantador del procedimiento.</li></ul>';
+      $('po-rec-disp').innerHTML=d;
+    } else { $('po-rec-disp').style.display='none'; }
+    // ── Aptitud ──
+    var stentReciente = (stent==='SM'&&stentMeses!=null&&stentMeses<1)||(stent==='SFA'&&ctx==='Electivo'&&stentMeses!=null&&stentMeses<6)||(ctx==='SCA'&&stent!=='No'&&stentMeses!=null&&stentMeses<12);
+    var diferir = uns || (!isNaN(a1c)&&a1c>=8.5) || stentReciente;
+    var apt, kind;
+    if(diferir){ apt='⏸️ DIFERIR — NO APTO TEMPORALMENTE'; kind='err'; }
+    else if(pend.length||rcri>=2||r==='alto'){ apt='✅ APTO CON CONDICIONES'; kind='warn'; }
+    else { apt='✅ APTO'; kind='ok'; }
+    var c={ok:['var(--ok-bg)','var(--ok)'],warn:['var(--warn-bg)','var(--warn)'],err:['var(--err-bg)','var(--err)']}[kind];
+    $('po-apt-box').innerHTML='<div class="po-apt" style="background:'+c[0]+';color:'+c[1]+';border:1px solid '+c[1]+'">'+apt+'</div>'+(pend.length?'<div style="font-size:.76rem;color:var(--txt2)">Pendiente para completar valoración: '+pend.join(', ')+'.</div>':'');
+    window._poState={pend:pend,apt:apt,rcri:rcri,mace:mace,uns:uns,diferir:diferir,r:r};
+  }
+
+  window.preopGenNota=function(){
+    preopUpdate();
+    var st=window._poState||{pend:[],apt:'',rcri:0,mace:'',r:''};
+    var edad=pv('po-edad');
+    var frLabels={'po-rcri-isq':'cardiopatía isquémica','po-rcri-ic':'insuficiencia cardíaca','po-rcri-ecv':'ECV/AIT previo','po-rcri-dm':'diabetes insulino-requirente','po-rcri-irc':'insuficiencia renal crónica'};
+    var fr=[]; Object.keys(frLabels).forEach(function(id){ if(pc(id))fr.push(frLabels[id]); });
+    var sintLabels={'po-si-angorest':'angor estable','po-si-angorinest':'angor inestable','po-si-disnea12':'disnea CF I-II','po-si-disnea34':'disnea CF III-IV','po-si-edema':'edema periférico','po-si-sincope':'síncope','po-si-palp':'palpitaciones'};
+    var sint=[]; Object.keys(sintLabels).forEach(function(id){ if(pc(id))sint.push(sintLabels[id]); });
+    var sintTxt = pc('po-si-asint')&&!sint.length ? 'Asintomático' : (sint.length?('Refiere '+sint.join(', ')):'Sin síntomas relevantes referidos');
+    var fxLabels=[]; if(pc('po-fx-bb'))fxLabels.push('betabloqueante'); if(pc('po-fx-ieca'))fxLabels.push('IECA/ARA-II'); if(pc('po-fx-diur'))fxLabels.push('diuréticos'); if(pc('po-fx-sglt2'))fxLabels.push('SGLT-2'); if(pc('po-fx-insu'))fxLabels.push('insulina'); if(pc('po-fx-est'))fxLabels.push('estatinas');
+    if(pv('po-aco')!=='Ninguno')fxLabels.push(pv('po-aco')); if(pv('po-aap')!=='Ninguno')fxLabels.push(pv('po-aap'));
+    var cf=pv('po-cf'), cfTxt=cf==='buena'?'buena (>4 METs)':cf==='reducida'?'reducida (≤4 METs)':'no evaluable';
+    var rMap={bajo:'bajo',intermedio:'intermedio',alto:'alto'};
+    var L=[];
+    L.push('Valoración preoperatoria de cirugía '+(cirNombre()||'[cirugía]')+' — de coordinación ('+pv('po-urgencia').toLowerCase()+').');
+    L.push('');
+    L.push('Paciente de '+(edad||'—')+' años. '+((parseFloat(edad)>=65)?'Mayor':'Menor')+' a 65 años.');
+    L.push('FRCV: '+(fr.length?fr.join(', '):'sin factores destacados'));
+    L.push(sintTxt+'.');
+    L.push('Clase funcional '+cfTxt+'.');
+    L.push('En tratamiento con: '+(fxLabels.length?fxLabels.join(', '):'sin fármacos cardiológicos relevantes')+'.');
+    L.push('');
+    L.push('EF: PA '+(pv('po-pa')||'—')+'. FC '+(pv('po-fc')||'—')+' lpm, ritmo '+pv('po-ritmo').toLowerCase()+'. Soplo: '+pv('po-soplo').toLowerCase()+'. '+(pv('po-ic-signos')==='Sí'?'Con signos de IC.':'Sin signos de IC.'));
+    L.push('');
+    L.push('De la paraclínica se destaca:');
+    L.push('- Hemoglobina: '+(pv('po-hb')||'—')+' g/dl');
+    L.push('- Plaquetas: '+pv('po-plaq').toLowerCase());
+    L.push('- Crasis: '+pv('po-crasis').toLowerCase());
+    L.push('- Creatinina: '+(pv('po-creat')||'—')+' mg/dl, TFG: '+(pv('po-tfg')||'—')+' ml/min');
+    if(pv('po-hba1c')) L.push('- HbA1c: '+pv('po-hba1c')+'%');
+    L.push('- ECG: '+pv('po-ecg'));
+    L.push('- ETT: FEVI '+pv('po-fevi')+'. Valvulopatías: '+pv('po-valv')+(pv('po-valv')==='Significativa'&&pv('po-valv-libre')?(' ('+pv('po-valv-libre')+')'):''));
+    L.push('- Troponinas: '+pv('po-tropo').toLowerCase());
+    L.push('- BNP/NT-proBNP: '+pv('po-bnp').toLowerCase());
+    L.push('');
+    L.push('Valorado por cirugía de riesgo '+(rMap[st.r]||'—')+'.');
+    L.push('Score de Lee (RCRI): '+st.rcri+' puntos — riesgo estimado de MACE a 30 días: '+st.mace+'.');
+    L.push(((parseFloat(edad)>=65)?'Mayor':'Menor')+' a 65 años. '+(st.uns?'Con condición cardíaca inestable — requiere estabilización.':'Sin inestabilidad clínica.'));
+    if(pv('po-disp')!=='Ninguno'){
+      L.push('');
+      L.push('Portador de '+pv('po-disp')+'. '+pv('po-disp-dep')+' de marcapaso.');
+      var dispTxt=($('po-rec-disp').innerText||'').replace(/\s*\n\s*/g,' ').trim();
+      L.push('Cirugía con riesgo de interferencia electromagnética según ubicación ('+pv('po-disp-ubi')+').');
+      if(dispTxt) L.push('Se recomienda: '+dispTxt);
+    }
+    L.push('');
+    if(st.pend&&st.pend.length) L.push('Solicito '+st.pend.join(', ')+' para completar la valoración preoperatoria.');
+    var farmaTxt=($('po-rec-farma').innerText||'').replace(/^💊[^\n]*\n?/,'').replace(/\s*\n\s*/g,' ').trim();
+    if(farmaTxt) L.push('Conducta farmacológica: '+farmaTxt);
+    var atTxt=($('po-rec-antitromb').innerText||'').replace(/^🩸[^\n]*\n?/,'').replace(/\s*\n\s*/g,' ').trim();
+    if(atTxt) L.push('Plan antitrombótico: '+atTxt);
+    L.push('');
+    L.push(st.apt);
+    L.push('');
+    L.push('Dr. M. Dos Santos.');
+    $('po-nota').value=L.join('\n');
+  };
+
+  window.preopPrintNota=function(){
+    var txt=pv('po-nota')||'';
+    if(!txt.trim()){ preopGenNota(); txt=pv('po-nota'); }
+    var area=$('po-print-area'); area.textContent=txt; area.style.display='block';
+    window.print();
+    setTimeout(function(){ area.style.display='none'; },400);
+  };
+
+  // Init
+  preopUpdate();
+})();
+</script>
 
 <div id="isc" class="isc"></div>
 <div id="tutorial-overlay" style="display:none">
