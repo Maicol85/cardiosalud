@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CardioSalud — Dashboard</title>
+<title>CardioSalud — Aplicación</title>
 <style>
 :root{--p:#1565C0;--pd:#0D47A1;--pl:#1976D2;--acc:#42A5F5;--bg:#EEF2F7;--surf:#fff;--border:#BBDEFB;--txt:#1A237E;--txt2:#546E7A;--ok:#2E7D32;--ok-bg:#E8F5E9;--warn:#E65100;--warn-bg:#FFF3E0;--err:#B71C1C;--err-bg:#FFEBEE;}
 [data-theme="dark"]{--p:#58a6ff;--pd:#388bfd;--pl:#79b8ff;--acc:#79b8ff;--bg:#0d1117;--surf:#161b22;--border:#30363d;--txt:#e6edf3;--txt2:#8b949e;--ok:#3fb950;--ok-bg:#1a3a1f;--warn:#d29922;--warn-bg:#2d2a0a;--err:#f78166;--err-bg:#3a1a1a;}
@@ -698,7 +698,7 @@ main{padding-bottom:100px}
     <div id="tutorial-body">
       <div id="tutorial-icon">👋</div>
       <div id="tutorial-title">Bienvenido a CardioSalud</div>
-      <div id="tutorial-desc">Tu dashboard cardiológico clínico. En 4 pasos te mostramos las funciones principales.</div>
+      <div id="tutorial-desc">Tu aplicación cardiológico clínico. En 4 pasos te mostramos las funciones principales.</div>
       <div id="tutorial-highlight"></div>
     </div>
     <div id="tutorial-footer">
@@ -2022,7 +2022,7 @@ function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JS
 function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');if(d){patients=d.patients;nextPid=d.nextPid;nextCid=d.nextCid;}else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}migrateConsultations(patients);}
 function buildInstScreen(){
   const insts=getInsts();
-  document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al dashboard</p><div class="isc-cards">${insts.map((inst,i)=>`<div class="ic" onclick="enterInst(${i})"><div class="ic-i">${inst.icon}</div><div class="ic-n">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
+  document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al aplicación</p><div class="isc-cards">${insts.map((inst,i)=>`<div class="ic" onclick="enterInst(${i})"><div class="ic-i">${inst.icon}</div><div class="ic-n">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
   document.getElementById('isc').style.display='flex';
   ['inst-bdg','btn-back'].forEach(id=>document.getElementById(id).style.display='none');
 }
@@ -3709,9 +3709,9 @@ function editDoctorName(){
 })();
 
 const TUTORIAL_STEPS=[
-  {icon:'👋',title:'Bienvenido a CardioSalud',desc:'Tu dashboard cardiológico clínico personal. En 4 pasos te mostramos las funciones principales.',highlight:''},
+  {icon:'👋',title:'Bienvenido a CardioSalud',desc:'Tu aplicación cardiológico clínico personal. En 4 pasos te mostramos las funciones principales.',highlight:''},
   {icon:'📋',title:'Registrá tus pacientes',desc:'Agregá consultas con diagnóstico, ETT, paraclínica, ECG e imágenes. Todo queda guardado en tu dispositivo de forma segura.',highlight:'💡 Usá el botón "+ Nueva consulta" en la tabla principal'},
-  {icon:'🧮',title:'Calculadoras clínicas',desc:'SCORE2, PREVENT 2023, QTc, función renal CKD-EPI, riesgo quirúrgico, FA y mucho más — todo integrado sin salir del dashboard.',highlight:'💡 Tocá el botón ＋ en la esquina inferior izquierda'},
+  {icon:'🧮',title:'Calculadoras clínicas',desc:'SCORE2, PREVENT 2023, QTc, función renal CKD-EPI, riesgo quirúrgico, FA y mucho más — todo integrado sin salir del aplicación.',highlight:'💡 Tocá el botón ＋ en la esquina inferior izquierda'},
   {icon:'📖',title:'Referencias y herramientas',desc:'Vademécum cardiológico, guías de dispositivos, miocardiopatías ESC 2023, valvulopatías, HTA secundaria, ECG rápido y segmentación cardíaca.',highlight:'💡 Todo accesible desde el menú ＋'},
   {icon:'✅',title:'¡Listo para empezar!',desc:'Ya conocés lo esencial. Podés volver a ver este tutorial tocando el ícono ⚙️ en el header.',highlight:''}
 ];
@@ -6277,5 +6277,6 @@ function toggleStatSec(k){
     <p style="font-size:.72rem;color:var(--txt2);margin:12px 0 0;text-align:center">Los campos vacíos no aparecen en el selector</p>
   </div>
 </div>
+<footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 </body>
 </html>
