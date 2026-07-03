@@ -497,6 +497,7 @@ main{padding-bottom:100px}
   <span id="inst-bdg" class="inst-bdg" style="display:none"></span>
   <button id="btn-back" class="btn-back" onclick="exitInst()" style="display:none">← Cambiar institución</button>
   <button id="btn-edit-centros" onclick="openCentrosModal()" title="Editar centros" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">✏️ Editar centros</button>
+  <button id="btn-cerrar" onclick="exitInst()" title="Cerrar sesión" style="display:none;background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">🔒 Cerrar</button>
   <div class="hdr-search" id="hdr-search-wrap">
     <span class="hdr-search-icon">🔍</span>
     <input type="text" id="hdr-search-input" placeholder="Buscar paciente, fármaco, referencia..." oninput="globalSearch(this.value)" onfocus="if(this.value)globalSearch(this.value)" autocomplete="off">
@@ -1885,8 +1886,8 @@ function calcPREVENT({sex,age,tc,hdl,sbp,htn,dm,smoke,egfr,uacr}){
   if(!a||!t||!h||!s)return null;
   let lp,base,mean;
   if(sex==='F'){
-    lp=-7.1062*ln(a)+1.2831*ln(t)-1.8723*ln(h)+(htn?1.9905:1.8203)*ln(s)+(htn?.1115:0)+.6855*(dm?1:0)+1.3268*(smoke?1:0);
-    base=.9665;mean=-29.799;
+    lp=-29.799*ln(a)+4.884*ln(a)*ln(a)+13.540*ln(t)-3.114*ln(a)*ln(t)-13.578*ln(h)+3.149*ln(a)*ln(h)+(htn?2.019:1.957)*ln(s)+(htn?0.661:0)+7.574*(smoke?1:0)-1.665*ln(a)*(smoke?1:0)+0.661*(dm?1:0);
+    base=0.9665;mean=86.61;
   }else{
     lp=12.344*ln(a)+11.853*ln(t)-2.664*ln(a)*ln(t)-7.990*ln(h)+1.769*ln(a)*ln(h)+(htn?1.797:1.764)*ln(s)+7.837*(smoke?1:0)-1.795*ln(a)*(smoke?1:0)+.661*(dm?1:0);
     base=.9144;mean=61.18;
@@ -2402,7 +2403,7 @@ function renderCal(){
 }
 
 // ── INSTITUCIONES ────────────────────────────────────────────────
-const DEFAULT_INSTS=[{id:'mutualista',label:'Mutualista',icon:'🏥'},{id:'hospital',label:'Hospital',icon:'🏨'},{id:'particulares',label:'Particulares',icon:'👤'}];
+const DEFAULT_INSTS=[{id:'mutualista',label:'Centro 1',icon:'🏥'},{id:'hospital',label:'Centro 2',icon:'🏨'},{id:'particulares',label:'Centro 3',icon:'👤'}];
 function getInsts(){
   const centros=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null');
   if(centros&&centros.some(c=>c.trim())){
@@ -2416,19 +2417,21 @@ function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JS
 function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');if(d){patients=d.patients;nextPid=d.nextPid;nextCid=d.nextCid;}else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}migrateConsultations(patients);}
 function buildInstScreen(){
   const insts=getInsts();
-  document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al aplicación</p><div class="isc-cards">${insts.map((inst,i)=>`<div class="ic" onclick="enterInst(${i})"><div class="ic-i">${inst.icon}</div><div class="ic-n">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
+  document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al aplicación</p><div class="isc-cards">${insts.map((inst,i)=>`<div class="ic" onclick="enterInst(${i})"><div class="ic-i">${inst.icon}</div><div class="ic-n" contenteditable="true" spellcheck="false" title="Doble click para renombrar" onclick="event.stopPropagation()" ondblclick="event.stopPropagation()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onblur="renameInst(${i},this.textContent)">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
   document.getElementById('isc').style.display='flex';
-  ['inst-bdg','btn-back'].forEach(id=>document.getElementById(id).style.display='none');
+  ['inst-bdg','btn-back','btn-cerrar'].forEach(id=>document.getElementById(id).style.display='none');
 }
 function enterInst(i){
   const insts=getInsts();loadInst(insts[i]);
   document.getElementById('isc').style.display='none';
   const b=document.getElementById('inst-bdg');b.textContent=activeInst.icon+' '+activeInst.label;b.style.display='';
   document.getElementById('btn-back').style.display='';
+  document.getElementById('btn-cerrar').style.display='';
   selD=null;filterPatient=null;filterDesde=null;filterHasta=null;openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openFA=null;openCirugia=null;openAntiagregacion=null;openDetail=new Set();refreshSel();initCal();render();
 }
 function exitInst(){saveInst();activeInst=null;patients=[];buildInstScreen();}
 function addInst(){const name=(prompt('Nombre de la nueva institución:')||'').trim();if(!name)return;const insts=getInsts();const icons=['🏥','🏨','👤','🏢','🩺','🏫'];insts.push({id:'c_'+Math.random().toString(36).slice(2),label:name,icon:icons[insts.length%icons.length]});saveInsts(insts);buildInstScreen();}
+function renameInst(i,newLabel){newLabel=(newLabel||'').trim();if(!newLabel){buildInstScreen();return;}const insts=getInsts();if(!insts[i])return;insts[i].label=newLabel;saveInsts(insts);const centros=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null');if(centros&&centros.some(c=>c.trim()))localStorage.setItem('cardiosalud_centros',JSON.stringify(insts.map(x=>x.label)));const bdg=document.getElementById('inst-bdg');if(activeInst&&activeInst.id===insts[i].id){activeInst.label=newLabel;if(bdg)bdg.textContent=activeInst.icon+' '+activeInst.label;}}
 // ── FILTROS / DRILLDOWN ───────────────────────────────────────────
 function filterByPat(pid){filterPatient=filterPatient===pid?null:pid;selD=null;filterDesde=null;filterHasta=null;openDetail=new Set();openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openFA=null;openCirugia=null;openAntiagregacion=null;render();}
 function clearPatFilter(){filterPatient=null;render();}
