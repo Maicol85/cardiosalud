@@ -636,60 +636,6 @@ main{padding-bottom:100px}
         <div class="control-section" id="control-list"><div style="font-size:.82rem;color:var(--txt2);text-align:center;padding:10px">Sin controles programados</div></div>
       </div>
 
-      <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('diag')"><h2>Diagnósticos Frecuentes</h2><span id="sti-diag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
-        <div class="sec-body" id="scb-diag"><div class="dlist" id="diag-list"></div></div>
-      </div>
-
-      <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fevi')"><h2>Distribución FEVI</h2><span id="sti-fevi" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
-        <div class="sec-body" id="scb-fevi" style="padding:12px 14px">
-          <table class="ftbl"><thead><tr><th>Categoría</th><th>N</th><th>%</th></tr></thead>
-          <tbody id="fevi-body"></tbody></table>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('cirugia')"><h2>Cirugía Cardíaca</h2><span id="sti-cirugia" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
-        <div class="sec-body" id="scb-cirugia" style="padding:12px 14px">
-          <table class="ftbl"><thead><tr><th>Procedimiento</th><th>N</th><th>%</th></tr></thead>
-          <tbody id="cirugia-body"></tbody></table>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fa')"><h2>Fibrilación Auricular</h2><span id="sti-fa" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
-        <div class="sec-body" id="scb-fa" style="padding:12px 14px">
-          <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
-          <tbody id="fa-body"></tbody></table>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antiagr')"><h2>Antiagregación</h2><span id="sti-antiagr" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
-        <div class="sec-body" id="scb-antiagr" style="padding:12px 14px">
-          <table class="ftbl"><thead><tr><th>Régimen</th><th>N</th><th>%</th></tr></thead>
-          <tbody id="antiagr-body"></tbody></table>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antcoag')"><h2>Anticoagulantes</h2><span id="sti-antcoag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
-        <div class="sec-body" id="scb-antcoag" style="padding:12px 14px">
-          <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
-          <tbody id="antcoag-body"></tbody></table>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('devices')"><h2>Dispositivos Implantados</h2><span id="sti-devices" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
-        <div class="sec-body" id="scb-devices" style="padding:12px 14px">
-          <table class="ftbl"><thead><tr><th>Dispositivo</th><th>N</th><th>%</th></tr></thead>
-          <tbody id="device-body"></tbody></table>
-        </div>
-      </div>
-    </div>
-
     <!-- ═══════════ VALORACIÓN PREOPERATORIA — CIRUGÍA NO CARDIACA ═══════════ -->
     <div class="section" id="preop-section" style="grid-column:1 / -1;">
       <style>
@@ -714,7 +660,6 @@ main{padding-bottom:100px}
         #preop-section .po-tbl{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:6px}
         #preop-section .po-tbl th,#preop-section .po-tbl td{border:1px solid var(--border);padding:4px 6px;text-align:center}
         #preop-section .po-tbl th{background:#E3F2FD;color:var(--p)}
-        @media print{ body *{visibility:hidden} #po-print-area,#po-print-area *{visibility:visible} #po-print-area{position:absolute;left:0;top:0;width:100%;padding:24px;white-space:pre-wrap;font-family:'Segoe UI',sans-serif;color:#000;font-size:13px;line-height:1.6} }
       </style>
 
       <div class="sec-hdr" style="cursor:pointer" onclick="preopTog('preop-body','preop-arrow')"><h2>🏥 Valoración PreOperatoria — Cirugía No Cardiaca</h2><span id="preop-arrow" style="font-size:.9rem;flex-shrink:0">▼</span></div>
@@ -856,16 +801,72 @@ main{padding-bottom:100px}
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
             <button class="po-btn" onclick="preopGenNota()">📝 Generar nota clínica</button>
             <button class="po-btn sec" onclick="preopPrintNota()">🖨️ Imprimir nota</button>
+            <button class="po-btn sec" onclick="preopLimpiar()">🧹 Limpiar</button>
+            <button class="po-btn" onclick="preopGuardar()">💾 Guardar en paciente</button>
           </div>
           <textarea id="po-nota" style="width:100%;min-height:260px;padding:10px;border:1.5px solid var(--border);border-radius:8px;font-size:.82rem;color:var(--txt);background:var(--surf);font-family:inherit;line-height:1.5" placeholder="Presioná 'Generar nota clínica' para autocompletar…"></textarea>
         </div>
       </div>
     </div>
 
+      <div class="section">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('diag')"><h2>Diagnósticos Frecuentes</h2><span id="sti-diag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-diag"><div class="dlist" id="diag-list"></div></div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fevi')"><h2>Distribución FEVI</h2><span id="sti-fevi" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-fevi" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Categoría</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="fevi-body"></tbody></table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('cirugia')"><h2>Cirugía Cardíaca</h2><span id="sti-cirugia" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-cirugia" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Procedimiento</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="cirugia-body"></tbody></table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fa')"><h2>Fibrilación Auricular</h2><span id="sti-fa" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-fa" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="fa-body"></tbody></table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antiagr')"><h2>Antiagregación</h2><span id="sti-antiagr" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-antiagr" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Régimen</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="antiagr-body"></tbody></table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antcoag')"><h2>Anticoagulantes</h2><span id="sti-antcoag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-antcoag" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="antcoag-body"></tbody></table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('devices')"><h2>Dispositivos Implantados</h2><span id="sti-devices" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div class="sec-body" id="scb-devices" style="padding:12px 14px">
+          <table class="ftbl"><thead><tr><th>Dispositivo</th><th>N</th><th>%</th></tr></thead>
+          <tbody id="device-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 </main>
 
-<div id="po-print-area" style="display:none"></div>
 <script>
 (function(){
   function $(id){ return document.getElementById(id); }
@@ -1076,9 +1077,42 @@ main{padding-bottom:100px}
   window.preopPrintNota=function(){
     var txt=pv('po-nota')||'';
     if(!txt.trim()){ preopGenNota(); txt=pv('po-nota'); }
-    var area=$('po-print-area'); area.textContent=txt; area.style.display='block';
+    var esc2=(typeof esc==='function')?esc:function(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+    var med=(($('hdr-doctor-lbl')||{}).textContent||'Dr. M. Dos Santos').replace('✏️','').trim();
+    var centro=(typeof activeInst!=='undefined'&&activeInst)?activeInst.label:'';
+    var fecha=new Date().toLocaleDateString('es-UY',{day:'2-digit',month:'2-digit',year:'numeric'});
+    var pInfo='';
+    if(typeof filterPatient!=='undefined'&&filterPatient!==null){
+      var p=patients.find(function(x){return x.id===filterPatient;});
+      if(p) pInfo='<div style="margin:4px 0 14px;font-size:12pt"><b>Paciente:</b> '+esc2(p.name)+' — '+p.age+' años'+(p.ci?(' · CI: '+esc2(p.ci)):'')+(p.hc?(' · HC: '+esc2(p.hc)):'')+'</div>';
+    }
+    var pa=document.getElementById('print-area'); if(!pa)return;
+    pa.innerHTML='<div class="print-patient"><div style="text-align:center;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:14px"><div style="font-size:17pt;font-weight:bold">'+esc2(med)+'</div><div style="font-size:11pt">Cardiólogo</div>'+(centro?('<div style="font-size:11pt">'+esc2(centro)+'</div>'):'')+'<div style="font-size:10pt;color:#555;margin-top:4px">Fecha: '+fecha+'</div></div>'+pInfo+'<div style="white-space:pre-wrap;font-size:12pt;line-height:1.6">'+esc2(txt)+'</div></div>';
     window.print();
-    setTimeout(function(){ area.style.display='none'; },400);
+    setTimeout(function(){ pa.innerHTML=''; },600);
+  };
+
+  window.preopLimpiar=function(){
+    var sec=$('preop-section'); if(!sec)return;
+    sec.querySelectorAll('input,select,textarea').forEach(function(el){
+      if(el.type==='checkbox'||el.type==='radio') el.checked=false;
+      else if(el.tagName==='SELECT') el.selectedIndex=0;
+      else el.value='';
+    });
+    var nota=$('po-nota'); if(nota)nota.value='';
+    preopUpdate();
+  };
+
+  window.preopGuardar=function(){
+    if(typeof filterPatient==='undefined'||filterPatient===null){ alert('Seleccioná un paciente primero'); return; }
+    var p=patients.find(function(x){return x.id===filterPatient;});
+    if(!p){ alert('Seleccioná un paciente primero'); return; }
+    var txt=pv('po-nota')||''; if(!txt.trim()){ preopGenNota(); txt=pv('po-nota'); }
+    var c={id:nextCid++,date:(new Date()).toISOString().slice(0,10),diagnosis:'Valoración PreOperatoria',background:'',treatment:'',ett:'',paraclinica:'',conduct:txt,prevent:null,ecgs:[],images:[],note:''};
+    p.consultations.push(c);
+    if(typeof render==='function')render();
+    if(typeof saveInst==='function')saveInst();
+    alert('Nota preoperatoria guardada como consulta de '+p.name+'.');
   };
 
   // Init
