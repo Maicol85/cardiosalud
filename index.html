@@ -927,34 +927,44 @@ main{padding-bottom:100px}
     var pend=[];
     // ── Paraclínica ──
     var para='<b>🔬 Paraclínica recomendada</b><ul>';
-    if((mayor65||fr||ecv)&&ri){ para+='<li>ECG — <b>Clase I</b></li>'; if(pv('po-ecg')==='No disponible')pend.push('ECG'); }
-    else if(!mayor65&&r==='alto'){ para+='<li>ECG — considerar</li>'; }
-    if((ecv||fr||mayor65)&&ri){ para+='<li>Troponinas ultrasensibles — <b>Clase I</b> (pre y 24-48h post)</li>'; if(pv('po-tropo')==='No disponible')pend.push('troponinas ultrasensibles'); }
-    if(disnea) para+='<li>BNP/NT-proBNP — <b>Clase I</b> (disnea/edema)</li>';
-    else if((ecv||fr||mayor65)&&ri){ para+='<li>BNP/NT-proBNP — <b>IIa</b></li>'; }
-    if(pv('po-bnp')==='No disponible'&&(disnea||((ecv||fr||mayor65)&&ri))) pend.push('BNP/NT-proBNP');
-    if(pv('po-soplo')==='Significativo'||pv('po-soplo')==='A evaluar con ETT') { para+='<li>ETT — <b>Clase I</b> (soplo significativo)</li>'; if(pv('po-fevi')==='No disponible')pend.push('ETT'); }
+    // ECG
+    if(r==='bajo'&&mayor65){ para+='<li>ECG — <b>recomendado</b> (cirugía de bajo riesgo en mayor de 65 años)</li>'; if(pv('po-ecg')==='No disponible')pend.push('ECG'); }
+    else if(r==='bajo'&&!mayor65&&fr){ para+='<li>ECG — <b>considerar</b> (cirugía de bajo riesgo con factores de riesgo)</li>'; }
+    else if(r==='bajo'&&!mayor65&&!fr){ para+='<li>ECG — no requerido (cirugía de bajo riesgo, menor de 65 años, sin factores de riesgo)</li>'; }
+    else if(ri){ para+='<li>ECG — <b>Clase I</b> (cirugía de riesgo '+(r==='intermedio'?'intermedio':'alto')+')</li>'; if(pv('po-ecg')==='No disponible')pend.push('ECG'); }
+    // ETT
+    if(pv('po-soplo')==='Significativo'||pv('po-soplo')==='A evaluar con ETT'){ para+='<li>ETT — <b>Clase I</b> (soplo significativo)</li>'; if(pv('po-fevi')==='No disponible')pend.push('ETT'); }
     else if(disnea&&pv('po-bnp')==='Elevado'){ para+='<li>ETT — <b>Clase I</b> (disnea + BNP elevado)</li>'; if(pv('po-fevi')==='No disponible')pend.push('ETT'); }
-    else if(r==='alto'){ para+='<li>ETT — considerar</li>'; }
+    else if(ri&&(mayor65||fr)){ para+='<li>ETT — <b>recomendado</b> (cirugía de riesgo '+(r==='intermedio'?'intermedio':'alto')+' con '+(mayor65?'edad ≥65 años':'factores de riesgo')+')</li>'; if(pv('po-fevi')==='No disponible')pend.push('ETT'); }
+    else if(ri){ para+='<li>ETT — considerar según criterio clínico</li>'; }
+    // Troponinas
+    if((ecv||fr||mayor65)&&ri){ para+='<li>Troponinas ultrasensibles — <b>Clase I</b> (pre y 24-48h post)</li>'; if(pv('po-tropo')==='No disponible')pend.push('troponinas ultrasensibles'); }
+    // BNP
+    if(disnea){ para+='<li>BNP/NT-proBNP — <b>Clase I</b> (disnea/edema)</li>'; if(pv('po-bnp')==='No disponible')pend.push('BNP/NT-proBNP'); }
+    else if((ecv||fr||mayor65)&&ri){ para+='<li>BNP/NT-proBNP — <b>IIa</b></li>'; if(pv('po-bnp')==='No disponible')pend.push('BNP/NT-proBNP'); }
     // Prueba de estrés
-    if(r==='bajo') para+='<li>Prueba de estrés — no indicada (cirugía de bajo riesgo)</li>';
-    else if(ri&&cf==='reducida'&&rcri<2) para+='<li>Prueba de estrés — considerar (CF ≤4 METs, RCRI &lt;2)</li>';
-    else if(r==='alto'&&cf==='reducida'&&rcri>=2){ para+='<li>Prueba de estrés — <b>recomendada</b> (CF ≤4 METs, RCRI ≥2)</li>'; pend.push('prueba funcional de estrés'); }
-    if(ri){ para+='<li>Hemoglobina — siempre</li>'; if(!pv('po-hb'))pend.push('hemograma'); }
+    if(r==='bajo'){ para+='<li>Prueba de estrés — no indicada en cirugía de bajo riesgo independientemente de la clase funcional</li>'; }
+    else if(ri&&cf==='buena'){ para+='<li>Prueba de estrés — no requerida (buena clase funcional)</li>'; }
+    else if(ri&&cf==='reducida'&&rcri<2){ para+='<li>Prueba de estrés — <b>considerar</b> (CF ≤4 METs, Lee &lt;2)</li>'; }
+    else if(ri&&cf==='reducida'&&rcri>=2){ para+='<li>Prueba de estrés — <b>recomendada</b> (CF ≤4 METs, Lee ≥2)</li>'; pend.push('prueba funcional de estrés'); }
+    else if(ri&&cf==='noeval'&&rcri>=2){ para+='<li>Prueba de estrés — <b>recomendada</b> (clase funcional no evaluable, Lee ≥2)</li>'; pend.push('prueba funcional de estrés'); }
+    // Hemograma y HbA1c
+    if(ri){ para+='<li>Hemoglobina — siempre en cirugía de riesgo intermedio/alto</li>'; if(!pv('po-hb'))pend.push('hemograma'); }
     if(dm){ para+='<li>HbA1c — obligatoria (DM)</li>'; if(!pv('po-hba1c'))pend.push('HbA1c'); }
     para+='</ul>';
     $('po-rec-para').innerHTML=para;
     // ── Farmacológicas ──
-    var far='<b>💊 Recomendaciones farmacológicas</b><ul>';
-    if(pc('po-fx-bb')) far+='<li>Betabloqueante: <b>continuar</b>.</li>';
-    else if(r==='alto'&&rcri>=1) far+='<li>Betabloqueante: <b>iniciar</b> bisoprolol o atenolol 1 semana a 1 mes antes.</li>';
+    var far='<b>💊 Orientaciones farmacológicas</b><ul>';
+    if(pc('po-fx-bb')){ far+='<li>Betabloqueante: se sugiere <b>continuar</b> el tratamiento actual sin interrupción.</li>'; }
+    else if(r==='alto'&&rcri>=1){ far+='<li>Betabloqueante: dado cirugía de alto riesgo con factores de riesgo cardiovascular, se sugiere considerar inicio de bisoprolol o atenolol <b>1 semana a 1 mes antes</b> del procedimiento.</li>'; }
+    else if(r==='intermedio'&&rcri>=2){ far+='<li>Betabloqueante: dado cirugía de riesgo intermedio con Score de Lee ≥2, se sugiere considerar inicio de betabloqueante <b>1 semana a 1 mes antes</b> del procedimiento.</li>'; }
     var vascular = /vascular|aórtic|carotíd|MMII|periférica|aneurisma/i.test(cirNombre());
-    if(vascular) far+='<li>Estatina: <b>iniciar</b> 2 semanas antes (cirugía vascular).</li>';
-    if(pc('po-fx-est')) far+='<li>Estatina: <b>continuar</b> siempre.</li>';
-    if(pc('po-fx-ieca')){ var ind=pv('po-ieca-ind'); if(ind==='IC'||ind==='ambas') far+='<li>IECA/ARA-II: <b>mantener</b> (IC con disfunción sistólica).</li>'; else far+='<li>IECA/ARA-II: <b>suspender</b> el día de la cirugía (HTA sin IC).</li>'; }
-    if(pc('po-fx-diur')) far+='<li>Diuréticos: <b>suspender</b> el día de la cirugía.</li>';
-    if(pc('po-fx-sglt2')) far+='<li>SGLT-2: <b>suspender</b> ≥3 días antes.</li>';
-    if(!isNaN(a1c)&&a1c>=8.5) far+='<li><b>HbA1c ≥8.5% → diferir cirugía electiva.</b></li>';
+    if(vascular&&!pc('po-fx-est')){ far+='<li>Estatina: dado cirugía vascular, se sugiere considerar inicio <b>2 semanas antes</b> del procedimiento.</li>'; }
+    if(pc('po-fx-est')){ far+='<li>Estatina: se sugiere <b>continuar</b> el tratamiento actual sin interrupción.</li>'; }
+    if(pc('po-fx-ieca')){ var ind=pv('po-ieca-ind'); if(ind==='IC'||ind==='ambas'){ far+='<li>IECA/ARA-II: se sugiere <b>mantener</b> (indicación por IC con disfunción sistólica).</li>'; } else { far+='<li>IECA/ARA-II: se sugiere <b>suspender el día de la cirugía</b> (indicación por HTA sin IC).</li>'; } }
+    if(pc('po-fx-diur')){ far+='<li>Diuréticos: se sugiere <b>suspender el día de la cirugía</b>.</li>'; }
+    if(pc('po-fx-sglt2')){ far+='<li>SGLT-2: se sugiere <b>suspender ≥3 días antes</b> del procedimiento.</li>'; }
+    if(!isNaN(a1c)&&a1c>=8.5){ far+='<li>HbA1c ≥8.5%: se sugiere <b>diferir la cirugía electiva</b> hasta optimizar el control glucémico.</li>'; }
     far+='</ul>';
     $('po-rec-farma').innerHTML=far;
     // ── Antitrombótico ──
@@ -1007,13 +1017,23 @@ main{padding-bottom:100px}
     // ── Aptitud ──
     var stentReciente = (stent==='SM'&&stentMeses!=null&&stentMeses<1)||(stent==='SFA'&&ctx==='Electivo'&&stentMeses!=null&&stentMeses<6)||(ctx==='SCA'&&stent!=='No'&&stentMeses!=null&&stentMeses<12);
     var diferir = uns || (!isNaN(a1c)&&a1c>=8.5) || stentReciente;
-    var apt, kind;
-    if(diferir){ apt='⏸️ DIFERIR — NO APTO TEMPORALMENTE'; kind='err'; }
-    else if(pend.length||rcri>=2||r==='alto'){ apt='✅ APTO CON CONDICIONES'; kind='warn'; }
-    else { apt='✅ APTO'; kind='ok'; }
+    var apt, aptCorto, kind;
+    if(diferir){
+      apt='Paciente no se encuentra estable desde el punto de vista cardiovascular para la realización del procedimiento propuesto. Se sugiere: ………………';
+      aptCorto='⚠️ Inestabilidad cardiovascular — diferir';
+      kind='err';
+    } else if(pend.length){
+      apt='Se solicita '+pend.join(', ')+' para completar la valoración cardiovascular preoperatoria.';
+      aptCorto='📋 Paraclínica pendiente';
+      kind='warn';
+    } else {
+      apt='Paciente estable desde el punto de vista cardiovascular. Sin contraindicaciones cardiovasculares actuales para el procedimiento propuesto.';
+      aptCorto='✅ Sin contraindicaciones CV';
+      kind='ok';
+    }
     var c={ok:['var(--ok-bg)','var(--ok)'],warn:['var(--warn-bg)','var(--warn)'],err:['var(--err-bg)','var(--err)']}[kind];
-    $('po-apt-box').innerHTML='<div class="po-apt" style="background:'+c[0]+';color:'+c[1]+';border:1px solid '+c[1]+'">'+apt+'</div>'+(pend.length?'<div style="font-size:.76rem;color:var(--txt2)">Pendiente para completar valoración: '+pend.join(', ')+'.</div>':'');
-    window._poState={pend:pend,apt:apt,rcri:rcri,mace:mace,uns:uns,diferir:diferir,r:r};
+    $('po-apt-box').innerHTML='<div class="po-apt" style="background:'+c[0]+';color:'+c[1]+';border:1px solid '+c[1]+';font-size:.85rem;font-weight:700;text-align:left;padding:12px 14px">'+apt+'</div>';
+    window._poState={pend:pend,apt:apt,aptCorto:aptCorto,rcri:rcri,mace:mace,uns:uns,diferir:diferir,r:r};
   }
 
   window.preopGenNota=function(){
@@ -1051,9 +1071,9 @@ main{padding-bottom:100px}
     L.push('- Troponinas: '+pv('po-tropo').toLowerCase());
     L.push('- BNP/NT-proBNP: '+pv('po-bnp').toLowerCase());
     L.push('');
-    L.push('Valorado por cirugía de riesgo '+(rMap[st.r]||'—')+'.');
-    L.push('Score de Lee (RCRI): '+st.rcri+' puntos — riesgo estimado de MACE a 30 días: '+st.mace+'.');
-    L.push(((parseFloat(edad)>=65)?'Mayor':'Menor')+' a 65 años. '+(st.uns?'Con condición cardíaca inestable — requiere estabilización.':'Sin inestabilidad clínica.'));
+    L.push('Preoperatorio de cirugía de riesgo cardiovascular '+(rMap[st.r]||'—')+'.');
+    L.push('Score de Lee (RCRI): '+st.rcri+' punto'+(st.rcri===1?'':'s')+' — riesgo estimado de MACE a 30 días: '+st.mace+'.');
+    L.push(((parseFloat(edad)>=65)?'Mayor':'Menor')+' a 65 años. '+(st.uns?'Con condición cardíaca inestable — requiere estabilización previa.':'Sin inestabilidad cardiovascular clínica.'));
     if(pv('po-disp')!=='Ninguno'){
       L.push('');
       L.push('Portador de '+pv('po-disp')+'. '+pv('po-disp-dep')+' de marcapaso.');
@@ -1068,7 +1088,9 @@ main{padding-bottom:100px}
     var atTxt=($('po-rec-antitromb').innerText||'').replace(/^🩸[^\n]*\n?/,'').replace(/\s*\n\s*/g,' ').trim();
     if(atTxt) L.push('Plan antitrombótico: '+atTxt);
     L.push('');
+    L.push('CONDUCTA:');
     L.push(st.apt);
+    if(st.pend&&st.pend.length) L.push('Se solicita '+st.pend.join(', ')+' para completar la valoración cardiovascular preoperatoria.');
     L.push('');
     L.push('Dr. M. Dos Santos.');
     $('po-nota').value=L.join('\n');
