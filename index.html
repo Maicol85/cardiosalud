@@ -1162,7 +1162,61 @@ main{padding-bottom:100px}
     </div>
   </div>
 </div>
-<div id="login-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#0D47A1,#1976D2);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px"><div style="background:#fff;border-radius:16px;padding:36px 32px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center"><div style="font-size:2.5rem;margin-bottom:12px">🫀</div><h1 style="font-size:1.4rem;font-weight:800;color:#1A237E;margin-bottom:4px">CardioSalud</h1><p style="font-size:.84rem;color:#546E7A;margin-bottom:24px">Ingresá la contraseña para acceder</p><input type="password" id="login-input" placeholder="••••••••" style="width:100%;padding:11px 14px;border:1.5px solid #BBDEFB;border-radius:8px;font-size:.95rem;outline:none;margin-bottom:12px;font-family:inherit;text-align:center;letter-spacing:2px" onkeydown="if(event.key==='Enter')checkLogin()"><button onclick="checkLogin()" style="width:100%;padding:11px;background:linear-gradient(135deg,#0D47A1,#1976D2);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer">Ingresar</button><div id="login-error" style="color:#C62828;font-size:.8rem;margin-top:6px;display:none">Contraseña incorrecta</div></div></div>
+<div id="login-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#0D47A1,#1976D2);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px"><div style="background:#fff;border-radius:16px;padding:36px 32px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center"><style>
+@keyframes heartbeat {
+  0%   { transform: scale(1); }
+  8%   { transform: scale(1.16); }
+  16%  { transform: scale(0.96); }
+  24%  { transform: scale(1.10); }
+  32%  { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+@keyframes heartFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+#cardio-heart {
+  animation: heartFloat 3s ease-in-out infinite;
+  display: block;
+  margin: 0 auto 12px;
+  filter: drop-shadow(0 4px 18px rgba(229,57,53,.45));
+}
+#cardio-heart .heart-body {
+  animation: heartbeat 0.82s ease-in-out infinite;
+  transform-origin: 50% 60%;
+}
+</style>
+
+<svg id="cardio-heart" width="110" height="110" viewBox="0 0 100 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="hGrad" cx="38%" cy="32%" r="72%">
+      <stop offset="0%" stop-color="#ff8a80"/>
+      <stop offset="45%" stop-color="#e53935"/>
+      <stop offset="100%" stop-color="#7f0000"/>
+    </radialGradient>
+    <radialGradient id="hGrad2" cx="62%" cy="68%" r="55%">
+      <stop offset="0%" stop-color="#ef5350" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#b71c1c" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <g class="heart-body">
+    <!-- Cuerpo principal -->
+    <path d="M50 82 C50 82 8 54 8 27 C8 13 18 4 30 4 C39 4 46 9 50 17 C54 9 61 4 70 4 C82 4 92 13 92 27 C92 54 50 82 50 82Z"
+      fill="url(#hGrad)" stroke="#b71c1c" stroke-width="1.5"/>
+    <!-- Sombra interna derecha -->
+    <path d="M50 82 C50 82 8 54 8 27 C8 13 18 4 30 4 C39 4 46 9 50 17 C54 9 61 4 70 4 C82 4 92 13 92 27 C92 54 50 82 50 82Z"
+      fill="url(#hGrad2)"/>
+    <!-- Surco interventricular -->
+    <path d="M50 17 C50 17 48 38 46 55 C44 68 44 76 50 82" stroke="#c62828" stroke-width="1.2" fill="none" opacity="0.5"/>
+    <!-- Arterias coronarias -->
+    <path d="M50 14 C44 10 35 8 30 12 C25 16 22 22 24 28" stroke="#ff8a80" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <path d="M50 14 C56 10 65 8 70 12 C75 16 76 24 74 30" stroke="#ff8a80" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <!-- Brillo superior izquierdo -->
+    <ellipse cx="34" cy="26" rx="11" ry="7" fill="#ffffff" opacity="0.22" transform="rotate(-20 34 26)"/>
+    <!-- Brillo pequeño -->
+    <ellipse cx="27" cy="20" rx="5" ry="3" fill="#ffffff" opacity="0.18"/>
+  </g>
+</svg><h1 style="font-size:1.4rem;font-weight:800;color:#1A237E;margin-bottom:4px">CardioSalud</h1><p style="font-size:.84rem;color:#546E7A;margin-bottom:24px">Ingresá la contraseña para acceder</p><input type="password" id="login-input" placeholder="••••••••" style="width:100%;padding:11px 14px;border:1.5px solid #BBDEFB;border-radius:8px;font-size:.95rem;outline:none;margin-bottom:12px;font-family:inherit;text-align:center;letter-spacing:2px" onkeydown="if(event.key==='Enter')checkLogin()"><button onclick="checkLogin()" style="width:100%;padding:11px;background:linear-gradient(135deg,#0D47A1,#1976D2);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer">Ingresar</button><div id="login-error" style="color:#C62828;font-size:.8rem;margin-top:6px;display:none">Contraseña incorrecta</div></div></div>
 <div class="fab-menu-wrap">
   <div class="fab-items" id="fab-items">
     <div class="fab-item"><span class="fab-item-lbl">Calculadoras clínicas</span><button class="fab-item-btn" onclick="toggleCalcPanel();toggleFabMenu()" title="Calculadoras">🧮</button></div>
