@@ -1082,15 +1082,14 @@ main{padding-bottom:100px}
       if(dispTxt) L.push('Se recomienda: '+dispTxt);
     }
     L.push('');
-    if(st.pend&&st.pend.length) L.push('Solicito '+st.pend.join(', ')+' para completar la valoración preoperatoria.');
     var farmaTxt=($('po-rec-farma').innerText||'').replace(/^💊[^\n]*\n?/,'').replace(/\s*\n\s*/g,' ').trim();
     if(farmaTxt) L.push('Conducta farmacológica: '+farmaTxt);
     var atTxt=($('po-rec-antitromb').innerText||'').replace(/^🩸[^\n]*\n?/,'').replace(/\s*\n\s*/g,' ').trim();
     if(atTxt) L.push('Plan antitrombótico: '+atTxt);
     L.push('');
     L.push('CONDUCTA:');
-    L.push(st.apt);
     if(st.pend&&st.pend.length) L.push('Se solicita '+st.pend.join(', ')+' para completar la valoración cardiovascular preoperatoria.');
+    L.push(st.apt);
     L.push('');
     L.push('Dr. M. Dos Santos.');
     $('po-nota').value=L.join('\n');
