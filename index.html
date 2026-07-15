@@ -498,6 +498,9 @@ main{padding-bottom:100px}
   <button id="btn-back" class="btn-back" onclick="exitInst()" style="display:none">← Cambiar institución</button>
   <button id="btn-edit-centros" onclick="openCentrosModal()" title="Editar centros" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">✏️ Editar centros</button>
   <button id="btn-cerrar" onclick="exitInst()" title="Cerrar sesión" style="display:none;background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">🔒 Cerrar</button>
+  <button id="btn-export" onclick="exportBackup()" title="Exportar todas las instituciones y pacientes a un archivo" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">⬇️ Exportar</button>
+  <button id="btn-import" onclick="document.getElementById('import-file-input').click()" title="Importar backup (reemplaza todo)" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">⬆️ Importar</button>
+  <input type="file" id="import-file-input" accept="application/json,.json" style="display:none" onchange="handleImportFile(this.files&&this.files[0]);this.value=''">
   <div class="hdr-search" id="hdr-search-wrap">
     <span class="hdr-search-icon">🔍</span>
     <input type="text" id="hdr-search-input" placeholder="Buscar paciente, fármaco, referencia..." oninput="globalSearch(this.value)" onfocus="if(this.value)globalSearch(this.value)" autocomplete="off">
@@ -2486,6 +2489,53 @@ function getInsts(){
 function saveInsts(a){localStorage.setItem('crd_insts',JSON.stringify(a));}
 function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JSON.stringify({patients,nextPid,nextCid}));}
 function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');if(d){patients=d.patients;nextPid=d.nextPid;nextCid=d.nextCid;}else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}migrateConsultations(patients);}
+// Exporta TODAS las instituciones + sus pacientes a un unico JSON. Usa getInsts()
+// (fuente real de la lista) y lee el bloque crd_d_<id> de cada una. No incluye cs_auth.
+function exportBackup(){
+  try{
+    var insts=getInsts();
+    var data={};
+    insts.forEach(function(inst){
+      var raw=localStorage.getItem('crd_d_'+inst.id);
+      data[inst.id]= raw ? JSON.parse(raw) : {patients:[],nextPid:11,nextCid:200};
+    });
+    var obj={app:'CardioSalud',version:1,exported:new Date().toISOString(),insts:insts,data:data};
+    var blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url; a.download='cardiosalud_backup_'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){ alert('No se pudo exportar el backup: '+(e&&e.message?e.message:e)); }
+}
+// Importa un backup JSON: valida {insts,data}, confirma reemplazo total (irreversible)
+// y reescribe crd_insts + cada crd_d_<id>. Borra la lista legada cardiosalud_centros
+// para que getInsts() use la lista importada con los ids correctos. No toca cs_auth ni el tema.
+function handleImportFile(file){
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var obj;
+    try{ obj=JSON.parse(ev.target.result); }catch(e){ alert('El archivo no es un JSON válido.'); return; }
+    if(!obj || !Array.isArray(obj.insts) || !obj.data || typeof obj.data!=='object'){
+      alert('El archivo no es un backup válido de CardioSalud (faltan las claves "insts" y "data").');
+      return;
+    }
+    if(!confirm('Esto va a REEMPLAZAR TODAS las instituciones y pacientes guardados en este navegador por los del archivo importado.\n\nEs una acción IRREVERSIBLE. ¿Continuar?')) return;
+    try{
+      saveInsts(obj.insts); // escribe crd_insts
+      // quita la lista legada para que getInsts() use la importada (ids consistentes con data)
+      localStorage.removeItem('cardiosalud_centros');
+      Object.keys(obj.data).forEach(function(id){
+        localStorage.setItem('crd_d_'+id, JSON.stringify(obj.data[id]));
+      });
+      activeInst=null;
+      buildInstScreen();
+      alert('Importación completada: '+obj.insts.length+' institución(es) cargada(s).');
+    }catch(e){ alert('Error al aplicar el backup: '+(e&&e.message?e.message:e)); }
+  };
+  reader.readAsText(file);
+}
 function buildInstScreen(){
   const insts=getInsts();
   document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al aplicación</p><div class="isc-cards">${insts.map((inst,i)=>`<div class="ic" onclick="enterInst(${i})"><div class="ic-i">${inst.icon}</div><div class="ic-n" spellcheck="false" title="Doble click para renombrar" onclick="icNameClick(${i},event)" ondblclick="icNameDbl(this,event)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onblur="icNameBlur(this,${i})">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
