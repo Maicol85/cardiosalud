@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SYNTAX Score — CardioSalud</title>
+<style>
+  :root {
+    --navy:    #0B1F3A;
+    --navy2:   #162B4D;
+    --red:     #C0392B;
+    --red-pale:#FDEDEC;
+    --amber:   #D4860A;
+    --amber-pale:#FEF3DC;
+    --green:   #1A6B4A;
+    --green-pale:#E8F5EE;
+    --blue:    #1A4A8A;
+    --blue-pale:#EBF2FB;
+    --bg:      #F2F5F9;
+    --surface: #FFFFFF;
+    --border:  #D0DAE8;
+    --text:    #0B1F3A;
+    --muted:   #5A6E82;
+    --light:   #8FA0B4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy); padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  }
+  .logo { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -.3px; }
+  .logo span { color: #E8A020; }
+  .logo-sub { font-size: 11px; color: rgba(255,255,255,.5); margin-left: 4px; font-weight: 400; }
+  .header-badge {
+    margin-left: auto; background: rgba(255,255,255,.12);
+    color: rgba(255,255,255,.8); font-size: 11px; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px; letter-spacing: .3px;
+  }
+
+  /* ── TABS ── */
+  .tab-header {
+    background: var(--navy2); display: flex; padding: 0 20px; gap: 4px;
+  }
+  .tab-btn {
+    padding: 12px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+    border: none; background: transparent; color: rgba(255,255,255,.5);
+    border-bottom: 3px solid transparent; font-family: inherit; transition: all .15s;
+  }
+  .tab-btn.active { color: #fff; border-bottom-color: #E8A020; }
+  .tab-btn:hover { color: rgba(255,255,255,.85); }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+  /* ── SCORE DISPLAY ── */
+  .score-panel {
+    background: var(--navy); border-radius: 14px; padding: 20px;
+    display: flex; align-items: center; gap: 20px; margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(11,31,58,.25);
+  }
+  .score-num {
+    font-size: 56px; font-weight: 900; line-height: 1;
+    font-variant-numeric: tabular-nums; min-width: 80px; text-align: center;
+  }
+  .score-num.low    { color: #4CAF50; }
+  .score-num.mid    { color: #E8A020; }
+  .score-num.high   { color: #EF5350; }
+  .score-num.empty  { color: rgba(255,255,255,.2); }
+  .score-label { font-size: 12px; text-align: center; color: rgba(255,255,255,.5); margin-top: 2px; }
+  .score-divider { width: 1px; background: rgba(255,255,255,.15); align-self: stretch; }
+  .score-interp { flex: 1; }
+  .score-cat { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+  .score-rec { font-size: 13px; color: rgba(255,255,255,.7); line-height: 1.5; }
+  .score-guia { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 6px; }
+
+  /* ── CARDS ── */
+  .card { background: var(--surface); border-radius: 12px; padding: 18px; border: 1px solid var(--border); margin-bottom: 14px; }
+  .card-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .card-title span { font-size: 15px; }
+
+  /* ── SEGMENTOS ── */
+  .seg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  @media (max-width: 600px) { .seg-grid { grid-template-columns: 1fr 1fr; } }
+
+  .seg-item {
+    border: 2px solid var(--border); border-radius: 10px; padding: 10px 12px;
+    cursor: pointer; transition: all .15s; user-select: none; position: relative;
+  }
+  .seg-item:hover { border-color: var(--blue); background: var(--blue-pale); }
+  .seg-item.selected { border-color: var(--red); background: var(--red-pale); }
+  .seg-item.disabled { opacity: .35; cursor: not-allowed; pointer-events: none; }
+  .seg-num { font-size: 10px; font-weight: 700; color: var(--light); }
+  .seg-name { font-size: 12px; font-weight: 600; color: var(--text); margin-top: 2px; }
+  .seg-pts { position: absolute; top: 8px; right: 10px; font-size: 11px; font-weight: 800; color: var(--muted); }
+  .seg-item.selected .seg-pts { color: var(--red); }
+
+  /* ── LESION CARD ── */
+  .lesion-card {
+    border: 2px solid var(--border); border-radius: 12px; padding: 14px;
+    margin-bottom: 10px; background: var(--surface);
+  }
+  .lesion-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  }
+  .lesion-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--navy);
+    color: #fff; font-size: 13px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .lesion-title { font-size: 14px; font-weight: 700; flex: 1; }
+  .lesion-pts { font-size: 20px; font-weight: 900; color: var(--red); }
+
+  .mod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  @media (max-width: 500px) { .mod-grid { grid-template-columns: 1fr; } }
+
+  .mod-item {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
+    font-size: 12px; transition: all .15s; user-select: none;
+  }
+  .mod-item:hover { background: var(--bg); }
+  .mod-item.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .mod-item input[type=checkbox] { accent-color: var(--red); width: 15px; height: 15px; flex-shrink: 0; }
+  .mod-pts { margin-left: auto; font-weight: 700; font-size: 11px; color: var(--light); }
+  .mod-item.active .mod-pts { color: #E8A020; }
+
+  /* select dentro de lesión */
+  .lesion-select { width: 100%; padding: 7px 10px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 12px; font-family: inherit; background: var(--surface);
+    color: var(--text); margin-top: 4px; }
+
+  /* ── FORMS ── */
+  .form-row { display: grid; gap: 12px; margin-bottom: 12px; }
+  .form-row.cols2 { grid-template-columns: 1fr 1fr; }
+  .form-row.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+  @media (max-width: 600px) { .form-row.cols2, .form-row.cols3 { grid-template-columns: 1fr; } }
+  label { font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .3px; }
+  input[type=number], select, input[type=text] {
+    width: 100%; padding: 9px 12px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 13px; font-family: inherit; color: var(--text);
+    background: var(--surface); transition: border .15s;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,74,138,.1); }
+
+  /* ── BUTTONS ── */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px;
+    border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer;
+    border: none; font-family: inherit; transition: all .15s; }
+  .btn-primary { background: var(--navy); color: #fff; }
+  .btn-primary:hover { background: var(--navy2); }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover { background: #A93226; }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--bg); }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .btn-green { background: var(--green); color: #fff; }
+
+  /* ── MISC ── */
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .flex { display: flex; } .items-center { align-items: center; } .gap-8 { gap: 8px; }
+  .gap-12 { gap: 12px; } .ml-auto { margin-left: auto; }
+  .text-sm { font-size: 12px; } .text-muted { color: var(--muted); }
+  .mt-8 { margin-top: 8px; } .mt-12 { margin-top: 12px; } .mt-16 { margin-top: 16px; }
+  .badge { display: inline-flex; align-items: center; padding: 2px 10px;
+    border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .badge-blue { background: var(--blue-pale); color: var(--blue); }
+  .badge-red { background: var(--red-pale); color: var(--red); }
+  .badge-green { background: var(--green-pale); color: var(--green); }
+  .badge-amber { background: var(--amber-pale); color: var(--amber); }
+
+  .info-box { background: var(--blue-pale); border: 1px solid #B0C8E8;
+    border-radius: 8px; padding: 12px 14px; font-size: 12px; color: var(--blue);
+    line-height: 1.6; margin-bottom: 12px; }
+  .warn-box { background: var(--amber-pale); border: 1px solid #E8C070;
+    border-radius: 8px; padding: 12px 14px; font-size: 12px; color: #7A4F00;
+    line-height: 1.6; margin-bottom: 12px; }
+
+  .tag-vessel { display: inline-block; padding: 1px 7px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; margin-left: 4px; }
+  .tag-da { background: #DCEEFB; color: #1A4A8A; }
+  .tag-cx { background: #E8F5EE; color: #1A6B4A; }
+  .tag-cd { background: #FEF3DC; color: #7A4F00; }
+  .tag-tc { background: #FDEDEC; color: #C0392B; }
+
+  /* Print */
+  @media print {
+    header, .tab-header, .btn, .actions-bar { display: none !important; }
+    .card { break-inside: avoid; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Cardio<span>Salud</span> <span class="logo-sub">· SYNTAX Score</span></div>
+  </div>
+  <div class="header-badge">EasyMed Suite</div>
+</header>
+
+<div class="tab-header">
+  <button class="tab-btn active" onclick="switchTab('sx1', this)">SYNTAX Score I</button>
+  <button class="tab-btn" onclick="switchTab('sx2', this)">SYNTAX Score II</button>
+  <button class="tab-btn" onclick="switchTab('tablas', this)">📊 Tablas de Decisión</button>
+  <button class="tab-btn" onclick="switchTab('info', this)">📖 Guía</button>
+</div>
+
+<main>
+
+<!-- ══════════════════════════════════════ -->
+<!-- TAB: SYNTAX SCORE I                   -->
+<!-- ══════════════════════════════════════ -->
+<div id="tab-sx1">
+
+  <!-- 1. Config inicial -->
+  <!-- Paciente y dominancia -->
+  <div class="card">
+    <div class="card-title"><span>⚙️</span> Configuración inicial</div>
+    <div class="form-row cols3">
+      <div>
+        <label>Nombre / ID paciente</label>
+        <input type="text" id="sx1-paciente" placeholder="Opcional">
+      </div>
+      <div>
+        <label>Dominancia coronaria</label>
+        <select id="sx1-dom" onchange="actualizarSegmentos()">
+          <option value="derecha">Derecha (más frecuente)</option>
+          <option value="izquierda">Izquierda</option>
+        </select>
+      </div>
+      <div>
+        <label>Fecha del cateterismo</label>
+        <input type="date" id="sx1-fecha">
+      </div>
+      <div>
+        <label>Diabetes mellitus</label>
+        <select id="sx1-dm" onchange="calcSX1()">
+          <option value="no">No diabético</option>
+          <option value="si">Diabético (insulinorrequiriente)</option>
+          <option value="si-oral">Diabético (solo hipoglucemiantes orales)</option>
+        </select>
+      </div>
+      <div>
+        <label>Extensión enfermedad</label>
+        <select id="sx1-vasos" onchange="calcSX1()">
+          <option value="3v">3 vasos</option>
+          <option value="tc">Tronco común</option>
+          <option value="tc3v">Tronco + 3 vasos</option>
+          <option value="2v-da">2 vasos con DA proximal</option>
+          <option value="2v">2 vasos sin DA proximal</option>
+          <option value="1v-da">1 vaso con DA proximal</option>
+          <option value="1v">1 vaso sin DA proximal</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Árbol coronario -->
+  <!-- Agregar lesión -->
+  <div class="card">
+    <div class="card-title"><span>🩺</span> Árbol coronario — seleccioná los segmentos con lesión ≥50%</div>
+
+    <div class="info-box">
+      Tocá el segmento afectado para agregarlo como lesión. Solo segmentos en vasos ≥1.5mm. Cada segmento tiene su peso según importancia en el árbol coronario.
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">
+      🟡 Coronaria Derecha (CD)
+    </div>
+    <div class="seg-grid" style="margin-bottom:16px" id="segs-cd"></div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">
+      🔴 Tronco Común + Descendente Anterior (DA)
+    </div>
+    <div class="seg-grid" style="margin-bottom:16px" id="segs-tc-da"></div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">
+      🟢 Circunfleja (Cx)
+    </div>
+    <div class="seg-grid" id="segs-cx"></div>
+  </div>
+
+  <!-- 3. Lesiones activas -->
+  <!-- Lesiones activas -->
+  <div id="lesiones-container"></div>
+
+  <!-- 4. Panel resultado — al final -->
+  <!-- Panel resultado -->
+  <div class="score-panel" id="sx1-result-panel" style="display:none">
+    <div>
+      <div class="score-num empty" id="sx1-num">—</div>
+      <div class="score-label">SYNTAX I</div>
+    </div>
+    <div class="score-divider"></div>
+    <div class="score-interp">
+      <div class="score-cat" id="sx1-cat">Ingresá las lesiones</div>
+      <div class="score-rec" id="sx1-rec">Seleccioná la dominancia y agregá al menos una lesión para calcular el score.</div>
+      <div class="score-guia" id="sx1-guia"></div>
+    </div>
+  </div>
+
+  <!-- 5. Guardar en CardioSalud + Acciones -->
+  <div id="sx1-acciones" style="display:none">
+
+    <!-- Guardar en historia del paciente -->
+    <div class="card" style="border:2px solid var(--green);background:var(--green-pale)">
+      <div class="card-title" style="color:var(--green)"><span>💾</span> Guardar en CardioSalud</div>
+      <div style="font-size:13px;color:var(--text);margin-bottom:14px">
+        Guardá el resultado en la historia del paciente para que quede registrado en CardioSalud.
+      </div>
+      <div class="form-row cols2">
+        <div>
+          <label>Paciente</label>
+          <input type="text" id="sx1-save-paciente" placeholder="Nombre o HC del paciente">
+        </div>
+        <div>
+          <label>Observaciones clínicas</label>
+          <input type="text" id="sx1-save-obs" placeholder="Ej: post-SCA, anatomía compleja, etc.">
+        </div>
+      </div>
+      <div class="flex gap-8 items-center">
+        <button class="btn btn-green" onclick="guardarEnCardioSalud()">💾 Guardar en historia</button>
+        <span id="sx1-save-msg" style="font-size:13px;color:var(--green)"></span>
+      </div>
+      <!-- Lista de guardados -->
+      <div id="sx1-guardados" style="margin-top:14px;display:none">
+        <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;margin-bottom:8px">Guardados en esta sesión</div>
+        <div id="sx1-guardados-lista"></div>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="flex gap-8 items-center" style="margin-bottom:24px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="imprimirSX1()">🖨 Imprimir resultado</button>
+      <button class="btn btn-secondary" onclick="resetSX1()">🔄 Nueva calculación</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- TAB: SYNTAX SCORE II                  -->
+<!-- ══════════════════════════════════════ -->
+<div id="tab-sx2" style="display:none">
+
+  <div class="score-panel">
+    <div>
+      <div class="score-num empty" id="sx2-num-pci">—</div>
+      <div class="score-label">Mort. 4a ICP</div>
+    </div>
+    <div class="score-divider"></div>
+    <div>
+      <div class="score-num empty" id="sx2-num-cabg">—</div>
+      <div class="score-label">Mort. 4a CRM</div>
+    </div>
+    <div class="score-divider"></div>
+    <div class="score-interp">
+      <div class="score-cat" id="sx2-cat">SYNTAX Score II</div>
+      <div class="score-rec" id="sx2-rec">Completá los datos clínicos y el SYNTAX I para calcular la mortalidad predicha a 4 años con cada estrategia.</div>
+      <div class="score-guia" id="sx2-guia"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>📋</span> Datos clínicos — SYNTAX Score II</div>
+    <div class="info-box">
+      El SYNTAX II combina el score anatómico (SYNTAX I) con variables clínicas para predecir mortalidad a 4 años con ICP vs CRM. Requiere datos del SYNTAX I.
+    </div>
+
+    <div class="form-row cols2">
+      <div>
+        <label>SYNTAX Score I (anatómico)</label>
+        <input type="number" id="sx2-syntax1" placeholder="0-83" min="0" max="83" oninput="calcSX2()">
+        <div class="text-sm text-muted mt-8">Calculalo en la pestaña anterior o ingresalo manualmente</div>
+      </div>
+      <div>
+        <label>Edad (años)</label>
+        <input type="number" id="sx2-edad" placeholder="18-99" min="18" max="99" oninput="calcSX2()">
+      </div>
+    </div>
+
+    <div class="form-row cols2">
+      <div>
+        <label>Creatinina sérica (mg/dL)</label>
+        <input type="number" id="sx2-creat" placeholder="Ej: 1.1" step="0.1" min="0.4" max="10" oninput="calcSX2()">
+      </div>
+      <div>
+        <label>FEVI (%)</label>
+        <input type="number" id="sx2-fevi" placeholder="Ej: 55" min="10" max="80" oninput="calcSX2()">
+      </div>
+    </div>
+
+    <div class="form-row cols3">
+      <div>
+        <label>Tronco común afectado</label>
+        <select id="sx2-tronco" onchange="calcSX2()">
+          <option value="0">No</option>
+          <option value="1">Sí</option>
+        </select>
+      </div>
+      <div>
+        <label>Diabetes mellitus insulinorrequiriente</label>
+        <select id="sx2-dm" onchange="calcSX2()">
+          <option value="0">No / No insulinorrequiriente</option>
+          <option value="1">Sí, insulinorrequiriente</option>
+        </select>
+      </div>
+      <div>
+        <label>Género</label>
+        <select id="sx2-sexo" onchange="calcSX2()">
+          <option value="0">Masculino</option>
+          <option value="1">Femenino</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row cols2">
+      <div>
+        <label>EPOC (enfermedad pulmonar obstructiva crónica)</label>
+        <select id="sx2-epoc" onchange="calcSX2()">
+          <option value="0">No</option>
+          <option value="1">Sí</option>
+        </select>
+      </div>
+      <div>
+        <label>Enfermedad vascular periférica</label>
+        <select id="sx2-evp" onchange="calcSX2()">
+          <option value="0">No</option>
+          <option value="1">Sí</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resultado SX2 -->
+  <div class="card" id="sx2-resultado" style="display:none">
+    <div class="card-title"><span>📊</span> Resultado y Recomendación</div>
+    <div id="sx2-resultado-content"></div>
+  </div>
+
+  <div class="flex gap-8" style="margin-bottom:20px">
+    <button class="btn btn-green" onclick="imprimirSX2()">🖨 Imprimir resultado</button>
+    <button class="btn btn-secondary" onclick="resetSX2()">🔄 Limpiar</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- TAB: TABLAS DE DECISIÓN               -->
+<!-- ══════════════════════════════════════ -->
+<div id="tab-tablas" style="display:none">
+
+  <!-- Calculadora rápida integrada -->
+  <div class="card" style="border:2px solid var(--navy)">
+    <div class="card-title"><span>⚡</span> Consulta rápida — ¿ICP o CRM?</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Ingresá los tres datos clave para ver la recomendación inmediata según guías ESC/ACC 2023.</div>
+    <div class="form-row cols3">
+      <div>
+        <label>SYNTAX Score I</label>
+        <input type="number" id="tq-sx" placeholder="0–83" min="0" max="83" oninput="calcTablaRapida()">
+      </div>
+      <div>
+        <label>Diabetes mellitus</label>
+        <select id="tq-dm" onchange="calcTablaRapida()">
+          <option value="no">No diabético</option>
+          <option value="si">Diabético</option>
+        </select>
+      </div>
+      <div>
+        <label>Extensión de la enfermedad</label>
+        <select id="tq-vasos" onchange="calcTablaRapida()">
+          <option value="1v">1 vaso</option>
+          <option value="2v">2 vasos</option>
+          <option value="3v">3 vasos</option>
+          <option value="tc">Tronco común</option>
+          <option value="tc3v">Tronco + 3 vasos</option>
+        </select>
+      </div>
+    </div>
+    <div id="tq-resultado" style="display:none;margin-top:4px"></div>
+  </div>
+
+  <!-- Tabla 1: Enfermedad de 3 vasos -->
+  <div class="card">
+    <div class="card-title"><span>🩺</span> Enfermedad de 3 Vasos — Indicación según SYNTAX y Diabetes</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">
+      Basado en guías ESC/EACTS 2023 y estudio SYNTAX. En pacientes con enfermedad coronaria estable de 3 vasos.
+    </div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:left;border-radius:8px 0 0 0">SYNTAX Score</th>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:center">Rango</th>
+            <th style="background:#1A4A8A;color:#fff;padding:10px 14px;text-align:center">No Diabético</th>
+            <th style="background:#7B2020;color:#fff;padding:10px 14px;text-align:center;border-radius:0 8px 0 0">Diabético</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:var(--green-pale)">
+            <td style="padding:12px 14px;border-bottom:1px solid var(--border);font-weight:700">BAJO</td>
+            <td style="padding:12px 14px;border-bottom:1px solid var(--border);text-align:center"><span style="font-size:16px;font-weight:900;color:var(--green)">≤22</span></td>
+            <td style="padding:12px 14px;border-bottom:1px solid var(--border);text-align:center">
+              <div style="font-weight:700;color:var(--green)">ICP o CRM</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">Equivalentes · Clase I para ambos</div>
+            </td>
+            <td style="padding:12px 14px;border-bottom:1px solid var(--border);text-align:center">
+              <div style="font-weight:700;color:var(--amber)">CRM preferible</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">Beneficio supervivencia con CRM · Clase IIa</div>
+            </td>
+          </tr>
+          <tr style="background:var(--amber-pale)">
+            <td style="padding:12px 14px;border-bottom:1px solid var(--border);font-weight:700">INTERMEDIO</td>
+            <td style="padding:12px 14px;border-bottom:1px solid var(--border);text-align:center"><span style="font-size:16px;font-weight:900;color:var(--amber)">23–32</span></td>
+            <td style="padding:12px 14px;border-bottom:1px solid var(--border);text-align:center">
+              <div style="font-weight:700;color:var(--amber)">Heart Team</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">ICP aceptable · Clase IIa · Individualizar</div>
+            </td>
+            <td style="padding:12px 14px;border-bottom:1px solid var(--border);text-align:center">
+              <div style="font-weight:700;color:var(--red)">CRM recomendada</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">Clase I · FREEDOM trial · Mejor supervivencia</div>
+            </td>
+          </tr>
+          <tr style="background:var(--red-pale)">
+            <td style="padding:12px 14px;font-weight:700">ALTO</td>
+            <td style="padding:12px 14px;text-align:center"><span style="font-size:16px;font-weight:900;color:var(--red)">≥33</span></td>
+            <td style="padding:12px 14px;text-align:center">
+              <div style="font-weight:700;color:var(--red)">CRM recomendada</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">Clase I · ICP contraindicado (Clase III)</div>
+            </td>
+            <td style="padding:12px 14px;text-align:center">
+              <div style="font-weight:700;color:var(--red)">CRM obligatoria</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">Clase I · ICP Clase III · No indicado</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tabla 2: Tronco común -->
+  <div class="card">
+    <div class="card-title"><span>❤️</span> Tronco Común (Left Main) — Indicación según SYNTAX</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">
+      Actualización ESC 2023 basada en EXCEL, NOBLE y seguimiento a largo plazo.
+    </div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:left">SYNTAX Score</th>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:center">Rango</th>
+            <th style="background:#1A4A8A;color:#fff;padding:10px 14px;text-align:center">Recomendación</th>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:center">Clase ESC</th>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:center">Evidencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:var(--green-pale)">
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);font-weight:700">BAJO</td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center"><span style="font-weight:900;color:var(--green)">≤22</span></td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border)">
+              <strong style="color:var(--green)">ICP o CRM equivalentes</strong><br>
+              <span style="font-size:11px;color:var(--muted)">Resultados similares a 5 años en EXCEL y NOBLE. ICP es opción válida, especialmente en ostium o segmento medio.</span>
+            </td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center;font-weight:700">I</td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center;font-size:11px;color:var(--muted)">A</td>
+          </tr>
+          <tr style="background:var(--amber-pale)">
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);font-weight:700">INTERMEDIO</td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center"><span style="font-weight:900;color:var(--amber)">23–32</span></td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border)">
+              <strong style="color:var(--amber)">ICP aceptable — Heart Team obligatorio</strong><br>
+              <span style="font-size:11px;color:var(--muted)">Discusión multidisciplinaria. ICP puede considerarse si anatomía favorable para ICP (ostium/cuerpo del TC). Bifurcación distal compleja: preferir CRM.</span>
+            </td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center;font-weight:700">IIa</td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center;font-size:11px;color:var(--muted)">B</td>
+          </tr>
+          <tr style="background:var(--red-pale)">
+            <td style="padding:11px 14px;font-weight:700">ALTO</td>
+            <td style="padding:11px 14px;text-align:center"><span style="font-weight:900;color:var(--red)">≥33</span></td>
+            <td style="padding:11px 14px">
+              <strong style="color:var(--red)">CRM fuertemente recomendada</strong><br>
+              <span style="font-size:11px;color:var(--muted)">ICP con mayor mortalidad tardía. Anatomía compleja. Preferir CRM salvo contraindicación quirúrgica absoluta.</span>
+            </td>
+            <td style="padding:11px 14px;text-align:center;font-weight:700">III (ICP)</td>
+            <td style="padding:11px 14px;text-align:center;font-size:11px;color:var(--muted)">B</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tabla 3: 1 y 2 vasos -->
+  <div class="card">
+    <div class="card-title"><span>🔬</span> Enfermedad de 1 y 2 Vasos — Cuándo calcular SYNTAX</div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:left">Extensión</th>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:center">SYNTAX requerido</th>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px">Recomendación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);font-weight:700">1 vaso — sin DA proximal</td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center"><span class="badge badge-green">No necesario</span></td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border)">ICP Clase I si hay isquemia documentada o síntomas. CRM no indicada de rutina.</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);font-weight:700">1 vaso — DA proximal</td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center"><span class="badge badge-amber">Considerar</span></td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border)">ICP o CRM equivalentes (Clase I). DA proximal con FEVI reducida: CRM puede ser preferible por beneficio de supervivencia con mamaria interna.</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);font-weight:700">2 vasos — sin DA proximal</td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center"><span class="badge badge-green">No determinante</span></td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border)">ICP preferible. SYNTAX aporta información sobre complejidad pero no cambia la indicación de forma determinante.</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);font-weight:700">2 vasos — con DA proximal</td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border);text-align:center"><span class="badge badge-amber">Útil</span></td>
+            <td style="padding:11px 14px;border-bottom:1px solid var(--border)">ICP o CRM (Clase I). En diabéticos o lesiones complejas: calcular SYNTAX. Si ≥23 con diabetes: Heart Team.</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 14px;font-weight:700">2 vasos + tronco o 3 vasos</td>
+            <td style="padding:11px 14px;text-align:center"><span class="badge badge-red">Mandatorio</span></td>
+            <td style="padding:11px 14px">SYNTAX es el principal determinante de la estrategia. Ver tablas anteriores.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tabla 4: Diabetes y FREEDOM trial -->
+  <div class="card">
+    <div class="card-title"><span>🩸</span> Diabetes Mellitus — Impacto en la decisión (FREEDOM Trial)</div>
+    <div class="info-box">
+      El estudio FREEDOM (NEJM 2012, N=1900) demostró que en diabéticos con enfermedad multivaso, la CRM reduce significativamente la mortalidad total vs ICP (10.9% vs 16.3% a 5 años), a expensas de mayor tasa de ACV (5.2% vs 2.4%).
+    </div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:left">Variable</th>
+            <th style="background:#1A4A8A;color:#fff;padding:10px 14px;text-align:center">ICP (FREEDOM)</th>
+            <th style="background:#1A6B4A;color:#fff;padding:10px 14px;text-align:center">CRM (FREEDOM)</th>
+            <th style="background:var(--navy);color:#fff;padding:10px 14px;text-align:center">p-valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:9px 14px;border-bottom:1px solid var(--border)">Mortalidad total 5 años</td><td style="padding:9px 14px;border-bottom:1px solid var(--border);text-align:center;color:var(--red);font-weight:700">16.3%</td><td style="padding:9px 14px;border-bottom:1px solid var(--border);text-align:center;color:var(--green);font-weight:700">10.9%</td><td style="padding:9px 14px;border-bottom:1px solid var(--border);text-align:center;font-size:11px">0.049</td></tr>
+          <tr><td style="padding:9px 14px;border-bottom:1px solid var(--border)">MACE (muerte/IAM/ACV)</td><td style="padding:9px 14px;border-bottom:1px solid var(--border);text-align:center;color:var(--red);font-weight:700">26.6%</td><td style="padding:9px 14px;border-bottom:1px solid var(--border);text-align:center;color:var(--green);font-weight:700">18.7%</td><td style="padding:9px 14px;border-bottom:1px solid var(--border);text-align:center;font-size:11px">&lt;0.001</td></tr>
+          <tr><td style="padding:9px 14px;border-bottom:1px solid var(--border)">IAM no fatal</td><td style="padding:9px 14px;border-bottom:1px solid var(--border);text-align:center;color:var(--red);font-weight:700">11.0%</td><td style="padding:9px 14px;border-bottom:1px solid var(--border);text-align:center;color:var(--green);font-weight:700">6.0%</td><td style="padding:9px 14px;border-bottom:1px solid var(--border);text-align:center;font-size:11px">0.002</td></tr>
+          <tr><td style="padding:9px 14px">ACV</td><td style="padding:9px 14px;text-align:center;color:var(--green);font-weight:700">2.4%</td><td style="padding:9px 14px;text-align:center;color:var(--red);font-weight:700">5.2%</td><td style="padding:9px 14px;text-align:center;font-size:11px">0.03</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6">
+      <strong>Conclusión clínica:</strong> En diabéticos con enfermedad multivaso, la CRM reduce mortalidad e IAM a expensas de mayor riesgo de ACV perioperatorio. El balance riesgo-beneficio favorece CRM especialmente en: SYNTAX ≥23, 3 vasos, DA proximal comprometida, función ventricular reducida. En lesiones simples (SYNTAX ≤22, 2 vasos sin DA proximal), la decisión puede ser individualizada.
+    </div>
+  </div>
+
+  <!-- Tabla 5: Factores modificadores de la decisión -->
+  <div class="card">
+    <div class="card-title"><span>⚖️</span> Factores que modifican la decisión final</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:var(--green-pale);border-radius:10px;padding:14px;border-left:4px solid var(--green)">
+        <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px">✅ Favorecen ICP</div>
+        <ul style="font-size:12px;line-height:1.9;color:var(--text);padding-left:16px">
+          <li>SYNTAX ≤22</li>
+          <li>No diabético</li>
+          <li>Lesión de ostium/cuerpo del TC</li>
+          <li>Alto riesgo quirúrgico (EuroSCORE II &gt;4%)</li>
+          <li>Edad avanzada + comorbilidades</li>
+          <li>Preferencia informada del paciente</li>
+          <li>Ausencia de cirujano cardíaco disponible</li>
+          <li>No candidato a mamaria interna (EPOC severo, reoperación)</li>
+        </ul>
+      </div>
+      <div style="background:var(--blue-pale);border-radius:10px;padding:14px;border-left:4px solid var(--blue)">
+        <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px">🔵 Favorecen CRM</div>
+        <ul style="font-size:12px;line-height:1.9;color:var(--text);padding-left:16px">
+          <li>SYNTAX ≥23</li>
+          <li>Diabetes mellitus (especialmente insulinorrequiriente)</li>
+          <li>Bifurcación distal compleja del TC</li>
+          <li>3 vasos con DA proximal</li>
+          <li>FEVI &lt;35% + revascularización completa</li>
+          <li>OTC múltiples</li>
+          <li>Calcificación severa no tratable con ICP</li>
+          <li>Bajo riesgo quirúrgico (EuroSCORE II &lt;2%)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="warn-box" style="margin-top:12px;margin-bottom:0">
+      <strong>Heart Team:</strong> En toda enfermedad de 3 vasos, tronco común o SYNTAX ≥23, las guías ESC 2023 recomiendan la discusión multidisciplinaria (Clase I). La decisión unilateral sin participación del cirujano cardiovascular no cumple el estándar actual de cuidado.
+    </div>
+  </div>
+
+  <!-- Resumen ejecutivo -->
+  <div class="card" style="background:var(--navy);color:#fff;border:none">
+    <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.5);margin-bottom:14px">📌 Resumen ejecutivo — Algoritmo simplificado</div>
+    <div style="display:grid;grid-template-columns:1fr;gap:8px;font-size:13px">
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px">
+        <span style="color:#E8A020;font-weight:700">1 vaso sin DA proximal →</span> ICP (Clase I) · No calcular SYNTAX
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px">
+        <span style="color:#E8A020;font-weight:700">1 vaso con DA proximal →</span> ICP o CRM equivalentes · CRM si FEVI reducida o diabético
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px">
+        <span style="color:#E8A020;font-weight:700">2 vasos →</span> Calcular SYNTAX si DA proximal o diabético · ICP preferible si SYNTAX ≤22 y no diabético
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px">
+        <span style="color:#4CAF50;font-weight:700">3 vasos / TC, SYNTAX ≤22 →</span> ICP o CRM · En diabético: CRM preferible
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px">
+        <span style="color:#E8A020;font-weight:700">3 vasos / TC, SYNTAX 23–32 →</span> Heart Team obligatorio · CRM en diabético
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:12px">
+        <span style="color:#EF5350;font-weight:700">3 vasos / TC, SYNTAX ≥33 →</span> CRM · ICP contraindicado (Clase III)
+      </div>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:14px">
+      Fuentes: ESC/EACTS Guidelines on Myocardial Revascularization 2023 · SYNTAX Trial (Serruys et al. NEJM 2009) · FREEDOM Trial (Farkouh et al. NEJM 2012) · EXCEL Trial (Stone et al. NEJM 2016) · NOBLE Trial (Mäkikallio et al. Lancet 2016) · Farooq V et al. SYNTAX II, Lancet 2013
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- TAB: GUÍA                             -->
+<!-- ══════════════════════════════════════ -->
+<div id="tab-info" style="display:none">
+  <div class="card">
+    <div class="card-title"><span>📖</span> ¿Qué es el SYNTAX Score?</div>
+    <div style="font-size:13px;line-height:1.8;color:var(--text)">
+      <p style="margin-bottom:10px">El <strong>SYNTAX Score</strong> es una herramienta angiográfica que cuantifica la complejidad anatómica de la enfermedad coronaria. Fue desarrollado en el estudio SYNTAX para guiar la decisión de revascularización en pacientes con enfermedad de tronco común y/o multivaso.</p>
+      <p style="margin-bottom:10px">Cada lesión coronaria con estenosis ≥50% en vasos ≥1.5mm recibe un puntaje basado en el <strong>peso del segmento</strong> (importancia del territorio miocárdico irrigado) multiplicado por un <strong>multiplicador de oclusión</strong> y ajustado por <strong>modificadores de complejidad</strong>.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>🎯</span> Interpretación SYNTAX Score I</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div style="background:var(--green-pale);border-radius:10px;padding:14px;border-left:4px solid var(--green)">
+        <div style="font-size:22px;font-weight:900;color:var(--green)">≤22</div>
+        <div style="font-size:12px;font-weight:700;margin:4px 0">BAJO</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">ICP preferible o equivalente a CRM. Resultados similares en MACE a 5 años.</div>
+      </div>
+      <div style="background:var(--amber-pale);border-radius:10px;padding:14px;border-left:4px solid var(--amber)">
+        <div style="font-size:22px;font-weight:900;color:var(--amber)">23–32</div>
+        <div style="font-size:12px;font-weight:700;margin:4px 0">INTERMEDIO</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">Zona gris. Discutir en Heart Team. En diabéticos con 3 vasos, CRM preferible.</div>
+      </div>
+      <div style="background:var(--red-pale);border-radius:10px;padding:14px;border-left:4px solid var(--red)">
+        <div style="font-size:22px;font-weight:900;color:var(--red)">≥33</div>
+        <div style="font-size:12px;font-weight:700;margin:4px 0">ALTO</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">CRM claramente superior. ICP con peor pronóstico, especialmente en diabéticos.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>🔬</span> Modificadores de complejidad por lesión</div>
+    <table style="width:100%;font-size:12px;border-collapse:collapse">
+      <thead>
+        <tr style="background:var(--bg)">
+          <th style="text-align:left;padding:8px 10px;border-bottom:2px solid var(--border)">Característica</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--border);text-align:center">Puntos</th>
+          <th style="padding:8px 10px;border-bottom:2px solid var(--border)">Definición</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Oclusión total crónica (OTC)</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700;color:var(--red)">×2</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Multiplica el peso del segmento por 2</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>OTC: sin muñón</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+1</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Oclusión sin imagen de muñón visible</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>OTC: >3 meses o desconocido</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+1</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Antigüedad de la oclusión</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>OTC: puentes colaterales</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+1</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Presencia de circulación colateral</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Trifurcación (rama simple)</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+3</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">1 rama afectada</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Trifurcación (2 ramas)</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+4</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">2 ramas afectadas</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Bifurcación — ángulo &lt;70°</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+1</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Ángulo favorable</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Bifurcación — ángulo ≥70°</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+2</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Ángulo desfavorable</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Lesión aorto-ostial</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+1</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Solo segmentos 1, 5</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Tortuosidad severa</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+2</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">≥1 angulación >90° o ≥3 de 45-90° proximal</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Longitud &gt;20mm</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+1</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Lesión larga</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Calcificación severa</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+2</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Visible en más de una proyección</td></tr>
+        <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)"><strong>Trombo</strong></td><td style="text-align:center;padding:7px 10px;border-bottom:1px solid var(--border);font-weight:700">+1</td><td style="padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted)">Imagen sugestiva de trombo</td></tr>
+        <tr><td style="padding:7px 10px"><strong>Enfermedad difusa/vaso pequeño</strong></td><td style="text-align:center;padding:7px 10px;font-weight:700">+1</td><td style="padding:7px 10px;color:var(--muted)">≥75% del segmento distal con diámetro &lt;2mm</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>⚠️</span> Limitaciones importantes</div>
+    <div class="warn-box">
+      El SYNTAX Score es una herramienta de apoyo a la decisión clínica. La decisión final de revascularización debe tomarse en el contexto clínico completo del paciente, idealmente en el seno de un Heart Team multidisciplinario (cardiólogo intervencionista + cirujano cardiovascular). Esta calculadora no reemplaza el juicio clínico.
+    </div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.7">
+      <strong>Fuentes:</strong> Sianos G et al. The SYNTAX Score: an angiographic tool grading the complexity of coronary artery disease. EuroIntervention 2005. · Serruys PW et al. Percutaneous Coronary Intervention versus Coronary-Artery Bypass Grafting for Severe Coronary Artery Disease. NEJM 2009. · Farooq V et al. SYNTAX Score II. Lancet 2013. · ESC/EACTS Guidelines on Myocardial Revascularization 2018/2023.
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════════════════
+// SEGMENTOS CORONARIOS — pesos por dominancia
+// ══════════════════════════════════════════════════════
+const SEGMENTOS_DERECHA = [
+  // CD
+  { id:1,  nombre:'CD proximal',           peso:1.0, vaso:'cd',    canOTC:true,  canBif:false, canOstial:true  },
+  { id:2,  nombre:'CD media',              peso:0.75,vaso:'cd',    canOTC:true,  canBif:false, canOstial:false },
+  { id:3,  nombre:'CD distal',             peso:0.5, vaso:'cd',    canOTC:true,  canBif:false, canOstial:false },
+  { id:4,  nombre:'Desc. posterior (CD)',  peso:0.5, vaso:'cd',    canOTC:true,  canBif:false, canOstial:false },
+  // TC + DA
+  { id:5,  nombre:'Tronco común (TC)',     peso:6.0, vaso:'tc',    canOTC:true,  canBif:true,  canOstial:true  },
+  { id:6,  nombre:'DA proximal',           peso:3.5, vaso:'da',    canOTC:true,  canBif:true,  canOstial:true  },
+  { id:7,  nombre:'DA media',              peso:2.5, vaso:'da',    canOTC:true,  canBif:false, canOstial:false },
+  { id:8,  nombre:'DA apical',             peso:1.0, vaso:'da',    canOTC:true,  canBif:false, canOstial:false },
+  { id:9,  nombre:'1ª diagonal',           peso:1.0, vaso:'da',    canOTC:true,  canBif:false, canOstial:false },
+  { id:10, nombre:'2ª diagonal',           peso:0.5, vaso:'da',    canOTC:true,  canBif:false, canOstial:false },
+  // Cx
+  { id:11, nombre:'Cx proximal',           peso:1.5, vaso:'cx',    canOTC:true,  canBif:true,  canOstial:true  },
+  { id:12, nombre:'1ª OM',                 peso:1.0, vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+  { id:13, nombre:'Cx distal',             peso:0.5, vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+  { id:14, nombre:'2ª OM / Postero-lat.',  peso:0.5, vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+  { id:15, nombre:'Arteria intermediaria', peso:1.0, vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+  { id:16, nombre:'Postero-descendente',   peso:0.5, vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+];
+
+const SEGMENTOS_IZQUIERDA = [
+  { id:1,  nombre:'CD proximal',           peso:0.5, vaso:'cd',    canOTC:true,  canBif:false, canOstial:true  },
+  { id:2,  nombre:'CD media',              peso:0.5, vaso:'cd',    canOTC:true,  canBif:false, canOstial:false },
+  { id:3,  nombre:'CD distal',             peso:0.5, vaso:'cd',    canOTC:true,  canBif:false, canOstial:false },
+  { id:4,  nombre:'Desc. posterior (CD)',  peso:0.0, vaso:'cd',    canOTC:false, canBif:false, canOstial:false },
+  { id:5,  nombre:'Tronco común (TC)',     peso:6.0, vaso:'tc',    canOTC:true,  canBif:true,  canOstial:true  },
+  { id:6,  nombre:'DA proximal',           peso:3.5, vaso:'da',    canOTC:true,  canBif:true,  canOstial:true  },
+  { id:7,  nombre:'DA media',              peso:2.5, vaso:'da',    canOTC:true,  canBif:false, canOstial:false },
+  { id:8,  nombre:'DA apical',             peso:1.0, vaso:'da',    canOTC:true,  canBif:false, canOstial:false },
+  { id:9,  nombre:'1ª diagonal',           peso:1.0, vaso:'da',    canOTC:true,  canBif:false, canOstial:false },
+  { id:10, nombre:'2ª diagonal',           peso:0.5, vaso:'da',    canOTC:true,  canBif:false, canOstial:false },
+  { id:11, nombre:'Cx proximal',           peso:2.5, vaso:'cx',    canOTC:true,  canBif:true,  canOstial:true  },
+  { id:12, nombre:'1ª OM',                 peso:1.0, vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+  { id:13, nombre:'Cx distal',             peso:0.75,vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+  { id:14, nombre:'2ª OM / Postero-lat.',  peso:0.75,vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+  { id:15, nombre:'Desc. posterior (Cx)',  peso:1.5, vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+  { id:16, nombre:'Arteria intermediaria', peso:1.0, vaso:'cx',    canOTC:true,  canBif:false, canOstial:false },
+];
+
+// Estado
+let segmentos = [...SEGMENTOS_DERECHA];
+let lesiones = []; // { segId, peso, otc, otcMunon, otcMeses, otcColat, bif, bifAngle, trifur, ostial, tortuos, largo, calcif, trombo, difusa }
+
+function getSegs() {
+  const dom = document.getElementById('sx1-dom')?.value || 'derecha';
+  return dom === 'derecha' ? SEGMENTOS_DERECHA : SEGMENTOS_IZQUIERDA;
+}
+
+function actualizarSegmentos() {
+  segmentos = getSegs();
+  renderSegmentos();
+  calcSX1();
+  // Precargar nombre si viene de CardioSalud
+  const urlParams = new URLSearchParams(window.location.search);
+  const pacParam = urlParams.get('paciente');
+  if (pacParam) {
+    const pacEl = document.getElementById('sx1-paciente');
+    const saveEl = document.getElementById('sx1-save-paciente');
+    if (pacEl) pacEl.value = decodeURIComponent(pacParam);
+    if (saveEl) saveEl.value = decodeURIComponent(pacParam);
+  }
+  renderGuardados();
+}
+
+function renderSegmentos() {
+  const segs = getSegs();
+  const lesionIds = lesiones.map(l => l.segId);
+
+  const renderGrupo = (containerId, vasos) => {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const grupo = segs.filter(s => vasos.includes(s.vaso));
+    el.innerHTML = grupo.map(s => {
+      const disabled = s.peso === 0;
+      const selected = lesionIds.includes(s.id);
+      const tag = { tc:'tc', da:'da', cx:'cx', cd:'cd' }[s.vaso];
+      return `<div class="seg-item ${selected?'selected':''} ${disabled?'disabled':''}"
+        onclick="toggleSegmento(${s.id})"
+        title="Peso: ${s.peso}">
+        <div class="seg-num">Seg. ${s.id} <span class="tag-vessel tag-${tag}">${s.vaso.toUpperCase()}</span></div>
+        <div class="seg-name">${s.nombre}</div>
+        <div class="seg-pts">${s.peso}</div>
+      </div>`;
+    }).join('');
+  };
+
+  renderGrupo('segs-cd', ['cd']);
+  renderGrupo('segs-tc-da', ['tc', 'da']);
+  renderGrupo('segs-cx', ['cx']);
+}
+
+function toggleSegmento(segId) {
+  const seg = getSegs().find(s => s.id === segId);
+  if (!seg || seg.peso === 0) return;
+
+  const idx = lesiones.findIndex(l => l.segId === segId);
+  if (idx >= 0) {
+    // Quitar lesión
+    if (!confirm('¿Eliminar esta lesión?')) return;
+    lesiones.splice(idx, 1);
+  } else {
+    // Agregar lesión
+    lesiones.push({
+      segId, peso: seg.peso,
+      otc: false, otcMunon: false, otcMeses: false, otcColat: false,
+      bif: 'ninguna', bifAngle: 'favorable',
+      trifur: 'ninguna',
+      ostial: false, tortuos: false, largo: false,
+      calcif: false, trombo: false, difusa: false
+    });
+  }
+  renderSegmentos();
+  renderLesiones();
+  calcSX1();
+}
+
+function renderLesiones() {
+  const segs = getSegs();
+  const container = document.getElementById('lesiones-container');
+  if (!container) return;
+
+  if (lesiones.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = lesiones.map((l, i) => {
+    const seg = segs.find(s => s.id === l.segId);
+    if (!seg) return '';
+    const pts = calcPuntosLesion(l, seg);
+    const tag = { tc:'tc', da:'da', cx:'cx', cd:'cd' }[seg.vaso];
+
+    return `<div class="lesion-card">
+      <div class="lesion-header">
+        <div class="lesion-num">${i+1}</div>
+        <div class="lesion-title">
+          Seg. ${seg.id} — ${seg.nombre}
+          <span class="tag-vessel tag-${tag}">${seg.vaso.toUpperCase()}</span>
+          <span class="badge badge-blue" style="margin-left:6px">Peso base: ${seg.peso}</span>
+        </div>
+        <div class="lesion-pts">${pts.toFixed(1)}</div>
+        <button class="btn btn-danger btn-sm" onclick="quitarLesion(${i})">✕</button>
+      </div>
+
+      <div class="mod-grid">
+        ${seg.canOTC ? `
+        <div class="mod-item ${l.otc?'active':''}" onclick="toggleMod(${i},'otc')">
+          <input type="checkbox" ${l.otc?'checked':''} onclick="event.stopPropagation()">
+          <span>Oclusión Total Crónica (OTC)</span>
+          <span class="mod-pts">×2</span>
+        </div>` : ''}
+        <div class="mod-item ${l.largo?'active':''}" onclick="toggleMod(${i},'largo')">
+          <input type="checkbox" ${l.largo?'checked':''} onclick="event.stopPropagation()">
+          <span>Longitud &gt;20mm</span>
+          <span class="mod-pts">+1</span>
+        </div>
+        <div class="mod-item ${l.calcif?'active':''}" onclick="toggleMod(${i},'calcif')">
+          <input type="checkbox" ${l.calcif?'checked':''} onclick="event.stopPropagation()">
+          <span>Calcificación severa</span>
+          <span class="mod-pts">+2</span>
+        </div>
+        <div class="mod-item ${l.tortuos?'active':''}" onclick="toggleMod(${i},'tortuos')">
+          <input type="checkbox" ${l.tortuos?'checked':''} onclick="event.stopPropagation()">
+          <span>Tortuosidad severa</span>
+          <span class="mod-pts">+2</span>
+        </div>
+        <div class="mod-item ${l.trombo?'active':''}" onclick="toggleMod(${i},'trombo')">
+          <input type="checkbox" ${l.trombo?'checked':''} onclick="event.stopPropagation()">
+          <span>Trombo</span>
+          <span class="mod-pts">+1</span>
+        </div>
+        <div class="mod-item ${l.difusa?'active':''}" onclick="toggleMod(${i},'difusa')">
+          <input type="checkbox" ${l.difusa?'checked':''} onclick="event.stopPropagation()">
+          <span>Enfermedad difusa / vaso &lt;2mm</span>
+          <span class="mod-pts">+1</span>
+        </div>
+        ${seg.canOstial ? `
+        <div class="mod-item ${l.ostial?'active':''}" onclick="toggleMod(${i},'ostial')">
+          <input type="checkbox" ${l.ostial?'checked':''} onclick="event.stopPropagation()">
+          <span>Lesión aorto-ostial</span>
+          <span class="mod-pts">+1</span>
+        </div>` : ''}
+      </div>
+
+      ${l.otc ? `
+      <div style="background:var(--bg);border-radius:8px;padding:12px;margin-top:10px">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;text-transform:uppercase">Características de la OTC</div>
+        <div class="mod-grid">
+          <div class="mod-item ${l.otcMunon?'active':''}" onclick="toggleMod(${i},'otcMunon')">
+            <input type="checkbox" ${l.otcMunon?'checked':''} onclick="event.stopPropagation()">
+            <span>Sin imagen de muñón</span><span class="mod-pts">+1</span>
+          </div>
+          <div class="mod-item ${l.otcMeses?'active':''}" onclick="toggleMod(${i},'otcMeses')">
+            <input type="checkbox" ${l.otcMeses?'checked':''} onclick="event.stopPropagation()">
+            <span>&gt;3 meses o duración desconocida</span><span class="mod-pts">+1</span>
+          </div>
+          <div class="mod-item ${l.otcColat?'active':''}" onclick="toggleMod(${i},'otcColat')">
+            <input type="checkbox" ${l.otcColat?'checked':''} onclick="event.stopPropagation()">
+            <span>Circulación colateral presente</span><span class="mod-pts">+1</span>
+          </div>
+        </div>
+      </div>` : ''}
+
+      ${seg.canBif ? `
+      <div style="margin-top:10px">
+        <label>Bifurcación</label>
+        <select class="lesion-select" onchange="setMod(${i},'bif',this.value)">
+          <option value="ninguna" ${l.bif==='ninguna'?'selected':''}>Sin bifurcación afectada</option>
+          <option value="favorable" ${l.bif==='favorable'?'selected':''}>Bifurcación — ángulo favorable (&lt;70°) +1</option>
+          <option value="desfavorable" ${l.bif==='desfavorable'?'selected':''}>Bifurcación — ángulo desfavorable (≥70°) +2</option>
+          <option value="trifur1" ${l.bif==='trifur1'?'selected':''}>Trifurcación — 1 rama afectada +3</option>
+          <option value="trifur2" ${l.bif==='trifur2'?'selected':''}>Trifurcación — 2 ramas afectadas +4</option>
+        </select>
+      </div>` : ''}
+
+    </div>`;
+  }).join('');
+}
+
+function toggleMod(lesionIdx, mod) {
+  if (lesiones[lesionIdx] === undefined) return;
+  lesiones[lesionIdx][mod] = !lesiones[lesionIdx][mod];
+  renderLesiones();
+  calcSX1();
+}
+
+function setMod(lesionIdx, mod, val) {
+  if (lesiones[lesionIdx] === undefined) return;
+  lesiones[lesionIdx][mod] = val;
+  calcSX1();
+}
+
+function quitarLesion(idx) {
+  lesiones.splice(idx, 1);
+  renderSegmentos();
+  renderLesiones();
+  calcSX1();
+}
+
+function calcPuntosLesion(l, seg) {
+  let pts = seg.peso;
+
+  // OTC multiplica ×2
+  if (l.otc) {
+    pts = pts * 2;
+    if (l.otcMunon) pts += 1;
+    if (l.otcMeses) pts += 1;
+    if (l.otcColat) pts += 1;
+  }
+
+  // Modificadores aditivos
+  if (l.largo)   pts += 1;
+  if (l.calcif)  pts += 2;
+  if (l.tortuos) pts += 2;
+  if (l.trombo)  pts += 1;
+  if (l.difusa)  pts += 1;
+  if (l.ostial && seg.canOstial) pts += 1;
+
+  // Bifurcación / trifurcación
+  if (l.bif === 'favorable')   pts += 1;
+  if (l.bif === 'desfavorable') pts += 2;
+  if (l.bif === 'trifur1')     pts += 3;
+  if (l.bif === 'trifur2')     pts += 4;
+
+  return pts;
+}
+
+function calcSX1() {
+  const segs = getSegs();
+  let total = 0;
+  lesiones.forEach(l => {
+    const seg = segs.find(s => s.id === l.segId);
+    if (seg) total += calcPuntosLesion(l, seg);
+  });
+  total = Math.round(total * 10) / 10;
+
+  const numEl = document.getElementById('sx1-num');
+  const catEl = document.getElementById('sx1-cat');
+  const recEl = document.getElementById('sx1-rec');
+  const guiaEl = document.getElementById('sx1-guia');
+
+  const resultPanel = document.getElementById('sx1-result-panel');
+  const accionesPanel = document.getElementById('sx1-acciones');
+
+  if (lesiones.length === 0) {
+    if (numEl) { numEl.textContent = '—'; numEl.className = 'score-num empty'; }
+    if (catEl) catEl.textContent = 'Ingresá las lesiones';
+    if (recEl) recEl.textContent = 'Seleccioná segmentos con lesión ≥50% en el árbol coronario.';
+    if (guiaEl) guiaEl.textContent = '';
+    if (resultPanel) resultPanel.style.display = 'none';
+    if (accionesPanel) accionesPanel.style.display = 'none';
+    return;
+  }
+
+  // Mostrar panel cuando hay lesiones
+  if (resultPanel) resultPanel.style.display = 'flex';
+  if (accionesPanel) accionesPanel.style.display = 'block';
+
+  if (numEl) {
+    numEl.textContent = total;
+    numEl.className = 'score-num ' + (total <= 22 ? 'low' : total <= 32 ? 'mid' : 'high');
+  }
+
+  const dm = document.getElementById('sx1-dm')?.value || 'no';
+  const vasos = document.getElementById('sx1-vasos')?.value || '3v';
+  const esDM = dm === 'si' || dm === 'si-oral';
+  const esDMInsulin = dm === 'si';
+  const esTronco = vasos === 'tc' || vasos === 'tc3v';
+  const esMultivaso = vasos === '3v' || vasos === 'tc' || vasos === 'tc3v' || vasos === '2v-da';
+  const es1v = vasos === '1v' || vasos === '1v-da';
+
+  let cat, rec, guia;
+
+  if (es1v) {
+    // 1 vaso — SYNTAX no determinante
+    cat = '🟢 Enfermedad de 1 vaso';
+    if (vasos === '1v-da') {
+      rec = 'DA proximal comprometida. ICP o CRM equivalentes (Clase I). En pacientes con FEVI reducida, CRM con mamaria interna puede ofrecer beneficio adicional de supervivencia.';
+      guia = 'ESC 2023 Clase I para ICP y CRM en DA proximal sintomática con isquemia documentada.';
+    } else {
+      rec = 'ICP recomendado (Clase I) si hay isquemia documentada o síntomas. CRM no indicada de rutina en 1 vaso sin DA proximal.';
+      guia = 'El SYNTAX Score no es el determinante principal en enfermedad de 1 vaso.';
+    }
+  } else if (total <= 22) {
+    if (esDM && esMultivaso) {
+      cat = '🟡 SYNTAX Bajo (≤22) — Diabético';
+      rec = 'A pesar del SYNTAX bajo, la diabetes mellitus en enfermedad multivaso favorece CRM. El estudio FREEDOM demostró reducción de mortalidad total con CRM vs ICP (10.9% vs 16.3% a 5 años) en diabéticos con enfermedad multivaso.';
+      guia = esDMInsulin
+        ? 'Clase IIa para CRM. Heart Team recomendado. DM insulinorrequiriente: beneficio de CRM aún mayor.'
+        : 'Clase IIa para CRM. Discutir en Heart Team. Individualizar según riesgo quirúrgico.';
+    } else {
+      cat = '🟢 SYNTAX Bajo (≤22)';
+      rec = 'ICP preferible o equivalente a CRM. Resultados similares en MACE a 5 años' + (esTronco ? ' para tronco común (EXCEL, NOBLE)' : '') + '. Angioplastia es una opción válida.';
+      guia = esTronco
+        ? 'Tronco común con SYNTAX ≤22: ICP Clase I según ESC 2023 si anatomía favorable (ostium/cuerpo del TC).'
+        : 'Clase I para ICP según guías ESC 2023 en SYNTAX ≤22.';
+    }
+  } else if (total <= 32) {
+    if (esDM) {
+      cat = '🔴 SYNTAX Intermedio (23-32) — Diabético';
+      rec = 'CRM claramente recomendada. Diabetes + SYNTAX ≥23 + enfermedad multivaso: combinación con mayor beneficio de CRM sobre ICP demostrado en FREEDOM y SYNTAX trial. ICP no recomendado como primera opción.';
+      guia = 'Clase I para CRM en diabéticos con SYNTAX ≥23 y enfermedad multivaso. Heart Team obligatorio (Clase I ESC 2023).';
+    } else {
+      cat = '🟡 SYNTAX Intermedio (23-32)';
+      rec = esTronco
+        ? 'Tronco común con SYNTAX intermedio: Heart Team obligatorio. ICP aceptable si lesión de ostium/cuerpo. Bifurcación distal compleja: preferir CRM (Clase IIa).'
+        : 'Zona gris. Heart Team recomendado. ICP aceptable en no diabéticos con anatomía favorable. CRM preferible si hay otros factores de riesgo.';
+      guia = 'Clase IIa para CRM, Clase IIb para ICP en SYNTAX 23-32. Decisión individualizada.';
+    }
+  } else {
+    if (esDM) {
+      cat = '🔴 SYNTAX Alto (≥33) — Diabético';
+      rec = 'CRM obligatoria. ICP absolutamente contraindicado (Clase III). SYNTAX alto + diabetes: la peor combinación pronóstica con ICP. Mortalidad a 5 años significativamente mayor con ICP.';
+      guia = 'Clase I para CRM · Clase III para ICP. No hay indicación de ICP en esta combinación salvo contraindicación quirúrgica absoluta.';
+    } else {
+      cat = '🔴 SYNTAX Alto (≥33)';
+      rec = 'CRM claramente superior. ICP asociado a mayor tasa de MACE, revascularización repetida y mortalidad a 5 años. CRM es la estrategia recomendada.';
+      guia = 'Clase III para ICP (contraindicado). CRM Clase I. Incluso en no diabéticos con SYNTAX ≥33, CRM es la única estrategia con evidencia sólida.';
+    }
+  }
+
+  if (catEl) catEl.textContent = cat;
+  if (recEl) recEl.textContent = rec;
+  if (guiaEl) guiaEl.textContent = guia;
+
+  // Badge DM + Vasos en el panel de score
+  var dmBadgeEl = document.getElementById('sx1-dm-badge');
+  if (!dmBadgeEl) {
+    var interpEl = document.querySelector('#tab-sx1 .score-interp');
+    if (interpEl) {
+      dmBadgeEl = document.createElement('div');
+      dmBadgeEl.id = 'sx1-dm-badge';
+      dmBadgeEl.style.cssText = 'margin-top:8px;display:flex;gap:6px;flex-wrap:wrap';
+      interpEl.appendChild(dmBadgeEl);
+    }
+  }
+  if (dmBadgeEl && lesiones.length > 0) {
+    var dmVal = document.getElementById('sx1-dm')?.value || 'no';
+    var vasosVal = document.getElementById('sx1-vasos')?.value || '3v';
+    var vasosLabels = {'3v':'3 vasos','tc':'Tronco común','tc3v':'TC + 3 vasos','2v-da':'2V con DA prox.','2v':'2V sin DA prox.','1v-da':'1V con DA prox.','1v':'1 vaso'};
+    var dmLabels = {'no':'No diabético','si':'DM insulinorrequiriente','si-oral':'DM con hipoglucemiantes orales'};
+    dmBadgeEl.innerHTML =
+      '<span style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600">' + (vasosLabels[vasosVal]||vasosVal) + '</span>' +
+      '<span style="background:' + (dmVal==='no'?'rgba(76,175,80,.2)':'rgba(192,57,43,.3)') + ';color:' + (dmVal==='no'?'#81C784':'#EF9A9A') + ';font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600">' + (dmLabels[dmVal]||dmVal) + '</span>';
+  } else if (dmBadgeEl) {
+    dmBadgeEl.innerHTML = '';
+  }
+
+  // Pasar el valor al tab SX2
+  const sx2Input = document.getElementById('sx2-syntax1');
+  if (sx2Input && !sx2Input.value) {
+    sx2Input.value = total;
+    calcSX2();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// SYNTAX SCORE II — Farooq et al. Lancet 2013
+// Predicción de mortalidad a 4 años ICP vs CRM
+// ══════════════════════════════════════════════════════
+function calcSX2() {
+  const sx1    = parseFloat(document.getElementById('sx2-syntax1')?.value) || 0;
+  const edad   = parseFloat(document.getElementById('sx2-edad')?.value)    || 0;
+  const creat  = parseFloat(document.getElementById('sx2-creat')?.value)   || 0;
+  const fevi   = parseFloat(document.getElementById('sx2-fevi')?.value)    || 0;
+  const tronco = parseInt(document.getElementById('sx2-tronco')?.value)    || 0;
+  const dm     = parseInt(document.getElementById('sx2-dm')?.value)        || 0;
+  const sexo   = parseInt(document.getElementById('sx2-sexo')?.value)      || 0;
+  const epoc   = parseInt(document.getElementById('sx2-epoc')?.value)      || 0;
+  const evp    = parseInt(document.getElementById('sx2-evp')?.value)       || 0;
+
+  if (!sx1 || !edad || !creat || !fevi) {
+    const r = document.getElementById('sx2-resultado');
+    if (r) r.style.display = 'none';
+    return;
+  }
+
+  // Fórmulas SYNTAX II — Farooq V et al., Lancet 2013
+  // Basadas en los coeficientes del modelo publicado
+
+  // Log-odds para ICP (PCI)
+  const logOdds_PCI =
+    0.0666354  * sx1
+    + 0.0507545  * edad
+    + 0.5316899  * Math.log(creat)
+    - 0.0334738  * fevi
+    + 0.3804110  * tronco
+    + 0.5342967  * dm
+    + 0.6554535  * sexo   // femenino
+    + 0.7646778  * epoc
+    - 5.8009;
+
+  // Log-odds para CRM (CABG)
+  const logOdds_CABG =
+    0.0466596  * sx1
+    + 0.0513447  * edad
+    + 0.6039095  * Math.log(creat)
+    - 0.0306948  * fevi
+    + 0.5338399  * tronco
+    + 0.8557200  * dm
+    + 0.0 * sexo  // sexo no significativo en CRM
+    + 0.6545900  * epoc
+    + 0.4636760  * evp
+    - 6.1781;
+
+  // Probabilidad de mortalidad a 4 años
+  const mort_PCI  = (Math.exp(logOdds_PCI)  / (1 + Math.exp(logOdds_PCI)))  * 100;
+  const mort_CABG = (Math.exp(logOdds_CABG) / (1 + Math.exp(logOdds_CABG))) * 100;
+
+  // Actualizar panel
+  const numPCI  = document.getElementById('sx2-num-pci');
+  const numCABG = document.getElementById('sx2-num-cabg');
+  if (numPCI)  { numPCI.textContent  = mort_PCI.toFixed(1)  + '%'; numPCI.className  = 'score-num ' + (mort_PCI  < 5 ? 'low' : mort_PCI  < 10 ? 'mid' : 'high'); }
+  if (numCABG) { numCABG.textContent = mort_CABG.toFixed(1) + '%'; numCABG.className = 'score-num ' + (mort_CABG < 5 ? 'low' : mort_CABG < 10 ? 'mid' : 'high'); }
+
+  // Recomendación
+  const diff = mort_PCI - mort_CABG;
+  let recom, clase;
+  if (Math.abs(diff) < 1) {
+    recom = 'Mortalidad predicha similar entre ICP y CRM. Decisión debe basarse en otras consideraciones (riesgo quirúrgico, preferencia del paciente, comorbilidades, equipo disponible).';
+    clase = '🟡 Equivalentes';
+  } else if (diff > 0) {
+    recom = `CRM con menor mortalidad predicha a 4 años (${mort_CABG.toFixed(1)}% vs ${mort_PCI.toFixed(1)}% con ICP). Diferencia de ${diff.toFixed(1)} puntos porcentuales. La cirugía de revascularización miocárdica sería la estrategia preferida.`;
+    clase = '🔵 CRM preferible';
+  } else {
+    recom = `ICP con menor mortalidad predicha a 4 años (${mort_PCI.toFixed(1)}% vs ${mort_CABG.toFixed(1)}% con CRM). Diferencia de ${Math.abs(diff).toFixed(1)} puntos porcentuales. La angioplastia sería la estrategia preferida.`;
+    clase = '🟢 ICP preferible';
+  }
+
+  // SX2 score combinado (puntuación numérica para ICP)
+  const sx2_pci  = sx1 + 0.5 * edad - 0.25 * fevi + 2 * tronco + 2 * dm + 2 * sexo + 2 * epoc;
+  const sx2_cabg = sx1 + 0.5 * edad - 0.25 * fevi + 3 * tronco + 4 * dm + 2 * epoc + 2 * evp;
+
+  const resEl = document.getElementById('sx2-resultado');
+  const contEl = document.getElementById('sx2-resultado-content');
+  if (resEl) resEl.style.display = 'block';
+  if (contEl) contEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div style="background:var(--blue-pale);border-radius:10px;padding:16px;text-align:center;border:2px solid ${diff>1?'var(--border)':'var(--blue)'}">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;margin-bottom:6px">ICP / Angioplastia</div>
+        <div style="font-size:36px;font-weight:900;color:${mort_PCI<5?'var(--green)':mort_PCI<10?'var(--amber)':'var(--red)'}">
+          ${mort_PCI.toFixed(1)}%
+        </div>
+        <div style="font-size:12px;color:var(--muted)">Mortalidad a 4 años</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">SYNTAX II ICP: ${sx2_pci.toFixed(0)}</div>
+      </div>
+      <div style="background:var(--blue-pale);border-radius:10px;padding:16px;text-align:center;border:2px solid ${diff<-1?'var(--blue)':'var(--border)'}">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;margin-bottom:6px">CRM / Cirugía</div>
+        <div style="font-size:36px;font-weight:900;color:${mort_CABG<5?'var(--green)':mort_CABG<10?'var(--amber)':'var(--red)'}">
+          ${mort_CABG.toFixed(1)}%
+        </div>
+        <div style="font-size:12px;color:var(--muted)">Mortalidad a 4 años</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">SYNTAX II CRM: ${sx2_cabg.toFixed(0)}</div>
+      </div>
+    </div>
+
+    <div style="background:var(--navy);color:#fff;border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px">${clase}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.6">${recom}</div>
+    </div>
+
+    <div class="warn-box" style="margin-bottom:0">
+      <strong>⚠️ Limitación:</strong> El SYNTAX II predice mortalidad global, no MACE. Las decisiones de revascularización deben considerar también: calidad de vida, experiencia del operador, anatomía favorable para ICP, riesgo quirúrgico (EuroSCORE II, STS), preferencia del paciente y disponibilidad de Heart Team.
+    </div>`;
+
+  // Cat SX2
+  const catEl = document.getElementById('sx2-cat');
+  const recEl2 = document.getElementById('sx2-rec');
+  if (catEl) catEl.textContent = clase;
+  if (recEl2) recEl2.textContent = recom.slice(0, 120) + (recom.length > 120 ? '...' : '');
+  if (document.getElementById('sx2-guia')) document.getElementById('sx2-guia').textContent = 'Farooq V et al. Lancet 2013 · ESC/EACTS 2023';
+}
+
+// ══════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════
+function switchTab(id, btn) {
+  ['tab-sx1', 'tab-sx2', 'tab-tablas', 'tab-info'].forEach(t => {
+    const el = document.getElementById(t);
+    if (el) el.style.display = 'none';
+  });
+  const target = document.getElementById('tab-' + id);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════════════
+function resetSX1() {
+  if (!confirm('¿Limpiar todas las lesiones?')) return;
+  lesiones = [];
+  renderSegmentos();
+  renderLesiones();
+  calcSX1();
+}
+
+function resetSX2() {
+  ['sx2-syntax1','sx2-edad','sx2-creat','sx2-fevi'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['sx2-tronco','sx2-dm','sx2-sexo','sx2-epoc','sx2-evp'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.selectedIndex = 0;
+  });
+  const r = document.getElementById('sx2-resultado');
+  if (r) r.style.display = 'none';
+  const numPCI = document.getElementById('sx2-num-pci');
+  const numCABG = document.getElementById('sx2-num-cabg');
+  if (numPCI)  { numPCI.textContent = '—';  numPCI.className = 'score-num empty'; }
+  if (numCABG) { numCABG.textContent = '—'; numCABG.className = 'score-num empty'; }
+}
+
+function imprimirSX1() { window.print(); }
+function imprimirSX2() { window.print(); }
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const hoy = new Date().toISOString().slice(0, 10);
+  const fechaEl = document.getElementById('sx1-fecha');
+  if (fechaEl) fechaEl.value = hoy;
+  renderSegmentos();
+  calcSX1();
+});
+
+// ══════════════════════════════════════════════════════
+// CALCULADORA RÁPIDA DE TABLAS
+// ══════════════════════════════════════════════════════
+function calcTablaRapida() {
+  const sx = parseFloat(document.getElementById('tq-sx')?.value) || 0;
+  const dm = document.getElementById('tq-dm')?.value || 'no';
+  const vasos = document.getElementById('tq-vasos')?.value || '3v';
+  const res = document.getElementById('tq-resultado');
+  if (!res) return;
+
+  if (!sx) { res.style.display = 'none'; return; }
+
+  let recom = '', color = '', clase = '', detalle = '';
+
+  const esDM = dm === 'si';
+  const esTronco = vasos === 'tc' || vasos === 'tc3v';
+  const es3v = vasos === '3v' || vasos === 'tc3v';
+  const es2v = vasos === '2v';
+  const es1v = vasos === '1v';
+
+  if (es1v) {
+    recom = 'ICP recomendado';
+    color = 'var(--green)';
+    clase = 'Clase I';
+    detalle = 'En enfermedad de 1 vaso sin DA proximal, el SYNTAX no determina la indicación. ICP es la estrategia preferida si hay isquemia documentada o síntomas.';
+  } else if (sx <= 22) {
+    if (esDM && (es3v || esTronco)) {
+      recom = 'CRM preferible';
+      color = 'var(--amber)';
+      clase = 'Clase IIa';
+      detalle = 'SYNTAX bajo, pero la diabetes en enfermedad multivaso favorece CRM por menor mortalidad a largo plazo (FREEDOM trial). Heart Team recomendado.';
+    } else {
+      recom = 'ICP o CRM equivalentes';
+      color = 'var(--green)';
+      clase = 'Clase I para ambos';
+      detalle = 'SYNTAX bajo. Resultados similares en MACE a 5 años. ICP es una opción válida. Considerar preferencia del paciente y riesgo quirúrgico.';
+    }
+  } else if (sx <= 32) {
+    if (esDM || es3v || esTronco) {
+      recom = 'CRM recomendada';
+      color = 'var(--red)';
+      clase = 'Clase I (CRM) / IIb (ICP)';
+      detalle = 'SYNTAX intermedio con diabetes y/o enfermedad multivaso. CRM con beneficio demostrado en mortalidad. Heart Team obligatorio.';
+    } else {
+      recom = 'Heart Team — individualizar';
+      color = 'var(--amber)';
+      clase = 'Clase IIa';
+      detalle = 'SYNTAX intermedio. Discusión multidisciplinaria. ICP puede ser aceptable si anatomía favorable y bajo riesgo.';
+    }
+  } else {
+    recom = 'CRM indicada';
+    color = 'var(--red)';
+    clase = 'Clase I (CRM) · Clase III (ICP)';
+    detalle = 'SYNTAX alto. ICP contraindicado por mayor MACE y mortalidad a largo plazo. CRM es la única estrategia recomendada salvo contraindicación quirúrgica absoluta.';
+  }
+
+  res.style.display = 'block';
+  res.innerHTML = '<div style="background:var(--navy);border-radius:10px;padding:14px;display:flex;gap:14px;align-items:flex-start">'
+    + '<div style="flex:1">'
+    + '<div style="font-size:18px;font-weight:900;color:' + color + ';margin-bottom:4px">' + recom + '</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:6px">' + clase + '</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.5">' + detalle + '</div>'
+    + '</div></div>';
+}
+
+
+// ══════════════════════════════════════════════════════
+// GUARDAR EN CARDIOSALUD (localStorage como puente)
+// ══════════════════════════════════════════════════════
+var sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]');
+
+function guardarEnCardioSalud() {
+  const segs = getSegs();
+  const total = lesiones.reduce((s,l) => {
+    const seg = segs.find(x => x.id === l.segId);
+    return s + (seg ? calcPuntosLesion(l, seg) : 0);
+  }, 0);
+
+  const paciente = document.getElementById('sx1-save-paciente')?.value ||
+                   document.getElementById('sx1-paciente')?.value || 'Paciente sin nombre';
+  const obs = document.getElementById('sx1-save-obs')?.value || '';
+  const fecha = document.getElementById('sx1-fecha')?.value || new Date().toISOString().slice(0,10);
+  const dm = document.getElementById('sx1-dm')?.value || 'no';
+  const vasos = document.getElementById('sx1-vasos')?.value || '3v';
+  const dom = document.getElementById('sx1-dom')?.value || 'derecha';
+  const cat = document.getElementById('sx1-cat')?.textContent || '';
+
+  const dmLabels = {'no':'No diabético','si':'DM insulinorrequiriente','si-oral':'DM con hipoglucemiantes orales'};
+  const vasosLabels = {'3v':'3 vasos','tc':'Tronco común','tc3v':'TC + 3V',
+    '2v-da':'2V con DA prox.','2v':'2V sin DA prox.','1v-da':'1V con DA prox.','1v':'1 vaso'};
+
+  const registro = {
+    id: Date.now(),
+    fecha, paciente,
+    score: Math.round(total * 10) / 10,
+    categoria: cat,
+    dm: dmLabels[dm] || dm,
+    vasos: vasosLabels[vasos] || vasos,
+    dominancia: dom,
+    lesiones: lesiones.length,
+    obs,
+    segmentos: lesiones.map(l => {
+      const seg = segs.find(x => x.id === l.segId);
+      return (seg ? 'Seg.' + seg.id + ' ' + seg.nombre : '?') + (l.otc?' [OTC]':'');
+    }).join(', ')
+  };
+
+  sx1Guardados.unshift(registro);
+  localStorage.setItem('cardiosalud_syntax', JSON.stringify(sx1Guardados));
+
+  const msg = document.getElementById('sx1-save-msg');
+  if (msg) {
+    msg.textContent = '✅ Guardado en CardioSalud — ' + paciente;
+    setTimeout(() => msg.textContent = '', 3000);
+  }
+
+  renderGuardados();
+
+  // Autocompletar nombre para próxima vez
+  const savePac = document.getElementById('sx1-save-paciente');
+  if(savePac && !savePac.value) savePac.value = paciente;
+}
+
+function renderGuardados() {
+  const lista = document.getElementById('sx1-guardados-lista');
+  const contenedor = document.getElementById('sx1-guardados');
+  if (!lista || !contenedor) return;
+
+  sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]');
+  if (sx1Guardados.length === 0) { contenedor.style.display = 'none'; return; }
+
+  contenedor.style.display = 'block';
+  lista.innerHTML = sx1Guardados.slice(0, 5).map(r => {
+    const color = r.score <= 22 ? 'var(--green)' : r.score <= 32 ? 'var(--amber)' : 'var(--red)';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(26,107,74,.2)">'
+      + '<div style="font-size:20px;font-weight:900;color:' + color + ';min-width:36px">' + r.score + '</div>'
+      + '<div style="flex:1">'
+      + '<div style="font-size:13px;font-weight:700">' + r.paciente + '</div>'
+      + '<div style="font-size:11px;color:var(--green)">' + r.fecha + ' · ' + r.vasos + ' · ' + r.dm + '</div>'
+      + (r.obs ? '<div style="font-size:11px;color:var(--muted)">' + r.obs + '</div>' : '')
+      + '</div>'
+      + '<button onclick="eliminarGuardado(' + r.id + ')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px">✕</button>'
+      + '</div>';
+  }).join('');
+}
+
+function eliminarGuardado(id) {
+  sx1Guardados = sx1Guardados.filter(r => r.id !== id);
+  localStorage.setItem('cardiosalud_syntax', JSON.stringify(sx1Guardados));
+  renderGuardados();
+}
+
+</script>
+</body>
+</html>
