@@ -643,6 +643,79 @@ main{padding-bottom:100px}
 .mcp-flag span:first-child{flex-shrink:0}
 .mcp-th-may{background:var(--err)!important}
 .mcp-th-men{background:var(--warn)!important}
+/* ═══════════ Prevención (tab) ═══════════ */
+#tab-prevencion .prev-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
+#tab-prevencion .prev-tab{flex:1 1 auto;min-width:110px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-prevencion .prev-tab.active{color:var(--p);border-bottom-color:var(--p)}
+#tab-prevencion .prev-tab:hover:not(.active){color:var(--txt)}
+.prev-tc{display:none}
+.prev-tc.active{display:block}
+.prev-risk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:12px}
+.prev-risk{border-radius:10px;padding:14px;border:1px solid var(--border);border-left:6px solid var(--p);background:var(--surf)}
+.prev-risk-t{font-size:.86rem;font-weight:800;margin-bottom:8px}
+.prev-risk ul{margin:0 0 0 16px;padding:0}
+.prev-risk li{font-size:.8rem;line-height:1.5;color:var(--txt);margin-bottom:3px}
+.prev-risk-muyalto{border-left-color:var(--err)}.prev-risk-muyalto .prev-risk-t{color:var(--err)}
+.prev-risk-alto{border-left-color:#E65100}.prev-risk-alto .prev-risk-t{color:#E65100}
+.prev-risk-mod{border-left-color:var(--warn)}.prev-risk-mod .prev-risk-t{color:var(--warn)}
+.prev-risk-bajo{border-left-color:var(--ok)}.prev-risk-bajo .prev-risk-t{color:var(--ok)}
+.prev-stage{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--border);border-left:5px solid var(--p);border-radius:9px;padding:11px 13px;margin-bottom:8px;background:var(--surf)}
+.prev-stage-n{flex-shrink:0;width:30px;height:30px;border-radius:8px;background:var(--p);color:#fff;font-size:1rem;font-weight:900;display:flex;align-items:center;justify-content:center}
+.prev-stage-c{flex:1}
+.prev-stage-t{font-size:.85rem;font-weight:800;color:var(--txt);margin-bottom:3px}
+.prev-stage-d{font-size:.8rem;color:var(--txt2);line-height:1.5}
+.prev-st0{border-left-color:var(--ok)}.prev-st0 .prev-stage-n{background:var(--ok)}
+.prev-st1{border-left-color:#66BB6A}.prev-st1 .prev-stage-n{background:#66BB6A}
+.prev-st2{border-left-color:var(--warn)}.prev-st2 .prev-stage-n{background:var(--warn)}
+.prev-st3{border-left-color:#E65100}.prev-st3 .prev-stage-n{background:#E65100}
+.prev-st4{border-left-color:var(--err)}.prev-st4 .prev-stage-n{background:var(--err)}
+/* ═══════════ Embarazo (tab) ═══════════ */
+#tab-embarazo .emb-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
+#tab-embarazo .emb-tab{flex:1 1 auto;min-width:110px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-embarazo .emb-tab.active{color:var(--p);border-bottom-color:var(--p)}
+#tab-embarazo .emb-tab:hover:not(.active){color:var(--txt)}
+.emb-tc{display:none}
+.emb-tc.active{display:block}
+.emb-mg td:first-child{font-weight:700;white-space:nowrap}
+.emb-mg-terap td{background:rgba(46,125,50,.10)}
+.emb-mg-leve td{background:rgba(212,153,10,.12)}
+.emb-mg-mod td{background:rgba(230,81,0,.12)}
+.emb-mg-grave td{background:rgba(183,28,28,.13)}
+.emb-mg-critico td{background:rgba(80,80,80,.18)}
+/* ═══════════ Trials (tab) ═══════════ */
+#tab-trials .tri-search-wrap{position:relative;margin-bottom:12px}
+#tab-trials .tri-srch-ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--txt2);pointer-events:none}
+#tri-search{width:100%;padding:10px 40px 10px 36px;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;background:var(--surf);color:var(--txt);outline:none;font-family:inherit}
+#tri-search:focus{border-color:var(--p)}
+.tri-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--txt2);font-size:1rem;padding:4px 8px;border-radius:6px;line-height:1}
+.tri-clear:hover{background:var(--bg)}
+#tri-counter{font-size:.78rem;color:var(--txt2);margin-bottom:12px;font-weight:600}
+.tri-sec{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;background:var(--surf)}
+.tri-sec-h{width:100%;background:#F5F9FF;border:none;cursor:pointer;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.9rem;font-weight:800;color:var(--txt);text-align:left;font-family:inherit}
+[data-theme="dark"] .tri-sec-h{background:#0f1520}
+.tri-sec-h:hover{background:#E3F2FD}
+[data-theme="dark"] .tri-sec-h:hover{background:#161b22}
+.tri-count{font-size:.78rem;font-weight:600;color:var(--txt2)}
+.tri-arrow{color:var(--p);font-size:.85rem;flex-shrink:0}
+.tri-sec-b{display:none}
+.tri-sec-b.on{display:block}
+.tri-tbl-wrap{overflow-x:auto}
+.tri-tbl{width:100%;border-collapse:collapse;font-size:.8rem;min-width:760px}
+.tri-tbl th{background:var(--p);color:#fff;padding:8px 10px;text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.3px;font-weight:700;white-space:nowrap}
+.tri-tbl td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.4;color:var(--txt)}
+.tri-tbl tbody tr:nth-child(even){background:rgba(21,101,192,.04)}
+[data-theme="dark"] .tri-tbl tbody tr:nth-child(even){background:rgba(88,166,255,.06)}
+.tri-tbl tbody tr:hover{background:rgba(21,101,192,.10)}
+[data-theme="dark"] .tri-tbl tbody tr:hover{background:rgba(88,166,255,.12)}
+.tri-name{font-weight:800;color:var(--p);white-space:nowrap}
+.tri-badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.68rem;font-weight:800;white-space:nowrap}
+.tri-b1{background:var(--ok);color:#fff}
+.tri-b2a{background:#1565C0;color:#fff}
+.tri-b2b{background:#6A1B9A;color:#fff}
+.tri-bsc{background:#90A4AE;color:#1A237E}
+.tri-bctr{background:#E65100;color:#fff}
+.tri-hl{background:#FFF176;color:#000;border-radius:2px;padding:0 1px}
+.tri-empty{text-align:center;color:var(--txt2);font-size:.9rem;padding:40px 20px}
 @media(max-width:500px){#syn-root .mod-grid{grid-template-columns:1fr}}
 @media print{#syn-root .tab-header,#syn-root .btn{display:none!important}#syn-root .card{break-inside:avoid}}
 .csub{border:1px solid var(--border);border-radius:7px;margin-bottom:8px;overflow:visible}
@@ -734,6 +807,7 @@ main{padding-bottom:100px}
   <button class="mtab" data-tab="dispositivos" onclick="showMainTab('dispositivos')"><span class="mtab-ic">🔧</span>Dispositivos</button>
   <button class="mtab" data-tab="anticoag" onclick="showMainTab('anticoag')"><span class="mtab-ic">💊</span>Anticoagulación</button>
   <button class="mtab" data-tab="prevencion" onclick="showMainTab('prevencion')"><span class="mtab-ic">🛡️</span>Prevención</button>
+  <button class="mtab" data-tab="embarazo" onclick="showMainTab('embarazo')"><span class="mtab-ic">👶</span>Embarazo</button>
   <button class="mtab" data-tab="miocardiopatias" onclick="showMainTab('miocardiopatias')"><span class="mtab-ic">🧠</span>Miocardiopatías</button>
   <button class="mtab" data-tab="ref" onclick="showMainTab('ref')"><span class="mtab-ic">📖</span>Referencias</button>
   <button class="mtab" data-tab="trials" onclick="showMainTab('trials')"><span class="mtab-ic">📚</span>Trials</button>
@@ -2071,7 +2145,694 @@ main{padding-bottom:100px}
   </div>
 </div>
 <div class="tab-content" id="tab-prevencion" style="display:none">
-  <div class="tab-ph"><div class="tab-ph-ic">🛡️</div><h2>Prevención</h2><p>Módulo en construcción. Aquí irá la prevención cardiovascular.</p></div>
+  <div class="prev-tabs">
+    <button class="prev-tab active" data-prev="riesgo" onclick="switchPrevTab('riesgo',this)">🎯 Riesgo CV</button>
+    <button class="prev-tab" data-prev="hta" onclick="switchPrevTab('hta',this)">💊 HTA</button>
+    <button class="prev-tab" data-prev="lipidos" onclick="switchPrevTab('lipidos',this)">🧪 Dislipemia</button>
+    <button class="prev-tab" data-prev="crm" onclick="switchPrevTab('crm',this)">🫀 Síndrome CRM</button>
+    <button class="prev-tab" data-prev="tabaco" onclick="switchPrevTab('tabaco',this)">🚬 Tabaquismo</button>
+  </div>
+
+  <!-- ══════════ RIESGO CV ══════════ -->
+  <div class="prev-tc active" id="prev-tc-riesgo">
+    <div class="aco-sec-title">🎯 A · Estratificación de riesgo CV (ESC)</div>
+    <div class="prev-risk-grid">
+      <div class="prev-risk prev-risk-muyalto">
+        <div class="prev-risk-t">🔴 Muy alto</div>
+        <ul>
+          <li>ECVA documentada: IAM/AI, ACV/AIT, EAP, CACG con placa, TAC (EMV+2 con estenosis &gt;50%)</li>
+          <li>DM con daño de órgano meta</li>
+          <li>DM &gt;20 años de evolución</li>
+          <li>ERC con TFG &lt;30</li>
+          <li>≥3 factores de riesgo</li>
+          <li>SCORE2 &gt;10%</li>
+          <li>HF con ECVA</li>
+        </ul>
+      </div>
+      <div class="prev-risk prev-risk-alto">
+        <div class="prev-risk-t">🟠 Alto</div>
+        <ul>
+          <li>FR aislados: CT &gt;310, LDL &gt;190, HTA G3</li>
+          <li>DM sin daño de órgano meta</li>
+          <li>DM &gt;10 años de evolución</li>
+          <li>DM + 1 FR adicional</li>
+          <li>ERC con TFG 30–50</li>
+          <li>SCORE2 5–10%</li>
+          <li>HF sin FR</li>
+        </ul>
+      </div>
+      <div class="prev-risk prev-risk-mod">
+        <div class="prev-risk-t">🟡 Moderado</div>
+        <ul>
+          <li>DM1 &lt;35 años con &lt;10 años de enfermedad</li>
+          <li>DM2 &lt;50 años con &lt;10 años de enfermedad</li>
+          <li>SCORE2 1–5%</li>
+        </ul>
+      </div>
+      <div class="prev-risk prev-risk-bajo">
+        <div class="prev-risk-t">🟢 Bajo</div>
+        <ul>
+          <li>SCORE2 &lt;1%</li>
+          <li>Sin factores de riesgo significativos</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="aco-sec-title">📊 B · Score SCORE2</div>
+    <ul class="arr-ul">
+      <li>Estima el riesgo de <b>muerte CV a 10 años</b>.</li>
+      <li><b>No aplicable a:</b> DM, ERC, IC, múltiples FFRR (ya son de alto/muy alto riesgo).</li>
+      <li><b>RCV total:</b> hombres ×3, mujeres ×4.</li>
+      <li><b>Perfil ideal:</b> &lt;40 años, no fumador, PAS &lt;120, CT &lt;155, TG &lt;150.</li>
+      <li>Calculadora SCORE2 / PREVENT disponible en el panel de <b>Calculadoras</b> (FAB 🧮).</li>
+    </ul>
+
+    <div class="aco-sec-title">⬆️ C · Modificadores de riesgo</div>
+    <ul class="arr-ul">
+      <li>Placa en eco vascular · CAC &gt;10 · ITB &lt;0,9 o &gt;1,4 · albuminuria.</li>
+      <li>APO B elevada, TG elevados, PCR elevada.</li>
+      <li>Obesidad / obesidad central / sedentarismo.</li>
+      <li>Estrés, aislamiento, patología psiquiátrica · estado inflamatorio crónico.</li>
+      <li>SAOS, ERC, HIV, FA.</li>
+      <li>AF de muerte por ECV (H&lt;55 a, M&lt;60 a) → solicitar Lp(a): objetivo &lt;180.</li>
+    </ul>
+
+    <div class="aco-sec-title">🧮 D · Ecuaciones PREVENT (AHA/ACC 2023–2026)</div>
+    <ul class="arr-ul">
+      <li>Estiman el riesgo a <b>10 y 30 años</b> de ECVA, IC y ECV total.</li>
+      <li>Indicadas en síndrome CRM estadio 0–3.</li>
+      <li>Riesgo ≥20% a 10 años → estadio CRM 3.</li>
+      <li>Riesgo ≥7,5% a 10 años → priorizar farmacoterapia.</li>
+    </ul>
+  </div>
+
+  <!-- ══════════ HTA (ESC 2023) ══════════ -->
+  <div class="prev-tc" id="prev-tc-hta">
+    <div class="aco-sec-title">📊 A · Clasificación</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:150px">Categoría</th><th>PAS (mmHg)</th><th>PAD (mmHg)</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Normal</td><td>&lt;120</td><td>y &lt;80</td></tr>
+          <tr><td class="aco-ind">Normal-alta</td><td>120–129</td><td>y/o &lt;80</td></tr>
+          <tr><td class="aco-ind">HTA G1</td><td>130–139</td><td>y/o 80–89</td></tr>
+          <tr><td class="aco-ind">HTA G2</td><td>140–159</td><td>y/o 90–99</td></tr>
+          <tr><td class="aco-ind">HTA G3</td><td>≥160</td><td>y/o ≥100</td></tr>
+          <tr><td class="aco-ind">HTA sistólica aislada</td><td>≥140</td><td>y &lt;90</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">🎯 B · Objetivos de PA según perfil</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:180px">Perfil</th><th>Objetivo</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">General</td><td>&lt;130/80 mmHg</td></tr>
+          <tr><td class="aco-ind">&gt;65 años</td><td>&lt;140/80 mmHg (con precaución)</td></tr>
+          <tr><td class="aco-ind">&gt;80 años</td><td>&lt;150/80 mmHg</td></tr>
+          <tr><td class="aco-ind">DM</td><td>&lt;130/80 mmHg</td></tr>
+          <tr><td class="aco-ind">ERC sin proteinuria</td><td>&lt;140/90 mmHg</td></tr>
+          <tr><td class="aco-ind">ERC con proteinuria</td><td>&lt;130/80 mmHg</td></tr>
+          <tr><td class="aco-ind">Embarazo</td><td>&lt;140/90 mmHg</td></tr>
+          <tr><td class="aco-ind">Post-ACV</td><td>&lt;130/80 mmHg</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">🧭 C · Algoritmo de tratamiento escalonado</div>
+    <div class="arr-algo">
+      <div class="arr-astep"><div class="arr-astep-n">1</div><div class="arr-astep-c"><b>Monoterapia o combinación inicial:</b> IECA o ARA-II + BCC (primera línea en la mayoría) · IECA o ARA-II + diurético tiazídico (alternativa) · BB si IC, FA o post-IAM.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">2</div><div class="arr-astep-c"><b>Triple combinación:</b> IECA/ARA-II + BCC + diurético tiazídico.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">3</div><div class="arr-astep-c"><b>HTA resistente</b> (PA no controlada con 3 fármacos a dosis óptimas): agregar espironolactona 25–50 mg/día (primera línea). Alternativas: eplerenona, amilorida, doxazosina, betabloqueante. Derivar a especialista.</div></div>
+    </div>
+
+    <div class="aco-sec-title">⚙️ D · Situaciones especiales</div>
+    <ul class="arr-ul">
+      <li><b>HTA + IC-FEr:</b> IECA/ARNI + BB + ARM + iSGLT2.</li>
+      <li><b>HTA + FA:</b> IECA/ARA-II preferidos.</li>
+      <li><b>HTA + ERC:</b> IECA/ARA-II obligatorio si proteinuria.</li>
+      <li><b>HTA + DM:</b> objetivo &lt;130/80, IECA/ARA-II + iSGLT2.</li>
+      <li><b>Crisis hipertensiva:</b> PA &gt;180/120 con LOB → nitroprusiato o labetalol IV.</li>
+      <li><b>Urgencia hipertensiva:</b> PA &gt;180/120 sin LOB → reducción gradual oral.</li>
+    </ul>
+  </div>
+
+  <!-- ══════════ DISLIPEMIA (ESC 2023) ══════════ -->
+  <div class="prev-tc" id="prev-tc-lipidos">
+    <div class="aco-sec-title">🎯 A · Objetivos de LDL por categoría de riesgo</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:170px">Categoría</th><th>Objetivo LDL</th><th>Iniciar FAR si LDL &gt;</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Riesgo bajo</td><td>&lt;116 mg/dL</td><td>&gt;190 mg/dL</td></tr>
+          <tr><td class="aco-ind">Riesgo moderado</td><td>&lt;100 mg/dL</td><td>&gt;190 mg/dL</td></tr>
+          <tr><td class="aco-ind">Riesgo alto</td><td>&lt;70 mg/dL</td><td>&gt;100 mg/dL</td></tr>
+          <tr><td class="aco-ind">Riesgo muy alto</td><td>&lt;55 mg/dL</td><td>&gt;70 mg/dL</td></tr>
+          <tr><td class="aco-ind">Prevención 2ª</td><td>&lt;55 mg/dL</td><td>—</td></tr>
+          <tr><td class="aco-ind">2° evento CV en &lt;2 años</td><td>&lt;40 mg/dL</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">🔬 B · Objetivos especiales</div>
+    <ul class="arr-ul">
+      <li><b>OB + DM con LDL baja y TG altos:</b> C no-HDL objetivo 85/100/130 (bajo/mod/alto riesgo) · APO B objetivo 65/80/100.</li>
+      <li><b>Lp(a):</b> objetivo &lt;180 nmol/L si AF de muerte CV precoz.</li>
+    </ul>
+
+    <div class="aco-sec-title">💊 C · Fármacos y reducción de LDL</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:150px">Fármaco</th><th>Reducción LDL</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Atorvastatina 40–80 mg</td><td>50–55% (alta potencia)</td></tr>
+          <tr><td class="aco-ind">Rosuvastatina 20–40 mg</td><td>50–55% (alta potencia)</td></tr>
+          <tr><td class="aco-ind">Atorvastatina 10–20 mg</td><td>30–50% (moderada)</td></tr>
+          <tr><td class="aco-ind">Rosuvastatina 5–10 mg</td><td>30–50% (moderada)</td></tr>
+          <tr><td class="aco-ind">Simvastatina 20–40 mg</td><td>30–50% (moderada)</td></tr>
+          <tr><td class="aco-ind">Pravastatina 40 mg</td><td>30–50% (moderada)</td></tr>
+          <tr><td class="aco-ind">Pitavastatina 2–4 mg</td><td>30–50% (moderada)</td></tr>
+          <tr><td class="aco-ind">Simvastatina 10 mg · Pravastatina 10–20 mg</td><td>Baja potencia</td></tr>
+          <tr><td class="aco-ind">Ezetimibe 10 mg</td><td>+20–25% adicional</td></tr>
+          <tr><td class="aco-ind">PCSK9 (Evolocumab / Alirocumab)</td><td>+50–60% adicional</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:220px">Combinación</th><th>Reducción total</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Estatina + Ezetimibe</td><td>65%</td></tr>
+          <tr><td class="aco-ind">Estatina + PCSK9</td><td>75%</td></tr>
+          <tr><td class="aco-ind">Estatina + Ezetimibe + PCSK9</td><td>85%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">📈 D · Manejo de TG elevados</div>
+    <ul class="arr-ul">
+      <li>TG &gt;200 + alto riesgo: estatinas primera línea.</li>
+      <li>Prevención 1ª con TG &gt;200: estatinas + fenofibrato.</li>
+      <li>Alto riesgo con TG 135–499: estatinas (PUFA no mejora).</li>
+      <li>TG altos con LDL en rango: evaluar C no-HDL (objetivo = LDL objetivo + 30).</li>
+      <li>TG &gt;500: fenofibrato + restricción de grasa + omega-3 (riesgo de pancreatitis).</li>
+    </ul>
+
+    <div class="aco-sec-title">💊 E · Fibratos</div>
+    <ul class="arr-ul">
+      <li><b>Gemfibrozilo:</b> mayor riesgo de miopatía — 600–900 mg.</li>
+      <li><b>Fenofibrato:</b> mayor riesgo de pancreatitis, aumenta creatinina y homocisteína — sin aumento del RCV.</li>
+      <li><b>Ciprofibrato:</b> 100 mg.</li>
+    </ul>
+
+    <div class="aco-sec-title">👥 F · Poblaciones especiales</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:130px">Población</th><th>Consideración</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Mujer</td><td>Estatinas con menor beneficio en prevención 1ª. No hipolipemiantes en embarazo/lactancia. No ACO si CT &gt;160 o múltiples FRCV.</td></tr>
+          <tr><td class="aco-ind">&gt;65 años</td><td>Prevención 1ª con estatinas si alto riesgo.</td></tr>
+          <tr><td class="aco-ind">DM</td><td>Dislipemia aterogénica (↑TG, ↓HDL) — objetivo: reducir LDL.</td></tr>
+          <tr><td class="aco-ind">SCA</td><td>Estatinas de alta intensidad inmediato.</td></tr>
+          <tr><td class="aco-ind">ACV isquémico</td><td>Estatinas de alta intensidad.</td></tr>
+          <tr><td class="aco-ind">IC o valvulopatías</td><td>NO estatinas.</td></tr>
+          <tr><td class="aco-ind">ERC fase 3–5</td><td>Tratar si alto o muy alto riesgo.</td></tr>
+          <tr><td class="aco-ind">EAP / carótida / AAA</td><td>Estatinas de alta intensidad · AAA sin evidencia clara.</td></tr>
+          <tr><td class="aco-ind">Trasplante con ciclosporina</td><td>Estatinas con precaución.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">🩺 G · Seguimiento y monitoreo</div>
+    <ul class="arr-ul">
+      <li>Evaluar respuesta a las 6–8 semanas. Perfil de control cada 6–12 meses, luego anual.</li>
+      <li>ALT y CPK basales antes de iniciar. ALT en seguimiento: solo para fibratos (no para estatinas).</li>
+      <li>Ancianos y comorbilidades: mayor riesgo de miopatía → determinar CPK basal.</li>
+    </ul>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:150px">Parámetro</th><th>Conducta</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">ALT &lt;3× VN (seguimiento)</td><td>Continuar y control en 4–6 semanas</td></tr>
+          <tr><td class="aco-ind">ALT &gt;3× VN (seguimiento)</td><td>Interrumpir y control en 4–6 semanas</td></tr>
+          <tr><td class="aco-ind">CPK pre-tratamiento &gt;4× VN</td><td>No iniciar</td></tr>
+          <tr><td class="aco-ind">CPK &lt;4× VN</td><td>Sin síntomas: continuar · Con síntomas: continuar y control</td></tr>
+          <tr><td class="aco-ind">CPK 4–10× VN</td><td>Sin síntomas: control 2–6 semanas · Con síntomas: interrumpir</td></tr>
+          <tr><td class="aco-ind">CPK &gt;10× VN</td><td>Interrumpir siempre (riesgo de rabdomiólisis)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="aco-note">SAMS (Statin-Associated Muscle Symptoms): 10–15% — sin impotencia funcional, sin CPK elevada.</div>
+  </div>
+
+  <!-- ══════════ SÍNDROME CRM (AHA/ACC/ADA/ASN 2026) ══════════ -->
+  <div class="prev-tc" id="prev-tc-crm">
+    <div class="aco-sec-title">🫀 A · Estadificación CRM</div>
+    <div class="prev-stage prev-st0"><div class="prev-stage-n">0</div><div class="prev-stage-c"><div class="prev-stage-t">Sin factores de riesgo CRM</div><div class="prev-stage-d">IMC normal, normoglucemia, normotensión, perfil lipídico normal, sin ERC ni ECV.</div></div></div>
+    <div class="prev-stage prev-st1"><div class="prev-stage-n">1</div><div class="prev-stage-c"><div class="prev-stage-t">Exceso de adiposidad</div><div class="prev-stage-d">Sobrepeso/obesidad o adiposidad abdominal sin otros factores de riesgo. Manejo: cambios de estilo de vida + control de peso.</div></div></div>
+    <div class="prev-stage prev-st2"><div class="prev-stage-n">2</div><div class="prev-stage-c"><div class="prev-stage-t">Factores de riesgo metabólico / ERC</div><div class="prev-stage-d">Hipertrigliceridemia, HTA, síndrome metabólico, DT2, ERC moderada-alta. Manejo: abordar factores de riesgo, iSGLT2 + GLP-1 si DT2.</div></div></div>
+    <div class="prev-stage prev-st3"><div class="prev-stage-n">3</div><div class="prev-stage-c"><div class="prev-stage-t">ECV subclínica o equivalentes de alto riesgo</div><div class="prev-stage-d">ECV subclínica + factores CRM solapados. Riesgo PREVENT ≥20% a 10 años. Manejo: prevención intensiva, farmacoterapia cardioprotectora.</div></div></div>
+    <div class="prev-stage prev-st4"><div class="prev-stage-n">4</div><div class="prev-stage-c"><div class="prev-stage-t">ECV clínica establecida</div><div class="prev-stage-d">Cardiopatía coronaria, IC, ACV, EAP, FA + factores CRM concomitantes. Manejo: TMDG completa, enfoque multidisciplinario.</div></div></div>
+
+    <div class="aco-sec-title">💊 B · Pilares terapéuticos cardioprotectores</div>
+    <div class="arr-care-grid">
+      <div class="arr-care" style="border-left-color:#1565C0">
+        <div class="arr-care-t">iSGLT2 (Dapagliflozina / Empagliflozina)</div>
+        <div class="arr-care-d"><span class="arr-badge arr-b1">Clase I</span> DT2 + ECV o alto riesgo · IC-FEr e IC-FEp · ERC + DT2 con albuminuria. Beneficio CV + renal + metabólico.</div>
+      </div>
+      <div class="arr-care" style="border-left-color:#2E7D32">
+        <div class="arr-care-t">GLP-1 (Semaglutida / Liraglutida / Tirzepatida)</div>
+        <div class="arr-care-d"><span class="arr-badge arr-b1">Clase I</span> DT2 + ECV establecida. Obesidad sin DT2: pérdida de peso 15–21%. MASLD: mejora esteatosis. No reemplaza al iSGLT2 — son complementarios.</div>
+      </div>
+      <div class="arr-care" style="border-left-color:#E65100">
+        <div class="arr-care-t">IECA / ARA-II</div>
+        <div class="arr-care-d">ERC con albuminuria: primera línea obligatoria. IC-FEr: pilar fundamental. HTA + DM o ERC: preferidos.</div>
+      </div>
+      <div class="arr-care" style="border-left-color:#6A1B9A">
+        <div class="arr-care-t">ARM no esteroideo (Finerenona)</div>
+        <div class="arr-care-d"><span class="arr-badge arr-b1">Clase I</span> ERC + DT2 con albuminuria persistente. Beneficio renal y CV adicional sobre IECA/ARA-II.</div>
+      </div>
+    </div>
+
+    <div class="aco-sec-title">🎯 C · Objetivos terapéuticos CRM</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:130px">Parámetro</th><th>Objetivo</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">HbA1c</td><td>&lt;7,0% (individualizar en ancianos o comorbilidades)</td></tr>
+          <tr><td class="aco-ind">PA</td><td>&lt;130/80 mmHg</td></tr>
+          <tr><td class="aco-ind">LDL</td><td>Según categoría de riesgo CV</td></tr>
+          <tr><td class="aco-ind">TFGe</td><td>Monitorear progresión de ERC</td></tr>
+          <tr><td class="aco-ind">RACO</td><td>Reducción &gt;30–50% con IECA/ARA-II</td></tr>
+          <tr><td class="aco-ind">Peso</td><td>Pérdida ≥5–10% mejora factores metabólicos</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">🩺 D · Evaluación rutinaria CRM</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:160px">Estudio</th><th>Frecuencia</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Glucemia / HbA1c</td><td>Anual en adultos con FRCV</td></tr>
+          <tr><td class="aco-ind">TFGe + RACO</td><td>Anual en DM, HTA, ECV</td></tr>
+          <tr><td class="aco-ind">Perfil lipídico</td><td>Cada 5 años en adultos, más frecuente si FRCV</td></tr>
+          <tr><td class="aco-ind">IMC + circunferencia de cintura</td><td>Cada consulta</td></tr>
+          <tr><td class="aco-ind">PA</td><td>Cada consulta</td></tr>
+          <tr><td class="aco-ind">Evaluación MASLD</td><td>En DT2, obesidad, síndrome metabólico</td></tr>
+          <tr><td class="aco-ind">Apnea del sueño</td><td>En obesidad, HTA resistente, FA</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════ TABAQUISMO ══════════ -->
+  <div class="prev-tc" id="prev-tc-tabaco">
+    <div class="aco-sec-title">📋 A · Evaluación — Test de Fagerström</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:220px">Pregunta</th><th>Puntuación</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">¿Cuánto tiempo tras despertar fuma el primer cigarrillo?</td><td>≤5 min: 3 · 6–30 min: 2 · 31–60 min: 1 · &gt;60 min: 0</td></tr>
+          <tr><td class="aco-ind">¿Le resulta difícil no fumar en lugares prohibidos?</td><td>Sí: 1 · No: 0</td></tr>
+          <tr><td class="aco-ind">¿Qué cigarrillo le costaría más dejar?</td><td>El primero de la mañana: 1 · Cualquier otro: 0</td></tr>
+          <tr><td class="aco-ind">¿Cuántos cigarrillos fuma por día?</td><td>≤10: 0 · 11–20: 1 · 21–30: 2 · ≥31: 3</td></tr>
+          <tr><td class="aco-ind">¿Fuma más en las primeras horas?</td><td>Sí: 1 · No: 0</td></tr>
+          <tr><td class="aco-ind">¿Fuma aunque esté enfermo?</td><td>Sí: 1 · No: 0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="arr-ul">
+      <li><b>0–2:</b> dependencia muy baja · <b>3–4:</b> baja · <b>5:</b> moderada · <b>6–7:</b> alta · <b>8–10:</b> muy alta.</li>
+    </ul>
+
+    <div class="aco-sec-title">🖐️ B · Intervención 5A</div>
+    <div class="arr-algo">
+      <div class="arr-astep"><div class="arr-astep-n">1</div><div class="arr-astep-c"><b>Ask (Preguntar):</b> preguntar sobre tabaquismo en cada consulta.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">2</div><div class="arr-astep-c"><b>Advise (Aconsejar):</b> consejo claro y personalizado de cesación.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">3</div><div class="arr-astep-c"><b>Assess (Evaluar):</b> motivación para dejar de fumar.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">4</div><div class="arr-astep-c"><b>Assist (Ayudar):</b> plan de cesación + farmacoterapia.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">5</div><div class="arr-astep-c"><b>Arrange (Acordar):</b> seguimiento a las 2 semanas post-cese.</div></div>
+    </div>
+
+    <div class="aco-sec-title">💊 C · Tratamiento farmacológico</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:150px">Fármaco</th><th>Pauta y notas</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Vareniclina (1ª línea)</td><td>Sem 1: 0,5 mg/día → Sem 2: 0,5 mg c/12 h → Sem 3+: 1 mg c/12 h. Duración 12 sem (extender 12 más si éxito). Iniciar 1–2 sem antes del cese. Monitorear cambios de humor.</td></tr>
+          <tr><td class="aco-ind">Bupropión (2ª línea)</td><td>150 mg/día × 3 días → 150 mg c/12 h. Duración 7–12 sem. Iniciar 1–2 sem antes. CI: epilepsia, anorexia/bulimia, IMAO, retirada alcohólica.</td></tr>
+          <tr><td class="aco-ind">TRN — parche</td><td>21 mg/24 h (&gt;10 cig/día) o 14 mg/24 h (&lt;10 cig/día) × 6–8 sem → reducción gradual.</td></tr>
+          <tr><td class="aco-ind">TRN — goma</td><td>2 mg (&lt;25 cig/día) o 4 mg (≥25 cig/día) — máx 24 piezas/día.</td></tr>
+          <tr><td class="aco-ind">TRN combinada</td><td>Parche + goma: mayor eficacia que la monoterapia.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="arr-alert" style="background:var(--warn-bg);border-color:var(--warn)">
+      <div class="arr-alert-h" style="color:var(--warn)">⚠️ Cigarrillo electrónico</div>
+      <div style="font-size:.82rem;line-height:1.6;color:var(--txt)">NO recomendado como herramienta de cesación (ESC 2023) — evidencia insuficiente de seguridad a largo plazo.</div>
+    </div>
+
+    <div class="aco-sec-title">🫀 D · Riesgo cardiovascular del tabaquismo</div>
+    <ul class="arr-ul">
+      <li>Duplica el riesgo de ECV. Efecto sinérgico con otros FRCV.</li>
+      <li><b>Beneficio del cese:</b> visible a los 2 años; equipara el riesgo al de un no fumador a los 5–15 años.</li>
+      <li><b>Tabaquismo pasivo:</b> aumenta el RCV 25–30%.</li>
+      <li>Cigarrillos/día: relación dosis-respuesta con el RCV.</li>
+    </ul>
+  </div>
+</div>
+<div class="tab-content" id="tab-embarazo" style="display:none">
+  <div class="emb-tabs">
+    <button class="emb-tab active" data-emb="ehe" onclick="switchEmbTab('ehe',this)">🩺 Clasificación EHE</button>
+    <button class="emb-tab" data-emb="pe" onclick="switchEmbTab('pe',this)">⚠️ Preeclampsia</button>
+    <button class="emb-tab" data-emb="hellp" onclick="switchEmbTab('hellp',this)">🧪 Eclampsia y HELLP</button>
+    <button class="emb-tab" data-emb="farmacos" onclick="switchEmbTab('farmacos',this)">💊 Fármacos</button>
+    <button class="emb-tab" data-emb="prev" onclick="switchEmbTab('prev',this)">🛡️ Prevención</button>
+  </div>
+
+  <!-- ══════════ CLASIFICACIÓN EHE ══════════ -->
+  <div class="emb-tc active" id="emb-tc-ehe">
+    <div class="aco-sec-title">🩺 A · Tipos principales de estados hipertensivos del embarazo</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:120px"></th><th>HTA Crónica</th><th>HTA Gestacional</th><th>Preeclampsia</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Momento</td><td>Previa al embarazo o antes de sem 20; persiste &gt;12 sem en puerperio</td><td>&gt;20 sem; normaliza &lt;12 sem puerperio</td><td>&gt;20 sem</td></tr>
+          <tr><td class="aco-ind">Proteinuria / criterios</td><td>—</td><td>Sin LOB ni proteinuria significativa</td><td>Proteinuria ≥300 mg/24 h o índice Prot/Crea ≥0,3 mg/dL</td></tr>
+          <tr><td class="aco-ind">Notas</td><td>90% primaria, 10% secundaria</td><td>Si PA con cifras de severidad: manejar como Pre-E severa. 10–20% desarrolla Pre-E</td><td>15% presentación atípica (sin HTA ni proteinuria). 5% de los embarazos</td></tr>
+          <tr><td class="aco-ind">Sospecha / riesgo</td><td>Secundaria si: &lt;35 años, HTA grave o resistente, sin AF de HTA, hipoK, ↑creatinina, albuminuria</td><td>Riesgo Pre-E si LOB o HTA 2ª → 75% desarrolla Pre-E</td><td>Sin proteinuria si: SFH, cefalea que no cede con paracetamol, dolor HD/E, Crea &gt;1,1, transaminasas ×2, PQT &lt;100.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">📏 B · Definiciones ACOG</div>
+    <ul class="arr-ul">
+      <li><b>HTA:</b> PA ≥140/90 mmHg en 2 oportunidades separadas por 4 h.</li>
+      <li><b>HTA severa:</b> PA ≥160/110 mmHg persistente &gt;15 minutos.</li>
+      <li><b>HTA de túnica blanca:</b> HTA ante personal de salud pero PA &lt;135/85 en domicilio.</li>
+    </ul>
+
+    <div class="aco-sec-title">📊 C · Clasificación de severidad</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th>Severidad</th><th>PA</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind" style="color:var(--warn)">Leve</td><td>≤150/100</td></tr>
+          <tr><td class="aco-ind" style="color:var(--err)">Severa</td><td>≥160/110</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">🎯 D · Factores de riesgo de Preeclampsia</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th class="aco-th-alto">Alto riesgo</th><th class="aco-th-mod">Moderado riesgo</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Antecedente personal de PE · ERC · enfermedad autoinmune (LES, SAF) · diabetes pregestacional · HTA crónica · IPm AUt &gt;p95 · gestación múltiple</td>
+            <td>Nuliparidad · edad materna ≥40 años · intervalo con gestación previa &gt;10 años · IMC ≥35 kg/m² · AF de PE de 1° grado</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">📈 E · Epidemiología</div>
+    <ul class="arr-ul">
+      <li>EHE: 10% de los embarazos.</li>
+      <li>1ª causa de muerte materna en países desarrollados.</li>
+      <li>3ª causa de muerte materna en Uruguay.</li>
+    </ul>
+  </div>
+
+  <!-- ══════════ PREECLAMPSIA ══════════ -->
+  <div class="emb-tc" id="emb-tc-pe">
+    <div class="aco-sec-title">🔍 A · Signos de disfunción orgánica materna</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th>Clínicos</th><th>Analíticos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Alteraciones neurológicas (alt. visuales persistentes, estupor, cefalea, clonus) · epigastralgia o dolor en hipocondrio derecho · oliguria (&lt;30–35 ml/h o &lt;500 ml/24 h)</td>
+            <td>Insuficiencia renal (creatinina ≥90 µmol/L o ≥1 mg/dL) · transaminasas ×2 el límite superior · trombocitopenia &lt;100.000/µL · hemólisis (esquistocitosis, LDH &gt;600, bilirrubina elevada) · CID (TP &lt;60%, TTPa &gt;40 seg, fibrinógeno bajo)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">🧭 B · Algoritmo ratio sFlt-1/PlGF</div>
+    <div class="arr-algo">
+      <div class="arr-astep"><div class="arr-astep-n" style="background:var(--ok)">1</div><div class="arr-astep-c"><b>Ratio &lt;38 → Descartar PE</b> — alta / citar en 2 semanas. VPN ≈99% a 1 semana.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n" style="background:var(--warn)">2</div><div class="arr-astep-c"><b>Ratio 38–85 (&lt;34 sem) o 38–110 (&gt;34 sem) → Riesgo intermedio</b> — citar en 1 semana. VPP ≈40%.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n" style="background:#E65100">3</div><div class="arr-astep-c"><b>Ratio &gt;85 (&lt;34 sem) o &gt;110 (&gt;34 sem) → Alto riesgo de complicaciones</b> — control exhaustivo, hospitalización.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n" style="background:var(--err)">4</div><div class="arr-astep-c"><b>Ratio &gt;655 (o &gt;201) → Muy alto riesgo</b> — parto inminente probable.</div></div>
+    </div>
+
+    <div class="aco-sec-title">🟡 C · Preeclampsia NO severa — Manejo</div>
+    <ul class="arr-ul">
+      <li>NO reposo absoluto · dieta normo-Na y normocalórica · ejercicio 3 veces/semana · NO SO₄Mg profiláctico.</li>
+      <li>FAR si PA ≥160/110 (sin FAR previo) o ≥150/100 (con FAR).</li>
+      <li>Control cada 15 días con PC y Eco.</li>
+      <li><b>Controles:</b> al diagnóstico → HG, crasis, PL, iono, FR, FyE-H, Eco obstétrica, FMP. Semanal → HG, FR, FyE-H, proteinuria.</li>
+      <li><b>Finalización:</b> &lt;34 sem → maduración pulmonar · 35–37 sem → expectante · &gt;37 sem → interrumpir.</li>
+    </ul>
+
+    <div class="aco-sec-title">🔴 D · Preeclampsia SEVERA — Manejo</div>
+    <ul class="arr-ul">
+      <li><b>Ingreso hospitalario:</b> control de PA cada 5 min hasta estabilizar, luego horario · PC al ingreso · cultivo SGB si ≥32 sem · maduración pulmonar 24–34 sem.</li>
+      <li>Tto FAR si PA &gt;160/110 mmHg.</li>
+      <li><b>SO₄Mg:</b> 3 g en 20 min → 1–2 g/hora por 48 h.</li>
+      <li><b>Finalización:</b> &lt;24 sem → interrumpir · 24–34 sem → expectante (32–34 sem evaluar con modelo PIERS) · &gt;34 sem → finalizar previa maduración pulmonar.</li>
+    </ul>
+    <div class="arr-alert">
+      <div class="arr-alert-h">🚨 Finalización INMEDIATA si</div>
+      <ul>
+        <li>HTA grave incontrolable con 3 fármacos a dosis máximas</li>
+        <li>Pródromos de eclampsia persistentes</li>
+        <li>Signos de pérdida de bienestar fetal</li>
+        <li>Disfunción orgánica materna (oliguria &lt;500 ml/12 h, deterioro FR/hepático, ↑plaquetopenia)</li>
+        <li>Complicaciones: HIC, EAP, rotura hepática, DPPNI</li>
+        <li>HELLP con PQT &lt;50.000 sin respuesta a corticoides</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════ ECLAMPSIA Y HELLP ══════════ -->
+  <div class="emb-tc" id="emb-tc-hellp">
+    <div class="aco-sec-title">⚡ A · Eclampsia</div>
+    <ul class="arr-ul">
+      <li><b>Definición:</b> 1 convulsión sin epilepsia ni otra causa estructural. 2% de Pre-E, 3% de Pre-E severa.</li>
+      <li>60% anteparto, 20% intraparto, 20% posparto (90% en la primera semana posparto).</li>
+      <li>20–25% con mínima HTA y sin proteinuria. Recurrencia 2%.</li>
+    </ul>
+    <div class="arr-care-t" style="margin:8px 0 4px">Manejo de convulsiones — Protocolo ABCD</div>
+    <div class="arr-algo">
+      <div class="arr-astep"><div class="arr-astep-n">A</div><div class="arr-astep-c"><b>Airway:</b> asegurar vía aérea, aspirar faringe.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">B</div><div class="arr-astep-c"><b>Breathing:</b> comprobar respiración espontánea, O₂ 0,6 L/min.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">C</div><div class="arr-astep-c"><b>Circulation:</b> decúbito lateral izquierdo, 2 vías venosas 18G.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">D</div><div class="arr-astep-c"><b>Disability:</b> valorar nivel de consciencia y pupilas.</div></div>
+    </div>
+    <div class="arr-care-t" style="margin:10px 0 4px">SO₄Mg (escalonado)</div>
+    <ul class="arr-ul">
+      <li>Bolus 4,5 g (1,5 g/min) → perfusión 2 g/h.</li>
+      <li>Sin respuesta: bolus 2 g (1,5 g/min) → perfusión 2 g/h.</li>
+      <li>Sin respuesta: Diazepam 10 mg EV en 1 min.</li>
+      <li>Sin respuesta: Fenitoína 15 mg/kg EV en 1 hora + 250–500 mg/12 h.</li>
+    </ul>
+    <div class="arr-care-t" style="margin:10px 0 4px">Control tensional en eclampsia</div>
+    <ul class="arr-ul">
+      <li><b>Labetalol:</b> bolus 20 mg EV, repetir c/20 min doblando dosis (40, 80, 80 mg) → perfusión 50–400 mg/6 h.</li>
+      <li><b>Hidralazina:</b> bolus 5 mg EV, repetir c/20 min (máx 4 bolos) → perfusión 3–7 mg/h.</li>
+    </ul>
+
+    <div class="aco-sec-title">🧲 B · Monitoreo de SO₄Mg — toxicidad</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl emb-mg">
+        <thead><tr><th>Nivel de Mg (mEq/L)</th><th>Manifestaciones</th></tr></thead>
+        <tbody>
+          <tr class="emb-mg-terap"><td>🟢 4,2–8,4</td><td>Rango terapéutico (asintomático)</td></tr>
+          <tr class="emb-mg-leve"><td>🟡 9–12</td><td>Náuseas, somnolencia, visión doble, dificultad para hablar, debilidad, hipotensión, pérdida de reflejos osteotendinosos, oliguria</td></tr>
+          <tr class="emb-mg-mod"><td>🟠 &gt;12</td><td>Afectación de la musculatura respiratoria (bradipnea)</td></tr>
+          <tr class="emb-mg-grave"><td>🔴 15–17</td><td>Parálisis muscular y paro respiratorio</td></tr>
+          <tr class="emb-mg-critico"><td>⚫ &gt;18</td><td>Bloqueo AV completo y asistolia</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="arr-ul">
+      <li><b>Control cada 2–3 h:</b> ROT presentes, FR &gt;14, diuresis &gt;30 ml/h, SatO₂ normal.</li>
+      <li><b>Antídoto:</b> Gluconato de Ca 1 g EV en 3–4 minutos.</li>
+      <li>NO asociar con Nifedipino (riesgo de hipotensión sinérgica). CI en Miastenia Gravis.</li>
+    </ul>
+
+    <div class="aco-sec-title">🩸 C · Síndrome HELLP</div>
+    <ul class="arr-ul">
+      <li><b>Diagnóstico:</b> anemia hemolítica (esquistocitosis) · alteración hepática (transaminasas &gt;70, LDH &gt;600, BT &gt;1,2) · trombocitopenia &lt;100.000.</li>
+    </ul>
+    <div class="arr-care-t" style="margin:8px 0 4px">Diagnóstico diferencial</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:130px">Parámetro</th><th>HELLP</th><th>PTT</th><th>SHU</th><th>Hígado graso agudo</th><th>PTI</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Hipertensión</td><td>++</td><td>−</td><td>±</td><td>±</td><td>−</td></tr>
+          <tr><td class="aco-ind">Trombocitopenia</td><td>++</td><td>+++</td><td>++</td><td>+</td><td>+++</td></tr>
+          <tr><td class="aco-ind">Hemólisis</td><td>++</td><td>+++</td><td>+++</td><td>±</td><td>−</td></tr>
+          <tr><td class="aco-ind">Anemia</td><td>+</td><td>++</td><td>++</td><td>±</td><td>−</td></tr>
+          <tr><td class="aco-ind">CID</td><td>±</td><td>−</td><td>−</td><td>++</td><td>−</td></tr>
+          <tr><td class="aco-ind">Hipoglucemia</td><td>−</td><td>−</td><td>−</td><td>+++</td><td>−</td></tr>
+          <tr><td class="aco-ind">LDH</td><td>↑↑</td><td>↑↑↑</td><td>↑↑</td><td>↑</td><td>Normal</td></tr>
+          <tr><td class="aco-ind">Hiperbilirrubinemia</td><td>+</td><td>+</td><td>+</td><td>+++</td><td>−</td></tr>
+          <tr><td class="aco-ind">Insuficiencia renal</td><td>±</td><td>+</td><td>+++</td><td>++</td><td>−</td></tr>
+          <tr><td class="aco-ind">Proteinuria</td><td>+</td><td>±</td><td>±</td><td>±</td><td>−</td></tr>
+          <tr><td class="aco-ind">Tto 1ª línea</td><td>Finalización + corticoides</td><td>Plasmaféresis</td><td>Soporte / eculizumab (SHUa)</td><td>Finalización + soporte</td><td>Corticoides / IgIV</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="arr-care-t" style="margin:8px 0 4px">Manejo HELLP</div>
+    <ul class="arr-ul">
+      <li>Igual que preeclampsia severa.</li>
+      <li>Madurar con Dexametasona 10 mg c/12 h IV × 48 h.</li>
+      <li>Luego Metilprednisolona 40 mg IV c/12 h hasta PQT &gt;150.000 → bajar a la mitad. Si no mejora en 8 h: 40 mg c/6 h.</li>
+      <li>Mantener corticoides hasta 48 h del puerperio.</li>
+      <li><b>Transfusión de PQT:</b> &lt;40.000 + cesárea · &lt;20.000 + parto vaginal · primeras 24 h posparto si sangrado.</li>
+    </ul>
+  </div>
+
+  <!-- ══════════ FÁRMACOS ══════════ -->
+  <div class="emb-tc" id="emb-tc-farmacos">
+    <div class="aco-sec-title">💊 A · Antihipertensivos orales</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:110px">Fármaco</th><th>Dosis VO (mg/d)</th><th>Intervalo</th><th>Máx.</th><th>Contraindicaciones</th><th>Comentarios</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Labetalol</td><td>100–2400</td><td>6-8-12 h</td><td>2400/d</td><td>Asma, ICC, bradicardia, BAV 2°-3°</td><td>Ef. adv.: cefalea, temblor, hiperreactividad bronquial, bradicardia fetal</td></tr>
+          <tr><td class="aco-ind">Nifedipino retard</td><td>10–60</td><td>retard 12 h / Oros 24 h</td><td>60/d</td><td>Shock CV, IAM reciente, angina inestable</td><td>NO asociar con SO₄Mg — riesgo de hipotensión brusca</td></tr>
+          <tr><td class="aco-ind">Alfametildopa</td><td>250–3000</td><td>8-12 h</td><td>3 g/d</td><td>Hepatitis aguda, cirrosis, feocromocitoma</td><td>Suspender antes de 48 h posparto — asociada a depresión</td></tr>
+          <tr><td class="aco-ind">Hidralazina</td><td>25–200</td><td>6-8-12 h</td><td>200/d</td><td>Taquicardia, enf. coronaria, cardiopatía, IMAO</td><td>Ef. adv.: cefalea, sofocos, palpitaciones</td></tr>
+          <tr><td class="aco-ind">Hidroclorotiazida</td><td>12,5–25</td><td>24 h</td><td>50/d</td><td>Preeclampsia (reduce VSC)</td><td>Usar solo si la tomaba antes del embarazo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">💉 B · Antihipertensivos EV — HTA grave</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:120px">Fármaco</th><th>Posología</th><th>Contraindicaciones</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Labetalol EV</td><td>Bolus 20 mg EV lento en 1 min → repetir c/10 min doblando dosis (20, 40, 80 mg) → PC 50–400 mg/6 h</td><td>IC, bradicardia &lt;60 lpm, asma</td></tr>
+          <tr><td class="aco-ind">Hidralazina EV</td><td>Bolus lento 5 mg EV → repetir c/20–30 min (máx 4 bolos, 20 mg) → PC 3–7 mg/h</td><td>Taquicardia, enf. coronaria, cardiopatía</td></tr>
+          <tr><td class="aco-ind">Nitroglicerina EV</td><td>5 µg/min con aumento gradual (máx 100 µg/min)</td><td>Encefalopatía hipertensiva (aumento de PIC)</td></tr>
+          <tr><td class="aco-ind">Nitroprusiato sódico EV</td><td>0,25 µg/kg/min → máx 10 µg/kg/min</td><td>Último recurso — fetotóxico en uso prolongado &gt;4 h</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">🚫 C · Fármacos contraindicados en el embarazo</div>
+    <div class="arr-alert">
+      <div class="arr-alert-h">⚠️ CONTRAINDICADOS</div>
+      <ul>
+        <li>IECA / ARA-II / ARM → malformaciones fetales, IR fetal, RCIU, muerte</li>
+        <li>Atenolol → RCIU</li>
+        <li>Estatinas → teratogénicas</li>
+        <li>Warfarina en 1er trimestre → embriopatía</li>
+        <li>SO₄Mg + Nifedipino juntos → hipotensión severa</li>
+      </ul>
+    </div>
+
+    <div class="aco-sec-title">🤱 D · Fármacos seguros en la lactancia</div>
+    <ul class="arr-ul">
+      <li><b>Nifedipino:</b> primera opción, mejora FSR y diuresis.</li>
+      <li><b>Enalapril:</b> primera opción, especialmente en DM1 o cardiopatía.</li>
+      <li><b>Labetalol / Atenolol:</b> segunda línea.</li>
+      <li><b>Evitar:</b> tiazidas y furosemida (reducen la leche materna).</li>
+    </ul>
+  </div>
+
+  <!-- ══════════ PREVENCIÓN Y SEGUIMIENTO ══════════ -->
+  <div class="emb-tc" id="emb-tc-prev">
+    <div class="aco-sec-title">🛡️ A · Prevención de Preeclampsia</div>
+    <ul class="arr-ul">
+      <li><b>Calcio:</b> 1 g/día a toda gestante con baja ingesta de calcio (&lt;600 mg/día).</li>
+      <li><b>AAS 150 mg/noche</b> desde antes de la semana 16 hasta la semana 36: alto riesgo (≥1 FR alto) · moderado riesgo (≥2 FR moderados).</li>
+      <li><b>Dosis según peso:</b> &lt;40 kg → 100 mg · &gt;100 kg → 200 mg · resto → 150 mg. Iniciar entre semana 11 y 16 (no antes de 11, no después de 16).</li>
+    </ul>
+    <div class="arr-alert" style="background:var(--warn-bg);border-color:var(--warn)">
+      <div class="arr-alert-h" style="color:var(--warn)">⚠️ Contraindicaciones de AAS</div>
+      <div style="font-size:.82rem;line-height:1.6;color:var(--txt)">UGD activo · antecedente de hemorragia digestiva · alergia a AAS · diátesis hemorrágica · trastorno de coagulación · asma inducida por AAS · IR o enfermedad hepática grave.</div>
+    </div>
+    <div class="arr-care-t" style="margin:8px 0 4px">NO recomendado para prevenir Pre-E</div>
+    <ul class="arr-ul">
+      <li>Vitamina C, D, E · ácido fólico (en dosis de prevención de Pre-E) · omega-3 · estatinas · heparina.</li>
+    </ul>
+
+    <div class="aco-sec-title">🔬 B · Cribado de Preeclampsia</div>
+    <ul class="arr-ul">
+      <li><b>1er trimestre (&lt;14 sem):</b> Eco, AP, PA, Doppler de arterias uterinas. Objetivo: iniciar AAS antes de la semana 16.</li>
+      <li><b>2do trimestre (14–16 sem):</b> si no se hizo antes, valorar AP y Doppler de arterias uterinas.</li>
+      <li><b>Semanas 17–23 en poblaciones de riesgo:</b> Doppler uterino en AP de PE precoz, RCIU, DPPNI, muerte intrauterina, HTA crónica, ERC, DM1 con complicaciones vasculares.</li>
+    </ul>
+
+    <div class="aco-sec-title">🧮 C · Índice de predicción de riesgo de Pre-E</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th>Variable</th><th>Puntos</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">IP uterino promedio ≥p95 en 2do trimestre</td><td>4</td></tr>
+          <tr><td class="aco-ind">PAM ≥90 mmHg en 1er o 2do trimestre</td><td>3</td></tr>
+          <tr><td class="aco-ind">Proteinuria 24 h ≥300 mg en 2do trimestre</td><td>2</td></tr>
+          <tr><td class="aco-ind">IMC ≥25 kg/m² en 1er trimestre</td><td>1</td></tr>
+          <tr><td class="aco-ind">Antecedente de preeclampsia</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="arr-ul">
+      <li><b>2–6 puntos:</b> bajo riesgo · <b>7–9:</b> riesgo intermedio · <b>10–11:</b> alto riesgo.</li>
+    </ul>
+
+    <div class="aco-sec-title">📋 D · Seguimiento de HTA Crónica en el embarazo</div>
+    <ul class="arr-ul">
+      <li><b>Estudio basal 1er trimestre:</b> HG, creatinina, uricemia, FyE-H, iono, proteinuria, índice Prot/Crea.</li>
+      <li>ECG en 3er trimestre (si alteraciones del eje o sugestivas de HVI → eco).</li>
+      <li>HTA + DM pregestacional: fondo de ojo (si no tiene uno de &lt;6 meses).</li>
+      <li>Autocontrol de PA 2–3 veces/semana. Control médico cada 2–4 semanas. PC mensual: HG, FR, uricemia, iono, FyE-H.</li>
+      <li>Arterias uterinas normales (21–23 sem): control obstétrico a 28, 32, 36 sem. Patológicas: control a 24, 28, 32, 36 sem.</li>
+      <li>Finalizar: a partir de la semana 37, antes de la 40.</li>
+    </ul>
+
+    <div class="aco-sec-title">🤰 E · Puerperio y seguimiento post-PE</div>
+    <ul class="arr-ul">
+      <li><b>Control de PA:</b> primeras 48 h cada 6 h · 1ª semana diario · 12 semanas semanal.</li>
+      <li>La PA se normaliza en los primeros días (formas graves: hasta 2–4 semanas). Controlar índice Prot/Crea a las 6 semanas posparto (40 días).</li>
+      <li>Informar el riesgo de HTA crónica y ECV a largo plazo (2–3 veces mayor).</li>
+      <li><b>Estudio de trombofilias</b> en PE de inicio precoz (&lt;34 sem), DPPNI o PE recurrente: anticuerpos antifosfolipídicos, mutación del gen de protrombina, factor V de Leiden, antitrombina · a las 6 sem posparto: resistencia a la proteína C activada, proteína S libre y total, proteína C funcional y antígeno.</li>
+    </ul>
+    <div class="arr-care-t" style="margin:8px 0 4px">Riesgo de recurrencia según semana de parto</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th>Parto</th><th>Recurrencia</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">&gt;37 sem</td><td>20%</td></tr>
+          <tr><td class="aco-ind">34–37 sem</td><td>30%</td></tr>
+          <tr><td class="aco-ind">28–34 sem</td><td>40%</td></tr>
+          <tr><td class="aco-ind">&lt;28 sem</td><td>50%</td></tr>
+          <tr><td class="aco-ind">HELLP</td><td>3% HELLP + 20% PE</td></tr>
+          <tr><td class="aco-ind">Eclampsia</td><td>2% eclampsia + 20% PE</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 <div class="tab-content" id="tab-miocardiopatias" style="display:none">
   <div class="mcp-tabs">
@@ -2408,7 +3169,13 @@ main{padding-bottom:100px}
 </div>
 <div class="tab-content" id="tab-ref" style="display:none"></div>
 <div class="tab-content" id="tab-trials" style="display:none">
-  <div class="tab-ph"><div class="tab-ph-ic">📚</div><h2>Trials</h2><p>Módulo en construcción. Aquí irán los ensayos clínicos de referencia.</p></div>
+  <div class="tri-search-wrap">
+    <span class="tri-srch-ic">🔍</span>
+    <input type="text" id="tri-search" placeholder="Buscar por nombre, fármaco, año, resultado..." oninput="renderTrials()" autocomplete="off">
+    <button class="tri-clear" onclick="triClear()" title="Limpiar búsqueda">✕</button>
+  </div>
+  <div id="tri-counter"></div>
+  <div id="tri-container"></div>
 </div>
 <div class="tab-content" id="tab-mnemo" style="display:none">
   <div class="tab-ph"><div class="tab-ph-ic">🔤</div><h2>Mnemotecnias</h2><p>Módulo en construcción. Aquí irán las mnemotecnias cardiológicas.</p></div>
@@ -9845,6 +10612,203 @@ function switchMcpTab(name, btn){
   if(c) c.classList.add('active');
 }
 
+// ══════════════════════════════════════════════════════════════════
+// PREVENCIÓN — sub-tabs
+// ══════════════════════════════════════════════════════════════════
+function switchPrevTab(name, btn){
+  document.querySelectorAll('#tab-prevencion .prev-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#tab-prevencion .prev-tc').forEach(c=>c.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const c=document.getElementById('prev-tc-'+name);
+  if(c) c.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// EMBARAZO — sub-tabs
+// ══════════════════════════════════════════════════════════════════
+function switchEmbTab(name, btn){
+  document.querySelectorAll('#tab-embarazo .emb-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#tab-embarazo .emb-tc').forEach(c=>c.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const c=document.getElementById('emb-tc-'+name);
+  if(c) c.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// TRIALS — buscador global + acordeón (render dinámico)
+// ══════════════════════════════════════════════════════════════════
+var TRIALS_DATA=[
+  {id:'ic',icon:'🫀',name:'Insuficiencia Cardíaca',trials:[
+    {n:'CONSENSUS',y:1987,N:'253',d:'RCT',p:'IC severa NYHA IV',r:'Enalapril redujo mortalidad 40% vs placebo',i:'Clase I'},
+    {n:'SOLVD',y:1991,N:'2569',d:'RCT',p:'IC-FEr sintomática',r:'Enalapril redujo mortalidad 16% y hospitalización',i:'Clase I'},
+    {n:'MERIT-HF',y:1999,N:'3991',d:'RCT',p:'IC-FEr NYHA II-IV',r:'Metoprolol succinato redujo mortalidad 34%',i:'Clase I'},
+    {n:'COPERNICUS',y:2001,N:'2289',d:'RCT',p:'IC-FEr severa FEVI <25%',r:'Carvedilol redujo mortalidad 35%',i:'Clase I'},
+    {n:'RALES',y:1999,N:'1663',d:'RCT',p:'IC-FEr severa NYHA III-IV',r:'Espironolactona redujo mortalidad 30%',i:'Clase I'},
+    {n:'EMPHASIS-HF',y:2011,N:'2737',d:'RCT',p:'IC-FEr NYHA II',r:'Eplerenona redujo mortalidad CV + hosp 37%',i:'Clase I'},
+    {n:'PARADIGM-HF',y:2014,N:'8442',d:'RCT',p:'IC-FEr FEVI <40%',r:'Sacubitril/Valsartán redujo mortalidad CV 20% vs enalapril',i:'Clase I'},
+    {n:'DAPA-HF',y:2019,N:'4744',d:'RCT',p:'IC-FEr con/sin DM',r:'Dapagliflozina redujo muerte CV + hosp IC 26%',i:'Clase I'},
+    {n:'EMPEROR-Reduced',y:2020,N:'3730',d:'RCT',p:'IC-FEr FEVI <40%',r:'Empagliflozina redujo hosp IC 31%',i:'Clase I'},
+    {n:'EMPEROR-Preserved',y:2021,N:'5988',d:'RCT',p:'IC-FEp FEVI >40%',r:'Empagliflozina redujo hosp IC 29%',i:'Clase IIa'},
+    {n:'DELIVER',y:2022,N:'6263',d:'RCT',p:'IC-FEp FEVI >40%',r:'Dapagliflozina redujo muerte CV + hosp IC 18%',i:'Clase IIa'},
+    {n:'SHIFT',y:2010,N:'6558',d:'RCT',p:'IC-FEr RS FC ≥70',r:'Ivabradina redujo hosp IC + muerte CV 18%',i:'Clase IIa'},
+    {n:'VICTORIA',y:2020,N:'5050',d:'RCT',p:'IC-FEr NYHA II-IV hosp reciente',r:'Vericiguat redujo muerte CV + hosp IC 10%',i:'Clase IIb'},
+    {n:'CONFIRM-HF',y:2014,N:'304',d:'RCT',p:'IC-FEr déficit hierro',r:'Carboximaltosa férrica mejoró capacidad funcional y redujo hosp',i:'Clase I'},
+    {n:'AFFIRM-AHF',y:2020,N:'1108',d:'RCT',p:'IC aguda + déficit hierro',r:'Carboximaltosa férrica redujo hosp IC recurrente 26%',i:'Clase I'},
+    {n:'SUMMIT',y:2024,N:'731',d:'RCT',p:'IC-FEp + obesidad',r:'Tirzepatida redujo muerte CV + hosp IC 38%',i:'Clase IIa'},
+    {n:'FINEARTS-HF',y:2024,N:'6001',d:'RCT',p:'IC-FEp/FElr',r:'Finerenona redujo muerte CV + hosp IC 16%',i:'Clase IIa'}
+  ]},
+  {id:'coronaria',icon:'🫀',name:'Enfermedad Coronaria / SCA',trials:[
+    {n:'ISIS-2',y:1988,N:'17187',d:'RCT',p:'IAMCEST',r:'AAS + estreptoquinasa redujo mortalidad 42%',i:'Clase I'},
+    {n:'GUSTO',y:1993,N:'41021',d:'RCT',p:'IAMCEST',r:'tPA superior a estreptoquinasa en mortalidad',i:'Clase I'},
+    {n:'CURE',y:2001,N:'12562',d:'RCT',p:'SCASEST',r:'Clopidogrel + AAS redujo MACE 20% vs AAS solo',i:'Clase I'},
+    {n:'TRITON-TIMI 38',y:2007,N:'13608',d:'RCT',p:'SCA con ICP planificada',r:'Prasugrel redujo MACE 19% vs clopidogrel — mayor sangrado',i:'Clase I'},
+    {n:'PLATO',y:2009,N:'18624',d:'RCT',p:'SCA',r:'Ticagrelor redujo muerte CV + IAM + ACV 16% vs clopidogrel',i:'Clase I'},
+    {n:'SYNTAX',y:2009,N:'1800',d:'RCT',p:'EAC 3 vasos / TC',r:'ICP vs CRM: mortalidad similar, CRM < revascularización repetida',i:'Clase I'},
+    {n:'FREEDOM',y:2012,N:'1900',d:'RCT',p:'DM + EAC multivaso',r:'CRM redujo mortalidad total 10,9% vs ICP 16,3% a 5 años',i:'Clase I'},
+    {n:'COURAGE',y:2007,N:'2287',d:'RCT',p:'EAC estable',r:'ICP + TMO no superior a TMO solo en muerte + IAM',i:'Sin cambio'},
+    {n:'ISCHEMIA',y:2019,N:'5179',d:'RCT',p:'EAC estable moderada-severa',r:'Revascularización no redujo muerte + IAM vs TMO en seguimiento',i:'Controvertido'},
+    {n:'COMPLETE',y:2019,N:'4041',d:'RCT',p:'IAMCEST + EAC multivaso',r:'Revascularización completa redujo muerte CV + IAM 26% vs culprit-only',i:'Clase I'},
+    {n:'BIOVASC',y:2023,N:'1525',d:'RCT',p:'SCA multivaso',r:'Revascularización inmediata vs diferida: no inferior en MACE',i:'Clase IIa'},
+    {n:'MULTISTARS-AMI',y:2023,N:'840',d:'RCT',p:'IAMCEST multivaso',r:'Revascularización inmediata superior en MACE a 1 año',i:'Clase IIa'}
+  ]},
+  {id:'hta',icon:'💊',name:'Hipertensión Arterial',trials:[
+    {n:'HOPE',y:2000,N:'9297',d:'RCT',p:'Alto RCV sin IC',r:'Ramipril redujo muerte CV + IAM + ACV 22%',i:'Clase I'},
+    {n:'ALLHAT',y:2002,N:'33357',d:'RCT',p:'HTA + 1 FRCV',r:'Clortalidona no inferior a amlodipino o lisinopril',i:'Sin cambio'},
+    {n:'ONTARGET',y:2008,N:'25620',d:'RCT',p:'Alto RCV',r:'Telmisartán no inferior a ramipril; combinación más efectos adversos',i:'Sin cambio'},
+    {n:'ACCOMPLISH',y:2008,N:'11506',d:'RCT',p:'HTA alto riesgo',r:'IECA + BCC superior a IECA + diurético en MACE',i:'Clase IIa'},
+    {n:'SPRINT',y:2015,N:'9361',d:'RCT',p:'HTA sin DM',r:'Objetivo PA <120 redujo MACE 25% y mortalidad 27%',i:'Clase IIa'},
+    {n:'ACCORD',y:2010,N:'4733',d:'RCT',p:'HTA + DM2',r:'Objetivo PA <120 no redujo MACE vs <140 en DM',i:'Sin cambio'},
+    {n:'BPROAD',y:2024,N:'11255',d:'RCT',p:'HTA + DM2 (China)',r:'Objetivo PAS <120 redujo MACE 21% vs <140',i:'Clase IIa'},
+    {n:'BedMed',y:2024,N:'3357',d:'RCT',p:'HTA',r:'Dosis nocturna no superior a matutina en eventos CV',i:'Sin cambio'}
+  ]},
+  {id:'lipidos',icon:'🧪',name:'Dislipemia',trials:[
+    {n:'4S',y:1994,N:'4444',d:'RCT',p:'EAC + colesterol alto',r:'Simvastatina redujo mortalidad total 30% (prevención 2ª)',i:'Clase I'},
+    {n:'WOSCOPS',y:1995,N:'6595',d:'RCT',p:'Sin EAC + LDL alto',r:'Pravastatina redujo eventos coronarios 31% (prevención 1ª)',i:'Clase I'},
+    {n:'HPS',y:2002,N:'20536',d:'RCT',p:'Alto RCV',r:'Simvastatina redujo MACE 24% independiente del LDL basal',i:'Clase I'},
+    {n:'JUPITER',y:2008,N:'17802',d:'RCT',p:'Sin ECV + PCR alta',r:'Rosuvastatina redujo MACE 44% en prevención 1ª',i:'Clase I'},
+    {n:'IMPROVE-IT',y:2015,N:'18144',d:'RCT',p:'SCA + estatina',r:'Ezetimibe + estatina redujo MACE adicional 6,4%',i:'Clase I'},
+    {n:'FOURIER',y:2017,N:'27564',d:'RCT',p:'ECVA + estatina',r:'Evolocumab redujo MACE 15%, LDL -59%',i:'Clase I'},
+    {n:'ODYSSEY OUTCOMES',y:2018,N:'18924',d:'RCT',p:'SCA reciente + estatina',r:'Alirocumab redujo MACE 15% y mortalidad total',i:'Clase I'},
+    {n:'ORION-10',y:2020,N:'1561',d:'RCT',p:'ECVA + LDL alto',r:'Inclisirán 2 dosis/año redujo LDL 50% sostenido',i:'Clase IIa'},
+    {n:'KRAKEN',y:2024,N:'450',d:'RCT',p:'LDL alto',r:'Inclisirán superior a ezetimibe como 2ª línea',i:'Clase IIa'}
+  ]},
+  {id:'fa',icon:'⚡',name:'Fibrilación Auricular',trials:[
+    {n:'AFFIRM',y:2002,N:'4060',d:'RCT',p:'FA + ≥65 años o FFRR',r:'Control de ritmo no superior a control de frecuencia en mortalidad',i:'Sin cambio'},
+    {n:'RE-LY',y:2009,N:'18113',d:'RCT',p:'FA no valvular',r:'Dabigatrán 150mg superior a warfarina en ACV; 110mg no inferior con menos sangrado',i:'Clase I'},
+    {n:'ROCKET-AF',y:2011,N:'14264',d:'RCT',p:'FA + CHA₂DS₂ ≥2',r:'Rivaroxabán no inferior a warfarina en ACV; menos HIC',i:'Clase I'},
+    {n:'ARISTOTLE',y:2011,N:'18201',d:'RCT',p:'FA + FFRR',r:'Apixabán superior a warfarina en ACV, sangrado mayor y mortalidad',i:'Clase I'},
+    {n:'ENGAGE AF',y:2013,N:'21105',d:'RCT',p:'FA + FFRR',r:'Edoxabán no inferior a warfarina; menos sangrado mayor',i:'Clase I'},
+    {n:'CABANA',y:2019,N:'2204',d:'RCT',p:'FA sintomática',r:'Ablación no superior a FAA en muerte + ACV + sangrado mayor (ITT); superior en recurrencia FA',i:'Clase IIa'},
+    {n:'EAST-AFNET 4',y:2020,N:'2789',d:'RCT',p:'FA de diagnóstico reciente',r:'Control de ritmo precoz redujo muerte CV + ACV + hosp 21%',i:'Clase I'},
+    {n:'CASTLE-AF',y:2018,N:'363',d:'RCT',p:'FA + IC-FEr',r:'Ablación redujo muerte + hosp IC 38% vs terapia médica',i:'Clase I'}
+  ]},
+  {id:'dispositivos',icon:'🔧',name:'Dispositivos',trials:[
+    {n:'MADIT-II',y:2002,N:'1232',d:'RCT',p:'Post-IAM FEVI ≤30%',r:'CDI redujo mortalidad 31% vs TMO',i:'Clase I'},
+    {n:'SCD-HeFT',y:2005,N:'2521',d:'RCT',p:'IC-FEr FEVI ≤35%',r:'CDI redujo mortalidad 23% vs placebo; amiodarona neutral',i:'Clase I'},
+    {n:'DANISH',y:2016,N:'1116',d:'RCT',p:'IC-FEr no isquémica',r:'CDI no redujo mortalidad total vs TMO (redujo MSC)',i:'Controvertido'},
+    {n:'COMPANION',y:2004,N:'1520',d:'RCT',p:'IC-FEr BRI QRS ≥120ms',r:'TRC-D redujo muerte + hosp 20% vs TMO',i:'Clase I'},
+    {n:'CARE-HF',y:2005,N:'813',d:'RCT',p:'IC-FEr QRS ≥120ms',r:'TRC redujo mortalidad 36% vs TMO',i:'Clase I'},
+    {n:'RAFT',y:2010,N:'1798',d:'RCT',p:'IC-FEr QRS ≥120ms',r:'TRC-D superior a CDI solo en muerte + hosp IC',i:'Clase I'}
+  ]},
+  {id:'miocardiopatias',icon:'🧠',name:'Miocardiopatías',trials:[
+    {n:'EXPLORER-HCM',y:2020,N:'251',d:'RCT',p:'MCH obstructiva sintomática',r:'Mavacamten redujo gradiente TSVI y mejoró CF NYHA',i:'Clase IIa'},
+    {n:'SEQUOIA-HCM',y:2024,N:'282',d:'RCT',p:'MCH obstructiva sintomática',r:'Aficamten superior a placebo en capacidad funcional y gradiente',i:'Clase IIa'},
+    {n:'ATTR-ACT',y:2018,N:'441',d:'RCT',p:'Amiloidosis ATTR-wt y ATTR-h',r:'Tafamidis redujo mortalidad 30% y hosp CV 32% a 30 meses',i:'Clase I'},
+    {n:'HELIOS-B',y:2024,N:'655',d:'RCT',p:'Amiloidosis ATTR',r:'Vutrisirán redujo mortalidad + hosp CV 28% vs placebo',i:'Clase I'},
+    {n:'APOLLO-B',y:2022,N:'360',d:'RCT',p:'Amiloidosis ATTR con polineuropatía',r:'Patisirán redujo progresión de neuropatía y mejoró calidad de vida',i:'Clase I'}
+  ]},
+  {id:'crm',icon:'🫀',name:'Síndrome CRM / iSGLT2 / GLP-1',trials:[
+    {n:'EMPA-REG OUTCOME',y:2015,N:'7020',d:'RCT',p:'DM2 + ECVA',r:'Empagliflozina redujo muerte CV 38% y hosp IC 35%',i:'Clase I'},
+    {n:'CANVAS',y:2017,N:'10142',d:'RCT',p:'DM2 + alto RCV',r:'Canagliflozina redujo MACE 14%; mayor riesgo de amputación',i:'Clase I'},
+    {n:'DECLARE-TIMI 58',y:2018,N:'17160',d:'RCT',p:'DM2 + FFRR o ECVA',r:'Dapagliflozina redujo hosp IC + muerte CV en pacientes con IC',i:'Clase I'},
+    {n:'CREDENCE',y:2019,N:'4401',d:'RCT',p:'DM2 + ERC',r:'Canagliflozina redujo fallo renal + muerte renal/CV 30%',i:'Clase I'},
+    {n:'DAPA-CKD',y:2020,N:'4304',d:'RCT',p:'ERC con/sin DM2',r:'Dapagliflozina redujo progresión de ERC + muerte renal 39%',i:'Clase I'},
+    {n:'LEADER',y:2016,N:'9340',d:'RCT',p:'DM2 + alto RCV',r:'Liraglutida redujo muerte CV 22%',i:'Clase I'},
+    {n:'SUSTAIN-6',y:2016,N:'3297',d:'RCT',p:'DM2 + alto RCV',r:'Semaglutida SC redujo MACE 26%',i:'Clase I'},
+    {n:'SELECT',y:2023,N:'17604',d:'RCT',p:'Obesidad sin DM + ECVA',r:'Semaglutida redujo MACE 20% en obesos sin DM',i:'Clase I'},
+    {n:'FLOW',y:2024,N:'3533',d:'RCT',p:'DM2 + ERC',r:'Semaglutida redujo eventos renales mayores 24% y muerte CV 29%',i:'Clase I'},
+    {n:'FIDELIO-DKD',y:2020,N:'5734',d:'RCT',p:'DM2 + ERC + albuminuria',r:'Finerenona redujo progresión de ERC + MACE',i:'Clase I'},
+    {n:'FIGARO-DKD',y:2021,N:'7437',d:'RCT',p:'DM2 + ERC',r:'Finerenona redujo MACE 13%',i:'Clase I'}
+  ]},
+  {id:'valvulopatias',icon:'🩺',name:'Valvulopatías / Procedimientos',trials:[
+    {n:'PARTNER 1',y:2011,N:'699',d:'RCT',p:'EAo severa alto riesgo Q',r:'TAVI no inferior a cirugía en mortalidad a 1 año',i:'Clase I'},
+    {n:'PARTNER 2',y:2016,N:'2032',d:'RCT',p:'EAo severa riesgo intermedio',r:'TAVI no inferior a cirugía en muerte + ACV',i:'Clase I'},
+    {n:'EVOLUT Low Risk',y:2019,N:'1468',d:'RCT',p:'EAo severa bajo riesgo Q',r:'TAVI no inferior a cirugía en muerte + ACV a 2 años',i:'Clase I'},
+    {n:'COAPT',y:2018,N:'614',d:'RCT',p:'IM secundaria + IC',r:'MitraClip redujo hosp IC 47% y mortalidad 38% a 2 años',i:'Clase I'},
+    {n:'MITRA-FR',y:2018,N:'304',d:'RCT',p:'IM secundaria + IC',r:'MitraClip no redujo muerte + hosp IC vs TMO',i:'Controvertido'},
+    {n:'TRILUMINATE Pivotal',y:2023,N:'572',d:'RCT',p:'IT severa sintomática',r:'TriClip + TMO superior a TMO en calidad de vida y CF',i:'Clase IIa'}
+  ]}
+];
+
+function triEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function triBadge(imp){return ({'Clase I':'tri-b1','Clase IIa':'tri-b2a','Clase IIb':'tri-b2b','Sin cambio':'tri-bsc','Controvertido':'tri-bctr'})[imp]||'tri-bsc';}
+function triHl(text,q){
+  var e=triEsc(text);
+  if(!q) return e;
+  try{ var re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'); return e.replace(re,'<mark class="tri-hl">$1</mark>'); }
+  catch(_){ return e; }
+}
+function renderTrials(){
+  var inp=document.getElementById('tri-search');
+  var cont=document.getElementById('tri-container');
+  if(!cont) return;
+  var q=(inp&&inp.value||'').trim();
+  var ql=q.toLowerCase();
+  var total=0, shown=0, html='';
+  TRIALS_DATA.forEach(function(sec){
+    total+=sec.trials.length;
+    var matches = ql ? sec.trials.filter(function(t){
+      return (t.n+' '+t.y+' '+t.N+' '+t.d+' '+t.p+' '+t.r+' '+t.i).toLowerCase().indexOf(ql)>=0;
+    }) : sec.trials;
+    if(ql && matches.length===0) return;
+    shown+=matches.length;
+    var open = ql ? true : (sec.id==='ic');
+    var rows=matches.map(function(t){
+      return '<tr>'
+        +'<td class="tri-name">'+triHl(t.n,q)+'</td>'
+        +'<td>'+triHl(String(t.y),q)+'</td>'
+        +'<td>'+triHl(t.N,q)+'</td>'
+        +'<td>'+triHl(t.d,q)+'</td>'
+        +'<td>'+triHl(t.p,q)+'</td>'
+        +'<td>'+triHl(t.r,q)+'</td>'
+        +'<td><span class="tri-badge '+triBadge(t.i)+'">'+triEsc(t.i)+'</span></td>'
+        +'</tr>';
+    }).join('');
+    html+='<div class="tri-sec">'
+      +'<button class="tri-sec-h" onclick="triToggle(this)">'
+        +'<span>'+sec.icon+' '+triEsc(sec.name)+' <span class="tri-count">('+matches.length+')</span></span>'
+        +'<span class="tri-arrow">'+(open?'▲':'▼')+'</span>'
+      +'</button>'
+      +'<div class="tri-sec-b'+(open?' on':'')+'">'
+        +'<div class="tri-tbl-wrap"><table class="tri-tbl">'
+        +'<thead><tr><th>Estudio</th><th>Año</th><th>N</th><th>Diseño</th><th>Población</th><th>Resultado clave</th><th>Impacto</th></tr></thead>'
+        +'<tbody>'+rows+'</tbody></table></div>'
+      +'</div>'
+    +'</div>';
+  });
+  var counter=document.getElementById('tri-counter');
+  if(ql && shown===0){
+    cont.innerHTML='<div class="tri-empty">No se encontraron estudios para esa búsqueda.</div>';
+    if(counter) counter.textContent='0 de '+total+' estudios';
+    return;
+  }
+  cont.innerHTML=html;
+  if(counter) counter.textContent = ql ? ('Mostrando '+shown+' de '+total+' estudios') : (total+' estudios');
+}
+function triToggle(btn){
+  var body=btn.nextElementSibling;
+  var arrow=btn.querySelector('.tri-arrow');
+  if(!body) return;
+  var on=body.classList.toggle('on');
+  if(arrow) arrow.textContent = on ? '▲' : '▼';
+}
+function triClear(){
+  var inp=document.getElementById('tri-search');
+  if(inp) inp.value='';
+  renderTrials();
+}
+(function initTrials(){ if(document.getElementById('tri-container')) renderTrials(); })();
+
 // HCM Risk-SCD — O'Mahony C et al. Eur Heart J 2014 (misma fórmula validada que calcHCM)
 function calcMcpHcm(){
   const age=+document.getElementById('mcp-hcm-age')?.value||0;
@@ -9920,7 +10884,7 @@ function calcMcpHcm(){
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
-var MAIN_TABS=['ic','arritmias','dispositivos','anticoag','prevencion','miocardiopatias','ref','trials','mnemo','preop'];
+var MAIN_TABS=['ic','arritmias','dispositivos','anticoag','prevencion','embarazo','miocardiopatias','ref','trials','mnemo','preop'];
 function showMainTab(tab){
   var main=document.querySelector('main');
   if(main)main.style.display=(tab==='inicio')?'':'none';
