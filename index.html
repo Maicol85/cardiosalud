@@ -716,6 +716,18 @@ main{padding-bottom:100px}
 .tri-bctr{background:#E65100;color:#fff}
 .tri-hl{background:#FFF176;color:#000;border-radius:2px;padding:0 1px}
 .tri-empty{text-align:center;color:var(--txt2);font-size:.9rem;padding:40px 20px}
+/* ═══════════ Cardio-Oncología (tab) ═══════════ */
+#tab-cardioonc .co-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
+#tab-cardioonc .co-tab{flex:1 1 auto;min-width:110px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-cardioonc .co-tab.active{color:var(--p);border-bottom-color:var(--p)}
+#tab-cardioonc .co-tab:hover:not(.active){color:var(--txt)}
+.co-tc{display:none}
+.co-tc.active{display:block}
+.co-danger{background:var(--err-bg);border:2px solid var(--err);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+.co-danger-h{font-size:1rem;font-weight:800;color:var(--err);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.co-danger ul{margin:4px 0 4px 18px;padding:0}
+.co-danger li{font-size:.83rem;line-height:1.6;color:var(--txt);margin-bottom:3px}
+.co-bneu{display:inline-block;padding:1px 8px;border-radius:10px;font-size:.68rem;font-weight:800;background:#90A4AE;color:#1A237E;white-space:nowrap}
 @media(max-width:500px){#syn-root .mod-grid{grid-template-columns:1fr}}
 @media print{#syn-root .tab-header,#syn-root .btn{display:none!important}#syn-root .card{break-inside:avoid}}
 .csub{border:1px solid var(--border);border-radius:7px;margin-bottom:8px;overflow:visible}
@@ -808,6 +820,7 @@ main{padding-bottom:100px}
   <button class="mtab" data-tab="anticoag" onclick="showMainTab('anticoag')"><span class="mtab-ic">💊</span>Anticoagulación</button>
   <button class="mtab" data-tab="prevencion" onclick="showMainTab('prevencion')"><span class="mtab-ic">🛡️</span>Prevención</button>
   <button class="mtab" data-tab="embarazo" onclick="showMainTab('embarazo')"><span class="mtab-ic">👶</span>Embarazo</button>
+  <button class="mtab" data-tab="cardioonc" onclick="showMainTab('cardioonc')"><span class="mtab-ic">🎯</span>Cardio-Oncología</button>
   <button class="mtab" data-tab="miocardiopatias" onclick="showMainTab('miocardiopatias')"><span class="mtab-ic">🧠</span>Miocardiopatías</button>
   <button class="mtab" data-tab="ref" onclick="showMainTab('ref')"><span class="mtab-ic">📖</span>Referencias</button>
   <button class="mtab" data-tab="trials" onclick="showMainTab('trials')"><span class="mtab-ic">📚</span>Trials</button>
@@ -2832,6 +2845,329 @@ main{padding-bottom:100px}
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+<div class="tab-content" id="tab-cardioonc" style="display:none">
+  <div class="co-tabs">
+    <button class="co-tab active" data-co="basal" onclick="switchCoTab('basal',this)">🔍 Evaluación Basal</button>
+    <button class="co-tab" data-co="agentes" onclick="switchCoTab('agentes',this)">💊 Agentes</button>
+    <button class="co-tab" data-co="monitoreo" onclick="switchCoTab('monitoreo',this)">📊 Monitoreo</button>
+    <button class="co-tab" data-co="ctrcd" onclick="switchCoTab('ctrcd',this)">⚙️ Manejo CTRCD</button>
+    <button class="co-tab" data-co="prev" onclick="switchCoTab('prev',this)">🛡️ Cardioprotección</button>
+    <button class="co-tab" data-co="mioc" onclick="switchCoTab('mioc',this)">🔴 Miocarditis ICI</button>
+  </div>
+
+  <!-- ══════════ EVALUACIÓN BASAL ══════════ -->
+  <div class="co-tc active" id="co-tc-basal">
+    <div class="aco-sec-title">🎯 A · Score HFA-ICOS — Estratificación de riesgo</div>
+    <div class="prev-risk-grid">
+      <div class="prev-risk prev-risk-bajo">
+        <div class="prev-risk-t">🟢 Bajo riesgo</div>
+        <ul>
+          <li>Sin antecedentes CV significativos</li>
+          <li>Sin FRCV mayores</li>
+          <li>Tratamiento de bajo potencial cardiotóxico</li>
+          <li><b>Acción:</b> continuar con vigilancia estándar</li>
+        </ul>
+      </div>
+      <div class="prev-risk prev-risk-mod">
+        <div class="prev-risk-t">🟡 Moderado riesgo</div>
+        <ul>
+          <li>1–2 FRCV (HTA, DM, dislipemia, tabaquismo, obesidad)</li>
+          <li>Edad &gt;65 años</li>
+          <li>FEVI basal 50–54%</li>
+          <li><b>Acción:</b> monitoreo más frecuente, considerar derivación a cardio-oncología</li>
+        </ul>
+      </div>
+      <div class="prev-risk prev-risk-alto">
+        <div class="prev-risk-t">🟠 Alto riesgo</div>
+        <ul>
+          <li>ECV previa (IC, EAC, arritmias)</li>
+          <li>FEVI basal &lt;50%</li>
+          <li>Troponina o BNP basales elevados</li>
+          <li>Exposición previa a antraciclinas o radioterapia mediastínica</li>
+          <li><b>Acción:</b> derivación a cardio-oncología antes de iniciar tratamiento</li>
+        </ul>
+      </div>
+      <div class="prev-risk prev-risk-muyalto">
+        <div class="prev-risk-t">🔴 Muy alto riesgo</div>
+        <ul>
+          <li>IC activa o reciente</li>
+          <li>FEVI &lt;40%</li>
+          <li>IAM reciente (&lt;3 meses)</li>
+          <li>Combinación de múltiples factores de alto riesgo</li>
+          <li><b>Acción:</b> evaluación especializada obligatoria, optimización CV antes de quimioterapia</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="aco-sec-title">✅ B · Evaluación pre-tratamiento</div>
+    <div class="ic-check-group">
+      <label class="ic-check"><input type="checkbox">Historia clínica: antecedentes CV, FRCV, tratamientos cardiotóxicos previos, radioterapia mediastínica</label>
+      <label class="ic-check"><input type="checkbox">Examen físico: PA, FC, signos de IC</label>
+      <label class="ic-check"><input type="checkbox">ECG de 12 derivaciones (si anormal → derivar a cardio-oncología)</label>
+      <label class="ic-check"><input type="checkbox">ETT: FEVI + GLS basal (gold standard de seguimiento)</label>
+      <label class="ic-check"><input type="checkbox">Troponina de alta sensibilidad (hs-Tn)</label>
+      <label class="ic-check"><input type="checkbox">NT-proBNP / BNP</label>
+      <label class="ic-check"><input type="checkbox">Función renal, electrolitos</label>
+      <label class="ic-check"><input type="checkbox">Optimización de FRCV antes de iniciar quimioterapia</label>
+    </div>
+
+    <div class="aco-sec-title">📖 C · Definición de CTRCD (ESC 2022)</div>
+    <div class="arr-care" style="border-left-color:var(--p);margin-bottom:12px">
+      <div class="arr-care-d"><b>CTRCD</b> (Cancer Therapy-Related Cardiac Dysfunction): nueva caída de FEVI ≥10% hasta un valor &lt;50%, <b>o</b> caída de FEVI ≥20% desde el basal (independientemente del valor absoluto), con o sin síntomas de IC.</div>
+    </div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:170px">Severidad</th><th>Criterio</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Asintomática leve</td><td>Caída de GLS &gt;15% sin cambio de FEVI</td></tr>
+          <tr><td class="aco-ind">Asintomática moderada</td><td>Caída de FEVI pero &gt;40%, sin síntomas</td></tr>
+          <tr><td class="aco-ind">Asintomática grave</td><td>Caída de FEVI ≤40%, sin síntomas</td></tr>
+          <tr><td class="aco-ind">Sintomática</td><td>Cualquier caída de FEVI con síntomas de IC</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════ AGENTES CARDIOTÓXICOS ══════════ -->
+  <div class="co-tc" id="co-tc-agentes">
+    <div class="aco-sec-title">💊 A · Agentes cardiotóxicos por clase</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:130px">Clase</th><th>Agentes</th><th>Mecanismo</th><th>Toxicidad principal</th><th>Reversible</th><th>Dosis-dep.</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind" style="color:var(--err)">Antraciclinas<br><span style="font-weight:400;color:var(--txt2)">(Tipo I — irreversible)</span></td><td>Doxorrubicina, Epirrubicina, Daunorrubicina, Idarrubicina</td><td>Estrés oxidativo, inhibición TopoIIβ, disfunción mitocondrial, disregulación del hierro</td><td>Disfunción VI, IC — acumulativa y progresiva</td><td>NO (daño permanente del miocito)</td><td>SÍ — riesgo ↑ &gt;250–300 mg/m², marcado &gt;450 mg/m²</td></tr>
+          <tr><td class="aco-ind" style="color:var(--warn)">HER2 / Trastuzumab<br><span style="font-weight:400;color:var(--txt2)">(Tipo II — reversible)</span></td><td>Trastuzumab, Pertuzumab, Lapatinib</td><td>Bloqueo de la señal ErbB2 — inhibe vías cardioprotectoras del miocito</td><td>Disfunción VI — generalmente reversible al suspender</td><td>SÍ (en la mayoría)</td><td>NO — idiosincrásica</td></tr>
+          <tr><td class="aco-ind" style="color:var(--warn)">TKI VEGF<br><span style="font-weight:400;color:var(--txt2)">(anti-angiogénicos)</span></td><td>Sunitinib, Sorafenib, Pazopanib, Bevacizumab, Axitinib</td><td>Daño endotelial, inhibición de señales de supervivencia celular</td><td>HTA (casi universal), disfunción VI, isquemia, QT prolongado</td><td>Variable</td><td>Parcialmente</td></tr>
+          <tr><td class="aco-ind" style="color:var(--warn)">TKI BCR-ABL<br><span style="font-weight:400;color:var(--txt2)">(LMC)</span></td><td>Imatinib, Nilotinib, Dasatinib, Ponatinib</td><td>Aterosclerosis acelerada, daño endotelial, efecto metabólico</td><td>EAP, IAM, ACV (Nilotinib, Ponatinib), HTA, derrame pericárdico (Dasatinib)</td><td>Variable</td><td>—</td></tr>
+          <tr><td class="aco-ind" style="color:var(--err)">ICI<br><span style="font-weight:400;color:var(--txt2)">(checkpoint inmune)</span></td><td>Nivolumab, Pembrolizumab (anti-PD1); Atezolizumab, Durvalumab (anti-PDL1); Ipilimumab (anti-CTLA4)</td><td>Activación de linfocitos T contra el miocardio — inflamación mediada por células T</td><td>Miocarditis (rara 1–2% pero mortalidad ~50%), pericarditis, arritmias, vasculitis, dislipemia</td><td>Variable — puede ser fulminante</td><td>Mayor riesgo con ICI combinada</td></tr>
+          <tr><td class="aco-ind" style="color:var(--warn)">Otros</td><td>Ciclofosfamida; 5-Fluorouracilo; Radioterapia mediastínica</td><td>Ciclofosfamida: miocarditis hemorrágica · 5-FU: vasoespasmo coronario · RT: daño tardío</td><td>Ciclofosfamida: miocarditis aguda (dosis altas) · 5-FU: SCA durante infusión · RT: EAC acelerada, valvulopatías, pericarditis constrictiva, disfunción VI</td><td>Variable</td><td>Ciclofosfamida: SÍ</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">⚠️ B · Toxicidades CV más allá de la disfunción VI</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:150px">Toxicidad</th><th>Agentes</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">HTA</td><td>TKI VEGF (casi universal en las primeras semanas)</td></tr>
+          <tr><td class="aco-ind">QT prolongado</td><td>Arseniato, algunos TKI — monitoreo ECG obligatorio</td></tr>
+          <tr><td class="aco-ind">Isquemia / SCA</td><td>5-FU (vasoespasmo), TKI, radioterapia</td></tr>
+          <tr><td class="aco-ind">Tromboembolismo</td><td>Cisplatino, bevacizumab, lenalidomida</td></tr>
+          <tr><td class="aco-ind">Pericarditis / derrame</td><td>Dasatinib, ICI, radioterapia</td></tr>
+          <tr><td class="aco-ind">Arritmias</td><td>ICI, antraciclinas, ciclofosfamida</td></tr>
+          <tr><td class="aco-ind">Vasculitis</td><td>ICI</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════ MONITOREO ══════════ -->
+  <div class="co-tc" id="co-tc-monitoreo">
+    <div class="aco-sec-title">🧪 A · Antraciclinas</div>
+    <div class="arr-care-t" style="margin:4px 0 4px">Bajo riesgo (&lt;250 mg/m² doxorrubicina eq.)</div>
+    <ul class="arr-ul">
+      <li>ETT basal + al finalizar el tratamiento.</li>
+      <li><span class="arr-badge arr-b2a">Clase IIa</span> Troponina (riesgo moderado).</li>
+      <li>Post-tratamiento: ETT a los 6–12 meses.</li>
+    </ul>
+    <div class="arr-care-t" style="margin:10px 0 4px">Alto riesgo o dosis &gt;250–300 mg/m²</div>
+    <ul class="arr-ul">
+      <li>ETT basal · ETT cada 100 mg/m² adicionales o cada 2–3 ciclos.</li>
+      <li><span class="arr-badge arr-b1">Clase I</span> Troponina hs antes de cada ciclo.</li>
+      <li>GLS en cada ETT — alerta si caída relativa &gt;15%.</li>
+      <li>Al finalizar: ETT + troponina a los 3 y 12 meses.</li>
+      <li>Largo plazo: ETT cada 2 años (alto riesgo) o cada 5 años (moderado).</li>
+    </ul>
+    <div class="arr-alert">
+      <div class="arr-alert-h">⚠️ Señales de alarma — actuar aunque la FEVI sea normal</div>
+      <ul>
+        <li>hs-Troponina &gt; límite superior de referencia → iniciar cardioprotección</li>
+        <li>GLS con caída relativa &gt;15% desde el basal → iniciar cardioprotección</li>
+        <li>NT-proBNP en aumento progresivo → ETT urgente + derivar</li>
+      </ul>
+    </div>
+
+    <div class="aco-sec-title">🎯 B · Trastuzumab / HER2</div>
+    <ul class="arr-ul">
+      <li>ETT basal (especialmente si exposición previa a antraciclinas).</li>
+      <li>ETT cada 3 meses durante el tratamiento. Bajo riesgo estable: puede extenderse a cada 4 meses tras evaluar el 3er mes.</li>
+      <li><span class="arr-badge arr-b2a">Clase IIa</span> Troponina en alto riesgo · <span class="arr-badge arr-b2b">Clase IIb</span> en bajo-moderado.</li>
+      <li>Si FEVI basal &lt;50%: derivar a cardio-oncología antes de iniciar.</li>
+    </ul>
+
+    <div class="aco-sec-title">💉 C · TKI VEGF / Anti-angiogénicos</div>
+    <ul class="arr-ul">
+      <li>PA en cada visita. Primeras 4–6 semanas: control semanal; luego cada 2–3 semanas hasta fin del tratamiento.</li>
+      <li>Objetivo PA: &lt;140/90 mmHg (algunos expertos &lt;130/80).</li>
+      <li>ECG basal + periódico si riesgo de QT. Función renal y electrolitos periódicos.</li>
+      <li>ETT: basal y al finalizar; cada 3 meses si riesgo de disfunción VI.</li>
+    </ul>
+
+    <div class="aco-sec-title">🔴 D · ICI — Inhibidores de checkpoint</div>
+    <div class="arr-alert">
+      <div class="arr-alert-h">⚠️ Período de mayor riesgo: primeras 6–12 semanas (mediana de aparición: 34 días)</div>
+    </div>
+    <ul class="arr-ul">
+      <li><b>Basal:</b> ECG + troponina hs + NT-proBNP (la FEVI basal puede ser normal y no predice miocarditis).</li>
+      <li><b>Primeras 6 semanas:</b> troponina semanal o al inicio y fin de cada ciclo.</li>
+      <li><b>Mayor vigilancia en:</b> ICI combinada (nivolumab + ipilimumab), ICI + otras drogas cardiotóxicas.</li>
+    </ul>
+    <div class="co-danger">
+      <div class="co-danger-h">🚨 Escalada urgente si</div>
+      <ul>
+        <li>Cualquier síntoma nuevo (disnea, dolor torácico, palpitaciones, síncope)</li>
+        <li>Troponina elevada o en aumento</li>
+        <li>Cambios ECG (BAV, arritmias, cambios ST-T)</li>
+      </ul>
+      <div style="font-size:.82rem;color:var(--txt);margin-top:6px;line-height:1.6">→ ECG urgente + troponina + ETT + derivar · RMN cardíaca si sospecha de miocarditis · <b>NO esperar síntomas para actuar</b>.</div>
+    </div>
+  </div>
+
+  <!-- ══════════ MANEJO CTRCD ══════════ -->
+  <div class="co-tc" id="co-tc-ctrcd">
+    <div class="aco-sec-title">⚙️ A · Manejo según severidad</div>
+    <div class="arr-algo">
+      <div class="arr-astep"><div class="arr-astep-n" style="background:var(--ok)">1</div><div class="arr-astep-c"><b>Caída GLS &gt;15% sin cambio de FEVI (subclínica):</b> continuar quimioterapia · iniciar IECA o ARA-II + considerar BB · ETT en 4–6 semanas · discutir con oncología.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n" style="background:#66BB6A">2</div><div class="arr-astep-c"><b>CTRCD leve asintomática (FEVI &gt;50%):</b> continuar con monitoreo estrecho · iniciar IECA + BB · ETT en 4–6 semanas · optimizar FRCV.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n" style="background:var(--warn)">3</div><div class="arr-astep-c"><b>CTRCD moderada asintomática (FEVI 40–49%):</b> con antraciclinas → SUSPENDER + IECA + BB + ETT en 3 sem luego c/3 meses · sin antraciclinas → continuar si asintomático + IECA + BB + ETT c/3 meses.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n" style="background:#E65100">4</div><div class="arr-astep-c"><b>CTRCD grave asintomática (FEVI &lt;40%):</b> SUSPENDER tratamiento oncológico · IECA/ARNI + BB + ARM + iSGLT2 (tratamiento de IC completo) · ETT en 3 sem · discusión multidisciplinaria antes de cualquier rechallenge.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n" style="background:var(--err)">5</div><div class="arr-astep-c"><b>CTRCD sintomática (cualquier FEVI con síntomas de IC):</b> DISCONTINUAR tratamiento oncológico · tratamiento de IC urgente (hospitalizar si es necesario) · ETT urgente · discusión multidisciplinaria — rechallenge solo en casos excepcionales.</div></div>
+    </div>
+
+    <div class="aco-sec-title">💊 B · Tratamiento de la CTRCD</div>
+    <ul class="arr-ul">
+      <li><b>IECA (Enalapril, Ramipril):</b> primera línea — evidencia en prevención y tratamiento.</li>
+      <li><b>ARA-II (Candesartán):</b> alternativa si intolerancia a IECA — trial PRADA.</li>
+      <li><b>BB (Carvedilol, Bisoprolol):</b> combinado con IECA — evidencia en cardioprotección.</li>
+      <li><b>ARM (Espironolactona):</b> evidencia emergente en prevención.</li>
+      <li><b>iSGLT2:</b> emergente — prometedor, pendiente de grandes trials en este contexto.</li>
+      <li><b>ARNI (Sacubitril/Valsartán):</b> considerar si IC establecida.</li>
+    </ul>
+
+    <div class="aco-sec-title">🔄 C · Decisión de rechallenge</div>
+    <ul class="arr-ul">
+      <li>Recuperación de FEVI a valor basal o &gt;50%.</li>
+      <li>Tratamiento de IC óptimo establecido.</li>
+      <li>Discusión multidisciplinaria oncología-cardiología.</li>
+      <li>Consentimiento informado del paciente.</li>
+      <li>Plan de monitoreo intensificado.</li>
+      <li>Considerar cambiar a formulación liposomal o alternativa menos cardiotóxica.</li>
+    </ul>
+  </div>
+
+  <!-- ══════════ CARDIOPROTECCIÓN ══════════ -->
+  <div class="co-tc" id="co-tc-prev">
+    <div class="aco-sec-title">🏃 A · Estrategias no farmacológicas</div>
+    <ul class="arr-ul">
+      <li>Control estricto de FRCV antes, durante y después del tratamiento.</li>
+      <li>Actividad física regular (ejercicio aeróbico moderado — beneficio demostrado).</li>
+      <li>Dieta mediterránea + control de peso.</li>
+      <li>Cese tabáquico.</li>
+    </ul>
+
+    <div class="aco-sec-title">💉 B · Modificación del tratamiento oncológico</div>
+    <ul class="arr-ul">
+      <li>Limitar la dosis acumulada de antraciclinas: objetivo &lt;450 mg/m² doxorrubicina eq.</li>
+      <li>Infusión lenta (&gt;6 h) vs bolo: reduce el pico de concentración → menor cardiotoxicidad.</li>
+      <li>Antraciclinas liposomales (doxorrubicina liposomal pegilada): menor cardiotoxicidad — misma eficacia oncológica.</li>
+      <li>Antraciclinas secuenciales (no concurrentes) con trastuzumab.</li>
+      <li>Considerar alternativas menos cardiotóxicas en pacientes de alto riesgo.</li>
+    </ul>
+
+    <div class="aco-sec-title">🛡️ C · Cardioprotectores farmacológicos</div>
+    <div class="aco-tbl-wrap">
+      <table class="aco-tbl">
+        <thead><tr><th style="min-width:120px">Fármaco</th><th>Indicación</th><th>Evidencia</th><th>Clase</th></tr></thead>
+        <tbody>
+          <tr><td class="aco-ind">Dexrazoxane</td><td>Prevención con antraciclinas de alto riesgo / &gt;300 mg/m²</td><td>Único aprobado FDA/EMA</td><td><span class="arr-badge arr-b1">Clase I (ASCO)</span></td></tr>
+          <tr><td class="aco-ind">IECA / ARA-II</td><td>Prevención en alto riesgo + tratamiento de CTRCD</td><td>Candesartán (PRADA), Enalapril + Carvedilol</td><td><span class="arr-badge arr-b2a">Clase IIa</span></td></tr>
+          <tr><td class="aco-ind">Betabloqueantes</td><td>Prevención + tratamiento de CTRCD</td><td>Carvedilol: evidencia moderada</td><td><span class="arr-badge arr-b2a">Clase IIa</span></td></tr>
+          <tr><td class="aco-ind">Estatinas</td><td>Prevención — Atorvastatina alta dosis</td><td>Emergente — reduce la caída de FEVI</td><td><span class="arr-badge arr-b2b">Clase IIb</span></td></tr>
+          <tr><td class="aco-ind">ARM</td><td>Prevención — Espironolactona</td><td>Evidencia en cáncer de mama + antraciclinas</td><td><span class="arr-badge arr-b2b">Clase IIb</span></td></tr>
+          <tr><td class="aco-ind">iSGLT2</td><td>Tratamiento de CTRCD establecida</td><td>Emergente — grandes trials en curso</td><td><span class="co-bneu">En investigación</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aco-sec-title">☢️ D · Radioterapia mediastínica — cardiotoxicidad tardía</div>
+    <ul class="arr-ul">
+      <li>Puede manifestarse años o décadas después.</li>
+      <li>Complicaciones: EAC acelerada, estenosis valvular (aórtica, mitral), pericarditis constrictiva, disfunción VI, trastornos de conducción.</li>
+      <li><b>Screening:</b> ETT cada 5 años a partir de los 5–10 años post-radioterapia en pacientes de alto riesgo.</li>
+    </ul>
+  </div>
+
+  <!-- ══════════ MIOCARDITIS POR ICI ══════════ -->
+  <div class="co-tc" id="co-tc-mioc">
+    <div class="co-danger">
+      <div class="co-danger-h">🔴 Miocarditis por ICI — EMERGENCIA</div>
+      <div style="font-size:.83rem;line-height:1.6;color:var(--txt)">La irAE cardíaca más letal. Suspender el ICI de inmediato ante sospecha confirmada e iniciar corticoterapia. Hasta el 20–25% se presentan con FEVI normal — no descartar por un ETT normal.</div>
+    </div>
+
+    <div class="aco-sec-title">📈 A · Epidemiología y riesgo</div>
+    <ul class="arr-ul">
+      <li>Incidencia: 1–2% de los pacientes con ICI.</li>
+      <li>Mortalidad: 25–50% en casos graves.</li>
+      <li>Mayor riesgo: terapia combinada (nivolumab + ipilimumab) — 4–5× mayor.</li>
+      <li>Mediana de aparición: 34 días desde el inicio (rango 21–75 días); 80% dentro del primer mes.</li>
+      <li>70% tenían FEVI normal antes del evento.</li>
+    </ul>
+
+    <div class="aco-sec-title">🩺 B · Presentación clínica</div>
+    <ul class="arr-ul">
+      <li>Disnea (más frecuente) · dolor torácico · palpitaciones/arritmias · síncope · fatiga desproporcionada.</li>
+      <li>Bloqueo AV (puede ser el primer signo) · shock cardiogénico (formas fulminantes).</li>
+    </ul>
+    <div class="arr-alert">
+      <div class="arr-alert-h">⚠️ Importante</div>
+      <div style="font-size:.82rem;line-height:1.6;color:var(--txt)">Hasta el 20–25% pueden presentarse con FEVI normal — <b>NO descartar miocarditis por un ETT normal</b>.</div>
+    </div>
+
+    <div class="aco-sec-title">🧭 C · Algoritmo diagnóstico</div>
+    <div class="arr-algo">
+      <div class="arr-astep"><div class="arr-astep-n">1</div><div class="arr-astep-c"><b>Sospecha clínica:</b> cualquier síntoma CV nuevo en paciente con ICI → ALTA SOSPECHA.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">2</div><div class="arr-astep-c"><b>Evaluación urgente (primeras horas):</b> ECG (ST-T, BAV, arritmias ventriculares) · troponina hs (elevada en la mayoría, marcador más sensible) · NT-proBNP · ETT urgente (FEVI, derrame, función regional).</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">3</div><div class="arr-astep-c"><b>Confirmar:</b> RMN cardíaca (gold standard — edema miocárdico, RTG) · biopsia endomiocárdica si RMN no concluyente o evolución grave.</div></div>
+      <div class="arr-arrow">↓</div>
+      <div class="arr-astep"><div class="arr-astep-n">4</div><div class="arr-astep-c"><b>Clasificar gravedad:</b> subclínica (troponina ↑ sin síntomas) · leve (síntomas leves, FEVI conservada) · moderada (disfunción VI) · grave/fulminante (shock, arritmias malignas, BAV completo).</div></div>
+    </div>
+
+    <div class="aco-sec-title">💊 D · Tratamiento</div>
+    <div class="co-danger">
+      <div class="co-danger-h">🚫 Suspensión INMEDIATA del ICI en todos los casos con sospecha confirmada</div>
+    </div>
+    <div class="arr-care-t" style="margin:8px 0 4px">Corticoterapia (primera línea)</div>
+    <ul class="arr-ul">
+      <li><b>Leve-moderada:</b> Prednisona 1–2 mg/kg/día oral → reducción gradual en 4–6 semanas.</li>
+      <li><b>Grave:</b> Metilprednisolona 500–1000 mg/día IV × 3–5 días → luego prednisona oral.</li>
+      <li>Objetivo: normalización de la troponina antes de reducir la dosis.</li>
+    </ul>
+    <div class="arr-care-t" style="margin:10px 0 4px">Refractario a corticoides (segunda línea)</div>
+    <ul class="arr-ul">
+      <li>Micofenolato mofetil · Infliximab (anti-TNF, precaución: puede empeorar la IC) · Abatacept · Tacrolimus · inmunoglobulina IV en casos seleccionados.</li>
+    </ul>
+    <div class="arr-care-t" style="margin:10px 0 4px">Soporte hemodinámico y arritmias</div>
+    <ul class="arr-ul">
+      <li>Tratamiento de IC estándar (diuréticos, IECA, BB con cautela en bloqueo).</li>
+      <li>BCIAO / Impella si shock cardiogénico; ECMO en casos refractarios.</li>
+      <li>BAV completo → marcapaso transitorio · TV/FV → desfibrilación + amiodarona · monitoreo continuo en casos graves.</li>
+    </ul>
+
+    <div class="aco-sec-title">🔄 E · Reinicio del ICI post-miocarditis</div>
+    <ul class="arr-ul">
+      <li>Generalmente <b>CONTRAINDICADO</b> en miocarditis moderada-grave.</li>
+      <li>Casos leves seleccionados: discusión multidisciplinaria caso a caso.</li>
+      <li>Requiere: resolución completa, troponina normalizada, FEVI recuperada, consenso oncología-cardiología-paciente.</li>
+    </ul>
   </div>
 </div>
 <div class="tab-content" id="tab-miocardiopatias" style="display:none">
@@ -10635,6 +10971,17 @@ function switchEmbTab(name, btn){
 }
 
 // ══════════════════════════════════════════════════════════════════
+// CARDIO-ONCOLOGÍA — sub-tabs
+// ══════════════════════════════════════════════════════════════════
+function switchCoTab(name, btn){
+  document.querySelectorAll('#tab-cardioonc .co-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#tab-cardioonc .co-tc').forEach(c=>c.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const c=document.getElementById('co-tc-'+name);
+  if(c) c.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════════════
 // TRIALS — buscador global + acordeón (render dinámico)
 // ══════════════════════════════════════════════════════════════════
 var TRIALS_DATA=[
@@ -10884,7 +11231,7 @@ function calcMcpHcm(){
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
-var MAIN_TABS=['ic','arritmias','dispositivos','anticoag','prevencion','embarazo','miocardiopatias','ref','trials','mnemo','preop'];
+var MAIN_TABS=['ic','arritmias','dispositivos','anticoag','prevencion','embarazo','cardioonc','miocardiopatias','ref','trials','mnemo','preop'];
 function showMainTab(tab){
   var main=document.querySelector('main');
   if(main)main.style.display=(tab==='inicio')?'':'none';
