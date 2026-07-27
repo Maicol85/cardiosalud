@@ -814,18 +814,17 @@ main{padding-bottom:100px}
 
 <nav class="mtabs" id="main-tabs">
   <button class="mtab active" data-tab="inicio" onclick="showMainTab('inicio')"><span class="mtab-ic">🏠</span>Inicio</button>
+  <button class="mtab" data-tab="prevencion" onclick="showMainTab('prevencion')"><span class="mtab-ic">🛡️</span>Prevención</button>
+  <button class="mtab" data-tab="embarazo" onclick="showMainTab('embarazo')"><span class="mtab-ic">👶</span>Embarazo</button>
+  <button class="mtab" data-tab="preop" onclick="showMainTab('preop')"><span class="mtab-ic">🏥</span>Preoperatorio</button>
   <button class="mtab" data-tab="ic" onclick="showMainTab('ic')"><span class="mtab-ic">🫀</span>IC</button>
+  <button class="mtab" data-tab="miocardiopatias" onclick="showMainTab('miocardiopatias')"><span class="mtab-ic">🧠</span>Miocardiopatías</button>
+  <button class="mtab" data-tab="cardioonc" onclick="showMainTab('cardioonc')"><span class="mtab-ic">🎯</span>Cardio-oncología</button>
   <button class="mtab" data-tab="arritmias" onclick="showMainTab('arritmias')"><span class="mtab-ic">⚡</span>Arritmias</button>
   <button class="mtab" data-tab="dispositivos" onclick="showMainTab('dispositivos')"><span class="mtab-ic">🔧</span>Dispositivos</button>
   <button class="mtab" data-tab="anticoag" onclick="showMainTab('anticoag')"><span class="mtab-ic">💊</span>Anticoagulación</button>
-  <button class="mtab" data-tab="prevencion" onclick="showMainTab('prevencion')"><span class="mtab-ic">🛡️</span>Prevención</button>
-  <button class="mtab" data-tab="embarazo" onclick="showMainTab('embarazo')"><span class="mtab-ic">👶</span>Embarazo</button>
-  <button class="mtab" data-tab="cardioonc" onclick="showMainTab('cardioonc')"><span class="mtab-ic">🎯</span>Cardio-Oncología</button>
-  <button class="mtab" data-tab="miocardiopatias" onclick="showMainTab('miocardiopatias')"><span class="mtab-ic">🧠</span>Miocardiopatías</button>
   <button class="mtab" data-tab="ref" onclick="showMainTab('ref')"><span class="mtab-ic">📖</span>Referencias</button>
   <button class="mtab" data-tab="trials" onclick="showMainTab('trials')"><span class="mtab-ic">📚</span>Trials</button>
-  <button class="mtab" data-tab="mnemo" onclick="showMainTab('mnemo')"><span class="mtab-ic">🔤</span>Mnemotecnias</button>
-  <button class="mtab" data-tab="preop" onclick="showMainTab('preop')"><span class="mtab-ic">🏥</span>PreOP</button>
 </nav>
 
 <main>
@@ -3513,9 +3512,6 @@ main{padding-bottom:100px}
   <div id="tri-counter"></div>
   <div id="tri-container"></div>
 </div>
-<div class="tab-content" id="tab-mnemo" style="display:none">
-  <div class="tab-ph"><div class="tab-ph-ic">🔤</div><h2>Mnemotecnias</h2><p>Módulo en construcción. Aquí irán las mnemotecnias cardiológicas.</p></div>
-</div>
 <div class="tab-content" id="tab-preop" style="display:none"></div>
 
 <script>
@@ -4188,7 +4184,7 @@ main{padding-bottom:100px}
               <div class="fg"><label>PAS (mmHg)</label><input type="number" id="mg-sbp" placeholder="120" oninput="calcMAGGIC()"></div>
               <div class="fg"><label>IMC (kg/m²)</label><input type="number" id="mg-bmi" placeholder="25" oninput="calcMAGGIC()"></div>
               <div class="fg"><label>Creatinina (mg/dL)</label><input type="number" id="mg-creat" step="0.1" placeholder="1.0" oninput="calcMAGGIC()"></div>
-              <div class="fg"><label>Clase NYHA</label><select id="mg-nyha" oninput="calcMAGGIC()"><option value="1">I</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option></select></div>
+              <div class="fg"><label>Clase NYHA</label><select id="mg-nyha" oninput="calcMAGGIC()"><option value="" selected>—</option><option value="1">I</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option></select></div>
               <div class="fg"><label>Sexo</label><select id="mg-sex" oninput="calcMAGGIC()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
               <div class="fg"><label>Tabaquismo activo</label><select id="mg-smoke" oninput="calcMAGGIC()"><option value="0">No</option><option value="1">Sí</option></select></div>
               <div class="fg"><label>Diabetes</label><select id="mg-dm" oninput="calcMAGGIC()"><option value="0">No</option><option value="1">Sí</option></select></div>
@@ -4238,9 +4234,9 @@ main{padding-bottom:100px}
               <div class="fg"><label>Grosor máx. pared VI (mm)</label><input type="number" id="mcp-hcm-wall" min="10" max="60" placeholder="20" oninput="calcMcpHcm()"></div>
               <div class="fg"><label>Diámetro AI (mm)</label><input type="number" id="mcp-hcm-la" min="20" max="80" placeholder="45" oninput="calcMcpHcm()"></div>
               <div class="fg"><label>Gradiente TSVI máx. (mmHg)</label><input type="number" id="mcp-hcm-grad" min="0" max="200" placeholder="30" oninput="calcMcpHcm()"></div>
-              <div class="fg"><label>Historia familiar de MSC</label><select id="mcp-hcm-msd" oninput="calcMcpHcm()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>TVNS en Holter</label><select id="mcp-hcm-nsv" oninput="calcMcpHcm()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg cp-full"><label>Síncope inexplicado</label><select id="mcp-hcm-sync" oninput="calcMcpHcm()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Historia familiar de MSC</label><select id="mcp-hcm-msd" oninput="calcMcpHcm()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>TVNS en Holter</label><select id="mcp-hcm-nsv" oninput="calcMcpHcm()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg cp-full"><label>Síncope inexplicado</label><select id="mcp-hcm-sync" oninput="calcMcpHcm()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
             </div>
             <button onclick="calcMcpHcm()" style="width:100%;margin-top:10px;padding:8px;background:#1565C0;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.85rem;font-weight:700">= Calcular HCM Risk-SCD</button>
             <div class="cp-res" id="mcp-hcm-res"><div class="rpct" id="mcp-hcm-pct">—</div><div class="rcat" id="mcp-hcm-cat">—</div></div>
@@ -4276,12 +4272,12 @@ main{padding-bottom:100px}
           <div class="csub-b" id="csubb4">
             <div class="cp-grid">
               <div class="fg"><label>Edad</label><input type="number" id="ch-age" placeholder="65" oninput="calcCHADS()"></div>
-              <div class="fg"><label>Sexo</label><select id="ch-sex" oninput="calcCHADS()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
-              <div class="fg"><label>IC / Disfunción VI</label><select id="ch-ic" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>HTA</label><select id="ch-hta" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>Diabetes</label><select id="ch-dm" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>ACV / AIT / TEP previo</label><select id="ch-acv" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg cp-full"><label>Enf. vascular (IAM / AOP / placa aórtica)</label><select id="ch-vasc" oninput="calcCHADS()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Sexo</label><select id="ch-sex" oninput="calcCHADS()"><option value="" selected>—</option><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+              <div class="fg"><label>IC / Disfunción VI</label><select id="ch-ic" oninput="calcCHADS()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>HTA</label><select id="ch-hta" oninput="calcCHADS()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Diabetes</label><select id="ch-dm" oninput="calcCHADS()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>ACV / AIT / TEP previo</label><select id="ch-acv" oninput="calcCHADS()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg cp-full"><label>Enf. vascular (IAM / AOP / placa aórtica)</label><select id="ch-vasc" oninput="calcCHADS()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
             </div>
             <div class="cp-res" id="ch-res"><div class="rpct" id="ch-pct">—</div><div class="rcat" id="ch-cat">—</div></div>
           </div>
@@ -4290,15 +4286,15 @@ main{padding-bottom:100px}
           <button class="csub-h" onclick="toggleCsub(5)"><span>HAS-BLED (riesgo de sangrado)</span><span id="csuba5">▼</span></button>
           <div class="csub-b" id="csubb5">
             <div class="cp-grid">
-              <div class="fg"><label>HTA no controlada (PAS &gt;160)</label><select id="hb-hta" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>Fx renal (diálisis / Cr &gt;2.26)</label><select id="hb-renal" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>Fx hepática (cirrosis / bilirrubina &gt;2×)</label><select id="hb-hepat" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>ACV previo</label><select id="hb-acv" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>Sangrado previo / predisposición</label><select id="hb-bleed" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>INR lábil (TTR &lt;60%)</label><select id="hb-inr" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>Edad &gt;65 años</label><select id="hb-age" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg"><label>Antiagregantes / AINEs</label><select id="hb-drug" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              <div class="fg cp-full"><label>Alcohol (≥8 unidades/semana)</label><select id="hb-alc" oninput="calcHASBLED()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>HTA no controlada (PAS &gt;160)</label><select id="hb-hta" oninput="calcHASBLED()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Fx renal (diálisis / Cr &gt;2.26)</label><select id="hb-renal" oninput="calcHASBLED()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Fx hepática (cirrosis / bilirrubina &gt;2×)</label><select id="hb-hepat" oninput="calcHASBLED()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>ACV previo</label><select id="hb-acv" oninput="calcHASBLED()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Sangrado previo / predisposición</label><select id="hb-bleed" oninput="calcHASBLED()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>INR lábil (TTR &lt;60%)</label><select id="hb-inr" oninput="calcHASBLED()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Edad &gt;65 años</label><select id="hb-age" oninput="calcHASBLED()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Antiagregantes / AINEs</label><select id="hb-drug" oninput="calcHASBLED()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg cp-full"><label>Alcohol (≥8 unidades/semana)</label><select id="hb-alc" oninput="calcHASBLED()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
             </div>
             <div class="cp-res" id="hb-res"><div class="rpct" id="hb-pct">—</div><div class="rcat" id="hb-cat">—</div></div>
           </div>
@@ -4350,36 +4346,36 @@ main{padding-bottom:100px}
         <div class="csub">
           <button class="csub-h" onclick="toggleCsub(10)"><span>Score de Wells (probabilidad pre-test)</span><span id="csuba10">▼</span></button>
           <div class="csub-b" id="csubb10">
-            <div class="edm-item"><label>Signos clínicos de TVP (edema, dolor en pantorrilla) +3</label><select id="wl-dvt" oninput="calcWells()"><option value="0">No</option><option value="3">Sí</option></select></div>
-            <div class="edm-item"><label>TEP más probable que diagnóstico alternativo +3</label><select id="wl-altdx" oninput="calcWells()"><option value="0">No</option><option value="3">Sí</option></select></div>
-            <div class="edm-item"><label>FC &gt;100 lpm +1.5</label><select id="wl-hr" oninput="calcWells()"><option value="0">No</option><option value="1.5">Sí</option></select></div>
-            <div class="edm-item"><label>Inmovilización ≥3 días o cirugía &lt;4 semanas +1.5</label><select id="wl-immob" oninput="calcWells()"><option value="0">No</option><option value="1.5">Sí</option></select></div>
-            <div class="edm-item"><label>TVP o TEP previo +1.5</label><select id="wl-prev" oninput="calcWells()"><option value="0">No</option><option value="1.5">Sí</option></select></div>
-            <div class="edm-item"><label>Hemoptisis +1</label><select id="wl-hemo" oninput="calcWells()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>Cáncer activo (tratado en últimos 6 meses o paliativo) +1</label><select id="wl-cancer" oninput="calcWells()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="cp-res" id="wl-res" style="display:block;background:var(--ok-bg);color:var(--ok)">
-              <div class="rpct" id="wl-score">0 puntos</div>
-              <div class="rcat" id="wl-cat">Probabilidad baja</div>
-              <div style="font-size:.74rem;margin-top:4px" id="wl-interp">&lt;2 puntos: prevalencia ~5%. D-dímero puede descartar TEP.</div>
+            <div class="edm-item"><label>Signos clínicos de TVP (edema, dolor en pantorrilla) +3</label><select id="wl-dvt" oninput="calcWells()"><option value="" selected>—</option><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>TEP más probable que diagnóstico alternativo +3</label><select id="wl-altdx" oninput="calcWells()"><option value="" selected>—</option><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>FC &gt;100 lpm +1.5</label><select id="wl-hr" oninput="calcWells()"><option value="" selected>—</option><option value="0">No</option><option value="1.5">Sí</option></select></div>
+            <div class="edm-item"><label>Inmovilización ≥3 días o cirugía &lt;4 semanas +1.5</label><select id="wl-immob" oninput="calcWells()"><option value="" selected>—</option><option value="0">No</option><option value="1.5">Sí</option></select></div>
+            <div class="edm-item"><label>TVP o TEP previo +1.5</label><select id="wl-prev" oninput="calcWells()"><option value="" selected>—</option><option value="0">No</option><option value="1.5">Sí</option></select></div>
+            <div class="edm-item"><label>Hemoptisis +1</label><select id="wl-hemo" oninput="calcWells()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>Cáncer activo (tratado en últimos 6 meses o paliativo) +1</label><select id="wl-cancer" oninput="calcWells()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="cp-res" id="wl-res" style="display:block;background:var(--warn-bg);color:var(--warn)">
+              <div class="rpct" id="wl-score">—</div>
+              <div class="rcat" id="wl-cat">Complete los 7 criterios</div>
+              <div style="font-size:.74rem;margin-top:4px" id="wl-interp">Seleccione Sí/No en cada criterio para calcular. No se emite conclusión con datos incompletos.</div>
             </div>
           </div>
         </div>
         <div class="csub">
           <button class="csub-h" onclick="toggleCsub(11)"><span>Geneva Revisado (probabilidad pre-test)</span><span id="csuba11">▼</span></button>
           <div class="csub-b" id="csubb11">
-            <div class="edm-item"><label>TVP o TEP previo +3</label><select id="gv-prev" oninput="calcGeneva()"><option value="0">No</option><option value="3">Sí</option></select></div>
-            <div class="edm-item"><label>Edad &gt;65 años +1</label><select id="gv-age" oninput="calcGeneva()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>Cirugía/fractura en el último mes +2</label><select id="gv-surgery" oninput="calcGeneva()"><option value="0">No</option><option value="2">Sí</option></select></div>
-            <div class="edm-item"><label>Neoplasia activa +2</label><select id="gv-cancer" oninput="calcGeneva()"><option value="0">No</option><option value="2">Sí</option></select></div>
-            <div class="edm-item"><label>Dolor unilateral de miembro inferior +3</label><select id="gv-pain" oninput="calcGeneva()"><option value="0">No</option><option value="3">Sí</option></select></div>
-            <div class="edm-item"><label>Dolor a palpación profunda y edema unilateral +4</label><select id="gv-edema" oninput="calcGeneva()"><option value="0">No</option><option value="4">Sí</option></select></div>
-            <div class="edm-item"><label>FC 75–94 lpm +3</label><select id="gv-hr1" oninput="calcGeneva()"><option value="0">No</option><option value="3">Sí</option></select></div>
-            <div class="edm-item"><label>FC ≥95 lpm +5</label><select id="gv-hr2" oninput="calcGeneva()"><option value="0">No</option><option value="5">Sí</option></select></div>
-            <div class="edm-item"><label>Hemoptisis +2</label><select id="gv-hemo" oninput="calcGeneva()"><option value="0">No</option><option value="2">Sí</option></select></div>
-            <div class="cp-res" id="gv-res" style="display:block;background:var(--ok-bg);color:var(--ok)">
-              <div class="rpct" id="gv-score">0 puntos</div>
-              <div class="rcat" id="gv-cat">Probabilidad baja</div>
-              <div style="font-size:.74rem;margin-top:4px" id="gv-interp">≤3 puntos: baja probabilidad (~8%).</div>
+            <div class="edm-item"><label>TVP o TEP previo +3</label><select id="gv-prev" oninput="calcGeneva()"><option value="" selected>—</option><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>Edad &gt;65 años +1</label><select id="gv-age" oninput="calcGeneva()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>Cirugía/fractura en el último mes +2</label><select id="gv-surgery" oninput="calcGeneva()"><option value="" selected>—</option><option value="0">No</option><option value="2">Sí</option></select></div>
+            <div class="edm-item"><label>Neoplasia activa +2</label><select id="gv-cancer" oninput="calcGeneva()"><option value="" selected>—</option><option value="0">No</option><option value="2">Sí</option></select></div>
+            <div class="edm-item"><label>Dolor unilateral de miembro inferior +3</label><select id="gv-pain" oninput="calcGeneva()"><option value="" selected>—</option><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>Dolor a palpación profunda y edema unilateral +4</label><select id="gv-edema" oninput="calcGeneva()"><option value="" selected>—</option><option value="0">No</option><option value="4">Sí</option></select></div>
+            <div class="edm-item"><label>FC 75–94 lpm +3</label><select id="gv-hr1" oninput="calcGeneva()"><option value="" selected>—</option><option value="0">No</option><option value="3">Sí</option></select></div>
+            <div class="edm-item"><label>FC ≥95 lpm +5</label><select id="gv-hr2" oninput="calcGeneva()"><option value="" selected>—</option><option value="0">No</option><option value="5">Sí</option></select></div>
+            <div class="edm-item"><label>Hemoptisis +2</label><select id="gv-hemo" oninput="calcGeneva()"><option value="" selected>—</option><option value="0">No</option><option value="2">Sí</option></select></div>
+            <div class="cp-res" id="gv-res" style="display:block;background:var(--warn-bg);color:var(--warn)">
+              <div class="rpct" id="gv-score">—</div>
+              <div class="rcat" id="gv-cat">Complete los 9 criterios</div>
+              <div style="font-size:.74rem;margin-top:4px" id="gv-interp">Seleccione Sí/No en cada criterio para calcular. No se emite conclusión con datos incompletos.</div>
             </div>
           </div>
         </div>
@@ -4387,21 +4383,21 @@ main{padding-bottom:100px}
           <button class="csub-h" onclick="toggleCsub(12)"><span>Criterios HESTIA (tratamiento ambulatorio)</span><span id="csuba12">▼</span></button>
           <div class="csub-b" id="csubb12">
             <p style="font-size:.78rem;color:var(--txt2);margin:0 0 8px">Si algún criterio es <strong>Sí</strong>, el paciente <strong>requiere hospitalización</strong>.</p>
-            <div class="edm-item"><label>1. Inestabilidad hemodinámica (PAS &lt;100 + FC &gt;100)</label><select id="hs1" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>2. Trombolisis o embolectomía necesaria</label><select id="hs2" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>3. Sangrado activo o alto riesgo de sangrado</label><select id="hs3" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>4. Necesita &gt;24h de O₂ para SatO₂ &gt;90%</label><select id="hs4" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>5. TEP diagnosticado bajo anticoagulación</label><select id="hs5" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>6. Dolor severo que requiere opiáceos IV</label><select id="hs6" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>7. Razón médica o social para hospitalización ≥24h</label><select id="hs7" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>8. Clearance creatinina &lt;30 mL/min (Cockcroft-Gault)</label><select id="hs8" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>9. Trombocitopenia severa (&lt;75.000/µL)</label><select id="hs9" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>10. Embarazo</label><select id="hs10" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="edm-item"><label>11. Historia documentada de TIH</label><select id="hs11" oninput="calcHESTIA()"><option value="0">No</option><option value="1">Sí</option></select></div>
-            <div class="cp-res" id="hs-res" style="display:block;background:var(--ok-bg);color:var(--ok)">
-              <div class="rpct" id="hs-score">0 criterios positivos</div>
-              <div class="rcat" id="hs-cat">Tratamiento ambulatorio posible</div>
-              <div style="font-size:.74rem;margin-top:4px" id="hs-interp">Ningún criterio de hospitalización presente.</div>
+            <div class="edm-item"><label>1. Inestabilidad hemodinámica (PAS &lt;100 + FC &gt;100)</label><select id="hs1" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>2. Trombolisis o embolectomía necesaria</label><select id="hs2" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>3. Sangrado activo o alto riesgo de sangrado</label><select id="hs3" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>4. Necesita &gt;24h de O₂ para SatO₂ &gt;90%</label><select id="hs4" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>5. TEP diagnosticado bajo anticoagulación</label><select id="hs5" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>6. Dolor severo que requiere opiáceos IV</label><select id="hs6" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>7. Razón médica o social para hospitalización ≥24h</label><select id="hs7" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>8. Clearance creatinina &lt;30 mL/min (Cockcroft-Gault)</label><select id="hs8" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>9. Trombocitopenia severa (&lt;75.000/µL)</label><select id="hs9" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>10. Embarazo</label><select id="hs10" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="edm-item"><label>11. Historia documentada de TIH</label><select id="hs11" oninput="calcHESTIA()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+            <div class="cp-res" id="hs-res" style="display:block;background:var(--warn-bg);color:var(--warn)">
+              <div class="rpct" id="hs-score">—</div>
+              <div class="rcat" id="hs-cat">Complete los 11 criterios</div>
+              <div style="font-size:.74rem;margin-top:4px" id="hs-interp">Seleccione Sí/No en cada criterio para evaluar. No se emite conclusión con datos incompletos.</div>
             </div>
           </div>
         </div>
@@ -4509,20 +4505,20 @@ main{padding-bottom:100px}
         <div class="csub">
           <button class="csub-h" onclick="toggleCsub(3)"><span>Edmonton Frailty Scale</span><span id="csuba3">▼</span></button>
           <div class="csub-b" id="csubb3">
-            <div class="edm-item"><label>1. Cognición: ¿Qué fecha es hoy?</label><select id="edm0" oninput="calcEdm()"><option value="0">Correcto (0)</option><option value="1">Error día o mes (1)</option><option value="2">Error año (2)</option></select></div>
-            <div class="edm-item"><label>2. Salud general: hospitalizaciones último año</label><select id="edm1" oninput="calcEdm()"><option value="0">Ninguna (0)</option><option value="1">1–2 (1)</option><option value="2">≥3 (2)</option></select></div>
-            <div class="edm-item"><label>3. Independencia funcional: AVD dependientes de 10</label><select id="edm2" oninput="calcEdm()"><option value="0">0–1 (0)</option><option value="1">2–4 (1)</option><option value="2">≥5 (2)</option></select></div>
-            <div class="edm-item"><label>4. Soporte social: ¿Cuenta con ayuda?</label><select id="edm3" oninput="calcEdm()"><option value="0">Siempre (0)</option><option value="1">A veces (1)</option><option value="2">Nunca (2)</option></select></div>
-            <div class="edm-item"><label>5a. Medicamentos: ¿Usa ≥5 medicamentos?</label><select id="edm4" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
-            <div class="edm-item"><label>5b. Medicamentos: ¿Olvida tomarlos?</label><select id="edm5" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
-            <div class="edm-item"><label>6. Nutrición: ¿Perdió peso sin querer?</label><select id="edm6" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
-            <div class="edm-item"><label>7. Humor: ¿Se siente triste o deprimido?</label><select id="edm7" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
-            <div class="edm-item"><label>8. Continencia: ¿Pérdidas involuntarias de orina?</label><select id="edm8" oninput="calcEdm()"><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
-            <div class="edm-item"><label>9. TUG (Timed Up and Go)</label><select id="edm9" oninput="calcEdm()"><option value="0">&lt;10 seg (0)</option><option value="1">10–20 seg (1)</option><option value="2">&gt;20 seg / No puede (2)</option></select></div>
-            <div class="cp-res" id="edm-res" style="display:block;background:var(--ok-bg);color:var(--ok)">
-              <div class="rpct" id="edm-score">0 / 17</div>
-              <div class="rcat" id="edm-cat">No frágil</div>
-              <div style="font-size:.74rem;margin-top:4px" id="edm-interp">Candidato adecuado para TAVI. Bajo riesgo por fragilidad.</div>
+            <div class="edm-item"><label>1. Cognición: ¿Qué fecha es hoy?</label><select id="edm0" oninput="calcEdm()"><option value="" selected>—</option><option value="0">Correcto (0)</option><option value="1">Error día o mes (1)</option><option value="2">Error año (2)</option></select></div>
+            <div class="edm-item"><label>2. Salud general: hospitalizaciones último año</label><select id="edm1" oninput="calcEdm()"><option value="" selected>—</option><option value="0">Ninguna (0)</option><option value="1">1–2 (1)</option><option value="2">≥3 (2)</option></select></div>
+            <div class="edm-item"><label>3. Independencia funcional: AVD dependientes de 10</label><select id="edm2" oninput="calcEdm()"><option value="" selected>—</option><option value="0">0–1 (0)</option><option value="1">2–4 (1)</option><option value="2">≥5 (2)</option></select></div>
+            <div class="edm-item"><label>4. Soporte social: ¿Cuenta con ayuda?</label><select id="edm3" oninput="calcEdm()"><option value="" selected>—</option><option value="0">Siempre (0)</option><option value="1">A veces (1)</option><option value="2">Nunca (2)</option></select></div>
+            <div class="edm-item"><label>5a. Medicamentos: ¿Usa ≥5 medicamentos?</label><select id="edm4" oninput="calcEdm()"><option value="" selected>—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>5b. Medicamentos: ¿Olvida tomarlos?</label><select id="edm5" oninput="calcEdm()"><option value="" selected>—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>6. Nutrición: ¿Perdió peso sin querer?</label><select id="edm6" oninput="calcEdm()"><option value="" selected>—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>7. Humor: ¿Se siente triste o deprimido?</label><select id="edm7" oninput="calcEdm()"><option value="" selected>—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>8. Continencia: ¿Pérdidas involuntarias de orina?</label><select id="edm8" oninput="calcEdm()"><option value="" selected>—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>9. TUG (Timed Up and Go)</label><select id="edm9" oninput="calcEdm()"><option value="" selected>—</option><option value="0">&lt;10 seg (0)</option><option value="1">10–20 seg (1)</option><option value="2">&gt;20 seg / No puede (2)</option></select></div>
+            <div class="cp-res" id="edm-res" style="display:block;background:var(--warn-bg);color:var(--warn)">
+              <div class="rpct" id="edm-score">—</div>
+              <div class="rcat" id="edm-cat">Complete los 10 ítems</div>
+              <div style="font-size:.74rem;margin-top:4px" id="edm-interp">Responda cada ítem para calcular. No se emite conclusión con datos incompletos.</div>
             </div>
           </div>
         </div>
@@ -5211,7 +5207,16 @@ function toggleTbl(){
 let statsMonthY, statsMonthM;
 
 // ── UTILS ─────────────────────────────────────────────────────────
-const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+// Estado "faltan datos": sin resultado numérico ni conclusión clínica, fondo amarillo.
+function cpMissing(el,pctId,catId,miss,interpId){
+  if(!el)return;
+  el.classList.add('visible');
+  el.style.background='var(--warn-bg)';el.style.color='var(--warn)';
+  const p=document.getElementById(pctId);if(p)p.textContent='—';
+  const c=document.getElementById(catId);if(c)c.textContent='Faltan datos: '+miss.join(', ');
+  if(interpId){const i=document.getElementById(interpId);if(i)i.textContent='Complete todos los campos obligatorios para calcular. No se emite conclusión clínica con datos incompletos.';}
+}
 const fmtDate=d=>{if(!d)return'—';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`};
 function flatRows(){const r=[];patients.forEach(p=>p.consultations.forEach(c=>r.push({...c,name:p.name,age:p.age,pid:p.id,ci:p.ci||'',matricula:p.matricula||'',hc:p.hc||'',problema:!!p.problema})));return r;}
 
@@ -5416,9 +5421,9 @@ function render(){
       <td><button class="lnk" onclick="toggleDetail(${r.id})"><span${nameStyle}>${esc(r.name)}</span></button><button class="btn-plus" onclick="event.stopPropagation();addConsultaRapida(${r.pid})" title="Agregar consulta">+</button></td>
       <td>${r.age} años</td>
       <td><button class="lnk" onclick="toggleDetail(${r.id})">${fmtDate(r.date)}</button></td>
-      <td><div class="trunc" title="${esc(r.background)}">${r.background||'—'}</div></td>
+      <td><div class="trunc" title="${esc(r.background)}">${r.background?esc(r.background):'—'}</div></td>
       <td>${prvBadge(r.prevent)}</td>
-      <td>${r.diagnosis}</td>
+      <td>${esc(r.diagnosis)}</td>
       ${feviCell(r.ett)}
       <td><button class="btn-del" onclick="delC(${r.pid},${r.id})" title="Eliminar">✕</button></td>
     </tr>${det}`;
@@ -6421,8 +6426,9 @@ const VALV_DATA={
   em:{
     nombre:'Estenosis Mitral (EM)',
     color:'#F9A825',
+    // Estenosis mitral severa — ESC Guidelines Valvulopatías 2021 — AVA < 1,5 cm²
     severidad:[
-      {param:'Área valvular (cm²)',leve:'>1.5',mod:'1.0–1.5',sev:'<1.0'},
+      {param:'Área valvular (cm²)',leve:'>1.5',mod:'—',sev:'<1.5'},
       {param:'Gradiente medio (mmHg)',leve:'<5',mod:'5–10',sev:'>10'},
       {param:'PSAP (mmHg)',leve:'<30',mod:'30–50',sev:'>50'},
       {param:'Tiempo hemipresión (ms)',leve:'<100',mod:'100–220',sev:'>220'}
@@ -6950,7 +6956,7 @@ const MC_DATA={
 
 function buildHCMRisk(){
   return `<div class="mc-sec"><div class="mc-sec-t">⚠️ HCM Risk-SCD — Calculadora de Muerte Súbita a 5 años (ESC 2014)</div>
-  <div style="font-size:.74rem;color:var(--txt2);margin-bottom:10px;line-height:1.5">Indicada en pacientes ≥16 años con MCH. Score ≥6% = CDI Clase I · 4–6% = CDI Clase IIa · &lt;4% = CDI Clase IIb.</div>
+  <div style="font-size:.74rem;color:var(--txt2);margin-bottom:10px;line-height:1.5">Indicada en pacientes ≥16 años con MCH. Score ≥6% = CDI Clase IIa · 4–6% = CDI Clase IIb · &lt;4% = CDI no recomendado.</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
     <div class="fg"><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px">Edad (años)</label><input type="number" id="hcm-age" min="16" max="90" placeholder="ej. 45" oninput="calcHCM()"></div>
     <div class="fg"><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px">Grosor máx. pared (mm)</label><input type="number" id="hcm-wall" min="10" max="60" placeholder="ej. 20" oninput="calcHCM()"></div>
@@ -6958,9 +6964,9 @@ function buildHCMRisk(){
     <div class="fg"><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px">Gradiente máx. OTSVI (mmHg)</label><input type="number" id="hcm-grad" min="0" max="200" placeholder="ej. 30" oninput="calcHCM()"></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-    <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;cursor:pointer;background:#F5F9FF;padding:8px 10px;border-radius:7px;border:1px solid var(--border)"><input type="checkbox" id="hcm-msd" onchange="calcHCM()" style="accent-color:var(--p)"> Historia familiar de MS</label>
-    <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;cursor:pointer;background:#F5F9FF;padding:8px 10px;border-radius:7px;border:1px solid var(--border)"><input type="checkbox" id="hcm-nsv" onchange="calcHCM()" style="accent-color:var(--p)"> TV no sostenida (Holter)</label>
-    <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;cursor:pointer;background:#F5F9FF;padding:8px 10px;border-radius:7px;border:1px solid var(--border)"><input type="checkbox" id="hcm-sync" onchange="calcHCM()" style="accent-color:var(--p)"> Síncope inexplicado</label>
+    <div class="fg"><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px">Historia familiar de MS</label><select id="hcm-msd" onchange="calcHCM()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+    <div class="fg"><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px">TV no sostenida (Holter)</label><select id="hcm-nsv" onchange="calcHCM()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
+    <div class="fg"><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px">Síncope inexplicado</label><select id="hcm-sync" onchange="calcHCM()"><option value="" selected>—</option><option value="0">No</option><option value="1">Sí</option></select></div>
   </div>
   <div id="hcm-result" style="display:none;flex-direction:column;gap:8px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -6979,24 +6985,43 @@ function buildHCMRisk(){
   </div>`;
 }
 
+// HCM Risk-SCD — ESC Guidelines 2022 — Tabla recomendación CDI
 function calcHCM(){
-  const age=+document.getElementById('hcm-age')?.value||0;
-  const wall=+document.getElementById('hcm-wall')?.value||0;
-  const la=+document.getElementById('hcm-la')?.value||0;
-  const grad=+document.getElementById('hcm-grad')?.value||0;
-  const msd=document.getElementById('hcm-msd')?.checked?1:0;
-  const nsv=document.getElementById('hcm-nsv')?.checked?1:0;
-  const sync=document.getElementById('hcm-sync')?.checked?1:0;
   const res=document.getElementById('hcm-result');
-  if(!age||!wall||!la){if(res)res.style.display='none';return;}
-  const prognosticIndex=0.15939858*wall-0.00294271*wall*wall+0.0259082*la+0.00446131*grad+0.4583082*msd+0.82639195*nsv+0.71650361*sync-0.01799934*age;
+  const ageRaw=(document.getElementById('hcm-age')?.value||'').trim();
+  const wallRaw=(document.getElementById('hcm-wall')?.value||'').trim();
+  const laRaw=(document.getElementById('hcm-la')?.value||'').trim();
+  const gradRaw=(document.getElementById('hcm-grad')?.value||'').trim();
+  const msd=document.getElementById('hcm-msd')?.value;
+  const nsv=document.getElementById('hcm-nsv')?.value;
+  const sync=document.getElementById('hcm-sync')?.value;
+  const miss=[];
+  if(!ageRaw)miss.push('Edad');
+  if(!wallRaw)miss.push('Grosor de pared');
+  if(!laRaw)miss.push('Diámetro AI');
+  if(!gradRaw)miss.push('Gradiente OTSVI');
+  if(!msd)miss.push('Historia familiar de MS');
+  if(!nsv)miss.push('TV no sostenida');
+  if(!sync)miss.push('Síncope inexplicado');
+  if(miss.length){
+    if(res){
+      res.style.display='flex';
+      document.getElementById('hcm-score').textContent='—';
+      const box=document.getElementById('hcm-cat-box');if(box)box.style.background='var(--warn-bg)';
+      const catEl=document.getElementById('hcm-cat');catEl.style.color='var(--warn)';catEl.textContent='Faltan datos: '+miss.join(', ');
+      const recEl=document.getElementById('hcm-rec');recEl.style.color='var(--warn)';recEl.textContent='Complete todos los campos obligatorios para calcular. No se emite conclusión clínica con datos incompletos.';
+    }
+    return;
+  }
+  const age=+ageRaw,wall=+wallRaw,la=+laRaw,grad=+gradRaw;
+  const prognosticIndex=0.15939858*wall-0.00294271*wall*wall+0.0259082*la+0.00446131*grad+0.4583082*(+msd)+0.82639195*(+nsv)+0.71650361*(+sync)-0.01799934*age;
   const risk=(1-Math.pow(0.998077,Math.exp(prognosticIndex)))*100;
   const riskRound=Math.round(risk*10)/10;
   document.getElementById('hcm-score').textContent=riskRound+'%';
   let cat,bg,cl,rec;
-  if(riskRound<4){cat='Riesgo bajo';bg='#E8F5E9';cl='#2E7D32';rec='CDI Clase IIb — beneficio incierto. Individualizar según contexto clínico.';}
-  else if(riskRound<6){cat='Riesgo intermedio';bg='#FFF9C4';cl='#827717';rec='CDI Clase IIa — considerar implante tras discusión multidisciplinaria.';}
-  else{cat='Riesgo alto ≥6%';bg='#FFEBEE';cl='#C62828';rec='CDI Clase I — implante recomendado salvo contraindicación o preferencia del paciente.';}
+  if(riskRound<4){cat='Riesgo bajo';bg='#E8F5E9';cl='#2E7D32';rec='CDI no recomendado.';}
+  else if(riskRound<6){cat='Riesgo intermedio';bg='#FFF9C4';cl='#827717';rec='CDI a considerar (Clase IIb).';}
+  else{cat='Riesgo alto ≥6%';bg='#FFEBEE';cl='#C62828';rec='CDI debe considerarse (Clase IIa).';}
   const catBox=document.getElementById('hcm-cat-box');
   catBox.style.background=bg;
   document.getElementById('hcm-cat').style.color=cl;
@@ -9586,13 +9611,20 @@ function calcEuro(){
 
 // ── STS PROM (simplificado) ───────────────────────────────────────
 function calcSTS(){
-  const age=+document.getElementById('sts-age').value;
   const el=document.getElementById('sts-res');
-  if(!age){el.classList.remove('visible');return;}
+  const ageRaw=document.getElementById('sts-age').value.trim();
+  const feviRaw=document.getElementById('sts-fevi').value.trim();
+  const creatRaw=document.getElementById('sts-creat').value.trim();
+  const miss=[];
+  if(!ageRaw)miss.push('Edad');
+  if(!feviRaw)miss.push('FEVI');
+  if(!creatRaw)miss.push('Creatinina');
+  if(miss.length){cpMissing(el,'sts-pct','sts-cat',miss);return;}
+  const age=+ageRaw;
   const sex=document.getElementById('sts-sex').value;
   const proc=+document.getElementById('sts-proc').value;
-  const fevi=+document.getElementById('sts-fevi').value||60;
-  const creat=+document.getElementById('sts-creat').value||1;
+  const fevi=+feviRaw;
+  const creat=+creatRaw;
   const dm=+document.getElementById('sts-dm').value;
   const epoc=+document.getElementById('sts-epoc').value;
   const evp=+document.getElementById('sts-evp').value;
@@ -9623,14 +9655,23 @@ function calcSTS(){
 
 // ── STS PROM TAVI ─────────────────────────────────────────────────
 function calcTAVI(){
-  const age=+document.getElementById('tv-age').value;
   const el=document.getElementById('tv-res');
-  if(!age){el.classList.remove('visible');return;}
+  const ageRaw=document.getElementById('tv-age').value.trim();
+  const gradRaw=document.getElementById('tv-grad').value.trim();
+  const feviRaw=document.getElementById('tv-fevi').value.trim();
+  const creatRaw=document.getElementById('tv-creat').value.trim();
+  const miss=[];
+  if(!ageRaw)miss.push('Edad');
+  if(!gradRaw)miss.push('Gradiente medio');
+  if(!feviRaw)miss.push('FEVI');
+  if(!creatRaw)miss.push('Creatinina');
+  if(miss.length){cpMissing(el,'tv-pct','tv-cat',miss);return;}
+  const age=+ageRaw;
   const sex=document.getElementById('tv-sex').value;
   const ava=+document.getElementById('tv-ava').value||0;
-  const grad=+document.getElementById('tv-grad').value||40;
-  const fevi=+document.getElementById('tv-fevi').value||60;
-  const creat=+document.getElementById('tv-creat').value||1;
+  const grad=+gradRaw;
+  const fevi=+feviRaw;
+  const creat=+creatRaw;
   const dm=+document.getElementById('tv-dm').value;
   const epoc=+document.getElementById('tv-epoc').value;
   const htp=+document.getElementById('tv-htp').value;
@@ -9661,9 +9702,10 @@ function calcTAVI(){
 
 // ── EDMONTON FRAILTY SCALE ────────────────────────────────────────
 function calcEdm(){
-  let total=0;
-  for(let i=0;i<10;i++)total+=+document.getElementById('edm'+i).value;
   const el=document.getElementById('edm-res');
+  let total=0;const miss=[];
+  for(let i=0;i<10;i++){const x=document.getElementById('edm'+i).value;if(x==='')miss.push('Ítem '+(i+1));else total+=+x;}
+  if(miss.length){cpMissing(el,'edm-score','edm-cat',miss,'edm-interp');return;}
   el.classList.add('show');
   document.getElementById('edm-score').textContent=total+' / 17';
   let cat,bg,cl,interp;
@@ -9718,22 +9760,31 @@ function calcQTc(){
 }
 
 function calcCHADS(){
-  const age=+document.getElementById('ch-age').value;
   const el=document.getElementById('ch-res');
-  if(!age){el.classList.remove('visible');return;}
+  const ageRaw=document.getElementById('ch-age').value.trim();
   const sex=document.getElementById('ch-sex').value;
-  const ic=+document.getElementById('ch-ic').value;
-  const hta=+document.getElementById('ch-hta').value;
-  const dm=+document.getElementById('ch-dm').value;
-  const acv=+document.getElementById('ch-acv').value;
-  const vasc=+document.getElementById('ch-vasc').value;
+  const ic=document.getElementById('ch-ic').value;
+  const hta=document.getElementById('ch-hta').value;
+  const dm=document.getElementById('ch-dm').value;
+  const acv=document.getElementById('ch-acv').value;
+  const vasc=document.getElementById('ch-vasc').value;
+  const miss=[];
+  if(!ageRaw)miss.push('Edad');
+  if(!sex)miss.push('Sexo');
+  if(ic==='')miss.push('IC/Disfunción VI');
+  if(hta==='')miss.push('HTA');
+  if(dm==='')miss.push('Diabetes');
+  if(acv==='')miss.push('ACV/AIT/TEP previo');
+  if(vasc==='')miss.push('Enf. vascular');
+  if(miss.length){cpMissing(el,'ch-pct','ch-cat',miss);return;}
+  const age=+ageRaw;
   let score=0;
-  if(ic)score+=1;
-  if(hta)score+=1;
+  if(+ic)score+=1;
+  if(+hta)score+=1;
   if(age>=75)score+=2;else if(age>=65)score+=1;
-  if(dm)score+=1;
-  if(acv)score+=2;
-  if(vasc)score+=1;
+  if(+dm)score+=1;
+  if(+acv)score+=2;
+  if(+vasc)score+=1;
   if(sex==='F')score+=1;
   let cat,bg,cl;
   const isM=(sex==='M');
@@ -9749,16 +9800,11 @@ function calcCHADS(){
 // ── HAS-BLED ──────────────────────────────────────────────────────
 function calcHASBLED(){
   const el=document.getElementById('hb-res');
-  const hta=+document.getElementById('hb-hta').value;
-  const renal=+document.getElementById('hb-renal').value;
-  const hepat=+document.getElementById('hb-hepat').value;
-  const acv=+document.getElementById('hb-acv').value;
-  const bleed=+document.getElementById('hb-bleed').value;
-  const inr=+document.getElementById('hb-inr').value;
-  const age=+document.getElementById('hb-age').value;
-  const drug=+document.getElementById('hb-drug').value;
-  const alc=+document.getElementById('hb-alc').value;
-  const score=hta+renal+hepat+acv+bleed+inr+age+drug+alc;
+  const F=[['hb-hta','HTA no controlada'],['hb-renal','Fx renal'],['hb-hepat','Fx hepática'],['hb-acv','ACV previo'],['hb-bleed','Sangrado previo'],['hb-inr','INR lábil'],['hb-age','Edad >65'],['hb-drug','Antiagregantes/AINEs'],['hb-alc','Alcohol']];
+  const v={},miss=[];
+  F.forEach(([id,lbl])=>{const x=document.getElementById(id).value;if(x==='')miss.push(lbl);v[id]=+x;});
+  if(miss.length){cpMissing(el,'hb-pct','hb-cat',miss);return;}
+  const score=v['hb-hta']+v['hb-renal']+v['hb-hepat']+v['hb-acv']+v['hb-bleed']+v['hb-inr']+v['hb-age']+v['hb-drug']+v['hb-alc'];
   let cat,bg,cl;
   if(score<=1){cat='Riesgo bajo de sangrado';bg='var(--ok-bg)';cl='var(--ok)';}
   else if(score===2){cat='Riesgo moderado de sangrado';bg='var(--warn-bg)';cl='var(--warn)';}
@@ -9771,14 +9817,27 @@ function calcHASBLED(){
 
 // ── MAGGIC ────────────────────────────────────────────────────────
 function calcMAGGIC(){
-  const fevi=+document.getElementById('mg-fevi').value;
-  const age=+document.getElementById('mg-age').value;
   const el=document.getElementById('mg-res');
-  if(!fevi||!age){el.classList.remove('visible');return;}
-  const sbp=+document.getElementById('mg-sbp').value||120;
-  const bmi=+document.getElementById('mg-bmi').value||25;
-  const creat=+document.getElementById('mg-creat').value||1.0;
-  const nyha=+document.getElementById('mg-nyha').value||1;
+  const feviRaw=document.getElementById('mg-fevi').value.trim();
+  const ageRaw=document.getElementById('mg-age').value.trim();
+  const sbpRaw=document.getElementById('mg-sbp').value.trim();
+  const bmiRaw=document.getElementById('mg-bmi').value.trim();
+  const creatRaw=document.getElementById('mg-creat').value.trim();
+  const nyhaRaw=document.getElementById('mg-nyha').value;
+  const miss=[];
+  if(!feviRaw)miss.push('FEVI');
+  if(!ageRaw)miss.push('Edad');
+  if(!sbpRaw)miss.push('PAS');
+  if(!bmiRaw)miss.push('IMC');
+  if(!creatRaw)miss.push('Creatinina');
+  if(nyhaRaw==='')miss.push('Clase NYHA');
+  if(miss.length){cpMissing(el,'mg-pct','mg-cat',miss);return;}
+  const fevi=+feviRaw;
+  const age=+ageRaw;
+  const sbp=+sbpRaw;
+  const bmi=+bmiRaw;
+  const creat=+creatRaw;
+  const nyha=+nyhaRaw;
   const sex=document.getElementById('mg-sex').value;
   const smoke=+document.getElementById('mg-smoke').value;
   const dm=+document.getElementById('mg-dm').value;
@@ -9886,8 +9945,11 @@ function calcPHF(){
 
 // ── Wells TEP ─────────────────────────────────────────────────
 function calcWells(){
-  const g=id=>+document.getElementById(id).value;
-  const score=g('wl-dvt')+g('wl-altdx')+g('wl-hr')+g('wl-immob')+g('wl-prev')+g('wl-hemo')+g('wl-cancer');
+  const F=[['wl-dvt','Signos TVP'],['wl-altdx','TEP más probable'],['wl-hr','FC >100'],['wl-immob','Inmovilización/cirugía'],['wl-prev','TVP/TEP previo'],['wl-hemo','Hemoptisis'],['wl-cancer','Cáncer activo']];
+  const v={},miss=[];
+  F.forEach(([id,lbl])=>{const x=document.getElementById(id).value;if(x==='')miss.push(lbl);v[id]=+x;});
+  if(miss.length){cpMissing(document.getElementById('wl-res'),'wl-score','wl-cat',miss,'wl-interp');return;}
+  const score=v['wl-dvt']+v['wl-altdx']+v['wl-hr']+v['wl-immob']+v['wl-prev']+v['wl-hemo']+v['wl-cancer'];
   let cat,interp,bg,cl;
   if(score>=5){cat='Probabilidad alta';interp='≥5 puntos: prevalencia ~66%. TC angiopulmonar indicada.';bg='var(--err-bg)';cl='var(--err)';}
   else if(score>=2){cat='Probabilidad moderada';interp='2–4 puntos: prevalencia ~28%. D-dímero o imagen según contexto.';bg='var(--warn-bg)';cl='var(--warn)';}
@@ -9902,8 +9964,11 @@ function calcWells(){
 
 // ── Geneva Revisado TEP ───────────────────────────────────────
 function calcGeneva(){
-  const g=id=>+document.getElementById(id).value;
-  const score=g('gv-prev')+g('gv-age')+g('gv-surgery')+g('gv-cancer')+g('gv-pain')+g('gv-edema')+g('gv-hr1')+g('gv-hr2')+g('gv-hemo');
+  const F=[['gv-prev','TVP/TEP previo'],['gv-age','Edad >65'],['gv-surgery','Cirugía/fractura'],['gv-cancer','Neoplasia activa'],['gv-pain','Dolor unilateral MI'],['gv-edema','Dolor palpación + edema'],['gv-hr1','FC 75–94'],['gv-hr2','FC ≥95'],['gv-hemo','Hemoptisis']];
+  const v={},miss=[];
+  F.forEach(([id,lbl])=>{const x=document.getElementById(id).value;if(x==='')miss.push(lbl);v[id]=+x;});
+  if(miss.length){cpMissing(document.getElementById('gv-res'),'gv-score','gv-cat',miss,'gv-interp');return;}
+  const score=v['gv-prev']+v['gv-age']+v['gv-surgery']+v['gv-cancer']+v['gv-pain']+v['gv-edema']+v['gv-hr1']+v['gv-hr2']+v['gv-hemo'];
   let cat,interp,bg,cl;
   if(score>=11){cat='Probabilidad alta';interp='≥11 puntos: prevalencia ~74%. TC angiopulmonar indicada.';bg='var(--err-bg)';cl='var(--err)';}
   else if(score>=4){cat='Probabilidad intermedia';interp='4–10 puntos: prevalencia ~28%. Evaluar con D-dímero o imagen.';bg='var(--warn-bg)';cl='var(--warn)';}
@@ -9918,9 +9983,10 @@ function calcGeneva(){
 
 // ── HESTIA ────────────────────────────────────────────────────
 function calcHESTIA(){
-  let pos=0;
-  for(let i=1;i<=11;i++)pos+=+document.getElementById('hs'+i).value;
   const el=document.getElementById('hs-res');
+  let pos=0;const miss=[];
+  for(let i=1;i<=11;i++){const x=document.getElementById('hs'+i).value;if(x==='')miss.push('Criterio '+i);else pos+=+x;}
+  if(miss.length){cpMissing(el,'hs-score','hs-cat',miss,'hs-interp');return;}
   if(pos>0){
     el.style.background='var(--err-bg)';el.style.color='var(--err)';
     document.getElementById('hs-score').textContent=pos+' criterio'+(pos>1?'s':'')+' positivo'+(pos>1?'s':'');
@@ -11157,25 +11223,35 @@ function triClear(){
 (function initTrials(){ if(document.getElementById('tri-container')) renderTrials(); })();
 
 // HCM Risk-SCD — O'Mahony C et al. Eur Heart J 2014 (misma fórmula validada que calcHCM)
+// HCM Risk-SCD — ESC Guidelines 2022 — Tabla recomendación CDI
 function calcMcpHcm(){
-  const age=+document.getElementById('mcp-hcm-age')?.value||0;
-  const wall=+document.getElementById('mcp-hcm-wall')?.value||0;
-  const la=+document.getElementById('mcp-hcm-la')?.value||0;
-  const grad=+document.getElementById('mcp-hcm-grad')?.value||0;
-  const msd=+document.getElementById('mcp-hcm-msd')?.value||0;
-  const nsv=+document.getElementById('mcp-hcm-nsv')?.value||0;
-  const sync=+document.getElementById('mcp-hcm-sync')?.value||0;
   const pctEl=document.getElementById('mcp-hcm-pct');
   const catEl=document.getElementById('mcp-hcm-cat');
   if(!pctEl||!catEl)return;
-  if(!age||!wall||!la){pctEl.textContent='—';pctEl.style.color='';catEl.textContent='Completá edad, grosor de pared y diámetro AI';catEl.style.color='';return;}
-  const pi=0.15939858*wall-0.00294271*wall*wall+0.0259082*la+0.00446131*grad+0.4583082*msd+0.82639195*nsv+0.71650361*sync-0.01799934*age;
+  const ageRaw=(document.getElementById('mcp-hcm-age')?.value||'').trim();
+  const wallRaw=(document.getElementById('mcp-hcm-wall')?.value||'').trim();
+  const laRaw=(document.getElementById('mcp-hcm-la')?.value||'').trim();
+  const gradRaw=(document.getElementById('mcp-hcm-grad')?.value||'').trim();
+  const msd=document.getElementById('mcp-hcm-msd')?.value;
+  const nsv=document.getElementById('mcp-hcm-nsv')?.value;
+  const sync=document.getElementById('mcp-hcm-sync')?.value;
+  const miss=[];
+  if(!ageRaw)miss.push('Edad');
+  if(!wallRaw)miss.push('Grosor de pared');
+  if(!laRaw)miss.push('Diámetro AI');
+  if(!gradRaw)miss.push('Gradiente TSVI');
+  if(!msd)miss.push('Historia familiar de MSC');
+  if(!nsv)miss.push('TVNS en Holter');
+  if(!sync)miss.push('Síncope inexplicado');
+  if(miss.length){pctEl.textContent='—';pctEl.style.color='var(--warn)';catEl.textContent='Faltan datos: '+miss.join(', ');catEl.style.color='var(--warn)';return;}
+  const age=+ageRaw,wall=+wallRaw,la=+laRaw,grad=+gradRaw;
+  const pi=0.15939858*wall-0.00294271*wall*wall+0.0259082*la+0.00446131*grad+0.4583082*(+msd)+0.82639195*(+nsv)+0.71650361*(+sync)-0.01799934*age;
   const risk=(1-Math.pow(0.998077,Math.exp(pi)))*100;
   const r=Math.round(risk*10)/10;
   let cat,cl;
   if(r<4){cat='Riesgo bajo — CDI no recomendado';cl='var(--ok)';}
   else if(r<6){cat='Riesgo intermedio — CDI a considerar (Clase IIb)';cl='var(--warn)';}
-  else{cat='Riesgo alto ≥6% — CDI recomendado (Clase IIa)';cl='var(--err)';}
+  else{cat='Riesgo alto ≥6% — CDI debe considerarse (Clase IIa)';cl='var(--err)';}
   pctEl.textContent=r+'% a 5 años';pctEl.style.color=cl;
   catEl.textContent=cat;catEl.style.color=cl;
 }
@@ -11231,7 +11307,7 @@ function calcMcpHcm(){
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
-var MAIN_TABS=['ic','arritmias','dispositivos','anticoag','prevencion','embarazo','cardioonc','miocardiopatias','ref','trials','mnemo','preop'];
+var MAIN_TABS=['prevencion','embarazo','preop','ic','miocardiopatias','cardioonc','arritmias','dispositivos','anticoag','ref','trials'];
 function showMainTab(tab){
   var main=document.querySelector('main');
   if(main)main.style.display=(tab==='inicio')?'':'none';
