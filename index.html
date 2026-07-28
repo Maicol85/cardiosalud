@@ -11304,6 +11304,101 @@ function calcMcpHcm(){
     <p style="font-size:.72rem;color:var(--txt2);margin:12px 0 0;text-align:center">Los campos vacíos no aparecen en el selector</p>
   </div>
 </div>
+
+<!-- ═══════════ AUDITORÍA — Botón fijo + panel ═══════════ -->
+<button id="audit-fab" onclick="openAudit()" title="Auditoría individual" style="position:fixed;right:0;top:50%;border-radius:8px 0 0 8px;background:var(--accent2,var(--acc));color:#fff;padding:12px 10px;font-size:11px;font-weight:700;box-shadow:-3px 2px 10px rgba(0,0,0,0.35);border:none;cursor:pointer;z-index:1500">🔬 Laboratorio</button>
+<div id="audit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8500;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeAudit()">
+  <div style="background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:22px 22px 18px;width:100%;max-width:620px;max-height:88vh;overflow:auto;box-shadow:0 16px 50px rgba(0,0,0,.3)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h3 style="font-size:1.02rem;font-weight:800;color:var(--txt);margin:0">🔬 Auditoría individual</h3>
+      <button onclick="closeAudit()" style="background:none;border:none;cursor:pointer;font-size:1.15rem;color:var(--txt2);padding:2px 6px;line-height:1;border-radius:4px">✕</button>
+    </div>
+    <div id="audit-body"></div>
+  </div>
+</div>
+<script>
+/* ═══ Auditoría individual — estadísticas desde localStorage (crd_insts + crd_d_<id>) ═══ */
+function csAuditPatients(){
+  try{ if(typeof saveInst==='function') saveInst(); }catch(e){}   // persistir institución activa antes de leer
+  var insts=[];
+  try{ insts=(typeof getInsts==='function')?getInsts():(JSON.parse(localStorage.getItem('crd_insts')||'null')||[]); }catch(e){ insts=[]; }
+  if(!insts.length && typeof DEFAULT_INSTS!=='undefined') insts=DEFAULT_INSTS;
+  var all=[];
+  insts.forEach(function(inst){
+    try{
+      var raw=localStorage.getItem('crd_d_'+inst.id); if(!raw)return;
+      var d=JSON.parse(raw); var ps=(d&&Array.isArray(d.patients))?d.patients:[];
+      ps.forEach(function(p){ all.push(p); });
+    }catch(e){}
+  });
+  return all;
+}
+function computeAudit(){
+  var patients=csAuditPatients();
+  var totalPac=patients.length, cons=[];
+  patients.forEach(function(p){ (p.consultations||[]).forEach(function(c){ cons.push(c); }); });
+  var totalCons=cons.length;
+  var prom=totalPac?(totalCons/totalPac):0;
+  // Top 5 diagnósticos
+  var dx={}; cons.forEach(function(c){ var d=(c.diagnosis||'').trim(); if(d) dx[d]=(dx[d]||0)+1; });
+  var topDx=Object.keys(dx).map(function(k){return [k,dx[k]];}).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+  // NYHA (inferida del texto de la consulta más reciente que la mencione)
+  var nyha={I:0,II:0,III:0,IV:0,'Sin dato':0}, re=/NYHA\s*(IV|III|II|I)\b/i;
+  patients.forEach(function(p){
+    var cs=(p.consultations||[]).slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+    var cls=null;
+    for(var i=0;i<cs.length;i++){
+      var t=[cs[i].diagnosis,cs[i].ett,cs[i].conduct,cs[i].background,cs[i].treatment,cs[i].note].filter(Boolean).join(' ');
+      var m=t.match(re); if(m){ cls=m[1].toUpperCase(); break; }
+    }
+    if(cls && nyha[cls]!=null) nyha[cls]++; else nyha['Sin dato']++;
+  });
+  // Pacientes con PREVENT calculado
+  var conPrevent=patients.filter(function(p){ return (p.consultations||[]).some(function(c){ return !!c.prevent; }); }).length;
+  // Brecha de seguimiento: sin consulta en los últimos 6 meses
+  var cut=new Date(); cut.setMonth(cut.getMonth()-6); var cutStr=cut.toISOString().slice(0,10);
+  var brecha=0;
+  patients.forEach(function(p){
+    var ds=(p.consultations||[]).map(function(c){return c.date;}).filter(Boolean).sort();
+    var last=ds.length?ds[ds.length-1]:null;
+    if(!last || last<cutStr) brecha++;
+  });
+  return {totalPac:totalPac,totalCons:totalCons,prom:prom,topDx:topDx,nyha:nyha,conPrevent:conPrevent,brecha:brecha};
+}
+function openAudit(){
+  var a=computeAudit();
+  var stat=function(lbl,val,sub){ return '<div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center">'
+    +'<div style="font-size:1.55rem;font-weight:800;color:var(--p);line-height:1.1">'+val+'</div>'
+    +'<div style="font-size:.68rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px;margin-top:3px">'+lbl+'</div>'
+    +(sub?'<div style="font-size:.66rem;color:var(--txt2);margin-top:2px">'+sub+'</div>':'')+'</div>'; };
+  var kpis='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:18px">'
+    +stat('Pacientes',a.totalPac)
+    +stat('Consultas',a.totalCons)
+    +stat('Consultas / paciente',a.prom.toFixed(1))
+    +stat('Con PREVENT',a.conPrevent,(a.totalPac?Math.round(a.conPrevent/a.totalPac*100)+'% de pacientes':''))
+    +stat('Brecha seguimiento',a.brecha,'sin consulta 6+ meses')
+    +'</div>';
+  var maxDx=a.topDx.length?a.topDx[0][1]:1;
+  var bar=function(n,tot,color){ return '<div style="height:6px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+Math.round(n/(tot||1)*100)+'%;background:'+color+'"></div></div>'; };
+  var row=function(label,n,tot,color){ return '<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--txt);margin-bottom:2px"><span>'+label+'</span><strong style="color:var(--p)">'+n+'</strong></div>'+bar(n,tot,color)+'</div>'; };
+  var dxList=a.topDx.length?a.topDx.map(function(e){ return row(esc(e[0]),e[1],maxDx,'var(--p)'); }).join('')
+    :'<p style="font-size:.8rem;color:var(--txt2)">Sin diagnósticos registrados.</p>';
+  var nyhaOrder=['I','II','III','IV','Sin dato'];
+  var nyhaTot=nyhaOrder.reduce(function(s,k){return s+(a.nyha[k]||0);},0)||1;
+  var nyhaList=nyhaOrder.map(function(k){ return row(k==='Sin dato'?k:'Clase '+k, a.nyha[k]||0, nyhaTot, k==='Sin dato'?'var(--txt2)':'var(--p)'); }).join('');
+  var body=kpis
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">'
+    +'<div><div style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Top 5 diagnósticos</div>'+dxList+'</div>'
+    +'<div><div style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Clase funcional NYHA</div>'+nyhaList+'</div>'
+    +'</div>'
+    +'<p style="font-size:.66rem;color:var(--txt2);margin:16px 0 0;line-height:1.5">Auditoría calculada en este equipo desde localStorage (todas las instituciones). La clase NYHA se infiere del texto de las consultas. No se transmite ningún dato fuera del navegador.</p>';
+  document.getElementById('audit-body').innerHTML=body;
+  document.getElementById('audit-overlay').style.display='flex';
+}
+function closeAudit(){ var o=document.getElementById('audit-overlay'); if(o)o.style.display='none'; }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ var o=document.getElementById('audit-overlay'); if(o&&o.style.display==='flex')closeAudit(); } });
+</script>
+
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
