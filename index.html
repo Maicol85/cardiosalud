@@ -790,28 +790,34 @@ main{padding-bottom:100px}
   .print-imgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
   .print-imgs img{max-width:180px;max-height:140px;border:1px solid #ccc;border-radius:4px;object-fit:contain}
 }
+/* === Accesibilidad (auditoria UX/a11y P1/P2) === */
+:focus-visible{outline:3px solid var(--acc)!important;outline-offset:2px!important;border-radius:4px}
+.hdr-search input:focus-visible{outline:3px solid #fff!important;outline-offset:1px!important}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
 <body>
 <header>
-  <svg width="32" height="32" viewBox="0 0 34 34" fill="none" style="flex-shrink:0">
+  <svg width="32" height="32" viewBox="0 0 34 34" fill="none" style="flex-shrink:0" aria-hidden="true" focusable="false">
     <path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="#fff" opacity=".9"/>
     <path d="M10 17h3l2-5 3 8 2-4h4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
   </svg>
-  <div class="hdr-info"><h1>CardioSalud</h1><span class="hdr-sub" id="hdr-doctor-lbl" onclick="editDoctorName()" title="Click para editar" style="cursor:pointer">Dr. M. Dos Santos ✏️</span></div>
+  <div class="hdr-info"><h1>CardioSalud</h1><span class="hdr-sub" id="hdr-doctor-lbl" onclick="editDoctorName()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();editDoctorName();}" role="button" tabindex="0" aria-label="Editar nombre del médico" title="Click para editar" style="cursor:pointer">Dr. M. Dos Santos ✏️</span></div>
   <span id="inst-bdg" class="inst-bdg" style="display:none"></span>
   <button id="btn-back" class="btn-back" onclick="exitInst()" style="display:none">← Cambiar institución</button>
-  <button id="btn-edit-centros" onclick="openCentrosModal()" title="Editar centros" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">✏️ Editar centros</button>
-  <button id="btn-cerrar" onclick="exitInst()" title="Cerrar sesión" style="display:none;background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">🔒 Cerrar</button>
-  <button id="btn-export" onclick="exportBackup()" title="Exportar todas las instituciones y pacientes a un archivo" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">⬇️ Exportar</button>
-  <button id="btn-import" onclick="document.getElementById('import-file-input').click()" title="Importar backup (reemplaza todo)" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">⬆️ Importar</button>
+  <button id="btn-edit-centros" onclick="openCentrosModal()" title="Editar centros" aria-label="Editar centros" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">✏️ Editar centros</button>
+  <button id="btn-cerrar" onclick="exitInst()" title="Cerrar sesión" aria-label="Cerrar sesión" style="display:none;background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">🔒 Cerrar</button>
+  <button id="btn-export" onclick="exportBackup()" title="Exportar todas las instituciones y pacientes a un archivo" aria-label="Exportar backup de instituciones y pacientes" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">⬇️ Exportar</button>
+  <button id="btn-import" onclick="document.getElementById('import-file-input').click()" title="Importar backup (reemplaza todo)" aria-label="Importar backup (reemplaza todos los datos)" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">⬆️ Importar</button>
   <input type="file" id="import-file-input" accept="application/json,.json" style="display:none" onchange="handleImportFile(this.files&&this.files[0]);this.value=''">
   <div class="hdr-search" id="hdr-search-wrap">
-    <span class="hdr-search-icon">🔍</span>
-    <input type="text" id="hdr-search-input" placeholder="Buscar paciente, fármaco, referencia..." oninput="globalSearch(this.value)" onfocus="if(this.value)globalSearch(this.value)" autocomplete="off">
+    <span class="hdr-search-icon" aria-hidden="true">🔍</span>
+    <input type="text" id="hdr-search-input" aria-label="Buscar paciente, fármaco o referencia" placeholder="Buscar paciente, fármaco, referencia..." oninput="globalSearch(this.value)" onfocus="if(this.value)globalSearch(this.value)" autocomplete="off">
     <div class="hdr-search-results" id="hdr-search-results"></div>
   </div>
-  <button id="dark-toggle" onclick="toggleDarkMode()" title="Modo oscuro" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:1.1rem;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0">🌙</button>
+  <button id="dark-toggle" onclick="toggleDarkMode()" title="Modo oscuro" aria-label="Alternar modo oscuro" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:1.1rem;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0">🌙</button>
   <div class="hdr-right" id="clock"></div>
 </header>
 
@@ -5290,7 +5296,7 @@ function detailHTML(r){
   const f=(l,v)=>`<div><div class="dp-lbl">${l}</div><div class="dp-val">${esc(v||'—')}</div></div>`;
   const ecgs=r.ecgs||[],imgs=r.images||[];
   const addBtn=(field,lbl)=>`<label class="btn-add-img">${lbl}<input type="file" accept="image/*" multiple onchange="addImg(${r.pid},${r.id},'${field}',this)"></label>`;
-  const gallery=(arr,field)=>arr.length?arr.map((u,i)=>`<div class="img-thumb"><img src="${u}" onclick="viewImg(this.src)"><button class="img-del" onclick="delImg(${r.pid},${r.id},'${field}',${i})">✕</button></div>`).join(''):'<span class="no-ecg">Sin imágenes</span>';
+  const gallery=(arr,field)=>arr.length?arr.map((u,i)=>`<div class="img-thumb"><img src="${u}" alt="Imagen clínica adjunta ${i+1}" onclick="viewImg(this.src)"><button class="img-del" aria-label="Eliminar imagen ${i+1}" onclick="delImg(${r.pid},${r.id},'${field}',${i})">✕</button></div>`).join(''):'<span class="no-ecg">Sin imágenes</span>';
   return`<div class="det-panel">
     <div class="det-hdr">
       <span class="det-ttl">${esc(r.name)}, ${r.age} años</span>
@@ -9481,8 +9487,8 @@ function generatePDF(){
       c.ett?`<div class="print-field"><strong>ETT/Eco:</strong> ${esc(c.ett)}</div>`:'',
       c.prevent?`<div class="print-field"><strong>PREVENT 2023:</strong> ${c.prevent.pct}% — ${esc(c.prevent.cat)}</div>`:'',
       c.note?`<div class="print-field"><strong>Notas:</strong> <em>${esc(c.note)}</em></div>`:'',
-      c.ecgs&&c.ecgs.length?`<div class="print-img-title">ECG</div><div class="print-imgs">${c.ecgs.map(u=>`<img src="${u}">`).join('')}</div>`:'',
-      c.images&&c.images.length?`<div class="print-img-title">Imágenes</div><div class="print-imgs">${c.images.map(u=>`<img src="${u}">`).join('')}</div>`:'',
+      c.ecgs&&c.ecgs.length?`<div class="print-img-title">ECG</div><div class="print-imgs">${c.ecgs.map(u=>`<img src="${u}" alt="ECG del paciente">`).join('')}</div>`:'',
+      c.images&&c.images.length?`<div class="print-img-title">Imágenes</div><div class="print-imgs">${c.images.map(u=>`<img src="${u}" alt="Imagen clínica del paciente">`).join('')}</div>`:'',
     ].filter(Boolean).join('')).map(r=>`<div class="print-consult">${r}</div>`).join('');
     return`<div class="print-patient"><div class="print-name">${esc(p.name)} &mdash; ${p.age} años</div>${meta?`<div style="font-size:10pt;margin-bottom:6px;color:#555">${meta}</div>`:''}<div style="font-size:10pt;color:#555;margin-bottom:14px">${instLabel?`Institución: ${esc(instLabel)} &nbsp;&nbsp;`:''}Exportado: ${today}</div>${rows}</div>`;
   }).filter(Boolean).join('');
@@ -11290,7 +11296,7 @@ function calcMcpHcm(){
   <div style="background:var(--bg);border-radius:14px;padding:28px 24px;width:100%;max-width:340px;box-shadow:0 12px 40px rgba(0,0,0,.25)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <h3 style="font-size:1rem;font-weight:700;color:var(--txt);margin:0">✏️ Editar centros</h3>
-      <button onclick="closeCentrosModal()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--txt2);padding:2px 6px;line-height:1;border-radius:4px">✕</button>
+      <button onclick="closeCentrosModal()" aria-label="Cerrar" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--txt2);padding:2px 6px;line-height:1;border-radius:4px">✕</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
       <div><label style="font-size:.72rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px">Centro 1</label><input type="text" id="ct1" placeholder="Ej: Mutualista" maxlength="40" onkeydown="if(event.key==='Enter')saveCentros()" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:.86rem;outline:none;font-family:inherit;color:var(--txt);background:var(--bg);box-sizing:border-box"></div>
@@ -11312,7 +11318,7 @@ function calcMcpHcm(){
   <div style="background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:22px 22px 18px;width:100%;max-width:620px;max-height:88vh;overflow:auto;box-shadow:0 16px 50px rgba(0,0,0,.3)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <h3 style="font-size:1.02rem;font-weight:800;color:var(--txt);margin:0">🔬 Auditoría individual</h3>
-      <button onclick="closeAudit()" style="background:none;border:none;cursor:pointer;font-size:1.15rem;color:var(--txt2);padding:2px 6px;line-height:1;border-radius:4px">✕</button>
+      <button onclick="closeAudit()" aria-label="Cerrar" style="background:none;border:none;cursor:pointer;font-size:1.15rem;color:var(--txt2);padding:2px 6px;line-height:1;border-radius:4px">✕</button>
     </div>
     <div id="audit-body"></div>
   </div>
