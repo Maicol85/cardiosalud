@@ -932,7 +932,7 @@ main{padding-bottom:100px}
           </div>
 
           <div class="prv-calc">
-            <div class="calc-hdr" onclick="toggleCalc()">
+            <div role="button" tabindex="0" onkeydown="csKey(event)" class="calc-hdr" onclick="toggleCalc()">
               <strong>🧮 Calculadora PREVENT 2023 AHA</strong>
               <span id="calc-arrow" style="font-size:.82rem;color:var(--p)">▼ Desplegar</span>
             </div>
@@ -991,7 +991,7 @@ main{padding-bottom:100px}
         #preop-section .po-tbl th{background:#E3F2FD;color:var(--p)}
       </style>
 
-      <div class="sec-hdr" style="cursor:pointer" onclick="preopTog('preop-body','preop-arrow')"><h2>🏥 Valoración PreOperatoria — Cirugía No Cardiaca</h2><span id="preop-arrow" style="font-size:.9rem;flex-shrink:0">▼</span></div>
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="sec-hdr" style="cursor:pointer" onclick="preopTog('preop-body','preop-arrow')"><h2>🏥 Valoración PreOperatoria — Cirugía No Cardiaca</h2><span id="preop-arrow" style="font-size:.9rem;flex-shrink:0">▼</span></div>
       <div class="sec-body" id="preop-body" style="display:none;padding:14px">
 
         <!-- BLOQUE 1 -->
@@ -1139,12 +1139,12 @@ main{padding-bottom:100px}
     </div>
 
       <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('diag')"><h2>Diagnósticos Frecuentes</h2><span id="sti-diag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('diag')"><h2>Diagnósticos Frecuentes</h2><span id="sti-diag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
         <div class="sec-body" id="scb-diag"><div class="dlist" id="diag-list"></div></div>
       </div>
 
       <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fevi')"><h2>Distribución FEVI</h2><span id="sti-fevi" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fevi')"><h2>Distribución FEVI</h2><span id="sti-fevi" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
         <div class="sec-body" id="scb-fevi" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Categoría</th><th>N</th><th>%</th></tr></thead>
           <tbody id="fevi-body"></tbody></table>
@@ -1152,7 +1152,7 @@ main{padding-bottom:100px}
       </div>
 
       <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('cirugia')"><h2>Cirugía Cardíaca</h2><span id="sti-cirugia" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('cirugia')"><h2>Cirugía Cardíaca</h2><span id="sti-cirugia" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
         <div class="sec-body" id="scb-cirugia" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Procedimiento</th><th>N</th><th>%</th></tr></thead>
           <tbody id="cirugia-body"></tbody></table>
@@ -1160,7 +1160,7 @@ main{padding-bottom:100px}
       </div>
 
       <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fa')"><h2>Fibrilación Auricular</h2><span id="sti-fa" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('fa')"><h2>Fibrilación Auricular</h2><span id="sti-fa" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
         <div class="sec-body" id="scb-fa" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
           <tbody id="fa-body"></tbody></table>
@@ -1168,7 +1168,7 @@ main{padding-bottom:100px}
       </div>
 
       <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antiagr')"><h2>Antiagregación</h2><span id="sti-antiagr" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antiagr')"><h2>Antiagregación</h2><span id="sti-antiagr" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
         <div class="sec-body" id="scb-antiagr" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Régimen</th><th>N</th><th>%</th></tr></thead>
           <tbody id="antiagr-body"></tbody></table>
@@ -1176,7 +1176,7 @@ main{padding-bottom:100px}
       </div>
 
       <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antcoag')"><h2>Anticoagulantes</h2><span id="sti-antcoag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('antcoag')"><h2>Anticoagulantes</h2><span id="sti-antcoag" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
         <div class="sec-body" id="scb-antcoag" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Tipo</th><th>N</th><th>%</th></tr></thead>
           <tbody id="antcoag-body"></tbody></table>
@@ -1184,7 +1184,7 @@ main{padding-bottom:100px}
       </div>
 
       <div class="section">
-        <div class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('devices')"><h2>Dispositivos Implantados</h2><span id="sti-devices" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="sec-hdr" style="cursor:pointer" onclick="toggleStatSec('devices')"><h2>Dispositivos Implantados</h2><span id="sti-devices" style="font-size:.78rem;opacity:.9;flex-shrink:0">▼</span></div>
         <div class="sec-body" id="scb-devices" style="padding:12px 14px">
           <table class="ftbl"><thead><tr><th>Dispositivo</th><th>N</th><th>%</th></tr></thead>
           <tbody id="device-body"></tbody></table>
@@ -4090,17 +4090,17 @@ main{padding-bottom:100px}
       <button class="dt-tab" onclick="switchDTTab('ptp',this)">PTP ESC 2019</button>
     </div>
     <div id="dt-tab-ccs" class="dt-tab-content active">
-      <div class="dt-class-card" onclick="selectDTClass('ccs',1,this)"><div class="dt-badge dt-badge-i">I</div><div><div class="dt-class-label">Clase I — Sin limitación</div><div class="dt-class-desc">La actividad física ordinaria no causa angina. Dolor solo con esfuerzo extenuante o prolongado.</div></div></div>
-      <div class="dt-class-card" onclick="selectDTClass('ccs',2,this)"><div class="dt-badge dt-badge-ii">II</div><div><div class="dt-class-label">Clase II — Ligera limitación</div><div class="dt-class-desc">Angina al subir escaleras rápido, cuestas, frío o estrés emocional. Más de 2 cuadras en plano.</div></div></div>
-      <div class="dt-class-card" onclick="selectDTClass('ccs',3,this)"><div class="dt-badge dt-badge-iii">III</div><div><div class="dt-class-label">Clase III — Limitación marcada</div><div class="dt-class-desc">Angina al caminar 1–2 cuadras en plano o al subir un piso a paso normal.</div></div></div>
-      <div class="dt-class-card" onclick="selectDTClass('ccs',4,this)"><div class="dt-badge dt-badge-iv">IV</div><div><div class="dt-class-label">Clase IV — Sin actividad libre</div><div class="dt-class-desc">Incapacidad para cualquier actividad sin angina. El dolor puede aparecer en reposo.</div></div></div>
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="dt-class-card" onclick="selectDTClass('ccs',1,this)"><div class="dt-badge dt-badge-i">I</div><div><div class="dt-class-label">Clase I — Sin limitación</div><div class="dt-class-desc">La actividad física ordinaria no causa angina. Dolor solo con esfuerzo extenuante o prolongado.</div></div></div>
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="dt-class-card" onclick="selectDTClass('ccs',2,this)"><div class="dt-badge dt-badge-ii">II</div><div><div class="dt-class-label">Clase II — Ligera limitación</div><div class="dt-class-desc">Angina al subir escaleras rápido, cuestas, frío o estrés emocional. Más de 2 cuadras en plano.</div></div></div>
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="dt-class-card" onclick="selectDTClass('ccs',3,this)"><div class="dt-badge dt-badge-iii">III</div><div><div class="dt-class-label">Clase III — Limitación marcada</div><div class="dt-class-desc">Angina al caminar 1–2 cuadras en plano o al subir un piso a paso normal.</div></div></div>
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="dt-class-card" onclick="selectDTClass('ccs',4,this)"><div class="dt-badge dt-badge-iv">IV</div><div><div class="dt-class-label">Clase IV — Sin actividad libre</div><div class="dt-class-desc">Incapacidad para cualquier actividad sin angina. El dolor puede aparecer en reposo.</div></div></div>
       <div id="dt-result-ccs" class="dt-result"><strong id="dt-result-ccs-title"></strong><br><span id="dt-result-ccs-text"></span></div>
     </div>
     <div id="dt-tab-nyha" class="dt-tab-content">
-      <div class="dt-class-card" onclick="selectDTClass('nyha',1,this)"><div class="dt-badge dt-badge-i">I</div><div><div class="dt-class-label">Clase I — Sin limitación</div><div class="dt-class-desc">La actividad física ordinaria no causa fatiga, palpitaciones ni disnea.</div></div></div>
-      <div class="dt-class-card" onclick="selectDTClass('nyha',2,this)"><div class="dt-badge dt-badge-ii">II</div><div><div class="dt-class-label">Clase II — Ligera limitación</div><div class="dt-class-desc">Confortable en reposo. La actividad ordinaria provoca síntomas leves.</div></div></div>
-      <div class="dt-class-card" onclick="selectDTClass('nyha',3,this)"><div class="dt-badge dt-badge-iii">III</div><div><div class="dt-class-label">Clase III — Limitación marcada</div><div class="dt-class-desc">Confortable en reposo. Menos que la actividad ordinaria produce síntomas.</div></div></div>
-      <div class="dt-class-card" onclick="selectDTClass('nyha',4,this)"><div class="dt-badge dt-badge-iv">IV</div><div><div class="dt-class-label">Clase IV — Síntomas en reposo</div><div class="dt-class-desc">Incapacidad para cualquier actividad sin disnea. Síntomas presentes en reposo.</div></div></div>
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="dt-class-card" onclick="selectDTClass('nyha',1,this)"><div class="dt-badge dt-badge-i">I</div><div><div class="dt-class-label">Clase I — Sin limitación</div><div class="dt-class-desc">La actividad física ordinaria no causa fatiga, palpitaciones ni disnea.</div></div></div>
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="dt-class-card" onclick="selectDTClass('nyha',2,this)"><div class="dt-badge dt-badge-ii">II</div><div><div class="dt-class-label">Clase II — Ligera limitación</div><div class="dt-class-desc">Confortable en reposo. La actividad ordinaria provoca síntomas leves.</div></div></div>
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="dt-class-card" onclick="selectDTClass('nyha',3,this)"><div class="dt-badge dt-badge-iii">III</div><div><div class="dt-class-label">Clase III — Limitación marcada</div><div class="dt-class-desc">Confortable en reposo. Menos que la actividad ordinaria produce síntomas.</div></div></div>
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="dt-class-card" onclick="selectDTClass('nyha',4,this)"><div class="dt-badge dt-badge-iv">IV</div><div><div class="dt-class-label">Clase IV — Síntomas en reposo</div><div class="dt-class-desc">Incapacidad para cualquier actividad sin disnea. Síntomas presentes en reposo.</div></div></div>
       <div id="dt-result-nyha" class="dt-result"><strong id="dt-result-nyha-title"></strong><br><span id="dt-result-nyha-text"></span></div>
     </div>
     <div id="dt-tab-ptp" class="dt-tab-content">
@@ -5215,6 +5215,9 @@ let statsMonthY, statsMonthM;
 
 // ── UTILS ─────────────────────────────────────────────────────────
 const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+// a11y: activar div[role=button] con teclado (Enter/Espacio)
+function csKey(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); (e.currentTarget||e.target).click(); } }
+window.csKey=csKey;
 // Estado "faltan datos": sin resultado numérico ni conclusión clínica, fondo amarillo.
 function cpMissing(el,pctId,catId,miss,interpId){
   if(!el)return;
@@ -5743,7 +5746,7 @@ function renderCal(){
   for(let d=1;d<=ld.getDate();d++){
     const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const hc=!!dmap[ds],cls=['cd','cm',hc&&'hc',ds===today&&'td',ds===selD&&'sl'].filter(Boolean).join(' ');
-    h+=`<div class="${cls}"${hc?` onclick="selDate('${ds}')"`:''} >${d}</div>`;
+    h+=`<div class="${cls}"${hc?` role="button" tabindex="0" onkeydown="csKey(event)" onclick="selDate('${ds}')"`:''} >${d}</div>`;
   }
   document.getElementById('cal-grid').innerHTML=h;
   document.getElementById('cal-det').style.display='none';
@@ -5811,7 +5814,7 @@ function handleImportFile(file){
 }
 function buildInstScreen(){
   const insts=getInsts();
-  document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al aplicación</p><div class="isc-cards">${insts.map((inst,i)=>`<div class="ic" onclick="enterInst(${i})"><div class="ic-i">${inst.icon}</div><div class="ic-n" spellcheck="false" title="Doble click para renombrar" onclick="icNameClick(${i},event)" ondblclick="icNameDbl(this,event)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onblur="icNameBlur(this,${i})">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
+  document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al aplicación</p><div class="isc-cards">${insts.map((inst,i)=>`<div role="button" tabindex="0" onkeydown="csKey(event)" class="ic" onclick="enterInst(${i})"><div class="ic-i">${inst.icon}</div><div class="ic-n" spellcheck="false" title="Doble click para renombrar" onclick="icNameClick(${i},event)" ondblclick="icNameDbl(this,event)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onblur="icNameBlur(this,${i})">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
   document.getElementById('isc').style.display='flex';
   ['inst-bdg','btn-back','btn-cerrar'].forEach(id=>document.getElementById(id).style.display='none');
 }
@@ -7627,7 +7630,7 @@ function updateControlList(){
     return;
   }
   list.innerHTML=upcoming.slice(0,8).map(u=>`
-    <div class="control-item" onclick="toggleDetail(${u.cid});render()">
+    <div role="button" tabindex="0" onkeydown="csKey(event)" class="control-item" onclick="toggleDetail(${u.cid});render()">
       <div>
         <div class="control-item-name">${esc(u.name)}</div>
         <div class="control-item-date">${u.diag?esc(u.diag):''}</div>
@@ -7762,7 +7765,7 @@ function globalSearch(q){
     pats.forEach(p=>{
       const lastC=p.consultations[p.consultations.length-1];
       const diag=lastC?lastC.diagnosis:'';
-      html+=`<div class="hsr-item" onclick="globalSearchGoPatient(${p.id})">
+      html+=`<div role="button" tabindex="0" onkeydown="csKey(event)" class="hsr-item" onclick="globalSearchGoPatient(${p.id})">
         <span style="flex:1"><strong>${esc(p.name)}</strong>${diag?` — <span style="color:var(--txt2);font-size:.76rem">${esc(diag)}</span>`:''}</span>
         <span class="hsr-badge" style="background:#E3F2FD;color:var(--p)">${p.age}a</span>
       </div>`;
@@ -7779,7 +7782,7 @@ function globalSearch(q){
     if(drugs.length){
       html+=`<div class="hsr-section">💊 Vademécum</div>`;
       drugs.forEach(d=>{
-        html+=`<div class="hsr-item" onclick="globalSearchGoVad('${d.gen}')">
+        html+=`<div role="button" tabindex="0" onkeydown="csKey(event)" class="hsr-item" onclick="globalSearchGoVad('${d.gen}')">
           <span style="flex:1"><strong>${d.gen}</strong> <span style="color:var(--txt2);font-size:.76rem">${d.trade}</span></span>
           <span class="hsr-badge" style="background:#E8F5E9;color:#2E7D32">${d.grupo}</span>
         </div>`;
@@ -7802,7 +7805,7 @@ function globalSearch(q){
   if(refs.length){
     html+=`<div class="hsr-section">📖 Referencias Clínicas</div>`;
     refs.forEach(r=>{
-      html+=`<div class="hsr-item" onclick="globalSearchGoRef()">
+      html+=`<div role="button" tabindex="0" onkeydown="csKey(event)" class="hsr-item" onclick="globalSearchGoRef()">
         <span>${r.icon} ${r.label}</span>
         <span class="hsr-badge" style="background:#E3F2FD;color:var(--p)">Ref</span>
       </div>`;
@@ -7816,7 +7819,7 @@ function globalSearch(q){
     if(ecgs.length){
       html+=`<div class="hsr-section">⚡ ECG Rápido</div>`;
       ecgs.forEach(([k,v])=>{
-        html+=`<div class="hsr-item" onclick="globalSearchGoECG('${k}')">
+        html+=`<div role="button" tabindex="0" onkeydown="csKey(event)" class="hsr-item" onclick="globalSearchGoECG('${k}')">
           <span>⚡ ${v.titulo}</span>
           <span class="hsr-badge" style="background:#FFF9C4;color:#827717">ECG</span>
         </div>`;
@@ -8602,7 +8605,7 @@ function renderVad(){
   if(!lista.length){cont.innerHTML='<div class="vad-empty">No se encontraron fármacos</div>';return;}
   cont.innerHTML=lista.map((d,i)=>`
     <div class="vad-drug">
-      <div class="vad-drug-h" onclick="toggleVadDrug('vd${i}')">
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="vad-drug-h" onclick="toggleVadDrug('vd${i}')">
         <div><div class="vad-drug-name">${d.gen}</div><div class="vad-drug-trade">${d.trade} · ${d.clase}</div></div>
         <div class="vad-drug-clase">${d.grupo}</div>
       </div>
@@ -9052,7 +9055,7 @@ function filterEyePatients(){
     list.innerHTML='<span style="font-size:.78rem;color:var(--txt2)">Sin resultados</span>';
     list.style.display='flex';return;
   }
-  list.innerHTML=filtered.map(p=>`<div onclick="selectEyePatient(${p.id},'${esc(p.name)}')" style="padding:5px 6px;border-radius:5px;cursor:pointer;font-size:.82rem;color:var(--txt)" onmouseover="this.style.background='#BBDEFB'" onmouseout="this.style.background=''">${esc(p.name)} (${p.age} a.)</div>`).join('');
+  list.innerHTML=filtered.map(p=>`<div role="button" tabindex="0" onkeydown="csKey(event)" onclick="selectEyePatient(${p.id},'${esc(p.name)}')" style="padding:5px 6px;border-radius:5px;cursor:pointer;font-size:.82rem;color:var(--txt)" onmouseover="this.style.background='#BBDEFB'" onmouseout="this.style.background=''">${esc(p.name)} (${p.age} a.)</div>`).join('');
   list.style.display='flex';
 }
 function selectEyePatient(id,name){
@@ -10162,7 +10165,7 @@ function renderSegmentos() {
       const disabled = s.peso === 0;
       const selected = lesionIds.includes(s.id);
       const tag = { tc:'tc', da:'da', cx:'cx', cd:'cd' }[s.vaso];
-      return `<div class="seg-item ${selected?'selected':''} ${disabled?'disabled':''}"
+      return `<div role="button" tabindex="0" onkeydown="csKey(event)" class="seg-item ${selected?'selected':''} ${disabled?'disabled':''}"
         onclick="toggleSegmento(${s.id})"
         title="Peso: ${s.peso}">
         <div class="seg-num">Seg. ${s.id} <span class="tag-vessel tag-${tag}">${s.vaso.toUpperCase()}</span></div>
@@ -10230,38 +10233,38 @@ function renderLesiones() {
 
       <div class="mod-grid">
         ${seg.canOTC ? `
-        <div class="mod-item ${l.otc?'active':''}" onclick="toggleMod(${i},'otc')">
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.otc?'active':''}" onclick="toggleMod(${i},'otc')">
           <input type="checkbox" ${l.otc?'checked':''} onclick="event.stopPropagation()">
           <span>Oclusión Total Crónica (OTC)</span>
           <span class="mod-pts">×2</span>
         </div>` : ''}
-        <div class="mod-item ${l.largo?'active':''}" onclick="toggleMod(${i},'largo')">
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.largo?'active':''}" onclick="toggleMod(${i},'largo')">
           <input type="checkbox" ${l.largo?'checked':''} onclick="event.stopPropagation()">
           <span>Longitud &gt;20mm</span>
           <span class="mod-pts">+1</span>
         </div>
-        <div class="mod-item ${l.calcif?'active':''}" onclick="toggleMod(${i},'calcif')">
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.calcif?'active':''}" onclick="toggleMod(${i},'calcif')">
           <input type="checkbox" ${l.calcif?'checked':''} onclick="event.stopPropagation()">
           <span>Calcificación severa</span>
           <span class="mod-pts">+2</span>
         </div>
-        <div class="mod-item ${l.tortuos?'active':''}" onclick="toggleMod(${i},'tortuos')">
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.tortuos?'active':''}" onclick="toggleMod(${i},'tortuos')">
           <input type="checkbox" ${l.tortuos?'checked':''} onclick="event.stopPropagation()">
           <span>Tortuosidad severa</span>
           <span class="mod-pts">+2</span>
         </div>
-        <div class="mod-item ${l.trombo?'active':''}" onclick="toggleMod(${i},'trombo')">
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.trombo?'active':''}" onclick="toggleMod(${i},'trombo')">
           <input type="checkbox" ${l.trombo?'checked':''} onclick="event.stopPropagation()">
           <span>Trombo</span>
           <span class="mod-pts">+1</span>
         </div>
-        <div class="mod-item ${l.difusa?'active':''}" onclick="toggleMod(${i},'difusa')">
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.difusa?'active':''}" onclick="toggleMod(${i},'difusa')">
           <input type="checkbox" ${l.difusa?'checked':''} onclick="event.stopPropagation()">
           <span>Enfermedad difusa / vaso &lt;2mm</span>
           <span class="mod-pts">+1</span>
         </div>
         ${seg.canOstial ? `
-        <div class="mod-item ${l.ostial?'active':''}" onclick="toggleMod(${i},'ostial')">
+        <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.ostial?'active':''}" onclick="toggleMod(${i},'ostial')">
           <input type="checkbox" ${l.ostial?'checked':''} onclick="event.stopPropagation()">
           <span>Lesión aorto-ostial</span>
           <span class="mod-pts">+1</span>
@@ -10272,15 +10275,15 @@ function renderLesiones() {
       <div style="background:var(--bg);border-radius:8px;padding:12px;margin-top:10px">
         <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;text-transform:uppercase">Características de la OTC</div>
         <div class="mod-grid">
-          <div class="mod-item ${l.otcMunon?'active':''}" onclick="toggleMod(${i},'otcMunon')">
+          <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.otcMunon?'active':''}" onclick="toggleMod(${i},'otcMunon')">
             <input type="checkbox" ${l.otcMunon?'checked':''} onclick="event.stopPropagation()">
             <span>Sin imagen de muñón</span><span class="mod-pts">+1</span>
           </div>
-          <div class="mod-item ${l.otcMeses?'active':''}" onclick="toggleMod(${i},'otcMeses')">
+          <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.otcMeses?'active':''}" onclick="toggleMod(${i},'otcMeses')">
             <input type="checkbox" ${l.otcMeses?'checked':''} onclick="event.stopPropagation()">
             <span>&gt;3 meses o duración desconocida</span><span class="mod-pts">+1</span>
           </div>
-          <div class="mod-item ${l.otcColat?'active':''}" onclick="toggleMod(${i},'otcColat')">
+          <div role="button" tabindex="0" onkeydown="csKey(event)" class="mod-item ${l.otcColat?'active':''}" onclick="toggleMod(${i},'otcColat')">
             <input type="checkbox" ${l.otcColat?'checked':''} onclick="event.stopPropagation()">
             <span>Circulación colateral presente</span><span class="mod-pts">+1</span>
           </div>
@@ -11314,7 +11317,7 @@ function calcMcpHcm(){
 
 <!-- ═══════════ AUDITORÍA — Botón fijo + panel ═══════════ -->
 <button id="audit-fab" onclick="openAudit()" title="Auditoría individual" style="position:fixed;right:0;top:50%;border-radius:8px 0 0 8px;background:var(--accent2,var(--acc));color:#fff;padding:12px 10px;font-size:11px;font-weight:700;box-shadow:-3px 2px 10px rgba(0,0,0,0.35);border:none;cursor:pointer;z-index:1500">🔬 Laboratorio</button>
-<div id="audit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8500;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeAudit()">
+<div role="button" tabindex="0" onkeydown="csKey(event)" id="audit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8500;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeAudit()">
   <div style="background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:22px 22px 18px;width:100%;max-width:620px;max-height:88vh;overflow:auto;box-shadow:0 16px 50px rgba(0,0,0,.3)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <h3 style="font-size:1.02rem;font-weight:800;color:var(--txt);margin:0">🔬 Auditoría individual</h3>
