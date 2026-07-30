@@ -11456,5 +11456,51 @@ function showMainTab(tab){
   }
 })();
 </script>
+<script>
+/* ══ ARIA + gestión de foco en modales (Impeccable P1) — complementa el teclado de csKey ══ */
+(function(){
+  var FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+  var SEL='#pdf-modal-overlay,#centros-modal-overlay,#audit-overlay,#tutorial-overlay';
+  var lastFocus=new WeakMap();
+  function hash(s){ s=String(s); var h=0; for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))|0; return Math.abs(h); }
+  function labelModal(m){
+    m.setAttribute('role','dialog');            // fuerza dialog (aunque tuviera role=button del pase previo)
+    m.removeAttribute('tabindex');              // un backdrop de modal no debe estar en el orden de tabulación
+    m.setAttribute('aria-modal','true');
+    if(!m.getAttribute('aria-labelledby') && !m.getAttribute('aria-label')){
+      var t=m.querySelector('h1,h2,h3,h4');
+      if(t){ if(!t.id) t.id='cs-mt-'+hash((m.id||'')+t.textContent); m.setAttribute('aria-labelledby',t.id); }
+      else m.setAttribute('aria-label',(m.id||'Dialogo').replace(/-/g,' '));
+    }
+  }
+  function isVisible(m){ if(!m.isConnected) return false; var s=getComputedStyle(m); return s.display!=='none' && s.visibility!=='hidden'; }
+  function openM(m){ lastFocus.set(m,document.activeElement); var f=m.querySelector(FOCUSABLE); if(f) setTimeout(function(){ try{f.focus();}catch(e){} },40); }
+  function closeM(m){ var p=lastFocus.get(m); if(p && document.contains(p)){ try{p.focus();}catch(e){} } }
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Tab' && e.key!=='Escape') return;
+    var open=[].slice.call(document.querySelectorAll(SEL)).filter(isVisible);
+    if(!open.length) return;
+    var m=open[open.length-1];
+    if(e.key==='Escape'){
+      var btn=m.querySelector('[onclick*="close"],[onclick*="cerrar"],[onclick*="Close"],.close');
+      if(btn){ e.preventDefault(); btn.click(); }
+      return;
+    }
+    var f=[].slice.call(m.querySelectorAll(FOCUSABLE)).filter(function(x){return x.offsetParent!==null;});
+    if(!f.length) return; var first=f[0], last=f[f.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  });
+  function init(){
+    document.querySelectorAll(SEL).forEach(function(m){
+      labelModal(m);
+      var was=isVisible(m);
+      new MutationObserver(function(){ var v=isVisible(m); if(v&&!was)openM(m); else if(!v&&was)closeM(m); was=v; })
+        .observe(m,{attributes:true,attributeFilter:['style','class']});
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
 </body>
 </html>
