@@ -5209,8 +5209,6 @@ let statsMonthY, statsMonthM;
 
 // ── UTILS ─────────────────────────────────────────────────────────
 const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-// Parseo seguro de JSON de localStorage: evita romper la app si el dato esta corrupto.
-function crdParse(raw, def){ try{ return JSON.parse(raw); }catch(e){ console.warn('JSON invalido en storage, usando valor por defecto', e); return (def===undefined?null:def); } }
 // Estado "faltan datos": sin resultado numérico ni conclusión clínica, fondo amarillo.
 function cpMissing(el,pctId,catId,miss,interpId){
   if(!el)return;
@@ -5496,7 +5494,7 @@ function updateFEVI(rows){
   });
   document.getElementById('fevi-body').innerHTML=feviData.map((f,i)=>{
     const open=openFevi===f.l,pct=Math.round(f.n/tot*100);
-    return`<tr onclick="toggleFevi(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.n}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleFevi(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.n}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('')+`<tr style="border-top:2px solid var(--border)"><td><strong>No registrada</strong></td><td>${nd}</td><td>${Math.round(nd/tot*100)}%</td></tr>`;
 }
 
@@ -5519,7 +5517,7 @@ function updateAntcoag(){
   ];
   document.getElementById('antcoag-body').innerHTML=anticoagData.map((f,i)=>{
     const open=openAntcoag===f.l,pct=Math.round(f.pts.length/tot*100);
-    return`<tr onclick="toggleAntcoag(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleAntcoag(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('');
 }
 function toggleAntcoag(i){openAntcoag=openAntcoag===anticoagData[i]?.l?null:anticoagData[i]?.l;updateAntcoag();}
@@ -5541,7 +5539,7 @@ function updateDevice(){
   ];
   document.getElementById('device-body').innerHTML=deviceData.map((f,i)=>{
     const open=openDevice===f.l,pct=Math.round(f.pts.length/tot*100);
-    return`<tr onclick="toggleDevice(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleDevice(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('');
 }
 function toggleDevice(i){openDevice=openDevice===deviceData[i]?.l?null:deviceData[i]?.l;updateDevice();}
@@ -5552,7 +5550,7 @@ function updateFA(){
   const tot=patients.length||1;
   faData=[{l:'FA / Flutter',pts:[...faPts.entries()]}];
   const open=openFA==='fa',pct=Math.round(faPts.size/tot*100);
-  document.getElementById('fa-body').innerHTML=`<tr onclick="toggleFA()" style="cursor:pointer"><td>FA / Flutter ${open?'▲':'▼'}</td><td>${faPts.size}</td><td>${pct}%</td></tr>${open&&faPts.size?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${faData[0].pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
+  document.getElementById('fa-body').innerHTML=`<tr onclick="toggleFA()" style="cursor:pointer"><td>FA / Flutter ${open?'▲':'▼'}</td><td>${faPts.size}</td><td>${pct}%</td></tr>${open&&faPts.size?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${faData[0].pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
 }
 function toggleFA(){openFA=openFA==='fa'?null:'fa';updateFA();}
 function isCRM(s){return/\bCRM\b|by[- ]?pass\s+coronario|revascularizaci[oó]n\s+mioc[aá]rdica|bypass\s+coronario/i.test(s||'');}
@@ -5582,7 +5580,7 @@ function updateCirugia(){
   ];
   document.getElementById('cirugia-body').innerHTML=cirugiaData.map((f,i)=>{
     const open=openCirugia===f.l,pct=Math.round(f.pts.length/tot*100);
-    return`<tr onclick="toggleCirugia(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleCirugia(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('');
 }
 function toggleCirugia(i){openCirugia=openCirugia===cirugiaData[i]?.l?null:cirugiaData[i]?.l;updateCirugia();}
@@ -5608,7 +5606,7 @@ function updateAntiagregacion(){
   ];
   document.getElementById('antiagr-body').innerHTML=antiagregData.map((f,i)=>{
     const open=openAntiagregacion===f.l,pct=Math.round(f.pts.length/tot*100);
-    return`<tr onclick="toggleAntiagregacion(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleAntiagregacion(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('');
 }
 function toggleAntiagregacion(i){openAntiagregacion=openAntiagregacion===antiagregData[i]?.l?null:antiagregData[i]?.l;updateAntiagregacion();}
@@ -5748,16 +5746,16 @@ function renderCal(){
 // ── INSTITUCIONES ────────────────────────────────────────────────
 const DEFAULT_INSTS=[{id:'mutualista',label:'Centro 1',icon:'🏥'},{id:'hospital',label:'Centro 2',icon:'🏨'},{id:'particulares',label:'Centro 3',icon:'👤'}];
 function getInsts(){
-  const centros=crdParse(localStorage.getItem('cardiosalud_centros'), null);
+  const centros=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null');
   if(centros&&centros.some(c=>c.trim())){
     const icons=['🏥','🏨','👤','🏢'];
     return centros.reduce((a,c,i)=>{if(c.trim())a.push({id:'centro_'+i,label:c.trim(),icon:icons[i]});return a;},[]);
   }
-  return crdParse(localStorage.getItem('crd_insts'), null)||DEFAULT_INSTS.map(i=>({...i}));
+  return JSON.parse(localStorage.getItem('crd_insts')||'null')||DEFAULT_INSTS.map(i=>({...i}));
 }
 function saveInsts(a){localStorage.setItem('crd_insts',JSON.stringify(a));}
-function saveInst(){if(activeInst){try{localStorage.setItem('crd_d_'+activeInst.id,JSON.stringify({patients,nextPid,nextCid}));}catch(e){console.error('saveInst fallo',e);alert('No se pudieron guardar los datos: el almacenamiento del navegador esta lleno o no disponible. Las imágenes/ECG en base64 ocupan mucho espacio; considere exportar un backup y reducir imágenes. Los últimos cambios podrían no persistir.');}}}
-function loadInst(inst){activeInst=inst;const d=crdParse(localStorage.getItem('crd_d_'+inst.id), null);if(d){patients=d.patients;nextPid=d.nextPid;nextCid=d.nextCid;}else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}migrateConsultations(patients);}
+function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JSON.stringify({patients,nextPid,nextCid}));}
+function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');if(d){patients=d.patients;nextPid=d.nextPid;nextCid=d.nextCid;}else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}migrateConsultations(patients);}
 // Exporta TODAS las instituciones + sus pacientes a un unico JSON. Usa getInsts()
 // (fuente real de la lista) y lee el bloque crd_d_<id> de cada una. No incluye cs_auth.
 function exportBackup(){
@@ -5786,37 +5784,17 @@ function handleImportFile(file){
   reader.onload=function(ev){
     var obj;
     try{ obj=JSON.parse(ev.target.result); }catch(e){ alert('El archivo no es un JSON válido.'); return; }
-    if(!obj || typeof obj!=='object' || Array.isArray(obj) || !Array.isArray(obj.insts) || !obj.data || typeof obj.data!=='object' || Array.isArray(obj.data)){
+    if(!obj || !Array.isArray(obj.insts) || !obj.data || typeof obj.data!=='object'){
       alert('El archivo no es un backup válido de CardioSalud (faltan las claves "insts" y "data").');
       return;
-    }
-    // Validacion de esquema antes de aplicar nada
-    var idOk=/^[a-zA-Z0-9_]+$/;
-    for(var ii=0; ii<obj.insts.length; ii++){
-      var it=obj.insts[ii];
-      if(!it || typeof it!=='object' || typeof it.id!=='string' || !idOk.test(it.id) || typeof it.label!=='string'){
-        alert('Backup inválido: la institución #'+(ii+1)+' tiene un formato incorrecto (id/label).');
-        return;
-      }
-    }
-    var dataKeys=Object.keys(obj.data).filter(function(k){ return k!=='__proto__' && k!=='constructor' && k!=='prototype'; });
-    for(var di=0; di<dataKeys.length; di++){
-      var dk=dataKeys[di];
-      if(!idOk.test(dk)){ alert('Backup inválido: identificador de datos no permitido ("'+dk+'").'); return; }
-      var dv=obj.data[dk];
-      if(!dv || typeof dv!=='object' || Array.isArray(dv) || !Array.isArray(dv.patients)){
-        alert('Backup inválido: los datos de "'+dk+'" no tienen una lista de pacientes válida.');
-        return;
-      }
     }
     if(!confirm('Esto va a REEMPLAZAR TODAS las instituciones y pacientes guardados en este navegador por los del archivo importado.\n\nEs una acción IRREVERSIBLE. ¿Continuar?')) return;
     try{
       saveInsts(obj.insts); // escribe crd_insts
       // quita la lista legada para que getInsts() use la importada (ids consistentes con data)
       localStorage.removeItem('cardiosalud_centros');
-      dataKeys.forEach(function(id){
-        try{ localStorage.setItem('crd_d_'+id, JSON.stringify(obj.data[id])); }
-        catch(err){ alert('No se pudo guardar los datos de "'+id+'": almacenamiento lleno o no disponible.'); throw err; }
+      Object.keys(obj.data).forEach(function(id){
+        localStorage.setItem('crd_d_'+id, JSON.stringify(obj.data[id]));
       });
       activeInst=null;
       buildInstScreen();
@@ -5845,7 +5823,7 @@ let _icTimer=null;
 function icNameClick(i,ev){ev.stopPropagation();clearTimeout(_icTimer);_icTimer=setTimeout(function(){enterInst(i);},230);}
 function icNameDbl(el,ev){ev.stopPropagation();clearTimeout(_icTimer);el.setAttribute('contenteditable','true');el.focus();try{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);}catch(e){}}
 function icNameBlur(el,i){el.removeAttribute('contenteditable');renameInst(i,el.textContent);}
-function renameInst(i,newLabel){newLabel=(newLabel||'').trim();if(!newLabel){buildInstScreen();return;}const insts=getInsts();if(!insts[i])return;insts[i].label=newLabel;saveInsts(insts);const centros=crdParse(localStorage.getItem('cardiosalud_centros'), null);if(centros&&centros.some(c=>c.trim()))localStorage.setItem('cardiosalud_centros',JSON.stringify(insts.map(x=>x.label)));const bdg=document.getElementById('inst-bdg');if(activeInst&&activeInst.id===insts[i].id){activeInst.label=newLabel;if(bdg)bdg.textContent=activeInst.icon+' '+activeInst.label;}}
+function renameInst(i,newLabel){newLabel=(newLabel||'').trim();if(!newLabel){buildInstScreen();return;}const insts=getInsts();if(!insts[i])return;insts[i].label=newLabel;saveInsts(insts);const centros=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null');if(centros&&centros.some(c=>c.trim()))localStorage.setItem('cardiosalud_centros',JSON.stringify(insts.map(x=>x.label)));const bdg=document.getElementById('inst-bdg');if(activeInst&&activeInst.id===insts[i].id){activeInst.label=newLabel;if(bdg)bdg.textContent=activeInst.icon+' '+activeInst.label;}}
 // ── FILTROS / DRILLDOWN ───────────────────────────────────────────
 function filterByPat(pid){filterPatient=filterPatient===pid?null:pid;selD=null;filterDesde=null;filterHasta=null;openDetail=new Set();openDiag=null;openFevi=null;openAntcoag=null;openDevice=null;openFA=null;openCirugia=null;openAntiagregacion=null;render();}
 function clearPatFilter(){filterPatient=null;render();}
@@ -7691,7 +7669,7 @@ function exportFichaPDF(pid){
   <div class="header">
     <div>
       <div class="header h1">CardioSalud — Ficha Clínica</div>
-      <div class="sub">${esc(inst)} · Generado: ${fechaHoy}${doc?' · '+esc(doc):''}</div>
+      <div class="sub">${inst} · Generado: ${fechaHoy}${doc?' · '+doc:''}</div>
     </div>
     <div style="font-size:24px;opacity:.6">🫀</div>
   </div>
@@ -7730,8 +7708,8 @@ function exportFichaPDF(pid){
   </div>
 
   <div class="footer">
-    <span>CardioSalud · ${esc(inst)}</span>
-    <span>Ficha generada: ${fechaHoy}${doc?' · '+esc(doc):''}</span>
+    <span>CardioSalud · ${inst}</span>
+    <span>Ficha generada: ${fechaHoy}${doc?' · '+doc:''}</span>
     <span>Consultas: ${cons.length}</span>
   </div>
   </body></html>`;
@@ -10026,7 +10004,7 @@ function calcHESTIA(){
 
 // ── Editar centros ────────────────────────────────────────────
 function openCentrosModal(){
-  const saved=crdParse(localStorage.getItem('cardiosalud_centros'), null);
+  const saved=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null');
   const vals=saved||(DEFAULT_INSTS.slice(0,3).map(i=>i.label).concat(['']));
   for(let i=1;i<=4;i++)document.getElementById('ct'+i).value=vals[i-1]||'';
   document.getElementById('centros-modal-overlay').style.display='flex';
@@ -10686,7 +10664,7 @@ function calcTablaRapida() {
     + '</div></div>';
 }
 
-var sx1Guardados = crdParse(localStorage.getItem('cardiosalud_syntax'), []);
+var sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]');
 
 function guardarEnCardioSalud() {
   const segs = getSegs();
@@ -10744,7 +10722,7 @@ function renderGuardados() {
   const contenedor = document.getElementById('syn-sx1-guardados');
   if (!lista || !contenedor) return;
 
-  sx1Guardados = crdParse(localStorage.getItem('cardiosalud_syntax'), []);
+  sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]');
   if (sx1Guardados.length === 0) { contenedor.style.display = 'none'; return; }
 
   contenedor.style.display = 'block';
@@ -10753,9 +10731,9 @@ function renderGuardados() {
     return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(26,107,74,.2)">'
       + '<div style="font-size:20px;font-weight:900;color:' + color + ';min-width:36px">' + r.score + '</div>'
       + '<div style="flex:1">'
-      + '<div style="font-size:13px;font-weight:700">' + esc(r.paciente) + '</div>'
+      + '<div style="font-size:13px;font-weight:700">' + r.paciente + '</div>'
       + '<div style="font-size:11px;color:var(--green)">' + r.fecha + ' · ' + r.vasos + ' · ' + r.dm + '</div>'
-      + (r.obs ? '<div style="font-size:11px;color:var(--muted)">' + esc(r.obs) + '</div>' : '')
+      + (r.obs ? '<div style="font-size:11px;color:var(--muted)">' + r.obs + '</div>' : '')
       + '</div>'
       + '<button onclick="eliminarGuardado(' + r.id + ')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px">✕</button>'
       + '</div>';
@@ -10988,9 +10966,7 @@ function acoInrExportCSV(){
   const pat=patients.find(p=>String(p.id)===String(pid));
   const rows=[['Fecha','INR','Dosis (mg)','Nota']];
   data.forEach(d=>rows.push([d.date, d.inr, d.dose||'', d.note||'']));
-  // Prevencion de CSV/formula injection: neutraliza celdas que empiezan con = + - @ TAB CR
-  const csvSafe=v=>{ let s=String(v==null?'':v); if(/^[=+\-@\t\r]/.test(s)) s="'"+s; return s; };
-  const csv=rows.map(r=>r.map(c=>'"'+csvSafe(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const csv=rows.map(r=>r.map(c=>'"'+String(c==null?'':c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
   const blob=new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
