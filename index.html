@@ -5263,16 +5263,14 @@ function toggleCalc(){
 }
 
 function calcLive(){
-  const g=id=>document.getElementById(id).value;
-  const r=calcPREVENT({sex:g('c-sex'),age:g('c-age'),tc:g('c-tc'),hdl:g('c-hdl'),sbp:g('c-sbp'),htn:+g('c-htn'),dm:+g('c-dm'),smoke:+g('c-smoke'),egfr:g('c-egfr'),uacr:g('c-uacr')});
+  // FIX clínico: PREVENT AHA 2023 desactivada temporalmente — la ecuación (PCE base con
+  // multiplicadores renales arbitrarios) está en revisión. No se muestra ni se guarda resultado.
+  lastPRV=null;
   const el=document.getElementById('prv-res');
-  if(!r){el.style.display='none';lastPRV=null;return;}
-  lastPRV=r; el.style.display='block';
-  const bg={Alto:'var(--err-bg)',Intermedio:'var(--warn-bg)','Intermedio bajo':'#FFF9C4',Bajo:'var(--ok-bg)'};
-  const cl={Alto:'var(--err)',Intermedio:'var(--warn)','Intermedio bajo':'#827717',Bajo:'var(--ok)'};
-  el.style.background=bg[r.cat]; el.style.color=cl[r.cat];
-  document.getElementById('rpct').textContent=r.pct+'%';
-  document.getElementById('rcat').textContent=r.cat+' — riesgo CV a 10 años';
+  el.style.display='block';
+  el.style.background='var(--warn-bg)';el.style.color='var(--warn)';
+  document.getElementById('rpct').textContent='⚠️ En revisión';
+  document.getElementById('rcat').textContent='Calculadora en revisión — las ecuaciones PREVENT AHA 2023 requieren actualización. Resultado no disponible temporalmente.';
 }
 
 // ── TABS ─────────────────────────────────────────────────────────
@@ -5504,7 +5502,7 @@ function updateFEVI(rows){
   });
   document.getElementById('fevi-body').innerHTML=feviData.map((f,i)=>{
     const open=openFevi===f.l,pct=Math.round(f.n/tot*100);
-    return`<tr onclick="toggleFevi(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.n}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleFevi(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.n}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('')+`<tr style="border-top:2px solid var(--border)"><td><strong>No registrada</strong></td><td>${nd}</td><td>${Math.round(nd/tot*100)}%</td></tr>`;
 }
 
@@ -5527,7 +5525,7 @@ function updateAntcoag(){
   ];
   document.getElementById('antcoag-body').innerHTML=anticoagData.map((f,i)=>{
     const open=openAntcoag===f.l,pct=Math.round(f.pts.length/tot*100);
-    return`<tr onclick="toggleAntcoag(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleAntcoag(${i})" style="cursor:pointer"><td><span class="${f.c}">${f.l}</span> ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('');
 }
 function toggleAntcoag(i){openAntcoag=openAntcoag===anticoagData[i]?.l?null:anticoagData[i]?.l;updateAntcoag();}
@@ -5549,7 +5547,7 @@ function updateDevice(){
   ];
   document.getElementById('device-body').innerHTML=deviceData.map((f,i)=>{
     const open=openDevice===f.l,pct=Math.round(f.pts.length/tot*100);
-    return`<tr onclick="toggleDevice(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleDevice(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('');
 }
 function toggleDevice(i){openDevice=openDevice===deviceData[i]?.l?null:deviceData[i]?.l;updateDevice();}
@@ -5560,7 +5558,7 @@ function updateFA(){
   const tot=patients.length||1;
   faData=[{l:'FA / Flutter',pts:[...faPts.entries()]}];
   const open=openFA==='fa',pct=Math.round(faPts.size/tot*100);
-  document.getElementById('fa-body').innerHTML=`<tr onclick="toggleFA()" style="cursor:pointer"><td>FA / Flutter ${open?'▲':'▼'}</td><td>${faPts.size}</td><td>${pct}%</td></tr>${open&&faPts.size?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${faData[0].pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+  document.getElementById('fa-body').innerHTML=`<tr onclick="toggleFA()" style="cursor:pointer"><td>FA / Flutter ${open?'▲':'▼'}</td><td>${faPts.size}</td><td>${pct}%</td></tr>${open&&faPts.size?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${faData[0].pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
 }
 function toggleFA(){openFA=openFA==='fa'?null:'fa';updateFA();}
 function isCRM(s){return/\bCRM\b|by[- ]?pass\s+coronario|revascularizaci[oó]n\s+mioc[aá]rdica|bypass\s+coronario/i.test(s||'');}
@@ -5590,7 +5588,7 @@ function updateCirugia(){
   ];
   document.getElementById('cirugia-body').innerHTML=cirugiaData.map((f,i)=>{
     const open=openCirugia===f.l,pct=Math.round(f.pts.length/tot*100);
-    return`<tr onclick="toggleCirugia(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleCirugia(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('');
 }
 function toggleCirugia(i){openCirugia=openCirugia===cirugiaData[i]?.l?null:cirugiaData[i]?.l;updateCirugia();}
@@ -5616,7 +5614,7 @@ function updateAntiagregacion(){
   ];
   document.getElementById('antiagr-body').innerHTML=antiagregData.map((f,i)=>{
     const open=openAntiagregacion===f.l,pct=Math.round(f.pts.length/tot*100);
-    return`<tr onclick="toggleAntiagregacion(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${nm}</button>`).join('')}</div></td></tr>`:''}`;
+    return`<tr onclick="toggleAntiagregacion(${i})" style="cursor:pointer"><td>${f.l} ${open?'▲':'▼'}</td><td>${f.pts.length}</td><td>${pct}%</td></tr>${open&&f.pts.length?`<tr><td colspan="3" style="padding:3px 10px 8px"><div class="dr-pts">${f.pts.map(([pid,nm])=>`<button class="dr-pt" onclick="event.stopPropagation();filterByPat(${pid})">${esc(nm)}</button>`).join('')}</div></td></tr>`:''}`;
   }).join('');
 }
 function toggleAntiagregacion(i){openAntiagregacion=openAntiagregacion===antiagregData[i]?.l?null:antiagregData[i]?.l;updateAntiagregacion();}
@@ -6181,7 +6179,7 @@ const RAORTA=`<div style="font-size:.78rem">
 
 const AORTA_DATA={
   asc:{
-    titulo:'Aneurisma de Aorta Ascendente — Indicaciones quirúrgicas (ESC 2014)',
+    titulo:'Aneurisma de Aorta Ascendente — Indicaciones quirúrgicas (ESC 2014 — pendiente actualización a ESC PAAD 2024)',
     color:'#C62828',
     indicaciones:[
       {c:'I',n:'C',texto:'Cirugía si diámetro aórtico máximo >50mm en síndrome de Marfan'},
@@ -6209,7 +6207,7 @@ const AORTA_DATA={
 </tbody></table></div>`
   },
   arco:{
-    titulo:'Aneurisma del Arco Aórtico — Indicaciones quirúrgicas (ESC 2014)',
+    titulo:'Aneurisma del Arco Aórtico — Indicaciones quirúrgicas (ESC 2014 — pendiente actualización a ESC PAAD 2024)',
     color:'#F9A825',
     indicaciones:[
       {c:'IIa',n:'C',texto:'Cirugía si aneurisma del arco aórtico aislado con diámetro máximo >55mm'},
@@ -6220,7 +6218,7 @@ const AORTA_DATA={
     tabla:''
   },
   desc:{
-    titulo:'Aneurisma de Aorta Descendente — Indicaciones (ESC 2014)',
+    titulo:'Aneurisma de Aorta Descendente — Indicaciones (ESC 2014 — pendiente actualización a ESC PAAD 2024)',
     color:'#E65100',
     indicaciones:[
       {c:'IIa',n:'C',texto:'TEVAR preferida sobre cirugía abierta si anatomía adecuada (primera elección en aorta descendente)'},
@@ -6234,7 +6232,7 @@ const AORTA_DATA={
 </div>`
   },
   aaa:{
-    titulo:'Aneurisma Aórtico Abdominal (AAA) — Indicaciones (ESC 2014)',
+    titulo:'Aneurisma Aórtico Abdominal (AAA) — Indicaciones (ESC 2014 — pendiente actualización a ESC PAAD 2024)',
     color:'#1565C0',
     indicaciones:[
       {c:'I',n:'A',texto:'Monitorización indicada y segura si diámetro <55mm y crecimiento <10mm/año'},
@@ -6300,11 +6298,12 @@ function showAorta(id){
   }).join('');
   document.getElementById('aorta-content').innerHTML=`
     <div style="background:${d.color};color:#fff;border-radius:8px;padding:9px 14px;margin-bottom:10px;font-size:.86rem;font-weight:700">${d.titulo}</div>
-    <div style="font-size:.76rem;font-weight:700;color:var(--p);margin-bottom:6px">⚕️ Indicaciones (ESC 2014)</div>
+    <div style="background:#FFF3E0;border-left:3px solid #E65100;border-radius:6px;padding:8px 10px;font-size:.72rem;color:#E65100;line-height:1.5;margin-bottom:10px">⚠️ Este módulo está basado en ESC 2014. La guía vigente es ESC Peripheral Arterial and Aortic Diseases 2024. Actualización en curso.</div>
+    <div style="font-size:.76rem;font-weight:700;color:var(--p);margin-bottom:6px">⚕️ Indicaciones (ESC 2014 — pendiente actualización a ESC PAAD 2024)</div>
     ${indHTML}
     ${d.tabla}
     ${d.nota?`<div style="background:#E3F2FD;border-radius:6px;padding:8px 10px;font-size:.74rem;color:var(--p);line-height:1.5;margin-top:8px">💡 ${d.nota}</div>`:''}
-    <div style="font-size:.68rem;color:var(--txt2);text-align:right;margin-top:8px">ESC Guidelines on Aortic Diseases 2014 · Erbel R et al. Eur Heart J 2014</div>`;
+    <div style="font-size:.68rem;color:var(--txt2);text-align:right;margin-top:8px">ESC Guidelines on Aortic Diseases 2014 — pendiente actualización a ESC PAAD 2024 · Erbel R et al. Eur Heart J 2014</div>`;
 }
 setTimeout(()=>{if(typeof showAorta==='function')showAorta('asc');},170);
 
@@ -7030,9 +7029,9 @@ function calcHCM(){
   const riskRound=Math.round(risk*10)/10;
   document.getElementById('hcm-score').textContent=riskRound+'%';
   let cat,bg,cl,rec;
-  if(riskRound<4){cat='Riesgo bajo';bg='#E8F5E9';cl='#2E7D32';rec='CDI no recomendado.';}
-  else if(riskRound<6){cat='Riesgo intermedio';bg='#FFF9C4';cl='#827717';rec='CDI a considerar (Clase IIb).';}
-  else{cat='Riesgo alto ≥6%';bg='#FFEBEE';cl='#C62828';rec='CDI debe considerarse (Clase IIa).';}
+  if(riskRound<4){cat='Riesgo bajo';bg='#E8F5E9';cl='#2E7D32';rec='HCM Risk-SCD <4% — el score aislado no apoya CDI. Integrar marcadores mayores: paro/TV previa, síncope arrítmico, historia familiar MSC, grosor máximo, aneurisma apical, TVNS, RMC (AHA/ACC HCM 2024).';}
+  else if(riskRound<6){cat='Riesgo intermedio';bg='#FFF9C4';cl='#827717';rec='CDI a considerar (Clase IIb). Decisión final debe integrar contexto clínico completo.';}
+  else{cat='Riesgo alto ≥6%';bg='#FFEBEE';cl='#C62828';rec='CDI debe considerarse (Clase IIa). Decisión final debe integrar contexto clínico completo.';}
   const catBox=document.getElementById('hcm-cat-box');
   catBox.style.background=bg;
   document.getElementById('hcm-cat').style.color=cl;
@@ -7988,13 +7987,13 @@ function calcRenal(){
     rec='Ajustar: Metformina (precaución), AINEs (evitar), Digoxina (↓dosis), SGLT-2i (verificar límite). Nefrólogo si progresión.';
   } else if(fge>=30){
     kdigo='G3b — Moderada-severa (30–44)';kcolor='var(--warn)';
-    rec='Ajustar: Metformina (suspender <30), SGLT-2i (suspender), HBPMs (↓dosis), Gadolinio (contraindicado). Derivar a Nefrología.';
+    rec='Ajustar: Metformina (suspender <30), HBPMs (↓dosis). SGLT-2i: continuar si iniciado previamente; inicio: considerar con indicación nefro/cardioprotectora (KDIGO 2024). Gadolinio: riesgo dependiente del agente y contexto clínico — evaluar beneficio/riesgo; preferir agentes de baja dosis o macrocíclicos si imprescindible (KDIGO 2024). Derivar a Nefrología.';
   } else if(fge>=15){
     kdigo='G4 — Severamente reducida (15–29)';kcolor='#BF360C';
-    rec='Ajuste obligatorio de la mayoría de fármacos. Evitar nefrotóxicos. Preparar para terapia de reemplazo renal. Nefrología urgente.';
+    rec='Ajuste obligatorio de la mayoría de fármacos. Evitar nefrotóxicos. SGLT-2i: no iniciar de novo; si ya en uso, valorar continuación según tolerancia y ausencia de diálisis (KDIGO 2024). Preparar para terapia de reemplazo renal. Nefrología urgente.';
   } else {
     kdigo='G5 — Falla renal (<15)';kcolor='var(--err)';
-    rec='Falla renal. Diálisis o trasplante. Contraindicados: Metformina, AINEs, SGLT-2i, medios de contraste yodados sin precaución extrema.';
+    rec='Falla renal. Diálisis o trasplante. Contraindicados: Metformina, AINEs, medios de contraste yodados sin precaución extrema. SGLT-2i: sin diálisis — no iniciar; si en uso previo, decisión individualizada. En diálisis — suspender (KDIGO 2024).';
   }
 
   document.getElementById('rn-cg-val').textContent=cg!==null?cg:'—*';
@@ -8003,6 +8002,7 @@ function calcRenal(){
   kd.textContent=kdigo;kd.style.background=kcolor+'22';kd.style.color=kcolor;kd.style.border='1px solid '+kcolor+'55';
   document.getElementById('rn-rec').innerHTML='<strong style="color:var(--txt)">Ajuste de dosis:</strong> '+rec;
   if(cg===null)document.getElementById('rn-rec').innerHTML+='<br><span style="font-size:.72rem;color:var(--txt2)">*Ingresá el peso para calcular Cockcroft-Gault.</span>';
+  document.getElementById('rn-rec').innerHTML+='<br><span style="font-size:.72rem;color:var(--txt2);font-style:italic">📖 Ref.: KDIGO 2024 CKD Guideline</span>';
   res.style.cssText='display:flex;flex-direction:column;gap:10px;margin-top:10px';
   const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
 }
@@ -9555,19 +9555,27 @@ function calcScore2(){
   }
   risk=Math.max(0,Math.min(1,risk));
   const pct=Math.round(risk*1000)/10;
-  let cat,bg,cl;
-  if(!useOP){
+  // FIX clínico: umbrales SCORE2/SCORE2-OP por rango etario (ESC 2021).
+  let cat,bg,cl,banda;
+  if(age<50){
+    banda='<50';
+    if(pct<2.5){cat='Bajo (<2.5%)';bg='var(--ok-bg)';cl='var(--ok)';}
+    else if(pct<7.5){cat='Moderado (2.5–7.4%)';bg='var(--warn-bg)';cl='var(--warn)';}
+    else{cat='Alto (≥7.5%)';bg='var(--err-bg)';cl='var(--err)';}
+  }else if(age<70){
+    banda='50-69';
     if(pct<5){cat='Bajo (<5%)';bg='var(--ok-bg)';cl='var(--ok)';}
-    else if(pct<10){cat='Moderado (5–9%)';bg='#FFF9C4';cl='#827717';}
+    else if(pct<10){cat='Moderado (5–9.9%)';bg='var(--warn-bg)';cl='var(--warn)';}
     else{cat='Alto (≥10%)';bg='var(--err-bg)';cl='var(--err)';}
   }else{
+    banda='≥70';
     if(pct<7.5){cat='Bajo (<7.5%)';bg='var(--ok-bg)';cl='var(--ok)';}
     else if(pct<15){cat='Moderado (7.5–14.9%)';bg='var(--warn-bg)';cl='var(--warn)';}
     else{cat='Alto (≥15%)';bg='var(--err-bg)';cl='var(--err)';}
   }
   el.classList.add('show');el.style.background=bg;el.style.color=cl;
   document.getElementById('s2-pct').textContent=pct+'%';
-  document.getElementById('s2-cat').textContent=cat;
+  document.getElementById('s2-cat').textContent=cat+' · Clasificación para paciente de '+age+' años (rango '+banda+')';
 }
 
 // ── EUROSCORE II ──────────────────────────────────────────────────
@@ -9918,41 +9926,23 @@ setTimeout(updateControlList,500);
 
 // ── PREVENT 2023 — panel calculadora ─────────────────────────
 function calcPRV3(){
-  const g=id=>document.getElementById(id).value;
-  const r=calcPREVENT({sex:g('p3-sex'),age:g('p3-age'),tc:g('p3-tc'),hdl:g('p3-hdl'),sbp:g('p3-sbp'),htn:+g('p3-htn'),dm:+g('p3-dm'),smoke:+g('p3-smoke'),egfr:g('p3-egfr'),uacr:g('p3-uacr')});
+  // FIX clínico: PREVENT AHA 2023 desactivada temporalmente (ecuación en revisión).
   const el=document.getElementById('p3-res');
-  if(!r){el.style.display='none';return;}
-  const bg={Alto:'var(--err-bg)',Intermedio:'var(--warn-bg)','Intermedio bajo':'#FFF9C4',Bajo:'var(--ok-bg)'};
-  const cl={Alto:'var(--err)',Intermedio:'var(--warn)','Intermedio bajo':'#827717',Bajo:'var(--ok)'};
-  el.style.display='block';el.style.background=bg[r.cat];el.style.color=cl[r.cat];
-  document.getElementById('p3-pct').textContent=r.pct+'%';
-  document.getElementById('p3-cat').textContent=r.cat+' — riesgo CV a 10 años';
+  el.style.display='block';
+  el.style.background='var(--warn-bg)';el.style.color='var(--warn)';
+  document.getElementById('p3-pct').textContent='⚠️ En revisión';
+  document.getElementById('p3-cat').textContent='Calculadora en revisión — las ecuaciones PREVENT AHA 2023 requieren actualización. Resultado no disponible temporalmente.';
   const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
 }
 
 // ── PREVENT-HF 2023 ───────────────────────────────────────────
 function calcPHF(){
-  const g=id=>document.getElementById(id).value;
-  const sex=g('phf-sex'),age=+g('phf-age'),sbp=+g('phf-sbp'),bmi=+g('phf-bmi'),dm=+g('phf-dm'),smoke=+g('phf-smoke'),egfr=+(g('phf-egfr')||90);
+  // FIX clínico: PREVENT-HF 2023 desactivada temporalmente — ecuación de IC propia no validada, en revisión.
   const el=document.getElementById('phf-res');
-  if(!age||!sbp||!bmi){el.style.display='none';return;}
-  const ln=Math.log;
-  let lp,base;
-  if(sex==='F'){
-    lp=0.9245*ln(age/50)+(sbp>=120?0.6714*ln(sbp/120):-0.5070*ln(120/sbp))+0.5173*(dm?1:0)+0.2889*(smoke?1:0)+0.0740*((bmi-25)/5)-(egfr<90?0.3444*ln(egfr/90):0);
-    base=0.9782;
-  }else{
-    lp=0.7782*ln(age/50)+(sbp>=120?0.4887*ln(sbp/120):-0.3648*ln(120/sbp))+0.5319*(dm?1:0)+0.2440*(smoke?1:0)+0.1098*((bmi-25)/5)-(egfr<90?0.3124*ln(egfr/90):0);
-    base=0.9732;
-  }
-  const risk=Math.max(0,Math.min(1,1-Math.pow(base,Math.exp(lp))));
-  const pct=Math.round(risk*100);
-  const cat=pct<5?'Bajo':pct<10?'Intermedio bajo':pct<20?'Intermedio':'Alto';
-  const bg={Alto:'var(--err-bg)',Intermedio:'var(--warn-bg)','Intermedio bajo':'#FFF9C4',Bajo:'var(--ok-bg)'};
-  const cl={Alto:'var(--err)',Intermedio:'var(--warn)','Intermedio bajo':'#827717',Bajo:'var(--ok)'};
-  el.style.display='block';el.style.background=bg[cat];el.style.color=cl[cat];
-  document.getElementById('phf-pct').textContent=pct+'%';
-  document.getElementById('phf-cat').textContent=cat+' — riesgo de IC a 10 años';
+  el.style.display='block';
+  el.style.background='var(--warn-bg)';el.style.color='var(--warn)';
+  document.getElementById('phf-pct').textContent='⚠️ En revisión';
+  document.getElementById('phf-cat').textContent='Calculadora en revisión — las ecuaciones PREVENT AHA 2023 requieren actualización. Resultado no disponible temporalmente.';
   const cpb=document.querySelector('.cp-body');if(cpb)cpb.scrollTop=cpb.scrollHeight;
 }
 
@@ -11262,9 +11252,9 @@ function calcMcpHcm(){
   const risk=(1-Math.pow(0.998077,Math.exp(pi)))*100;
   const r=Math.round(risk*10)/10;
   let cat,cl;
-  if(r<4){cat='Riesgo bajo — CDI no recomendado';cl='var(--ok)';}
-  else if(r<6){cat='Riesgo intermedio — CDI a considerar (Clase IIb)';cl='var(--warn)';}
-  else{cat='Riesgo alto ≥6% — CDI debe considerarse (Clase IIa)';cl='var(--err)';}
+  if(r<4){cat='HCM Risk-SCD <4% — el score aislado no apoya CDI. Integrar marcadores mayores: paro/TV previa, síncope arrítmico, historia familiar MSC, grosor máximo, aneurisma apical, TVNS, RMC (AHA/ACC HCM 2024)';cl='var(--ok)';}
+  else if(r<6){cat='Riesgo intermedio — CDI a considerar (Clase IIb). Decisión final debe integrar contexto clínico completo';cl='var(--warn)';}
+  else{cat='Riesgo alto ≥6% — CDI debe considerarse (Clase IIa). Decisión final debe integrar contexto clínico completo';cl='var(--err)';}
   pctEl.textContent=r+'% a 5 años';pctEl.style.color=cl;
   catEl.textContent=cat;catEl.style.color=cl;
 }
