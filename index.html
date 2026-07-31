@@ -4175,9 +4175,11 @@ main{padding-bottom:100px}
           <div class="fg"><label>HDL-C (mg/dL)</label><input type="number" id="s2-hdl" placeholder="50" oninput="calcScore2()"></div>
           <div class="fg"><label>PA sistólica (mmHg)</label><input type="number" id="s2-sbp" placeholder="130" oninput="calcScore2()"></div>
           <div class="fg"><label>Tabaquismo</label><select id="s2-smoke" oninput="calcScore2()"><option value="0">No</option><option value="1">Sí</option></select></div>
-          <div class="fg cp-full" id="s2-dm-wrap" style="display:none"><label>Diabetes (solo SCORE2-OP)</label><select id="s2-dm" oninput="calcScore2()"><option value="0">No</option><option value="1">Sí</option></select></div>
+          <div class="fg"><label>Región de riesgo (ESC)</label><select id="s2-region" oninput="calcScore2()"><option value="alta">Alta (Europa del Este)</option><option value="mod" selected>Moderada (aprox. LatAm)</option><option value="baja">Baja (Europa Occidental)</option></select></div>
+          <div class="fg" id="s2-dm-wrap"><label>Diabetes tipo 2</label><select id="s2-dm" oninput="calcScore2()"><option value="0">No</option><option value="1">Sí</option></select></div>
         </div>
         <div class="cp-res" id="s2-res"><div class="rpct" id="s2-pct">—</div><div class="rcat" id="s2-cat">—</div></div>
+        <div id="s2-warn" style="display:none;margin-top:8px"></div>
       </div>
     </div>
     <div class="calc-sec">
@@ -6179,17 +6181,17 @@ const RAORTA=`<div style="font-size:.78rem">
 
 const AORTA_DATA={
   asc:{
-    titulo:'Aneurisma de Aorta Ascendente — Indicaciones quirúrgicas (ESC 2014 — pendiente actualización a ESC PAAD 2024)',
+    titulo:'Aorta Torácica Ascendente — Umbrales de intervención (ESC PAAD 2024)',
     color:'#C62828',
     indicaciones:[
-      {c:'I',n:'C',texto:'Cirugía si diámetro aórtico máximo >50mm en síndrome de Marfan'},
-      {c:'IIa',n:'C',texto:'Cirugía si diámetro >45mm en Marfan + factores de riesgo (historia familiar de DA, crecimiento >3mm/año, IA o IM severa, deseo de embarazo)'},
-      {c:'IIa',n:'C',texto:'Cirugía si diámetro >50mm en válvula aórtica bicúspide + factores de riesgo (coartación, HTA sistémica, historia familiar de DA, crecimiento >3mm/año)'},
-      {c:'IIa',n:'C',texto:'Cirugía si diámetro >55mm en pacientes sin elastopatía ni factores de riesgo'},
-      {c:'IIb',n:'C',texto:'Umbrales más bajos según superficie corporal en pacientes de pequeña estatura, rápida progresión, IA severa, embarazo programado o preferencia del paciente'},
-      {c:'IIa',n:'C',texto:'En LDS o Ehlers-Danlos tipo IV: considerar umbrales más bajos que en Marfan (datos insuficientes — decisión caso a caso)'}
+      {c:'≥55',n:'mm',texto:'Población general (sin síndrome genético ni válvula bicúspide): cirugía si diámetro máximo ≥55 mm'},
+      {c:'≥55',n:'mm',texto:'Válvula aórtica bicúspide (BAV): cirugía si ≥55 mm; considerar ≥50 mm si factores de riesgo (HTA, historia familiar, coartación, progresión >3 mm/año)'},
+      {c:'≥50',n:'mm',texto:'Síndrome de Marfan: cirugía si ≥50 mm; considerar ≥45 mm si factores adicionales (historia familiar de MSC, mutación SMAD3, variante FBN1 severa, deseo de embarazo)'},
+      {c:'≥45',n:'mm',texto:'Loeys-Dietz (LDS): cirugía si ≥45 mm'},
+      {c:'ASI≥25',n:'mm/m²',texto:'Síndrome de Turner: cirugía si índice de tamaño aórtico (ASI) ≥25 mm/m²'},
+      {c:'>3',n:'mm/año',texto:'Crecimiento rápido: >3 mm/año documentado en estudios seriados confiables → considerar intervención'}
     ],
-    nota:'La decisión debe considerar la morfología de la aorta. Umbrales más bajos si cirugía concomitante de válvula aórtica. En elastopatías: cirugía siempre preferida sobre TEVAR.',
+    nota:'Medir el diámetro máximo perpendicular al eje del vaso, con la misma técnica en cada control (TAC/RMN con gating; eco para ascendente). En elastopatías (Marfan, LDS, Ehlers-Danlos vascular) la cirugía abierta es preferida sobre TEVAR. Considerar umbrales más bajos si hay cirugía valvular concomitante.',
     tabla:`<div style="margin-top:10px"><div style="font-size:.76rem;font-weight:700;color:var(--p);margin-bottom:6px">📏 Umbrales de intervención por perfil clínico</div>
 <table style="width:100%;border-collapse:collapse;font-size:.72rem">
 <thead><tr>
@@ -6198,55 +6200,52 @@ const AORTA_DATA={
 <th style="background:#E3F2FD;color:var(--p);padding:6px 8px;text-align:center">Clase</th>
 </tr></thead>
 <tbody>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">Síndrome de Marfan sin FR</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">&gt;50mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#2E7D3222;color:#2E7D32;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">I C</span></td></tr>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">Marfan + factores de riesgo</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">&gt;45mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#E6510022;color:#E65100;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">IIa C</span></td></tr>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">Válvula bicúspide + factores de riesgo</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">&gt;50mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#E6510022;color:#E65100;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">IIa C</span></td></tr>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">Sin elastopatía, sin FR</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">&gt;55mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#E6510022;color:#E65100;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">IIa C</span></td></tr>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">LDS / Ehlers-Danlos tipo IV</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">&lt;45mm (caso a caso)</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#82771722;color:#827717;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">IIb C</span></td></tr>
-<tr><td style="padding:6px 8px">Cualquier perfil — crecimiento rápido</td><td style="padding:6px 8px;text-align:center;font-weight:700;color:#C62828">&gt;3mm/año → cirugía</td><td style="padding:6px 8px;text-align:center"><span style="background:#E6510022;color:#E65100;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">IIa C</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">Población general (sin FR, sin síndrome)</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">≥55 mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">Válvula bicúspide (BAV)</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">≥55 mm (≥50 si FR)</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">Síndrome de Marfan</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">≥50 mm (≥45 si FR)</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">Loeys-Dietz (LDS)</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">≥45 mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">Síndrome de Turner</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">ASI ≥25 mm/m²</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px">Cualquier perfil — crecimiento rápido</td><td style="padding:6px 8px;text-align:center;font-weight:700;color:#C62828">&gt;3 mm/año</td><td style="padding:6px 8px;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
 </tbody></table></div>`
   },
   arco:{
-    titulo:'Aneurisma del Arco Aórtico — Indicaciones quirúrgicas (ESC 2014 — pendiente actualización a ESC PAAD 2024)',
+    titulo:'Arco Aórtico — Umbrales de intervención (ESC PAAD 2024)',
     color:'#F9A825',
     indicaciones:[
-      {c:'IIa',n:'C',texto:'Cirugía si aneurisma del arco aórtico aislado con diámetro máximo >55mm'},
-      {c:'IIa',n:'C',texto:'Reparación del arco aórtico si el paciente ya tiene indicación de cirugía de aorta ascendente o descendente adyacente'},
-      {c:'IIa',n:'C',texto:'En elastopatías (Marfan, LDS): la cirugía es preferida sobre TEVAR cuando está indicada la intervención'}
+      {c:'≥60',n:'mm',texto:'Aneurisma aislado del arco aórtico: intervención si diámetro máximo ≥60 mm, en centro experto'},
+      {c:'≥55',n:'mm',texto:'Considerar intervención si ≥55 mm en centros con experiencia y presencia de factores de riesgo'},
+      {c:'Adyacente',n:'',texto:'Reparar el arco si el paciente ya tiene indicación de cirugía de aorta ascendente o descendente adyacente'},
+      {c:'Elastopatía',n:'',texto:'En Marfan/LDS: la cirugía abierta es preferida sobre TEVAR cuando está indicada la intervención'}
     ],
-    nota:'La cirugía del arco aórtico es técnicamente compleja (paro circulatorio hipotérmico). Evaluar en centros de referencia. Mortalidad operatoria 3-8% en centros especializados.',
+    nota:'La cirugía del arco aórtico es técnicamente compleja (paro circulatorio hipotérmico). Derivar a centro de referencia con experiencia en cirugía de arco.',
     tabla:''
   },
   desc:{
-    titulo:'Aneurisma de Aorta Descendente — Indicaciones (ESC 2014 — pendiente actualización a ESC PAAD 2024)',
+    titulo:'Aorta Descendente / Toracoabdominal — Umbrales de intervención (ESC PAAD 2024)',
     color:'#E65100',
     indicaciones:[
-      {c:'IIa',n:'C',texto:'TEVAR preferida sobre cirugía abierta si anatomía adecuada (primera elección en aorta descendente)'},
-      {c:'IIa',n:'C',texto:'TEVAR si diámetro máximo >55mm en aorta descendente'},
-      {c:'IIa',n:'C',texto:'Cirugía abierta si TEVAR técnicamente no viable y diámetro >60mm'},
-      {c:'IIa',n:'C',texto:'En Marfan y otras elastopatías: cirugía preferida sobre TEVAR cuando está indicada la intervención'}
+      {c:'TEVAR',n:'',texto:'TEVAR (reparación endovascular torácica) preferida sobre cirugía abierta cuando es anatómicamente factible'},
+      {c:'≥60',n:'mm',texto:'Aneurisma de aorta descendente: intervención si diámetro máximo ≥60 mm'},
+      {c:'>10',n:'mm/año',texto:'Crecimiento rápido: >10 mm/año → considerar intervención independientemente del diámetro'},
+      {c:'Elastopatía',n:'',texto:'En Marfan y otras elastopatías: cirugía abierta preferida sobre TEVAR cuando está indicada la intervención'}
     ],
-    nota:'TEVAR: reparación endovascular torácica (stent-graft). Ventajas sobre cirugía abierta: menor mortalidad perioperatoria, sin paro circulatorio, recuperación más rápida. Limitación: durabilidad a largo plazo y necesidad de vigilancia.',
+    nota:'TEVAR: reparación endovascular torácica (stent-graft). Ventajas sobre cirugía abierta: menor mortalidad perioperatoria, sin paro circulatorio, recuperación más rápida. Limitación: durabilidad a largo plazo y necesidad de vigilancia por imagen.',
     tabla:`<div style="margin-top:10px;background:#FFF9C4;border-radius:6px;padding:8px 10px;font-size:.74rem;line-height:1.5;border-left:3px solid #F9A825">
 ⚠️ <strong>Elastopatías:</strong> En síndrome de Marfan, LDS y Ehlers-Danlos, la cirugía abierta es preferida sobre TEVAR por mayor durabilidad y porque la degeneración de la pared aórtica puede comprometer el sellado del stent a largo plazo.
 </div>`
   },
   aaa:{
-    titulo:'Aneurisma Aórtico Abdominal (AAA) — Indicaciones (ESC 2014 — pendiente actualización a ESC PAAD 2024)',
+    titulo:'Aneurisma de Aorta Abdominal (AAA) — Umbrales de intervención (ESC PAAD 2024)',
     color:'#1565C0',
     indicaciones:[
-      {c:'I',n:'A',texto:'Monitorización indicada y segura si diámetro <55mm y crecimiento <10mm/año'},
-      {c:'I',n:'B',texto:'Reparación indicada si diámetro AAA ≥55mm'},
-      {c:'I',n:'B',texto:'Reparación si crecimiento >10mm/año independiente del diámetro'},
-      {c:'I',n:'A',texto:'Si anatómicamente apto para EVAR: cirugía abierta o EVAR según riesgo quirúrgico (ambas Clase I)'},
-      {c:'I',n:'C',texto:'Si no apto para EVAR: cirugía abierta'},
-      {c:'IIa',n:'B',texto:'Intervalo de imagen cada 3 años para AAA 30-39mm'},
-      {c:'IIa',n:'B',texto:'Intervalo de imagen cada 2 años para AAA 40-44mm'},
-      {c:'IIa',n:'B',texto:'Intervalo de imagen cada año para AAA ≥45mm'},
-      {c:'IIb',n:'B',texto:'Estatinas e IECA en AAA pequeños para enlentecer progresión (beneficio no definitivamente probado)'},
-      {c:'IIb',n:'B',texto:'Tratamiento médico óptimo en AAA asintomático no apto para reparación abierta'}
+      {c:'♂ ≥55',n:'mm',texto:'Hombres: intervención (reparación abierta o EVAR) si diámetro ≥55 mm'},
+      {c:'♀ ≥50',n:'mm',texto:'Mujeres: intervención si diámetro ≥50 mm (mayor riesgo de rotura a igual diámetro)'},
+      {c:'>10',n:'mm/año',texto:'Crecimiento rápido: >10 mm/año → intervención independientemente del diámetro'},
+      {c:'Screening',n:'',texto:'Cribado ecográfico único recomendado en hombres fumadores o exfumadores de 65–75 años'},
+      {c:'EVAR/abierta',n:'',texto:'Si anatómicamente apto para EVAR: elegir EVAR o cirugía abierta según riesgo quirúrgico y expectativa de vida; si no apto, cirugía abierta'},
+      {c:'TMO',n:'',texto:'AAA pequeño: dejar de fumar (enlentece el crecimiento) y control de factores de riesgo cardiovascular'}
     ],
-    nota:'AAA en mujeres: mayor riesgo de rotura a igual diámetro — considerar umbral más bajo (~50mm). Dejar de fumar (Clase I B) enlentece crecimiento. EVAR: menor mortalidad perioperatoria pero mayor reintervención tardía.',
+    nota:'AAA en mujeres: umbral de intervención más bajo (≥50 mm) por mayor riesgo de rotura a igual diámetro. Dejar de fumar enlentece el crecimiento. EVAR: menor mortalidad perioperatoria pero mayor tasa de reintervención tardía y necesidad de vigilancia.',
     tabla:`<div style="margin-top:10px"><div style="font-size:.76rem;font-weight:700;color:var(--p);margin-bottom:6px">📏 Umbrales de intervención AAA</div>
 <table style="width:100%;border-collapse:collapse;font-size:.72rem">
 <thead><tr>
@@ -6255,12 +6254,12 @@ const AORTA_DATA={
 <th style="background:#E3F2FD;color:var(--p);padding:6px 8px;text-align:center">Clase</th>
 </tr></thead>
 <tbody>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">AAA 25-29mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center">Eco en 4 años</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#E6510022;color:#E65100;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">IIa B</span></td></tr>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">AAA 30-39mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center">Imagen cada 3 años</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#E6510022;color:#E65100;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">IIa B</span></td></tr>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">AAA 40-44mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center">Imagen cada 2 años</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#E6510022;color:#E65100;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">IIa B</span></td></tr>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">AAA 45-54mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center">Imagen anual</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#E6510022;color:#E65100;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">IIa B</span></td></tr>
-<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;font-weight:700">AAA ≥55mm (♂) / ≥50mm (♀)</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">REPARACIÓN</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#2E7D3222;color:#2E7D32;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">I B</span></td></tr>
-<tr><td style="padding:6px 8px">Crecimiento >10mm/año</td><td style="padding:6px 8px;text-align:center;font-weight:700;color:#C62828">REPARACIÓN</td><td style="padding:6px 8px;text-align:center"><span style="background:#2E7D3222;color:#2E7D32;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">I B</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">AAA 30-39mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center">Imagen cada 3 años</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">AAA 40-44mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center">Imagen cada 2 años</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7">AAA 45-54mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center">Imagen anual</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;font-weight:700">Hombres ≥55mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">INTERVENCIÓN</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;font-weight:700">Mujeres ≥50mm</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center;font-weight:700;color:#C62828">INTERVENCIÓN</td><td style="padding:6px 8px;border-bottom:1px solid #EEF2F7;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
+<tr><td style="padding:6px 8px">Crecimiento &gt;10mm/año</td><td style="padding:6px 8px;text-align:center;font-weight:700;color:#C62828">INTERVENCIÓN</td><td style="padding:6px 8px;text-align:center"><span style="background:#54636E22;color:#546E7A;padding:1px 7px;border-radius:5px;font-weight:700;font-size:.7rem">PAAD 2024</span></td></tr>
 </tbody></table></div>`
   },
   seg:{
@@ -6270,8 +6269,9 @@ const AORTA_DATA={
       {c:'I',n:'A',texto:'TAC o RMN aórtica completa al diagnóstico para estadificar toda la aorta'},
       {c:'I',n:'C',texto:'Ecocardiograma en todo paciente con aorta ascendente dilatada para evaluar válvula y función VI'},
       {c:'IIa',n:'C',texto:'RMN preferida sobre TAC en Marfan y elastopatías jóvenes (evitar radiación acumulada)'},
-      {c:'IIa',n:'C',texto:'Imagen anual si diámetro aórtico 45-50mm o crecimiento previo documentado'},
-      {c:'IIa',n:'C',texto:'Imagen cada 2-3 años si diámetro estable <45mm sin factores de riesgo'},
+      {c:'<45',n:'mm',texto:'Diámetro <45 mm estable: imagen cada 2–3 años (ESC PAAD 2024)'},
+      {c:'45-49',n:'mm',texto:'Diámetro 45–49 mm: imagen anual (ESC PAAD 2024)'},
+      {c:'≥50',n:'mm',texto:'Diámetro ≥50 mm: imagen cada 6 meses o evaluación quirúrgica (ESC PAAD 2024)'},
       {c:'I',n:'B',texto:'Control estricto de PA (objetivo <130/80mmHg) — betabloqueantes de elección en Marfan'},
       {c:'I',n:'B',texto:'Losartán en Marfan (antagonismo TGF-β) — beneficio demostrado en reducción de dilatación'},
       {c:'I',n:'C',texto:'Evitar ejercicio isométrico intenso (pesas, levantamiento) en aneurisma significativo'},
@@ -6298,12 +6298,11 @@ function showAorta(id){
   }).join('');
   document.getElementById('aorta-content').innerHTML=`
     <div style="background:${d.color};color:#fff;border-radius:8px;padding:9px 14px;margin-bottom:10px;font-size:.86rem;font-weight:700">${d.titulo}</div>
-    <div style="background:#FFF3E0;border-left:3px solid #E65100;border-radius:6px;padding:8px 10px;font-size:.72rem;color:#E65100;line-height:1.5;margin-bottom:10px">⚠️ Este módulo está basado en ESC 2014. La guía vigente es ESC Peripheral Arterial and Aortic Diseases 2024. Actualización en curso.</div>
-    <div style="font-size:.76rem;font-weight:700;color:var(--p);margin-bottom:6px">⚕️ Indicaciones (ESC 2014 — pendiente actualización a ESC PAAD 2024)</div>
+    <div style="font-size:.76rem;font-weight:700;color:var(--p);margin-bottom:6px">⚕️ Indicaciones (ESC PAAD 2024)</div>
     ${indHTML}
     ${d.tabla}
     ${d.nota?`<div style="background:#E3F2FD;border-radius:6px;padding:8px 10px;font-size:.74rem;color:var(--p);line-height:1.5;margin-top:8px">💡 ${d.nota}</div>`:''}
-    <div style="font-size:.68rem;color:var(--txt2);text-align:right;margin-top:8px">ESC Guidelines on Aortic Diseases 2014 — pendiente actualización a ESC PAAD 2024 · Erbel R et al. Eur Heart J 2014</div>`;
+    <div style="font-size:.68rem;color:var(--txt2);text-align:right;margin-top:8px">ESC 2024 Guidelines for the management of Peripheral Arterial and Aortic Diseases · Eur Heart J 2024</div>`;
 }
 setTimeout(()=>{if(typeof showAorta==='function')showAorta('asc');},170);
 
@@ -9534,14 +9533,14 @@ function calcScore2(){
   const sbp=+document.getElementById('s2-sbp').value;
   const smoke=+document.getElementById('s2-smoke').value;
   const dm=+document.getElementById('s2-dm').value;
-  const dmWrap=document.getElementById('s2-dm-wrap');
+  const region=(document.getElementById('s2-region')||{}).value||'mod';
+  const warn=document.getElementById('s2-warn');
   const lbl=document.getElementById('score2-label');
   const el=document.getElementById('s2-res');
-  if(!age){lbl.textContent='Ingresá la edad para determinar escala';dmWrap.style.display='none';el.style.display='none';return;}
+  if(!age){lbl.textContent='Ingresá la edad para determinar escala';el.style.display='none';if(warn)warn.style.display='none';return;}
   const useOP=age>=70;
-  dmWrap.style.display=useOP?'':'none';
   lbl.textContent=useOP?'Usando: SCORE2-OP (edad ≥70)':'Usando: SCORE2 (edad <70)';
-  if(!tc||!hdl||!sbp){el.style.display='none';return;}
+  if(!tc||!hdl||!sbp){el.style.display='none';if(warn)warn.style.display='none';return;}
   const non_hdl=(tc-hdl)/38.67;
   let lp,risk;
   if(!useOP){
@@ -9576,6 +9575,16 @@ function calcScore2(){
   el.classList.add('show');el.style.background=bg;el.style.color=cl;
   document.getElementById('s2-pct').textContent=pct+'%';
   document.getElementById('s2-cat').textContent=cat+' · Clasificación para paciente de '+age+' años (rango '+banda+')';
+  // FIX clínico: calibración geográfica (advertencia) + aviso SCORE2-Diabetes.
+  if(warn){
+    const regionLbl={alta:'alta (Europa del Este)',mod:'moderada',baja:'baja (Europa Occidental)'}[region]||'moderada';
+    let warnHTML='<div style="background:#FFF3E0;border-left:3px solid #E65100;border-radius:6px;padding:8px 10px;font-size:.72rem;color:#E65100;line-height:1.5">⚠️ Región de riesgo seleccionada: <b>'+regionLbl+'</b>. Uruguay no dispone de calibración local validada en las tablas ESC; se usa la región de riesgo <b>moderado</b> (España, Italia, Francia) como aproximación más cercana para América Latina. <b>Usar con precaución en población latinoamericana.</b><br><span style="color:#8a5a1a">Nota técnica: la recalibración numérica por región requiere los factores de recalibración oficiales ESC SCORE2, pendientes de verificación con la fuente primaria. El valor mostrado corresponde al modelo SCORE2 sin recalibración regional aplicada.</span></div>';
+    if(dm===1){
+      warnHTML+='<div style="background:#E3F2FD;border-left:3px solid #1565C0;border-radius:6px;padding:8px 10px;font-size:.72rem;color:#1565C0;line-height:1.5;margin-top:6px">ℹ️ Para pacientes con <b>DM2</b> existe <b>SCORE2-Diabetes (ESC 2023)</b>, con variables adicionales (HbA1c, duración de la diabetes, eGFR). El resultado actual no incorpora esas variables.</div>';
+    }
+    warn.innerHTML=warnHTML;
+    warn.style.display='block';
+  }
 }
 
 // ── EUROSCORE II ──────────────────────────────────────────────────
