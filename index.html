@@ -874,6 +874,7 @@ main{padding-bottom:100px}
     <button onclick="csActionsClose();toggleDarkMode()">🌓 Día/Noche</button>
     <label onclick="csActionsClose()">⬆️ Importar<input type="file" accept="application/json,.json" style="display:none" onchange="handleImportFile(this.files&&this.files[0]);this.value=''"></label>
     <button onclick="csActionsClose();exportBackup()">⬇️ Exportar</button>
+    <button onclick="csActionsClose();exportarCardioAnalytics()">📤 Exportar para Analytics</button>
     <button onclick="csActionsClose();openHelp()">❓ Ayuda</button>
     <button onclick="csActionsClose();logout()">🔒 Cerrar sesión</button>
   </div>
@@ -5862,6 +5863,46 @@ function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JS
 function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');if(d){patients=d.patients;nextPid=d.nextPid;nextCid=d.nextCid;}else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}migrateConsultations(patients);}
 // Exporta TODAS las instituciones + sus pacientes a un unico JSON. Usa getInsts()
 // (fuente real de la lista) y lee el bloque crd_d_<id> de cada una. No incluye cs_auth.
+// Exporta para CeiboAnalytics: aplana TODAS las instituciones -> pacientes -> consultas
+// en un arreglo "estudios" con la forma que espera readCardioSalud() de Analytics.
+function exportarCardioAnalytics(){
+  try{
+    var insts=getInsts();
+    var estudios=[];
+    insts.forEach(function(inst){
+      var raw=localStorage.getItem('crd_d_'+inst.id);
+      var d= raw ? JSON.parse(raw) : null;
+      var patients=(d && Array.isArray(d.patients)) ? d.patients : [];
+      patients.forEach(function(p){
+        var cons=(p && Array.isArray(p.consultations)) ? p.consultations : [];
+        cons.forEach(function(c){
+          var cc=c||{};
+          estudios.push({
+            id:'crd_'+inst.id+'_'+(p.id!=null?p.id:'')+'_'+(cc.id!=null?cc.id:Math.random().toString(36).slice(2)),
+            nombre:(p.name!=null?p.name:'')||'',
+            ci:(p.ci!=null?p.ci:'')||'',
+            doc_tipo:'CI',
+            edad:(p.age!=null?p.age:null),
+            matricula:(p.matricula!=null?p.matricula:'')||'',
+            fecha:(cc.date||cc.fecha||''),
+            inst:(inst.label||inst.id),
+            campos:cc
+          });
+        });
+      });
+    });
+    if(!estudios.length){ alert('No hay consultas para exportar.'); return; }
+    var payload={app:'cardiosalud',version:'1.0',exportado:new Date().toISOString(),estudios:estudios};
+    var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url; a.download='cardiosalud_analytics_'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    alert('✅ '+estudios.length+' consultas exportadas para Analytics');
+  }catch(e){ alert('No se pudo exportar para Analytics: '+(e&&e.message?e.message:e)); }
+}
+
 function exportBackup(){
   try{
     var insts=getInsts();
