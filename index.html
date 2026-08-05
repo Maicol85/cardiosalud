@@ -164,6 +164,17 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
 .calc-hdr strong{font-size:.78rem;color:var(--p);text-transform:uppercase;letter-spacing:.4px}
 .prv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .prv-grid .fg{margin-bottom:0}
+/* Acordeón Paciente nuevo */
+#acc-nuevo .sec-hdr{cursor:pointer}
+.accnp-sec-h{background:#F5F9FF;padding:9px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.82rem;font-weight:700;color:var(--txt);border:none;width:100%;text-align:left;border-radius:8px;margin:10px 0 8px;font-family:inherit}
+[data-theme="dark"] .accnp-sec-h{background:var(--surf)}
+.accnp-sec-b{padding:2px 2px 4px}
+.np-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.np-grid .np-full{grid-column:1 / -1}
+.np-inline{display:flex;gap:6px}
+.np-inline input{flex:1;min-width:0}
+.np-inline select{flex:0 0 92px}
+@media(max-width:768px){.np-grid{grid-template-columns:1fr}}
 .prv-res{margin-top:10px;padding:10px;border-radius:8px;text-align:center;display:none}
 .prv-res .rpct{font-size:1.5rem;font-weight:800}.prv-res .rcat{font-size:.8rem;font-weight:700;margin-top:2px}
 .dlist{display:flex;flex-direction:column;gap:9px}
@@ -906,8 +917,79 @@ main{padding-bottom:100px}
   </div>
 
   <div class="content">
+    <!-- ═══════════ ACORDEÓN PACIENTE NUEVO ═══════════ -->
+    <div class="section" id="acc-nuevo" style="grid-column:1 / -1">
+      <div role="button" tabindex="0" onkeydown="csKey(event)" class="sec-hdr" onclick="preopTog('accnp-body','accnp-arrow')"><h2>➕ Paciente nuevo</h2><span id="accnp-arrow" style="font-size:.9rem;flex-shrink:0">▲</span></div>
+      <div class="sec-body" id="accnp-body">
+        <div class="form-tabs">
+          <button class="tab-btn active" id="tab-new" onclick="switchTab('new')">Nuevo paciente</button>
+          <button class="tab-btn" id="tab-ex" onclick="switchTab('existing')">Paciente existente</button>
+        </div>
+        <div id="block-ex" style="display:none">
+          <div class="fg"><label>Buscar paciente</label><select id="f-pid"><option value="">Seleccionar paciente…</option></select></div>
+        </div>
+        <div id="block-new">
+          <button class="accnp-sec-h" onclick="preopTog('accnp-s1','accnp-a1')"><span>👤 Datos del paciente</span><span id="accnp-a1">▲</span></button>
+          <div class="accnp-sec-b" id="accnp-s1">
+            <div class="np-grid">
+              <div class="fg"><label>Nombre completo</label><input type="text" id="f-name" placeholder="Ej. Ana Torres"></div>
+              <div class="fg"><label>Edad</label><div class="np-inline"><input type="number" id="f-age" min="1" max="120" placeholder="Ej. 58"><select id="f-age-unit"><option value="a">años</option><option value="m">meses</option></select></div></div>
+              <div class="fg"><label>Sexo</label><select id="f-sex"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+              <div class="fg"><label>Cédula de identidad</label><input type="text" id="f-ci" placeholder="Ej. 1.234.567-8"></div>
+              <div class="fg"><label>Matrícula médica</label><input type="text" id="f-mat" placeholder="Ej. 12345"></div>
+              <div class="fg"><label>CI / Historia clínica</label><input type="text" id="f-hc" placeholder="Ej. HC-00123"></div>
+            </div>
+          </div>
+          <button class="accnp-sec-h" onclick="preopTog('accnp-s2','accnp-a2')"><span>🩺 Consulta inicial</span><span id="accnp-a2">▲</span></button>
+          <div class="accnp-sec-b" id="accnp-s2">
+            <div class="np-grid">
+              <div class="fg"><label>Fecha de consulta</label><input type="date" id="f-date"></div>
+              <div class="fg"><label>Diagnóstico principal</label>
+                <select id="f-diag" onchange="toggleDiagLibre('f-diag-libre',this)"><option value="">Seleccionar…</option>
+                  <option>Hipertensión arterial</option><option>Insuficiencia cardíaca</option>
+                  <option>Fibrilación auricular</option><option>Infarto agudo de miocardio</option>
+                  <option>Angina de pecho</option><option>Cardiopatía isquémica</option>
+                  <option>Miocardiopatía dilatada</option><option>Valvulopatía</option>
+                  <option>Taquicardia ventricular</option><option>Otro (especificar)</option>
+                </select>
+                <input type="text" id="f-diag-libre" placeholder="Escribí el diagnóstico…" style="display:none;margin-top:6px">
+              </div>
+              <div class="fg np-full"><label>Antecedentes cardiovasculares</label><textarea id="f-bg" rows="2" placeholder="HTA, DM2, Tabaquismo…"></textarea></div>
+              <div class="fg np-full"><label>Medicación actual</label><textarea id="f-tx" rows="2" placeholder="Enalapril 10mg, AAS 100mg…"></textarea></div>
+              <div class="fg np-full"><label>Paraclínica</label><textarea id="f-paraclinica" placeholder="Laboratorio, Rx tórax, BNP…"></textarea></div>
+              <div class="fg np-full"><label>ETT / Ecocardiograma</label><textarea id="f-ett" placeholder="FEVI 55%, HVI leve…"></textarea></div>
+              <div class="fg np-full"><label>Conducta</label><textarea id="f-conduct" placeholder="Internación, derivación, control…"></textarea></div>
+              <div class="fg np-full"><label>Notas</label><textarea id="f-notas" rows="2" placeholder="Notas adicionales…"></textarea></div>
+              <div class="fg"><label>ECG (imagen)</label><input type="file" id="f-ecg" accept="image/*"></div>
+              <div class="fg"><label>Próxima consulta</label><input type="date" id="f-prox"></div>
+            </div>
+          </div>
+          <button class="accnp-sec-h" onclick="preopTog('accnp-s3','accnp-a3')"><span>🧮 Calculadora PREVENT 2023 AHA</span><span id="accnp-a3">▼</span></button>
+          <div class="accnp-sec-b" id="accnp-s3" style="display:none">
+            <div class="prv-grid">
+              <div class="fg"><label>Sexo</label><select id="c-sex" oninput="calcLive()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+              <div class="fg"><label>Edad</label><input type="number" id="c-age" min="30" max="79" placeholder="55" oninput="calcLive()"></div>
+              <div class="fg"><label>Colesterol total (mg/dL)</label><input type="number" id="c-tc" placeholder="200" oninput="calcLive()"></div>
+              <div class="fg"><label>HDL-C (mg/dL)</label><input type="number" id="c-hdl" placeholder="50" oninput="calcLive()"></div>
+              <div class="fg"><label>PA sistólica (mmHg)</label><input type="number" id="c-sbp" placeholder="130" oninput="calcLive()"></div>
+              <div class="fg"><label>Creatinina (mg/dL)</label><input type="number" id="c-creat" step="0.01" placeholder="1.0" oninput="calcCKDEPI()"></div>
+              <div class="fg"><label>eGFR (mL/min/1.73m²)</label><input type="number" id="c-egfr" placeholder="75" oninput="calcLive()"></div>
+              <div class="fg"><label>uACR (mg/g)</label><input type="number" id="c-uacr" placeholder="10" oninput="calcLive()"></div>
+              <div></div>
+              <div class="fg"><label>Tto antihipertensivo</label><select id="c-htn" oninput="calcLive()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Diabetes</label><select id="c-dm" oninput="calcLive()"><option value="0">No</option><option value="1">Sí</option></select></div>
+              <div class="fg"><label>Tabaquismo</label><select id="c-smoke" oninput="calcLive()"><option value="0">No</option><option value="1">Sí</option></select></div>
+            </div>
+            <div class="prv-res" id="prv-res" style="display:none"><div class="rpct" id="rpct">—</div><div class="rcat" id="rcat">—</div></div>
+          </div>
+        </div>
+        <button class="btn-p" onclick="submitForm()">+ Guardar paciente</button>
+        <div class="msg-ok" id="msg-ok">✓ Paciente guardado correctamente</div>
+      </div>
+    </div>
+
     <div class="section">
-      <div class="sec-hdr"><h2>Consultas</h2><span style="font-size:.74rem;opacity:.8" id="pt-count"></span><button id="btn-toggle-tbl" onclick="toggleTbl()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-weight:600;margin-left:8px">▼ Expandir</button><button onclick="openPDFModal()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-weight:600;margin-left:6px">📄 Exportar PDF</button></div>
+      <div class="sec-hdr"><h2>Pacientes guardados <span id="pg-count" style="font-weight:600;opacity:.85">(0)</span></h2><span style="font-size:.74rem;opacity:.8" id="pt-count"></span><button id="btn-toggle-tbl" onclick="toggleTbl()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-weight:600;margin-left:8px">▼ Expandir</button><button onclick="openPDFModal()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.76rem;font-weight:600;margin-left:6px">📄 Exportar PDF</button></div>
       <div class="sec-body">
         <div class="filter-bar" id="filter-bar">
           <span>📅 Consultas del <strong id="filter-date"></strong></span>
@@ -944,72 +1026,6 @@ main{padding-bottom:100px}
     </div>
 
     <div style="display:flex;flex-direction:column;gap:18px">
-      <div class="section">
-        <div class="sec-hdr"><h2>Nueva Consulta</h2></div>
-        <div class="sec-body">
-          <div class="form-tabs">
-            <button class="tab-btn active" id="tab-new" onclick="switchTab('new')">Nuevo paciente</button>
-            <button class="tab-btn" id="tab-ex" onclick="switchTab('existing')">Paciente existente</button>
-          </div>
-          <div id="block-new">
-            <div class="fg"><label>Fecha de consulta</label><input type="date" id="f-date"></div>
-            <div class="fg"><label>Cédula de identidad</label><input type="text" id="f-ci" placeholder="Ej. 1.234.567-8"></div>
-            <div class="fg"><label>Matrícula médica</label><input type="text" id="f-mat" placeholder="Ej. 12345"></div>
-            <div class="fg"><label>Nombre completo</label><input type="text" id="f-name" placeholder="Ej. Ana Torres"></div>
-            <div class="fg"><label>Edad</label><input type="number" id="f-age" min="1" max="120" placeholder="Ej. 58"></div>
-            <div class="fg"><label>Antecedentes</label><textarea id="f-bg" placeholder="HTA, DM2, Tabaquismo…"></textarea></div>
-            <div class="fg"><label>Tratamientos</label><textarea id="f-tx" placeholder="Enalapril 10mg, AAS 100mg…"></textarea></div>
-            <div class="fg"><label>Historia Clínica</label><textarea id="f-hc" placeholder="Ej. HC-00123"></textarea></div>
-            <div class="fg"><label>Paraclínica</label><textarea id="f-paraclinica" placeholder="Laboratorio, Rx tórax, BNP…"></textarea></div>
-            <div class="fg"><label>ECG (imagen)</label><input type="file" id="f-ecg" accept="image/*"></div>
-            <div class="fg"><label>ETT / Ecocardiograma</label><textarea id="f-ett" placeholder="FEVI 55%, HVI leve…"></textarea></div>
-            <div class="fg"><label>Diagnóstico</label>
-              <select id="f-diag" onchange="toggleDiagLibre('f-diag-libre',this)"><option value="">Seleccionar…</option>
-                <option>Hipertensión arterial</option><option>Insuficiencia cardíaca</option>
-                <option>Fibrilación auricular</option><option>Infarto agudo de miocardio</option>
-                <option>Angina de pecho</option><option>Cardiopatía isquémica</option>
-                <option>Miocardiopatía dilatada</option><option>Valvulopatía</option>
-                <option>Taquicardia ventricular</option><option>Otro (especificar)</option>
-              </select>
-              <input type="text" id="f-diag-libre" placeholder="Escribí el diagnóstico…" style="display:none;margin-top:6px">
-            </div>
-            <div class="fg"><label>Conducta</label><textarea id="f-conduct" placeholder="Internación, derivación, control…"></textarea></div>
-          </div>
-          <div id="block-ex" style="display:none">
-            <div class="fg"><label>Buscar paciente</label>
-              <select id="f-pid"><option value="">Seleccionar paciente…</option></select>
-            </div>
-          </div>
-
-          <div class="prv-calc">
-            <div role="button" tabindex="0" onkeydown="csKey(event)" class="calc-hdr" onclick="toggleCalc()">
-              <strong>🧮 Calculadora PREVENT 2023 AHA</strong>
-              <span id="calc-arrow" style="font-size:.82rem;color:var(--p)">▼ Desplegar</span>
-            </div>
-            <div id="calc-body" style="display:none">
-              <div class="prv-grid">
-                <div class="fg"><label>Sexo</label><select id="c-sex" oninput="calcLive()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
-                <div class="fg"><label>Edad</label><input type="number" id="c-age" min="30" max="79" placeholder="55" oninput="calcLive()"></div>
-                <div class="fg"><label>Colesterol total (mg/dL)</label><input type="number" id="c-tc" placeholder="200" oninput="calcLive()"></div>
-                <div class="fg"><label>HDL-C (mg/dL)</label><input type="number" id="c-hdl" placeholder="50" oninput="calcLive()"></div>
-                <div class="fg"><label>PA sistólica (mmHg)</label><input type="number" id="c-sbp" placeholder="130" oninput="calcLive()"></div>
-                <div class="fg"><label>Creatinina (mg/dL)</label><input type="number" id="c-creat" step="0.01" placeholder="1.0" oninput="calcCKDEPI()"></div>
-                <div class="fg"><label>eGFR (mL/min/1.73m²)</label><input type="number" id="c-egfr" placeholder="75" oninput="calcLive()"></div>
-                <div class="fg"><label>uACR (mg/g)</label><input type="number" id="c-uacr" placeholder="10" oninput="calcLive()"></div>
-                <div></div>
-                <div class="fg"><label>Tto antihipertensivo</label><select id="c-htn" oninput="calcLive()"><option value="0">No</option><option value="1">Sí</option></select></div>
-                <div class="fg"><label>Diabetes</label><select id="c-dm" oninput="calcLive()"><option value="0">No</option><option value="1">Sí</option></select></div>
-                <div class="fg"><label>Tabaquismo</label><select id="c-smoke" oninput="calcLive()"><option value="0">No</option><option value="1">Sí</option></select></div>
-              </div>
-              <div class="prv-res" id="prv-res"><div class="rpct" id="rpct">—</div><div class="rcat" id="rcat">—</div></div>
-            </div>
-          </div>
-
-          <button class="btn-p" onclick="submitForm()">+ Guardar Consulta</button>
-          <div class="msg-ok" id="msg-ok">✓ Consulta guardada correctamente</div>
-        </div>
-      </div>
-
       <div class="section">
         <div class="sec-hdr"><h2>🔔 Próximos Controles</h2></div>
         <div class="control-section" id="control-list"><div style="font-size:.82rem;color:var(--txt2);text-align:center;padding:10px">Sin controles programados</div></div>
@@ -5301,7 +5317,7 @@ function cpMissing(el,pctId,catId,miss,interpId){
   if(interpId){const i=document.getElementById(interpId);if(i)i.textContent='Complete todos los campos obligatorios para calcular. No se emite conclusión clínica con datos incompletos.';}
 }
 const fmtDate=d=>{if(!d)return'—';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`};
-function flatRows(){const r=[];patients.forEach(p=>p.consultations.forEach(c=>r.push({...c,name:p.name,age:p.age,pid:p.id,ci:p.ci||'',matricula:p.matricula||'',hc:p.hc||'',problema:!!p.problema})));return r;}
+function flatRows(){const r=[];patients.forEach(p=>p.consultations.forEach(c=>r.push({...c,name:p.name,age:p.age,ageUnit:p.ageUnit||'a',sex:p.sex||'',pid:p.id,ci:p.ci||'',matricula:p.matricula||'',hc:p.hc||'',problema:!!p.problema})));return r;}
 
 // ── PREVENT 2023 (PCE base + PREVENT kidney modifier) ─────────────
 function calcPREVENT({sex,age,tc,hdl,sbp,htn,dm,smoke,egfr,uacr}){
@@ -5373,7 +5389,7 @@ function detailHTML(r){
   const gallery=(arr,field)=>arr.length?arr.map((u,i)=>`<div class="img-thumb"><img src="${u}" alt="Imagen clínica adjunta ${i+1}" onclick="viewImg(this.src)"><button class="img-del" aria-label="Eliminar imagen ${i+1}" onclick="delImg(${r.pid},${r.id},'${field}',${i})">✕</button></div>`).join(''):'<span class="no-ecg">Sin imágenes</span>';
   return`<div class="det-panel">
     <div class="det-hdr">
-      <span class="det-ttl">${esc(r.name)}, ${r.age} años</span>
+      <span class="det-ttl">${esc(r.name)}, ${r.age} ${r.ageUnit==='m'?'meses':'años'}${r.sex?` · ${r.sex==='F'?'Femenino':'Masculino'}`:''}</span>
       ${r.ci?`<span class="dp-badge">CI: ${esc(r.ci)}</span>`:''}${r.matricula?`<span class="dp-badge">Mat: ${esc(r.matricula)}</span>`:''}${r.hc?`<span class="dp-badge">HC: ${esc(r.hc)}</span>`:''}
       <button class="btn-prob${r.problema?' activo':''}" onclick="toggleProblema(${r.pid})">${r.problema?'✓ Quitar pendiente':'Marcar como pendiente'}</button>
       <button class="btn-edit" onclick="editDetail(${r.id})">✏️ Editar</button>
@@ -5393,6 +5409,7 @@ function detailHTML(r){
       ${f('Paraclínica',r.paraclinica)}
       ${f('ETT / Ecocardiograma',r.ett)}
       ${f('Conducta',r.conduct)}
+      ${f('Notas',r.notas)}
     </div>
     <div class="control-box" style="grid-column:1/-1">
       <label>🔔 Próximo control</label>
@@ -5489,6 +5506,7 @@ function render(){
   });
   currentRows=rows;
   document.getElementById('pt-count').textContent=`${rows.length} consulta${rows.length!==1?'s':''}`;
+  {const pg=document.getElementById('pg-count');if(pg)pg.textContent=`(${patients.length})`;}
   updateSearchStats(q);
   updateStats(rows);updateDiags(rows);updateFEVI(rows);updateCirugia();updateAntiagregacion();updateAntcoag();updateDevice();updateFA();renderCal();
   if(!tablExpanded)return;
@@ -5500,7 +5518,7 @@ function render(){
     const nameStyle=r.problema?' style="color:#B71C1C;font-weight:700"':'';
     return`<tr>
       <td><button class="lnk" onclick="toggleDetail(${r.id})"><span${nameStyle}>${esc(r.name)}</span></button><button class="btn-plus" onclick="event.stopPropagation();addConsultaRapida(${r.pid})" title="Agregar consulta">+</button></td>
-      <td>${r.age} años</td>
+      <td>${r.age} ${r.ageUnit==='m'?'meses':'años'}</td>
       <td><button class="lnk" onclick="toggleDetail(${r.id})">${fmtDate(r.date)}</button></td>
       <td><div class="trunc" title="${esc(r.background)}">${r.background?esc(r.background):'—'}</div></td>
       <td>${prvBadge(r.prevent)}</td>
@@ -5700,7 +5718,7 @@ function submitForm(){
   if(activeTab==='new'){
     const name=document.getElementById('f-name').value.trim(),age=+document.getElementById('f-age').value;
     if(!name||!age){alert('Ingresá nombre y edad del nuevo paciente.');return;}
-    target={isNew:true,name,age,ci:document.getElementById('f-ci').value.trim(),matricula:document.getElementById('f-mat').value.trim(),hc:document.getElementById('f-hc').value.trim()};
+    target={isNew:true,name,age,sex:document.getElementById('f-sex').value,ageUnit:document.getElementById('f-age-unit').value,ci:document.getElementById('f-ci').value.trim(),matricula:document.getElementById('f-mat').value.trim(),hc:document.getElementById('f-hc').value.trim()};
   }else{
     const pid=+document.getElementById('f-pid').value;
     if(!pid){alert('Seleccioná un paciente existente.');return;}
@@ -5712,11 +5730,15 @@ function submitForm(){
     ett:document.getElementById('f-ett').value.trim(),
     paraclinica:document.getElementById('f-paraclinica').value.trim(),
     conduct:document.getElementById('f-conduct').value.trim(),
+    notas:document.getElementById('f-notas').value.trim(),
+    nextControl:document.getElementById('f-prox').value||'',
     prevent:lastPRV,ecgs:[],images:[]};
   const save=()=>{
-    if(target.isNew)patients.push({id:nextPid++,name:target.name,age:target.age,ci:target.ci||'',matricula:target.matricula||'',hc:target.hc||'',problema:false,consultations:[c]});
+    if(target.isNew)patients.push({id:nextPid++,name:target.name,age:target.age,sex:target.sex||'',ageUnit:target.ageUnit||'a',ci:target.ci||'',matricula:target.matricula||'',hc:target.hc||'',problema:false,consultations:[c]});
     else patients.find(p=>p.id===target.pid).consultations.push(c);
+    if(!tablExpanded){tablExpanded=true;const tw=document.getElementById('tbl-wrap');if(tw)tw.style.display='';const bt=document.getElementById('btn-toggle-tbl');if(bt)bt.textContent='▲ Minimizar';}
     render();resetForm();refreshSel();saveInst();
+    const ab=document.getElementById('accnp-body');if(ab){ab.style.display='none';const aa=document.getElementById('accnp-arrow');if(aa)aa.textContent='▼';}
     const m=document.getElementById('msg-ok');m.style.display='block';setTimeout(()=>m.style.display='none',2800);
   };
   const file=document.getElementById('f-ecg').files[0];
@@ -5725,7 +5747,9 @@ function submitForm(){
 }
 
 function resetForm(){
-  ['f-name','f-age','f-ci','f-mat','f-hc','f-bg','f-tx','f-ett','f-paraclinica','f-conduct','f-diag-libre'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  ['f-name','f-age','f-ci','f-mat','f-hc','f-bg','f-tx','f-ett','f-paraclinica','f-conduct','f-diag-libre','f-notas','f-prox'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  const fsx=document.getElementById('f-sex');if(fsx)fsx.value='M';
+  const fau=document.getElementById('f-age-unit');if(fau)fau.value='a';
   document.getElementById('f-diag-libre').style.display='none';
   document.getElementById('f-diag').value='';document.getElementById('f-ecg').value='';
   document.getElementById('f-date').valueAsDate=new Date();
