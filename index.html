@@ -62,7 +62,7 @@ main{max-width:1340px;margin:0 auto;padding:20px;display:grid;gap:20px}
 .cs-actions-menu button:hover,.cs-actions-menu label:hover{background:var(--bg)}
 @media(max-width:768px){
   header{position:relative;padding:0 12px;gap:10px}
-  #inst-bdg,#btn-back,#btn-edit-centros,#btn-cerrar,#btn-export,#btn-import,#dark-toggle,#clock,.hdr-search{display:none!important}
+  #inst-bdg,#btn-back,#btn-edit-centros,#btn-cerrar,#btn-export,#btn-import,#btn-help,#btn-logout,#dark-toggle,#clock,.hdr-search{display:none!important}
   #audit-fab{display:none!important}
   .mtabs{display:none!important}
   .hdr-info{min-width:0;flex:1}
@@ -850,6 +850,8 @@ main{padding-bottom:100px}
     <div class="hdr-search-results" id="hdr-search-results"></div>
   </div>
   <button id="dark-toggle" onclick="toggleDarkMode()" title="Modo oscuro" aria-label="Alternar modo oscuro" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:1.1rem;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0">🌙</button>
+  <button id="btn-help" onclick="openHelp()" title="Ayuda / Manual" aria-label="Ayuda" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.95rem;font-weight:700;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0">?</button>
+  <button id="btn-logout" onclick="logout()" title="Cerrar sesión" aria-label="Cerrar sesión" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;font-size:.75rem;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:.2s;white-space:nowrap">🔒 Cerrar</button>
   <div class="hdr-right" id="clock"></div>
   <button class="cs-kebab" aria-label="Más acciones" onclick="csActionsToggle()">⋮</button>
   <!-- Menú de acciones ⋯ (desktop + móvil) -->
@@ -859,8 +861,8 @@ main{padding-bottom:100px}
     <button onclick="csActionsClose();toggleDarkMode()">🌓 Día/Noche</button>
     <label onclick="csActionsClose()">⬆️ Importar<input type="file" accept="application/json,.json" style="display:none" onchange="handleImportFile(this.files&&this.files[0]);this.value=''"></label>
     <button onclick="csActionsClose();exportBackup()">⬇️ Exportar</button>
-    <button onclick="csActionsClose();initTutorial()">❓ Ayuda</button>
-    <button onclick="csActionsClose();exitInst()">🔒 Cerrar sesión</button>
+    <button onclick="csActionsClose();openHelp()">❓ Ayuda</button>
+    <button onclick="csActionsClose();logout()">🔒 Cerrar sesión</button>
   </div>
 </header>
 <div class="cs-drawer-ov" id="csDrawerOv" onclick="csDrawerClose()"></div>
@@ -3841,23 +3843,44 @@ main{padding-bottom:100px}
 </script>
 
 <div id="isc" class="isc"></div>
-<div id="tutorial-overlay" style="display:none">
-  <div id="tutorial-card">
-    <div id="tutorial-progress"><div id="tutorial-bar" style="width:20%"></div></div>
-    <div id="tutorial-body">
-      <div id="tutorial-icon">👋</div>
-      <div id="tutorial-title">Bienvenido a CardioSalud</div>
-      <div id="tutorial-desc">Tu aplicación cardiológico clínico. En 4 pasos te mostramos las funciones principales.</div>
-      <div id="tutorial-highlight"></div>
+<!-- Modal Aviso Legal (se muestra tras login, antes de la app) -->
+<div id="cs-legal-modal" style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.6);align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--surf);color:var(--txt);max-width:470px;width:100%;border-radius:16px;padding:26px 26px 22px;box-shadow:0 24px 70px rgba(0,0,0,.5);text-align:center;max-height:92vh;overflow:auto">
+    <div style="font-size:2.6rem;line-height:1">🩺</div>
+    <h2 style="font-size:1.18rem;font-weight:800;margin:8px 0 12px;color:var(--txt)">⚕️ Aviso Legal</h2>
+    <p style="font-size:.9rem;line-height:1.55;color:var(--txt2);margin:0 0 16px">Herramienta de apoyo clínico cardiológico personal. No reemplaza el juicio clínico del médico ni la evaluación presencial del paciente.</p>
+    <div style="text-align:left;display:flex;flex-direction:column;gap:11px;margin-bottom:20px">
+      <div style="font-size:.83rem;line-height:1.5;color:var(--txt)">🔒 Los datos se guardan localmente en este dispositivo. No se transmiten a servidores.</div>
+      <div style="font-size:.83rem;line-height:1.5;color:var(--txt)">⚕️ Los cálculos y valores de referencia son orientativos. Verificá con las guías vigentes.</div>
+      <div style="font-size:.83rem;line-height:1.5;color:var(--txt)">📊 Los informes quedan en tu dispositivo. Realizá backups periódicos.</div>
+      <div style="font-size:.83rem;line-height:1.5;color:var(--txt)">🛡️ Los desarrolladores no asumen responsabilidad por decisiones clínicas basadas en este software.</div>
     </div>
-    <div id="tutorial-footer">
-      <div id="tutorial-dots"></div>
-      <div id="tutorial-nav">
-        <button class="t-btn t-btn-skip" id="t-btn-prev" onclick="tutorialPrev()" style="display:none">← Anterior</button>
-        <button class="t-btn t-btn-skip" onclick="closeTutorial()">Saltar</button>
-        <button class="t-btn t-btn-next" id="t-btn-next" onclick="tutorialNext()">Siguiente →</button>
-      </div>
+    <button onclick="closeLegalNotice()" style="width:100%;padding:12px;background:#0d9488;color:#fff;border:none;border-radius:9px;font-size:.95rem;font-weight:700;cursor:pointer;min-height:44px">✓ Entendido — Continuar</button>
+    <div style="margin-top:14px;font-size:.73rem;color:var(--txt2)">CeiboMed · Tecnología clínica con raíces</div>
+  </div>
+</div>
+<!-- Modal Ayuda / Manual del usuario -->
+<div id="cs-help-modal" style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.6);align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closeHelp()">
+  <div style="background:var(--surf);color:var(--txt);max-width:560px;width:100%;border-radius:16px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.5);max-height:88vh;overflow:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px">
+      <h2 style="font-size:1.15rem;font-weight:800;color:var(--txt);margin:0">❓ Ayuda — Manual del usuario</h2>
+      <button onclick="closeHelp()" aria-label="Cerrar" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--txt2);line-height:1;padding:2px 6px">✕</button>
     </div>
+    <p style="font-size:.86rem;color:var(--txt2);line-height:1.5;margin:0 0 14px">CardioSalud es tu asistente cardiológico clínico. Módulos principales:</p>
+    <div style="display:flex;flex-direction:column;gap:9px;font-size:.84rem;line-height:1.5;color:var(--txt)">
+      <div>🏠 <b>Inicio</b> — Pacientes, consultas, agenda y diagnósticos frecuentes del centro activo.</div>
+      <div>🛡️ <b>Prevención</b> — Riesgo cardiovascular (SCORE2), tabaquismo y objetivos de prevención.</div>
+      <div>👶 <b>Embarazo</b> — Manejo cardiológico durante el embarazo.</div>
+      <div>🏥 <b>Preoperatorio</b> — Evaluación de riesgo perioperatorio.</div>
+      <div>🫀 <b>IC</b> — Insuficiencia cardíaca: diagnóstico y tratamiento según guías.</div>
+      <div>🧠 <b>Miocardiopatías</b> — Miocardiopatías (ESC 2023).</div>
+      <div>🎯 <b>Cardio-oncología</b> — Vigilancia de cardiotoxicidad.</div>
+      <div>⚡ <b>Arritmias</b> — Manejo de arritmias.</div>
+      <div>🔧 <b>Dispositivos</b> — Marcapasos y dispositivos.</div>
+      <div>🧮 <b>Herramientas (botón ＋)</b> — Calculadoras clínicas, vademécum, dolor torácico, ECG rápido y segmentación cardíaca.</div>
+    </div>
+    <p style="font-size:.8rem;color:var(--txt2);line-height:1.5;margin:14px 0 0">En la barra superior podés cambiar de centro, exportar/importar backup y alternar modo día/noche. El menú <b>⋯</b> reúne todas las acciones. Los datos se guardan en este dispositivo — realizá backups periódicos.</p>
+    <div style="margin-top:16px;font-size:.73rem;color:var(--txt2);text-align:center">CeiboMed · Tecnología clínica con raíces</div>
   </div>
 </div>
 <style>
@@ -3876,7 +3899,7 @@ main{padding-bottom:100px}
   <path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="#4FC3F7" opacity=".95"/>
   <path d="M10 17h3l2-5 3 8 2-4h4" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>
-<h1 style="font-size:2rem;font-weight:800;letter-spacing:-.5px;line-height:1;color:#4FC3F7;text-shadow:0 0 22px rgba(79,195,247,.55);margin-bottom:5px">CardioSalud</h1><p style="font-size:.95rem;color:#ffffff;font-weight:600;margin-bottom:22px">Aplicación Cardiológica</p><input type="password" id="login-input" placeholder="••••••••" style="width:100%;padding:11px 14px;background:rgba(6,20,45,.5);border:1.5px solid rgba(79,195,247,.32);border-radius:8px;font-size:.95rem;outline:none;margin-bottom:12px;font-family:inherit;text-align:center;letter-spacing:2px;color:#eaf4ff" onkeydown="if(event.key==='Enter')checkLogin()"><button onclick="checkLogin()" style="width:100%;padding:11px;background:linear-gradient(135deg,#29B6F6,#0D47A1);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer">Ingresar</button><div id="login-error" style="color:#ff8a8a;font-size:.8rem;margin-top:6px;display:none">Contraseña incorrecta</div><div style="margin-top:16px;font-size:.78rem;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,.5)">EasyMed</div></div></div>
+<h1 style="font-size:2rem;font-weight:800;letter-spacing:-.5px;line-height:1;color:#4FC3F7;text-shadow:0 0 22px rgba(79,195,247,.55);margin-bottom:5px">CardioSalud</h1><p style="font-size:.95rem;color:#ffffff;font-weight:600;margin-bottom:22px">Aplicación Cardiológica</p><input type="password" id="login-input" placeholder="••••••••" style="width:100%;padding:11px 14px;background:rgba(6,20,45,.5);border:1.5px solid rgba(79,195,247,.32);border-radius:8px;font-size:.95rem;outline:none;margin-bottom:12px;font-family:inherit;text-align:center;letter-spacing:2px;color:#eaf4ff" onkeydown="if(event.key==='Enter')checkLogin()"><button onclick="checkLogin()" style="width:100%;padding:11px;background:linear-gradient(135deg,#29B6F6,#0D47A1);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer">Ingresar</button><div id="login-error" style="color:#ff8a8a;font-size:.8rem;margin-top:6px;display:none">Contraseña incorrecta</div><div style="margin-top:16px;font-size:.78rem;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,.5)">CeiboMed</div></div></div>
 <div class="fab-menu-wrap">
   <div class="fab-items" id="fab-items">
     <div class="fab-item"><span class="fab-item-lbl">Calculadoras clínicas</span><button class="fab-item-btn" onclick="toggleCalcPanel();toggleFabMenu()" title="Calculadoras">🧮</button></div>
@@ -9971,10 +9994,16 @@ function calcDASI(){
 document.getElementById('f-date').valueAsDate=new Date();
 (()=>{const n=new Date();statsMonthY=n.getFullYear();statsMonthM=n.getMonth();})();
 const APP_PASS='maicolcardio1';
-function checkLogin(){const val=document.getElementById('login-input').value;if(val===APP_PASS){document.getElementById('login-screen').style.display='none';localStorage.setItem('cs_auth','1');}else{document.getElementById('login-error').style.display='block';document.getElementById('login-input').value='';document.getElementById('login-input').focus();}}
-(function initLogin(){if(localStorage.getItem('cs_auth')==='1'){document.getElementById('login-screen').style.display='none';}else{setTimeout(()=>document.getElementById('login-input')?.focus(),300);}})();
+function showLegalNotice(){var m=document.getElementById('cs-legal-modal');if(m)m.style.display='flex';}
+function closeLegalNotice(){var m=document.getElementById('cs-legal-modal');if(m)m.style.display='none';}
+function openHelp(){var m=document.getElementById('cs-help-modal');if(m)m.style.display='flex';}
+function closeHelp(){var m=document.getElementById('cs-help-modal');if(m)m.style.display='none';}
+function logout(){try{localStorage.removeItem('cs_auth');}catch(e){}try{if(typeof csActionsClose==='function')csActionsClose();}catch(e){}closeHelp();closeLegalNotice();var ls=document.getElementById('login-screen');if(ls)ls.style.display='flex';var li=document.getElementById('login-input');if(li){li.value='';setTimeout(function(){try{li.focus();}catch(e){}},120);}}
+window.showLegalNotice=showLegalNotice;window.closeLegalNotice=closeLegalNotice;window.openHelp=openHelp;window.closeHelp=closeHelp;window.logout=logout;
+function checkLogin(){const val=document.getElementById('login-input').value;if(val===APP_PASS){document.getElementById('login-screen').style.display='none';localStorage.setItem('cs_auth','1');showLegalNotice();}else{document.getElementById('login-error').style.display='block';document.getElementById('login-input').value='';document.getElementById('login-input').focus();}}
+(function initLogin(){if(localStorage.getItem('cs_auth')==='1'){document.getElementById('login-screen').style.display='none';showLegalNotice();}else{setTimeout(()=>document.getElementById('login-input')?.focus(),300);}})();
 setInterval(clock,1000);clock();buildInstScreen();
-setTimeout(initTutorial,800);
+/* Onboarding/tour eliminado: la Ayuda se abre desde el botón "?" y el menú ⋯. */
 setTimeout(updateControlList,500);
 
 // ── PREVENT 2023 — panel calculadora ─────────────────────────
@@ -11549,26 +11578,7 @@ function showMainTab(tab){
 })();
 </script>
 <script>
-/* Aviso de datos locales (primer inicio) */
-(function(){
-  var KEY="cardiosalud_aviso_datos_visto";
-  function show(){
-    try{ if(localStorage.getItem(KEY)==='1') return; }catch(e){}
-    var ov=document.createElement('div');
-    ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Aviso sobre datos locales');
-    ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px';
-    var box=document.createElement('div');
-    box.style.cssText='background:#fff;color:#1a2a3a;max-width:440px;width:100%;border-radius:14px;padding:22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.4);font-family:system-ui,Segoe UI,sans-serif';
-    box.innerHTML='<div style="font-size:15px;font-weight:700;margin-bottom:10px">Aviso importante</div><div style="font-size:13.5px;line-height:1.6;color:#374151">⚠️ Los datos se guardan localmente en este navegador. Si borrás el navegador o cambiás de dispositivo, los datos se pierden. Exportá tu backup regularmente.</div>';
-    var btn=document.createElement('button');
-    btn.type='button'; btn.textContent='Entendido';
-    btn.style.cssText='margin-top:16px;width:100%;padding:11px;background:#1565C0;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;min-height:44px';
-    btn.onclick=function(){ try{localStorage.setItem(KEY,'1');}catch(e){} if(ov.parentNode)ov.parentNode.removeChild(ov); };
-    box.appendChild(btn); ov.appendChild(box); document.body.appendChild(ov);
-    setTimeout(function(){ try{btn.focus();}catch(e){} },40);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',show); else show();
-})();
+/* Aviso de datos locales: reemplazado por el modal de Aviso Legal (post-login). */
 </script>
 <script>
 /* Estándar encabezado móvil: ≡ drawer de tabs + ⋮ menú de acciones (≤768px).
