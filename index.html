@@ -689,6 +689,56 @@ main{padding-bottom:100px}
 .mcp-flag span:first-child{flex-shrink:0}
 .mcp-th-may{background:var(--err)!important}
 .mcp-th-men{background:var(--warn)!important}
+/* ═══════════ Valvulopatías + Endocarditis (tabs) ═══════════ */
+/* Acordeón por valvulopatía / sección */
+.vlv-acc{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;background:var(--surf)}
+.vlv-acc-h{background:#F5F9FF;padding:13px 15px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.9rem;font-weight:800;color:var(--txt);border:none;width:100%;text-align:left;font-family:inherit;gap:10px}
+[data-theme="dark"] .vlv-acc-h{background:#0f1520}
+.vlv-acc-h:hover{background:#E3F2FD}
+[data-theme="dark"] .vlv-acc-h:hover{background:#161b22}
+.vlv-acc-h .vlv-acc-ic{flex-shrink:0}
+.vlv-acc-b{padding:4px 15px 14px;display:none}
+.vlv-acc-b.on{display:block}
+/* Cards informativas (prótesis TAVI) */
+.vlv-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:8px}
+.vlv-card{border:1px solid var(--border);border-left:5px solid var(--p);border-radius:10px;padding:13px 14px;background:var(--surf)}
+.vlv-card-t{font-size:.86rem;font-weight:800;color:var(--p);margin-bottom:4px}
+.vlv-card-d{font-size:.79rem;color:var(--txt2);line-height:1.5}
+.vlv-card-tag{display:inline-block;font-size:.68rem;font-weight:700;padding:1px 8px;border-radius:10px;background:#E3F2FD;color:var(--p);margin-top:6px}
+[data-theme="dark"] .vlv-card-tag{background:#162536}
+/* Wizard TAVI vs Cirugía */
+.vwz{border:1.5px solid var(--border);border-radius:12px;padding:16px;background:var(--surf);margin-bottom:10px}
+.vwz-step{display:none}
+.vwz-step.on{display:block}
+.vwz-q{font-size:.92rem;font-weight:800;color:var(--txt);margin-bottom:12px;display:flex;align-items:flex-start;gap:8px}
+.vwz-q .vwz-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--p);color:#fff;font-size:.76rem;font-weight:800;flex-shrink:0}
+.vwz-opts{display:flex;flex-wrap:wrap;gap:8px}
+.vwz-btn{padding:9px 16px;border:1.5px solid var(--p);background:var(--surf);color:var(--p);border-radius:8px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s}
+.vwz-btn:hover{background:var(--p);color:#fff}
+.vwz-hint{font-size:.78rem;color:var(--txt2);line-height:1.5;margin:6px 0 12px}
+.vwz-res{border-radius:10px;padding:14px 16px;margin-top:6px}
+.vwz-res.green{background:var(--ok-bg);border:1.5px solid var(--ok)}
+.vwz-res.amber{background:var(--warn-bg);border:1.5px solid var(--warn)}
+.vwz-res.red{background:var(--err-bg);border:1.5px solid var(--err)}
+.vwz-res-t{font-size:.92rem;font-weight:800;margin-bottom:6px}
+.vwz-res.green .vwz-res-t{color:var(--ok)}
+.vwz-res.amber .vwz-res-t{color:var(--warn)}
+.vwz-res.red .vwz-res-t{color:var(--err)}
+.vwz-res-d{font-size:.82rem;line-height:1.6;color:var(--txt)}
+.vwz-inline{border:1px dashed var(--border);border-radius:10px;padding:12px;margin:10px 0;background:var(--bg)}
+.vwz-inline-t{font-size:.8rem;font-weight:800;color:var(--p);margin-bottom:8px}
+.vwz-back{background:none;border:none;color:var(--txt2);font-size:.8rem;cursor:pointer;font-family:inherit;padding:4px 0;text-decoration:underline}
+/* Buscador de ATB (Endocarditis) */
+.atb-search-wrap{position:relative;margin-bottom:12px}
+.atb-search-wrap input{padding-left:34px}
+.atb-srch-ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none}
+.atb-card{border:1px solid var(--border);border-left:5px solid var(--p);border-radius:10px;padding:13px 15px;margin-bottom:10px;background:var(--surf)}
+.atb-card-t{font-size:.9rem;font-weight:800;color:var(--p);margin-bottom:8px}
+.atb-row{font-size:.82rem;line-height:1.55;color:var(--txt);padding:4px 0;border-bottom:1px solid var(--border)}
+.atb-row:last-child{border-bottom:none}
+.atb-row b{color:var(--txt)}
+.atb-scheme-l{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--txt2)}
+.atb-empty{text-align:center;color:var(--txt2);font-size:.85rem;padding:20px}
 /* ═══════════ Prevención (tab) ═══════════ */
 #tab-prevencion .prev-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
 #tab-prevencion .prev-tab{flex:1 1 auto;min-width:110px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
@@ -889,6 +939,8 @@ main{padding-bottom:100px}
   <button class="mtab" data-tab="preop" onclick="showMainTab('preop')"><span class="mtab-ic">🏥</span>Preoperatorio</button>
   <button class="mtab" data-tab="ic" onclick="showMainTab('ic')"><span class="mtab-ic">🫀</span>IC</button>
   <button class="mtab" data-tab="miocardiopatias" onclick="showMainTab('miocardiopatias')"><span class="mtab-ic">🧠</span>Miocardiopatías</button>
+  <button class="mtab" data-tab="valvulopatias" onclick="showMainTab('valvulopatias')"><span class="mtab-ic">🫀</span>Valvulopatías</button>
+  <button class="mtab" data-tab="endocarditis" onclick="showMainTab('endocarditis')"><span class="mtab-ic">🦠</span>Endocarditis</button>
   <button class="mtab" data-tab="cardioonc" onclick="showMainTab('cardioonc')"><span class="mtab-ic">🎯</span>Cardio-oncología</button>
   <button class="mtab" data-tab="arritmias" onclick="showMainTab('arritmias')"><span class="mtab-ic">⚡</span>Arritmias</button>
   <button class="mtab" data-tab="dispositivos" onclick="showMainTab('dispositivos')"><span class="mtab-ic">🔧</span>Dispositivos</button>
@@ -3574,6 +3626,529 @@ main{padding-bottom:100px}
       <li>AAS: mantener si no se identificó causa no ateroesclerótica.</li>
       <li>Cribado de FA si sospecha embólica.</li>
     </ul>
+  </div>
+</div>
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB · VALVULOPATÍAS
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-valvulopatias" style="display:none">
+  <div class="co-note" style="font-size:.82rem;color:var(--txt2);margin-bottom:14px;line-height:1.5">🫀 <b>Valvulopatías</b> — recomendaciones según <b>ESC/EACTS 2021</b>. Un acordeón por valvulopatía; toque el encabezado para expandir.</div>
+
+  <!-- ─── ESTENOSIS AÓRTICA ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleVlvAcc('ea')"><span><span class="vlv-acc-ic">🔻</span> Estenosis aórtica</span><span id="vlv-a-ea">▼</span></button>
+    <div class="vlv-acc-b" id="vlv-b-ea">
+
+      <div class="aco-sec-title">🔎 A · Diagnóstico</div>
+      <div class="arr-care-t">Clínico</div>
+      <ul class="arr-ul">
+        <li>Soplo <b>eyectivo aórtico</b> mesosistólico, foco aórtico con irradiación a cuello (carótidas).</li>
+        <li>Triada sintomática clásica: <b>angina · síncope · disnea</b> (marcan mal pronóstico sin intervención).</li>
+        <li>Pulso <i>parvus et tardus</i>, R2 aórtico disminuido/abolido en EA severa.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Ecocardiográfico</div>
+      <ul class="arr-ul">
+        <li>Gradiente medio transvalvular, velocidad pico (V<sub>max</sub>), área valvular aórtica (AVA) y AVA indexada (AVAi).</li>
+        <li>En EA de bajo flujo–bajo gradiente: valorar FEVI, eco-estrés con dobutamina y score de calcio por TCMD.</li>
+      </ul>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Parámetro</th><th>Leve</th><th>Moderada</th><th>Severa</th><th>Muy severa</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">V<sub>max</sub> (m/s)</td><td>&lt;3.0</td><td>3.0–3.9</td><td>≥4.0</td><td>≥5.0</td></tr>
+            <tr><td class="aco-ind">Gradiente medio (mmHg)</td><td>&lt;20</td><td>20–39</td><td>≥40</td><td>—</td></tr>
+            <tr><td class="aco-ind">AVA (cm²)</td><td>&gt;1.5</td><td>1.0–1.5</td><td>≤1.0</td><td>&lt;0.6</td></tr>
+            <tr><td class="aco-ind">AVAi (cm²/m²)</td><td>—</td><td>—</td><td>≤0.6</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aco-sec-title">🫀 B · Prótesis para TAVI</div>
+      <div class="vlv-card-grid">
+        <div class="vlv-card">
+          <div class="vlv-card-t">SAPIEN 3 / S3 Ultra</div>
+          <div class="vlv-card-d">Edwards — <b>balón-expandible</b>. Tallas 20/23/26/29 mm. Acceso transfemoral preferido.</div>
+          <span class="vlv-card-tag">balloon-expandable</span>
+        </div>
+        <div class="vlv-card">
+          <div class="vlv-card-t">Evolut PRO / PRO+</div>
+          <div class="vlv-card-d">Medtronic — <b>autoexpandible</b>. Tallas 23/26/29/34 mm. Reposicionable.</div>
+          <span class="vlv-card-tag">self-expanding</span>
+        </div>
+        <div class="vlv-card">
+          <div class="vlv-card-t">ACURATE neo2</div>
+          <div class="vlv-card-d">Boston Scientific — <b>autoexpandible</b>, diseño supraanular.</div>
+          <span class="vlv-card-tag">self-expanding</span>
+        </div>
+        <div class="vlv-card">
+          <div class="vlv-card-t">Portico / Navitor</div>
+          <div class="vlv-card-d">Abbott — <b>autoexpandible</b>, reposicionable.</div>
+          <span class="vlv-card-tag">self-expanding</span>
+        </div>
+      </div>
+      <div class="arr-care" style="border-left-color:var(--p)">
+        <div class="arr-care-d">La elección depende de la anatomía del <i>annulus</i> (TCMD), grado y distribución de la calcificación, riesgo de bloqueo AV, altura de ostia coronarios y experiencia del centro.</div>
+      </div>
+
+      <div class="aco-sec-title">⚠️ C · Complicaciones del TAVI</div>
+      <ul class="arr-ul">
+        <li><b>Bloqueo AV</b> (→ marcapasos definitivo): <b>10–25%</b> según tipo de válvula.</li>
+        <li><b>Stroke / AIT:</b> 2–4%.</li>
+        <li><b>Leak paravalvular (LPV) ≥ moderado:</b> &lt;5% con válvulas actuales.</li>
+        <li><b>Oclusión coronaria:</b> &lt;1% — riesgo ↑ con ostia bajos + calcificación.</li>
+        <li><b>Disección / rotura anular:</b> &lt;1%, a menudo fatal.</li>
+        <li><b>Complicaciones vasculares del acceso:</b> 5–10%.</li>
+        <li><b>Taponamiento:</b> &lt;1%.</li>
+        <li><b>HALT</b> (<i>Hypoattenuating Leaflet Thickening</i>): trombosis subclínica de valva.</li>
+      </ul>
+
+      <div class="aco-sec-title">💊 D · Tratamiento antitrombótico posterior (ESC 2021)</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Escenario</th><th>Antitrombótico</th><th>Duración</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Sin indicación de ACO</td><td>AAS en monoterapia (de novo, ESC 2021)</td><td>De por vida</td></tr>
+            <tr><td class="aco-ind">Con indicación de ACO (p.ej. FA)</td><td>ACO solo (sin antiagregante)</td><td>De por vida</td></tr>
+            <tr><td class="aco-ind">DAPT rutinaria post-TAVI</td><td>AAS + Clopidogrel</td><td>No recomendada de rutina</td></tr>
+            <tr><td class="aco-ind">Rivaroxabán 10 mg (GALILEO)</td><td>Estrategia con ACO en sinusal</td><td>No recomendada (↑ mortalidad/sangrado)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="arr-ul"><li><b>Profilaxis de endocarditis:</b> SÍ — el TAVI se considera prótesis de alto riesgo (misma indicación que válvula protésica).</li></ul>
+
+      <div class="aco-sec-title">📋 E · Seguimiento post-TAVI</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Tiempo</th><th>Control</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Al mes</td><td>ECO (gradientes, LPV, FEVI) + ECG</td></tr>
+            <tr><td class="aco-ind">6 meses</td><td>ECO + clínica</td></tr>
+            <tr><td class="aco-ind">12 meses</td><td>ECO + clínica + laboratorio</td></tr>
+            <tr><td class="aco-ind">Anual</td><td>ECO + clínica</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-alert" style="background:var(--warn-bg);border-color:var(--warn)">
+        <div class="arr-alert-h" style="color:var(--warn)">🚨 Señales de alarma</div>
+        <div style="font-size:.82rem;line-height:1.6;color:var(--txt)">Nuevo soplo, disnea progresiva, síncope, FA de novo → adelantar ecocardiograma.</div>
+      </div>
+
+      <div class="aco-sec-title">🧭 F · Algoritmo TAVI vs Cirugía — interactivo</div>
+      <div class="vwz" id="vwz-root">
+        <!-- Paso 1 -->
+        <div class="vwz-step on" id="vwz-s1">
+          <div class="vwz-q"><span class="vwz-num">1</span> ¿Estenosis aórtica <b>severa sintomática</b> confirmada?</div>
+          <div class="vwz-opts">
+            <button class="vwz-btn" onclick="vwzGo('s2')">Sí</button>
+            <button class="vwz-btn" onclick="vwzResult('red','Sin indicación de intervención valvular','No se cumplen los criterios de EA severa sintomática. No es candidato a intervención valvular. Reevaluar diagnóstico y seguimiento ecocardiográfico según severidad.')">No</button>
+          </div>
+        </div>
+        <!-- Paso 2: STS PROM -->
+        <div class="vwz-step" id="vwz-s2">
+          <div class="vwz-q"><span class="vwz-num">2</span> Riesgo quirúrgico — <b>STS PROM (%)</b></div>
+          <div class="vwz-hint">Calcule con la herramienta o ingrese el valor directamente y presione «Continuar».</div>
+          <div class="vwz-inline">
+            <div class="vwz-inline-t">🧮 Calculadora STS PROM (simplificada)</div>
+            <div class="cp-grid">
+              <div class="fg"><label>Edad (años)</label><input type="number" id="vwsts-age" placeholder="80" oninput="vwStsCalc()"></div>
+              <div class="fg"><label>Sexo</label><select id="vwsts-sex" onchange="vwStsCalc()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+              <div class="fg"><label>Peso (kg)</label><input type="number" id="vwsts-peso" step="0.1" placeholder="70" oninput="vwStsCalc()"></div>
+              <div class="fg"><label>Talla (cm)</label><input type="number" id="vwsts-talla" placeholder="170" oninput="vwStsCalc()"></div>
+              <div class="fg"><label>Creatinina (mg/dL)</label><input type="number" id="vwsts-creat" step="0.1" placeholder="1.0" oninput="vwStsCalc()"></div>
+              <div class="fg"><label>FEVI (%)</label><input type="number" id="vwsts-fevi" placeholder="55" oninput="vwStsCalc()"></div>
+              <div class="fg"><label>NYHA</label><select id="vwsts-nyha" onchange="vwStsCalc()"><option value="1">I</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option></select></div>
+              <div class="fg"><label>Urgencia</label><select id="vwsts-urg" onchange="vwStsCalc()"><option value="0">Electiva</option><option value="1">Urgente</option><option value="2">Emergencia</option></select></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;font-size:.8rem;color:var(--txt)">
+              <label style="display:inline-flex;align-items:center;gap:6px;text-transform:none;font-weight:600"><input type="checkbox" id="vwsts-dm" onchange="vwStsCalc()" style="width:auto"> Diabetes</label>
+              <label style="display:inline-flex;align-items:center;gap:6px;text-transform:none;font-weight:600"><input type="checkbox" id="vwsts-epoc" onchange="vwStsCalc()" style="width:auto"> EPOC</label>
+              <label style="display:inline-flex;align-items:center;gap:6px;text-transform:none;font-weight:600"><input type="checkbox" id="vwsts-evp" onchange="vwStsCalc()" style="width:auto"> Arteriopatía periférica</label>
+              <label style="display:inline-flex;align-items:center;gap:6px;text-transform:none;font-weight:600"><input type="checkbox" id="vwsts-prev" onchange="vwStsCalc()" style="width:auto"> Cirugía cardíaca previa</label>
+            </div>
+            <div id="vwsts-bsa" style="font-size:.75rem;color:var(--txt2);margin-top:8px"></div>
+            <div class="cp-res" id="vwsts-res" style="display:none"><div class="rpct" id="vwsts-pct">—</div><div class="rcat" id="vwsts-cat">—</div></div>
+          </div>
+          <div class="fg" style="max-width:220px"><label>STS PROM a usar (%)</label><input type="number" id="vwsts-val" step="0.1" placeholder="ej. 6.5"></div>
+          <div class="vwz-opts">
+            <button class="vwz-btn" onclick="vwzEvalSts()">Continuar →</button>
+            <button class="vwz-back" onclick="vwzGo('s1')">← Atrás</button>
+          </div>
+        </div>
+        <!-- Paso 4: contraindicación cirugía -->
+        <div class="vwz-step" id="vwz-s4">
+          <div class="vwz-q"><span class="vwz-num">4</span> ¿<b>Contraindicación</b> para cirugía convencional?</div>
+          <div class="vwz-hint">Radioterapia torácica previa · deformidad torácica · aorta en porcelana · cirugía cardíaca previa · disfunción de prótesis biológica.</div>
+          <div class="vwz-opts">
+            <button class="vwz-btn" onclick="vwzResult('green','TAVI indicado — Clase I (ESC 2021)','Contraindicación para cirugía convencional en paciente de alto riesgo (STS &gt;8%). TAVI indicado por Heart Team. Confirmar anatomía por TCMD.')">Sí</button>
+            <button class="vwz-btn" onclick="vwzGo('s5')">No</button>
+          </div>
+          <div style="margin-top:8px"><button class="vwz-back" onclick="vwzGo('s2')">← Atrás</button></div>
+        </div>
+        <!-- Paso 5: Edmonton -->
+        <div class="vwz-step" id="vwz-s5">
+          <div class="vwz-q"><span class="vwz-num">5</span> Fragilidad — <b>Edmonton Frailty Scale</b></div>
+          <div class="vwz-hint">Complete los 10 ítems (total 0–17) y presione «Evaluar».</div>
+          <div class="vwz-inline">
+            <div class="vwz-inline-t">🧮 Edmonton Frailty Scale</div>
+            <div class="edm-item"><label>1. Cognición: diga los meses del año al revés</label><select id="vwedm0"><option value="">—</option><option value="0">≥5 meses (0)</option><option value="1">3–4 meses (1)</option><option value="2">≤2 meses (2)</option></select></div>
+            <div class="edm-item"><label>2. Salud general: internaciones el último año</label><select id="vwedm1"><option value="">—</option><option value="0">Ninguna (0)</option><option value="1">1–2 (1)</option><option value="2">≥3 (2)</option></select></div>
+            <div class="edm-item"><label>3. Independencia funcional: ¿ayuda para alguna AVD?</label><select id="vwedm2"><option value="">—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>4. Soporte social: ¿alguien que lo ayude si lo necesita?</label><select id="vwedm3"><option value="">—</option><option value="0">Siempre (0)</option><option value="1">A veces (1)</option><option value="2">Nunca (2)</option></select></div>
+            <div class="edm-item"><label>5. Medicamentos: ¿toma ≥5 fármacos?</label><select id="vwedm4"><option value="">—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>6. Nutrición: ¿perdió peso sin intentarlo?</label><select id="vwedm5"><option value="">—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>7. Humor: ¿triste o deprimido frecuentemente?</label><select id="vwedm6"><option value="">—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>8. Continencia: ¿pérdidas de orina involuntarias?</label><select id="vwedm7"><option value="">—</option><option value="0">No (0)</option><option value="1">Sí (1)</option></select></div>
+            <div class="edm-item"><label>9. Rendimiento: «levántate y camina» (TUG)</label><select id="vwedm8"><option value="">—</option><option value="0">&lt;10 s (0)</option><option value="1">10–19 s (1)</option><option value="2">≥20 s o rehúsa (2)</option></select></div>
+            <div class="edm-item"><label>10. Actividades habituales</label><select id="vwedm9"><option value="">—</option><option value="0">Sí (0)</option><option value="1">Con dificultad (1)</option><option value="2">No (2)</option></select></div>
+          </div>
+          <div class="vwz-opts">
+            <button class="vwz-btn" onclick="vwzEvalEdm()">Evaluar</button>
+            <button class="vwz-back" onclick="vwzGo('s4')">← Atrás</button>
+          </div>
+        </div>
+        <!-- Resultado -->
+        <div class="vwz-step" id="vwz-sr">
+          <div class="vwz-res" id="vwz-res-box"><div class="vwz-res-t" id="vwz-res-t">—</div><div class="vwz-res-d" id="vwz-res-d">—</div></div>
+          <div style="margin-top:12px"><button class="vwz-btn" onclick="vwzReset()">🔄 Reiniciar</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── INSUFICIENCIA AÓRTICA ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleVlvAcc('ia')"><span><span class="vlv-acc-ic">🩸</span> Insuficiencia aórtica</span><span id="vlv-a-ia">▼</span></button>
+    <div class="vlv-acc-b" id="vlv-b-ia">
+      <div class="aco-sec-title">🔎 A · Diagnóstico clínico</div>
+      <ul class="arr-ul">
+        <li>Soplo <b>diastólico aórtico</b> (decrescendo, foco aórtico y accesorio).</li>
+        <li>Pulso saltón (<b>Corrigan</b>), signo de <b>De Musset</b>, presión de pulso amplia.</li>
+        <li>Síntomas: disnea de esfuerzo, palpitaciones, angina (tardía).</li>
+      </ul>
+      <div class="aco-sec-title">📏 B · Severidad ecocardiográfica</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Parámetro</th><th>Leve</th><th>Moderada</th><th>Severa</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Vena contracta (mm)</td><td>&lt;3</td><td>3–6</td><td>&gt;6</td></tr>
+            <tr><td class="aco-ind">PHT (ms)</td><td>&gt;500</td><td>200–500</td><td>&lt;200</td></tr>
+            <tr><td class="aco-ind">Fracción regurgitante (%)</td><td>&lt;30</td><td>30–49</td><td>≥50</td></tr>
+            <tr><td class="aco-ind">Volumen regurgitante (mL)</td><td>&lt;30</td><td>30–59</td><td>≥60</td></tr>
+            <tr><td class="aco-ind">Jet / TSVI (%)</td><td>&lt;25</td><td>25–64</td><td>≥65</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="aco-sec-title">🔪 C · Indicaciones quirúrgicas (ESC 2021)</div>
+      <ul class="arr-ul">
+        <li><span class="arr-badge arr-b1">Clase I</span> IA severa <b>sintomática</b>.</li>
+        <li><span class="arr-badge arr-b1">Clase I</span> IA severa asintomática + <b>FEVI ≤50%</b>.</li>
+        <li><span class="arr-badge arr-b2a">Clase IIa</span> IA severa asintomática + FEVI &gt;50% + <b>DSFVI &gt;50 mm</b> o <b>DDFVI &gt;70 mm</b>.</li>
+        <li>Cirugía sobre la aorta indicada independientemente de la severidad de la IA cuando se cumplen los criterios de aorta.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── ESTENOSIS MITRAL ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleVlvAcc('em')"><span><span class="vlv-acc-ic">🔷</span> Estenosis mitral</span><span id="vlv-a-em">▼</span></button>
+    <div class="vlv-acc-b" id="vlv-b-em">
+      <div class="aco-sec-title">🔎 A · Diagnóstico clínico + eco</div>
+      <ul class="arr-ul">
+        <li><b>Chasquido de apertura</b> + soplo diastólico con refuerzo presistólico (rodada mitral).</li>
+        <li>Etiología reumática la más frecuente a nivel global.</li>
+      </ul>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Parámetro (ESC 2021)</th><th>Leve</th><th>Moderada</th><th>Severa</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">MVA (cm²)</td><td>&gt;1.5</td><td>1.0–1.5</td><td>&lt;1.5*</td></tr>
+            <tr><td class="aco-ind">Gradiente medio (mmHg)</td><td>&lt;5</td><td>5–10</td><td>&gt;10</td></tr>
+            <tr><td class="aco-ind">PSAP (mmHg)</td><td>&lt;30</td><td>30–50</td><td>&gt;50</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:.76rem;color:var(--txt2);margin:2px 0 8px">*Muy severa &lt;1.0 cm². Datos según <b>ESC/EACTS 2021</b> (AHA/ACC 2020: umbral de severidad MVA ≤1.5 cm²).</div>
+
+      <div class="aco-sec-title">📊 B · Score de Wilkins (morfología para valvuloplastia)</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Componente</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Movilidad</td><td>Alta, solo puntas restringidas</td><td>Base–medio normal</td><td>Válvula avanza en diástole (base)</td><td>Sin/mínimo movimiento</td></tr>
+            <tr><td class="aco-ind">Engrosamiento</td><td>Casi normal (4–5 mm)</td><td>Márgenes engrosados</td><td>Todo el velo (5–8 mm)</td><td>Marcado (&gt;8–10 mm)</td></tr>
+            <tr><td class="aco-ind">Calcificación</td><td>Una zona</td><td>Zonas dispersas en bordes</td><td>Hacia segmento medio</td><td>Extensa en todo el velo</td></tr>
+            <tr><td class="aco-ind">Afectación subvalvular</td><td>Mínima bajo el velo</td><td>Cuerdas hasta 1/3</td><td>Hasta tercio distal</td><td>Extensa hasta músculos papilares</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-care" style="border-left-color:var(--ok)"><div class="arr-care-d"><b>Total ≤8</b> → anatomía favorable para valvuloplastia con balón (BMV). <b>&gt;8</b> → desfavorable.</div></div>
+
+      <div class="aco-sec-title">🎈 C · Indicaciones de valvuloplastia mitral con balón (ESC 2021)</div>
+      <ul class="arr-ul">
+        <li><span class="arr-badge arr-b1">Clase I</span> EM severa sintomática (NYHA II–IV) + anatomía favorable (Wilkins ≤8) + sin trombo en AI + IT ≤ moderada.</li>
+        <li><span class="arr-badge arr-b2a">Clase IIa</span> EM severa asintomática + anatomía favorable + FA de novo o PSAP &gt;50 mmHg.</li>
+        <li><span class="arr-badge arr-b2b">Clase IIb</span> EM severa sintomática + Wilkins &gt;8 no candidata a cirugía.</li>
+      </ul>
+      <div class="arr-alert">
+        <div class="arr-alert-h">🚫 Contraindicaciones de BMV</div>
+        <div style="font-size:.82rem;line-height:1.6;color:var(--txt)">Trombo en aurícula izquierda · IT moderada–severa · Wilkins &gt;8 (relativa) · calcificación comisural bilateral severa.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── INSUFICIENCIA MITRAL ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleVlvAcc('im')"><span><span class="vlv-acc-ic">🔶</span> Insuficiencia mitral</span><span id="vlv-a-im">▼</span></button>
+    <div class="vlv-acc-b" id="vlv-b-im">
+      <div class="aco-sec-title">🗂️ A · Clasificación</div>
+      <ul class="arr-ul">
+        <li><b>Primaria (orgánica):</b> prolapso, rotura de cuerdas, endocarditis, reumática.</li>
+        <li><b>Secundaria (funcional):</b> isquémica o dilatada — anillo dilatado con valvas normales.</li>
+        <li><b>Carpentier:</b> I (anillo, movilidad normal) · II (prolapso, movilidad ↑) · IIIa (restricción diastólica, reumática) · IIIb (restricción sistólica, isquémica).</li>
+      </ul>
+      <div class="aco-sec-title">📏 B · Severidad ecocardiográfica</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Parámetro</th><th>Leve</th><th>Moderada</th><th>Severa</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Vena contracta (mm)</td><td>&lt;3</td><td>3–6.9</td><td>≥7</td></tr>
+            <tr><td class="aco-ind">Volumen regurgitante (mL/lat)</td><td>&lt;30</td><td>30–59</td><td>≥60</td></tr>
+            <tr><td class="aco-ind">Fracción regurgitante (%)</td><td>&lt;30</td><td>30–49</td><td>≥50</td></tr>
+            <tr><td class="aco-ind">EROA (cm²)</td><td>&lt;0.20</td><td>0.20–0.39</td><td>≥0.40</td></tr>
+            <tr><td class="aco-ind">Radio PISA (mm)</td><td>&lt;4</td><td>—</td><td>&gt;10</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="aco-sec-title">🔪 C · Indicaciones quirúrgicas (ESC 2021)</div>
+      <div class="arr-care-t">IM primaria</div>
+      <ul class="arr-ul">
+        <li><span class="arr-badge arr-b1">Clase I</span> Sintomática + FEVI &gt;30%.</li>
+        <li><span class="arr-badge arr-b1">Clase I</span> Asintomática + FEVI 30–60% o DSFVI ≥40 mm.</li>
+        <li><span class="arr-badge arr-b2a">Clase IIa</span> Asintomática + FEVI &gt;60% + reparable + FA de novo o PSAP &gt;50 mmHg.</li>
+        <li><b>Reparación</b> preferida sobre sustitución cuando es factible.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:8px">IM secundaria</div>
+      <ul class="arr-ul">
+        <li><span class="arr-badge arr-b2b">Clase IIb</span> DSFVI ≤55 mm tras optimización de GDMT.</li>
+        <li><b>MitraClip (TEER):</b> considerar en IM severa sintomática no candidata a cirugía (criterios COAPT).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── INSUFICIENCIA TRICUSPÍDEA ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleVlvAcc('it')"><span><span class="vlv-acc-ic">🔺</span> Insuficiencia tricuspídea</span><span id="vlv-a-it">▼</span></button>
+    <div class="vlv-acc-b" id="vlv-b-it">
+      <div class="aco-sec-title">🧬 A · Etiología</div>
+      <ul class="arr-ul">
+        <li><b>Secundaria (85%):</b> dilatación anular por FA, HTP y cardiopatías izquierdas.</li>
+        <li><b>Primaria:</b> endocarditis, anomalía de Ebstein, prolapso, traumática, marcapasos/cables.</li>
+      </ul>
+      <div class="aco-sec-title">📏 B · Severidad ecocardiográfica</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Parámetro</th><th>Leve</th><th>Moderada</th><th>Severa</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Vena contracta (mm)</td><td>&lt;3</td><td>3–6.9</td><td>≥7</td></tr>
+            <tr><td class="aco-ind">EROA por PISA (cm²)</td><td>&lt;0.20</td><td>0.20–0.39</td><td>≥0.40</td></tr>
+            <tr><td class="aco-ind">Volumen regurgitante (mL)</td><td>&lt;30</td><td>30–44</td><td>≥45</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="aco-sec-title">🔪 C · Indicaciones (ESC 2021)</div>
+      <ul class="arr-ul">
+        <li><span class="arr-badge arr-b1">Clase I</span> Cirugía concomitante a cirugía valvular izquierda si IT ≥ moderada o dilatación anular &gt;40 mm (&gt;21 mm/m²).</li>
+        <li><span class="arr-badge arr-b2a">Clase IIa</span> IT severa sintomática aislada sin disfunción severa de VD/VI.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── VÁLVULAS PROTÉSICAS ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleVlvAcc('prot')"><span><span class="vlv-acc-ic">⚙️</span> Válvulas protésicas</span><span id="vlv-a-prot">▼</span></button>
+    <div class="vlv-acc-b" id="vlv-b-prot">
+      <div class="aco-sec-title">⚖️ A · Mecánica vs biológica</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Aspecto</th><th>Mecánica</th><th>Biológica</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Durabilidad</td><td>&gt;20–30 años</td><td>10–15 años</td></tr>
+            <tr><td class="aco-ind">Anticoagulación</td><td>De por vida (AVK)</td><td>No obligatoria</td></tr>
+            <tr><td class="aco-ind">Riesgo hemorrágico</td><td>Mayor</td><td>Menor</td></tr>
+            <tr><td class="aco-ind">Preferida en</td><td>&lt;65 años</td><td>&gt;65–70 años / contraindicación de ACO</td></tr>
+            <tr><td class="aco-ind">Gestación</td><td>Riesgo de ACO para el feto</td><td>Mejor opción</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="aco-sec-title">📋 B · Seguimiento protésico</div>
+      <ul class="arr-ul">
+        <li>ECO basal al implante y al primer año.</li>
+        <li>Luego cada 5 años (biológica: control anual a partir del año 10).</li>
+        <li>Objetivo de INR según posición y trombogenicidad de la prótesis.</li>
+      </ul>
+      <div class="aco-sec-title">⚠️ C · Disfunción protésica</div>
+      <ul class="arr-ul">
+        <li><b>Trombosis:</b> fibrinólisis o cirugía según carga trombótica y estado clínico.</li>
+        <li><b>Degeneración estructural</b> (biológicas) → reintervención / valve-in-valve.</li>
+        <li><b>Leak perivalvular</b> → cierre percutáneo o cirugía si hemólisis/IC.</li>
+        <li><b>Endocarditis protésica</b> → ver tab Endocarditis.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB · ENDOCARDITIS
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-endocarditis" style="display:none">
+  <div class="co-note" style="font-size:.82rem;color:var(--txt2);margin-bottom:14px;line-height:1.5">🦠 <b>Endocarditis infecciosa</b> — criterios y manejo según <b>ESC 2023</b>. Toque cada encabezado para expandir.</div>
+
+  <!-- ─── DEFINICIÓN Y FACTORES DE RIESGO ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEndoAcc('def')"><span><span class="vlv-acc-ic">📖</span> Definición y factores de riesgo</span><span id="endo-a-def">▼</span></button>
+    <div class="vlv-acc-b" id="endo-b-def">
+      <ul class="arr-ul">
+        <li><b>Definición:</b> infección del endotelio cardíaco (válvulas nativas o protésicas, dispositivos intracardíacos, defectos).</li>
+      </ul>
+      <div class="arr-care-t">Alto riesgo</div>
+      <ul class="arr-ul">
+        <li>Válvula protésica (incluye TAVI) o material protésico usado en reparación valvular.</li>
+        <li>Endocarditis infecciosa previa.</li>
+        <li>Cardiopatía congénita cianótica no reparada.</li>
+        <li>Reparación con material protésico &lt;6 meses o con shunt/regurgitación residual.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:8px">Riesgo moderado</div>
+      <ul class="arr-ul">
+        <li>Otra cardiopatía congénita (no cianótica).</li>
+        <li>Válvula nativa con lesión (valvulopatía degenerativa o reumática).</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:8px">Sin indicación de profilaxis</div>
+      <ul class="arr-ul">
+        <li>Prolapso mitral sin regurgitación.</li>
+        <li>CIA ostium secundum.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── CRITERIOS DE DUKE MODIFICADOS ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEndoAcc('duke')"><span><span class="vlv-acc-ic">🧾</span> Criterios de Duke modificados (ESC 2023)</span><span id="endo-a-duke">▼</span></button>
+    <div class="vlv-acc-b" id="endo-b-duke">
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th class="mcp-th-may" style="width:50%">Criterios MAYORES</th><th class="mcp-th-men" style="width:50%">Criterios MENORES</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>
+                <b>1. Hemocultivos positivos</b>
+                <ul style="margin:5px 0 8px 16px;padding:0;font-size:.79rem;line-height:1.5">
+                  <li>Microorganismos típicos (<i>S. viridans, S. gallolyticus</i>, HACEK, <i>S. aureus</i>, <i>Enterococcus</i>) en ≥2 HC separados.</li>
+                  <li>Bacteriemia persistente: ≥2 HC con &gt;12 h de diferencia, o ≥3/4 positivos.</li>
+                  <li>1 HC positivo para <i>Coxiella burnetii</i> o IgG fase I &gt;1:800.</li>
+                </ul>
+                <b>2. Evidencia por imagen</b>
+                <ul style="margin:5px 0 8px 16px;padding:0;font-size:.79rem;line-height:1.5">
+                  <li>ECO: vegetación, absceso, pseudoaneurisma, perforación, fístula, aneurisma valvular, dehiscencia nueva de prótesis.</li>
+                  <li>PET-CT / SPECT-CT: actividad anormal perivalvular (prótesis &gt;3 meses).</li>
+                  <li>TC cardíaco: lesión perivalvular.</li>
+                </ul>
+                <b>3.</b> Actividad paravalvular en implante de dispositivo endovascular (PET/CT o SPECT/CT).
+              </td>
+              <td>
+                <ul style="margin:0 0 0 16px;padding:0;font-size:.79rem;line-height:1.55">
+                  <li>Condición predisponente (cardiopatía de riesgo o UDIV).</li>
+                  <li>Fiebre &gt;38 °C.</li>
+                  <li>Fenómenos vasculares (émbolo arterial, infarto séptico pulmonar, aneurisma micótico, hemorragia intracraneal, petequias, manchas de Janeway).</li>
+                  <li>Fenómenos inmunológicos (glomerulonefritis, nódulos de Osler, manchas de Roth, factor reumatoide +).</li>
+                  <li>Evidencia microbiológica que no cumple criterio mayor.</li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="aco-sec-title">🧭 Clasificación diagnóstica</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Categoría</th><th>Criterios</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind" style="color:var(--err)">Definitiva</td><td>2 mayores · o 1 mayor + 3 menores · o 5 menores · o criterios patológicos (histología/cultivo del material).</td></tr>
+            <tr><td class="aco-ind" style="color:var(--warn)">Posible</td><td>1 mayor + 1 menor · o 3 menores.</td></tr>
+            <tr><td class="aco-ind" style="color:var(--txt2)">Rechazada</td><td>Diagnóstico alternativo firme · o resolución con &lt;4 días de ATB · o sin evidencia patológica en cirugía/autopsia.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TRATAMIENTO ANTIBIÓTICO (BUSCADOR) ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEndoAcc('atb')"><span><span class="vlv-acc-ic">💊</span> Tratamiento antibiótico — buscador</span><span id="endo-a-atb">▼</span></button>
+    <div class="vlv-acc-b" id="endo-b-atb">
+      <div class="atb-search-wrap">
+        <span class="atb-srch-ic">🔍</span>
+        <input type="text" id="atb-search" placeholder="Buscar germen: aureus, MRSA, enterococo, HACEK, Coxiella..." oninput="renderAtb()" autocomplete="off">
+      </div>
+      <div class="fg" style="max-width:340px;margin-bottom:12px"><label>O seleccionar germen</label>
+        <select id="atb-select" onchange="atbSelect(this.value)"><option value="">— Todos —</option></select>
+      </div>
+      <div id="atb-results"></div>
+      <div style="font-size:.72rem;color:var(--txt2);margin-top:8px">Esquemas orientativos ESC 2023; ajustar dosis a función renal, peso y antibiograma. Consultar Infectología.</div>
+    </div>
+  </div>
+
+  <!-- ─── INDICACIONES QUIRÚRGICAS ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEndoAcc('cir')"><span><span class="vlv-acc-ic">🔪</span> Indicaciones quirúrgicas (ESC 2023)</span><span id="endo-a-cir">▼</span></button>
+    <div class="vlv-acc-b" id="endo-b-cir">
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Indicación</th><th>Timing</th><th>Clase</th></tr></thead>
+          <tbody>
+            <tr><td>Insuficiencia valvular aguda severa con edema pulmonar / shock</td><td class="aco-ind" style="color:var(--err)">Urgente (&lt;24 h)</td><td><span class="arr-badge arr-b3">I</span></td></tr>
+            <tr><td>Obstrucción valvular por vegetación</td><td class="aco-ind" style="color:var(--err)">Urgente (&lt;24 h)</td><td><span class="arr-badge arr-b3">I</span></td></tr>
+            <tr><td>Fístula / rotura hacia cavidad o pericardio</td><td class="aco-ind" style="color:var(--err)">Urgente (&lt;24 h)</td><td><span class="arr-badge arr-b3">I</span></td></tr>
+            <tr><td>Vegetación &gt;10 mm con ≥1 émbolo séptico pese a ATB</td><td class="aco-ind" style="color:var(--warn)">Precoz (días)</td><td><span class="arr-badge arr-b3">I</span></td></tr>
+            <tr><td>Bacteriemia persistente &gt;5–7 días con ATB apropiados</td><td class="aco-ind" style="color:var(--warn)">Precoz (días)</td><td><span class="arr-badge arr-b3">I</span></td></tr>
+            <tr><td>Absceso perivalvular / pseudoaneurisma / extensión</td><td class="aco-ind" style="color:var(--warn)">Precoz (días)</td><td><span class="arr-badge arr-b3">I</span></td></tr>
+            <tr><td>Vegetación &gt;10 mm + obstrucción o disfunción valvular severa</td><td class="aco-ind" style="color:var(--warn)">Precoz (días)</td><td><span class="arr-badge arr-b3">I</span></td></tr>
+            <tr><td>Vegetación &gt;15 mm aislada</td><td class="aco-ind" style="color:var(--warn)">Precoz (días)</td><td><span class="arr-badge arr-b2a">IIa</span></td></tr>
+            <tr><td>Disfunción valvular severa con buena función cardíaca</td><td class="aco-ind" style="color:var(--txt2)">Electiva</td><td><span class="arr-badge arr-b2a">IIa</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PROFILAXIS ─── -->
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEndoAcc('prof')"><span><span class="vlv-acc-ic">🛡️</span> Profilaxis</span><span id="endo-a-prof">▼</span></button>
+    <div class="vlv-acc-b" id="endo-b-prof">
+      <div class="arr-care" style="border-left-color:var(--p);margin-bottom:10px">
+        <div class="arr-care-d">Indicada <b>solo</b> en pacientes de <b>alto riesgo</b> sometidos a <b>procedimientos dentales de alto riesgo</b> (manipulación de región periapical o perforación de mucosa oral).</div>
+      </div>
+      <div class="arr-care-t">Pacientes de alto riesgo</div>
+      <ul class="arr-ul">
+        <li>Válvula protésica (incluye TAVI y reparación con material protésico).</li>
+        <li>Endocarditis previa.</li>
+        <li>Cardiopatía congénita cianótica no reparada / reparada con material (&lt;6 meses o con shunt residual).</li>
+      </ul>
+      <div class="aco-sec-title">💊 Esquema profiláctico (30–60 min antes)</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th>Situación</th><th>Fármaco</th><th>Dosis (adulto)</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Sin alergia</td><td>Amoxicilina</td><td>2 g VO</td></tr>
+            <tr><td class="aco-ind">Alergia a penicilina</td><td>Clindamicina</td><td>600 mg VO</td></tr>
+            <tr><td class="aco-ind">No puede tomar VO</td><td>Ampicilina</td><td>2 g IV/IM</td></tr>
+            <tr><td class="aco-ind">Alergia + no VO</td><td>Clindamicina</td><td>600 mg IV</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-alert">
+        <div class="arr-alert-h">🚫 NO está indicada para</div>
+        <div style="font-size:.82rem;line-height:1.6;color:var(--txt)">Procedimientos gastrointestinales, genitourinarios o respiratorios · prolapso mitral sin regurgitación · cardiopatía isquémica · HTA · miocardiopatías.</div>
+      </div>
+    </div>
   </div>
 </div>
 <div class="tab-content" id="tab-ref" style="display:none"></div>
@@ -11168,6 +11743,217 @@ function switchMcpTab(name, btn){
 }
 
 // ══════════════════════════════════════════════════════════════════
+// VALVULOPATÍAS — acordeones + wizard TAVI vs Cirugía + calculadoras
+// ══════════════════════════════════════════════════════════════════
+function toggleVlvAcc(id){
+  var b=document.getElementById('vlv-b-'+id), a=document.getElementById('vlv-a-'+id);
+  if(!b) return;
+  var on=b.classList.toggle('on');
+  if(a) a.textContent = on ? '▲' : '▼';
+}
+
+// ── Wizard: navegación de pasos ──
+function vwzGo(step){
+  var steps=document.querySelectorAll('#vwz-root .vwz-step');
+  for(var i=0;i<steps.length;i++) steps[i].classList.remove('on');
+  var el=document.getElementById('vwz-'+step);
+  if(el) el.classList.add('on');
+}
+function vwzResult(color,title,detail){
+  var box=document.getElementById('vwz-res-box');
+  box.className='vwz-res '+color;
+  document.getElementById('vwz-res-t').textContent=title;
+  document.getElementById('vwz-res-d').textContent=detail;
+  vwzGo('sr');
+}
+function vwzReset(){
+  ['vwsts-age','vwsts-peso','vwsts-talla','vwsts-creat','vwsts-fevi','vwsts-val'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  ['vwsts-dm','vwsts-epoc','vwsts-evp','vwsts-prev'].forEach(function(id){var e=document.getElementById(id);if(e)e.checked=false;});
+  var s;
+  if((s=document.getElementById('vwsts-sex')))s.value='M';
+  if((s=document.getElementById('vwsts-nyha')))s.value='1';
+  if((s=document.getElementById('vwsts-urg')))s.value='0';
+  for(var i=0;i<10;i++){var e=document.getElementById('vwedm'+i);if(e)e.value='';}
+  var r=document.getElementById('vwsts-res');if(r)r.style.display='none';
+  var bsa=document.getElementById('vwsts-bsa');if(bsa)bsa.textContent='';
+  vwzGo('s1');
+}
+// ── Calculadora STS PROM del wizard (logística simplificada) ──
+function vwStsCalc(){
+  var el=document.getElementById('vwsts-res');
+  var age=parseFloat(document.getElementById('vwsts-age').value);
+  var creat=parseFloat(document.getElementById('vwsts-creat').value);
+  var fevi=parseFloat(document.getElementById('vwsts-fevi').value);
+  var peso=parseFloat(document.getElementById('vwsts-peso').value);
+  var talla=parseFloat(document.getElementById('vwsts-talla').value);
+  var bsaEl=document.getElementById('vwsts-bsa');
+  if(peso>0&&talla>0){var bsa=0.007184*Math.pow(peso,0.425)*Math.pow(talla,0.725);bsaEl.textContent='BSA (DuBois): '+bsa.toFixed(2)+' m²';}
+  else bsaEl.textContent='';
+  if(isNaN(age)||isNaN(creat)||isNaN(fevi)){el.style.display='none';return;}
+  var sex=document.getElementById('vwsts-sex').value;
+  var nyha=parseInt(document.getElementById('vwsts-nyha').value,10);
+  var urg=parseInt(document.getElementById('vwsts-urg').value,10);
+  var dm=document.getElementById('vwsts-dm').checked;
+  var epoc=document.getElementById('vwsts-epoc').checked;
+  var evp=document.getElementById('vwsts-evp').checked;
+  var prev=document.getElementById('vwsts-prev').checked;
+  var lp=-6.1;
+  lp+=0.0625*(age-60);
+  if(sex==='F')lp+=0.25;
+  lp+=(creat-1.0)*0.4;
+  if(fevi<=20)lp+=1.20;else if(fevi<=30)lp+=0.80;else if(fevi<=50)lp+=0.40;
+  if(nyha===3)lp+=0.30;else if(nyha===4)lp+=0.60;
+  if(dm)lp+=0.35;if(epoc)lp+=0.40;if(evp)lp+=0.35;if(prev)lp+=0.80;
+  if(urg===1)lp+=0.60;else if(urg===2)lp+=1.40;
+  var risk=Math.exp(lp)/(1+Math.exp(lp))*100;
+  var pct=Math.round(risk*10)/10;
+  var cat,bg,cl;
+  if(pct<4){cat='Bajo (<4%)';bg='var(--ok-bg)';cl='var(--ok)';}
+  else if(pct<=8){cat='Intermedio (4–8%)';bg='var(--warn-bg)';cl='var(--warn)';}
+  else{cat='Alto (>8%)';bg='var(--err-bg)';cl='var(--err)';}
+  el.style.display='block';el.style.background=bg;el.style.color=cl;
+  document.getElementById('vwsts-pct').textContent=pct+'%';
+  document.getElementById('vwsts-cat').textContent=cat;
+  document.getElementById('vwsts-val').value=pct;
+}
+// ── Paso 3: ramificación según STS PROM ──
+function vwzEvalSts(){
+  var v=parseFloat(document.getElementById('vwsts-val').value);
+  if(isNaN(v)){alert('Ingrese o calcule el STS PROM (%) para continuar.');return;}
+  if(v<4){
+    vwzResult('green','Cirugía de reemplazo valvular (SVA)','STS PROM <4% (riesgo bajo). Cirugía de reemplazo valvular aórtico. TAVI solo si anatomía favorable y preferencia del paciente, decidido por el Heart Team.');
+  } else if(v<=8){
+    vwzResult('amber','TAVI o SVA — decisión del Heart Team','STS PROM 4–8% (riesgo intermedio). Decisión individualizada por Heart Team según anatomía (TCMD), comorbilidades, expectativa de vida y preferencia del paciente.');
+  } else {
+    vwzGo('s4');
+  }
+}
+// ── Paso 5: Edmonton Frailty Scale del wizard ──
+function vwzEvalEdm(){
+  var total=0;
+  for(var i=0;i<10;i++){
+    var x=document.getElementById('vwedm'+i).value;
+    if(x===''){alert('Complete los 10 ítems de Edmonton (falta el ítem '+(i+1)+').');return;}
+    total+=parseInt(x,10);
+  }
+  if(total<9){
+    vwzResult('green','TAVI indicado — Heart Team','Edmonton '+total+'/17 (no frágil / fragilidad leve). TAVI indicado con evaluación del Heart Team. En Uruguay el FNR cubre TAVI si STS ≥4% o paciente inoperable.');
+  } else if(total<=11){
+    vwzResult('amber','Valoración geriátrica obligatoria','Edmonton '+total+'/17 (fragilidad moderada). Valoración geriátrica integral obligatoria y decisión en ateneo multidisciplinario antes de indicar TAVI.');
+  } else {
+    vwzResult('red','TAVI contraindicado','Edmonton '+total+'/17 (fragilidad severa). TAVI contraindicado. Tratamiento médico óptimo con enfoque paliativo / de confort.');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ENDOCARDITIS — acordeones + buscador de antibióticos
+// ══════════════════════════════════════════════════════════════════
+function toggleEndoAcc(id){
+  var b=document.getElementById('endo-b-'+id), a=document.getElementById('endo-a-'+id);
+  if(!b) return;
+  var on=b.classList.toggle('on');
+  if(a) a.textContent = on ? '▲' : '▼';
+}
+var ATB_ENDO=[
+  {name:'Streptococcus viridans / S. gallolyticus — sensible a penicilina (CMI ≤0.125)',
+   alias:['streptococcus','estreptococo','viridans','gallolyticus','bovis','penicilina sensible','amoxicilina'],
+   schemes:[
+     {l:'Válvula nativa',t:'Amoxicilina 200 mg/kg/día IV c/4–6 h × 4 semanas · O Penicilina G 12–18 M UI/día × 4 semanas.'},
+     {l:'Opción corta (nativa)',t:'+ Gentamicina 3 mg/kg/día × 2 semanas (solo las primeras 2 semanas).'},
+     {l:'Alergia a β-lactámico',t:'Vancomicina 30 mg/kg/día × 4 semanas.'},
+     {l:'Válvula protésica',t:'Mismo esquema × 6 semanas (sin opción corta).'}
+   ]},
+  {name:'Streptococcus — resistencia intermedia a penicilina (CMI 0.125–2)',
+   alias:['streptococcus','estreptococo','resistencia intermedia','viridans'],
+   schemes:[
+     {l:'Esquema',t:'Amoxicilina 200 mg/kg/día + Gentamicina 3 mg/kg/día × 4–6 semanas.'}
+   ]},
+  {name:'Staphylococcus aureus MSSA — válvula nativa',
+   alias:['staphylococcus','estafilococo','aureus','mssa','sensible meticilina','cloxacilina'],
+   schemes:[
+     {l:'Válvula nativa',t:'Cloxacilina (flucloxacilina) 12 g/día IV c/4 h × 4–6 semanas.'},
+     {l:'Alergia',t:'Daptomicina 10 mg/kg/día (si no es MRSA).'}
+   ]},
+  {name:'Staphylococcus aureus MRSA / alergia a β-lactámico',
+   alias:['staphylococcus','estafilococo','aureus','mrsa','resistente meticilina','vancomicina'],
+   schemes:[
+     {l:'Válvula nativa',t:'Vancomicina 30–60 mg/kg/día × 4–6 semanas · O Daptomicina 10 mg/kg/día × 4–6 semanas.'},
+     {l:'Válvula protésica',t:'Vancomicina + Rifampicina 900–1200 mg/día VO + Gentamicina × 6 semanas (Gentamicina solo las primeras 2 semanas).'}
+   ]},
+  {name:'Enterococcus faecalis — sensible a ampicilina',
+   alias:['enterococcus','enterococo','faecalis','ampicilina'],
+   schemes:[
+     {l:'Esquema preferido',t:'Ampicilina 200 mg/kg/día + Ceftriaxona 4 g/día × 6 semanas.'},
+     {l:'Alternativa',t:'Ampicilina + Gentamicina 3 mg/kg/día × 4–6 semanas.'}
+   ]},
+  {name:'Enterococcus — resistente a ampicilina o vancomicina (VRE)',
+   alias:['enterococcus','enterococo','vre','resistente','linezolid','vancomicina'],
+   schemes:[
+     {l:'Esquema',t:'Daptomicina 10 mg/kg/día + Ampicilina · O Linezolid. Consultar Infectología.'}
+   ]},
+  {name:'Grupo HACEK',
+   alias:['hacek','haemophilus','aggregatibacter','cardiobacterium','eikenella','kingella','ceftriaxona'],
+   schemes:[
+     {l:'Esquema',t:'Ceftriaxona 2 g/día IV × 4 semanas.'},
+     {l:'Alternativa',t:'Amoxicilina-clavulánico 200 mg/kg/día si es sensible.'}
+   ]},
+  {name:'Hongos (Candida / Aspergillus)',
+   alias:['hongos','fungica','micotica','candida','aspergillus','anfotericina','fluconazol'],
+   schemes:[
+     {l:'Esquema',t:'Anfotericina B liposomal ± Fluconazol (Candida sensible).'},
+     {l:'Cirugía',t:'Cirugía casi siempre indicada.'},
+     {l:'Supresión',t:'Supresión prolongada con fluconazol.'}
+   ]},
+  {name:'Coxiella burnetii (fiebre Q)',
+   alias:['coxiella','burnetii','fiebre q','doxiciclina','hidroxicloroquina'],
+   schemes:[
+     {l:'Esquema',t:'Doxiciclina 200 mg/día + Hidroxicloroquina 600 mg/día × mínimo 18 meses (válvula nativa) o >24 meses (protésica).'}
+   ]}
+];
+function atbCardHtml(g){
+  var rows='';
+  for(var i=0;i<g.schemes.length;i++){
+    rows+='<div class="atb-row"><span class="atb-scheme-l">'+g.schemes[i].l+'</span><br>'+g.schemes[i].t+'</div>';
+  }
+  return '<div class="atb-card"><div class="atb-card-t">'+g.name+'</div>'+rows+'</div>';
+}
+function renderAtb(){
+  var box=document.getElementById('atb-results');
+  if(!box) return;
+  var q=(document.getElementById('atb-search').value||'').toLowerCase().trim();
+  var list=ATB_ENDO.filter(function(g){
+    if(!q) return true;
+    var hay=(g.name+' '+(g.alias||[]).join(' ')).toLowerCase();
+    return hay.indexOf(q)>=0;
+  });
+  if(!list.length){
+    box.textContent='';
+    var d=document.createElement('div');
+    d.className='atb-empty';
+    d.textContent='Sin coincidencias para «'+q+'».'; // textContent evita XSS del término buscado
+    box.appendChild(d);
+    return;
+  }
+  // El contenido de las cards es estático (controlado por la app), sin datos del usuario
+  box.innerHTML=list.map(atbCardHtml).join('');
+}
+function atbSelect(v){
+  document.getElementById('atb-search').value=v||'';
+  renderAtb();
+}
+(function atbInit(){
+  var sel=document.getElementById('atb-select');
+  if(sel){
+    for(var i=0;i<ATB_ENDO.length;i++){
+      var o=document.createElement('option');
+      o.value=ATB_ENDO[i].name; o.textContent=ATB_ENDO[i].name;
+      sel.appendChild(o);
+    }
+  }
+  renderAtb();
+})();
+
+// ══════════════════════════════════════════════════════════════════
 // PREVENCIÓN — sub-tabs
 // ══════════════════════════════════════════════════════════════════
 function switchPrevTab(name, btn){
@@ -11555,7 +12341,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ var o=doc
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
-var MAIN_TABS=['prevencion','embarazo','preop','ic','miocardiopatias','cardioonc','arritmias','dispositivos','anticoag','ref','trials'];
+var MAIN_TABS=['prevencion','embarazo','preop','ic','miocardiopatias','valvulopatias','endocarditis','cardioonc','arritmias','dispositivos','anticoag','ref','trials'];
 function showMainTab(tab){
   var main=document.querySelector('main');
   if(main)main.style.display=(tab==='inicio')?'':'none';
