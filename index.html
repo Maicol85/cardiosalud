@@ -943,6 +943,7 @@ main{padding-bottom:100px}
   <button class="mtab" data-tab="valvulopatias" onclick="showMainTab('valvulopatias')"><span class="mtab-ic">🫀</span>Valvulopatías</button>
   <button class="mtab" data-tab="endocarditis" onclick="showMainTab('endocarditis')"><span class="mtab-ic">🦠</span>Endocarditis</button>
   <button class="mtab" data-tab="cardioonc" onclick="showMainTab('cardioonc')"><span class="mtab-ic">🎯</span>Cardio-oncología</button>
+  <button class="mtab" data-tab="ecgriesgo" onclick="showMainTab('ecgriesgo')"><span class="mtab-ic">⚡</span>ECG de Riesgo</button>
   <button class="mtab" data-tab="arritmias" onclick="showMainTab('arritmias')"><span class="mtab-ic">⚡</span>Arritmias</button>
   <button class="mtab" data-tab="dispositivos" onclick="showMainTab('dispositivos')"><span class="mtab-ic">🔧</span>Dispositivos</button>
   <button class="mtab" data-tab="anticoag" onclick="showMainTab('anticoag')"><span class="mtab-ic">💊</span>Anticoagulación</button>
@@ -2164,6 +2165,665 @@ main{padding-bottom:100px}
   </div>
 
   <div style="font-size:.72rem;color:var(--txt2);margin-top:16px;line-height:1.5;padding-top:10px;border-top:1px solid var(--border)">⚕️ Contenido orientativo basado en ESC 2020/2021 y AHA/ACC. No reemplaza el juicio clínico ni la prescripción individualizada de ejercicio. Los tiempos de progresión y los umbrales deben ajustarse a cada paciente.</div>
+</div>
+
+<div class="tab-content" id="tab-ecgriesgo" style="display:none">
+  <div class="co-note" style="font-size:.82rem;color:var(--txt2);margin-bottom:14px;line-height:1.5">⚡ <b>ECG de riesgo</b> — canalopatías y patrones eléctricos asociados a muerte súbita, según <b>ESC 2022</b> y <b>AHA/ACC</b>. Toque cada encabezado para expandir. Material educativo y de referencia: las decisiones de implante de DAI, ablación, restricción deportiva y manejo farmacológico son del médico tratante con el contexto clínico completo.</div>
+
+  <!-- ══════════════ 1 · BRUGADA ══════════════ -->
+  <div class="aco-sec-title">🌊 1 · Síndrome de Brugada</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y fisiopatología</span><span id="ecgr-a-brpat">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-brpat">
+      <div class="arr-care-t">Patrón tipo 1 — el único diagnóstico</div>
+      <ul class="arr-ul">
+        <li>Elevación del punto J <b>≥2 mm</b> con morfología <b>convexa descendente</b> («en bóveda», <i>coved</i>), seguida de onda T negativa en <b>V1–V2</b>, en al menos una derivación, con o sin bloqueo de rama derecha.</li>
+        <li>El patrón tipo 1 <b>espontáneo es diagnóstico per se</b>.</li>
+        <li>Los patrones tipo 2 y tipo 3 tienen morfología <i>saddleback</i> («en silla de montar») y <b>no</b> son diagnósticos por sí solos.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Fisiopatología</div>
+      <ul class="arr-ul">
+        <li>Canalopatía del canal de sodio cardíaco. En <b>20–30%</b> de los casos hay mutación en <b>SCN5A</b> (subunidad alfa del canal Na<sub>v</sub>1.5).</li>
+        <li>Predominio masculino <b>8:1</b>.</li>
+        <li>Mayor prevalencia en población asiática, sobre todo japonesa y tailandesa, donde se conoce como <i>Pokkuri disease</i>.</li>
+        <li>La diferencia de expresión del canal entre epicardio y endocardio del VD genera el gradiente responsable del patrón y de la arritmia.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brdx')"><span><span class="vlv-acc-ic">🔬</span> Criterios diagnósticos y test de provocación</span><span id="ecgr-a-brdx">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-brdx">
+      <div class="arr-care-t">Diagnóstico confirmado</div>
+      <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:6px">Patrón tipo 1 espontáneo en V1–V2 (en posición estándar, o con V1–V2 en 2.º o 3.er espacio intercostal) <b>más uno</b> de:</div>
+      <ul class="arr-ul">
+        <li>FV documentada.</li>
+        <li>TV polimórfica.</li>
+        <li>Síncope de probable origen arrítmico.</li>
+        <li>Respiración agónica nocturna.</li>
+        <li>Historia familiar de muerte súbita &lt;45 años en familiar de primer grado con sospecha de Brugada.</li>
+        <li>Inducción de FV/TV con test de provocación.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Test de provocación farmacológica</div>
+      <ul class="arr-ul">
+        <li><b>Cuándo:</b> patrón tipo 2 espontáneo, o sospecha clínica con ECG no diagnóstico. Convierte el tipo 2 en tipo 1.</li>
+        <li><b>Ajmalina</b> 1 mg/kg IV en 5 min — mayor sensibilidad, de referencia en Europa.</li>
+        <li><b>Flecainida</b> 2 mg/kg IV, o 400 mg vía oral en <b>dosis única de test</b>. No confundir con el máximo terapéutico de la ficha del vademécum (300 mg/día): son cosas distintas, y esta dosis se da una sola vez con monitoreo continuo.</li>
+        <li><b>Procainamida.</b></li>
+        <li>Realizar con <b>monitoreo continuo y desfibrilador disponible</b>.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⛔ El test de provocación está contraindicado si hay</div>
+        <ul>
+          <li>Patrón tipo 1 espontáneo — ya es diagnóstico, no aporta y expone al paciente.</li>
+          <li>QRS &gt;120 ms basal.</li>
+          <li>Bloqueo bifascicular.</li>
+          <li>Intervalo HV prolongado en el estudio electrofisiológico.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brtrig')"><span><span class="vlv-acc-ic">🚫</span> Factores desencadenantes a evitar</span><span id="ecgr-a-brtrig">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-brtrig">
+      <div class="arr-care-t">Fármacos bloqueantes del canal de sodio</div>
+      <ul class="arr-ul">
+        <li>Desenmascaran o agravan el patrón: <b>flecainida, propafenona, ajmalina, procainamida, disopiramida</b>.</li>
+        <li>Verificar <b>siempre</b> la lista completa antes de prescribir cualquier fármaco:
+          <a href="https://www.brugadadrugs.org" target="_blank" rel="noopener noreferrer" style="color:var(--p);font-weight:700">brugadadrugs.org ↗</a></li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Fiebre</div>
+      <ul class="arr-ul">
+        <li>Desenmascara el patrón tipo 1 y <b>puede desencadenar FV</b>.</li>
+        <li>Instrucción al paciente y a la familia: tratar de forma agresiva cualquier fiebre &gt;38 °C con antipiréticos (paracetamol), <b>sin esperar</b>.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Otros desencadenantes</div>
+      <ul class="arr-ul">
+        <li>Alcohol en exceso, cocaína, cannabis en dosis altas.</li>
+        <li>Hipopotasemia, hiperglucemia.</li>
+        <li>Comidas copiosas (vagotonía posprandial) y ayuno prolongado.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Cuándo ocurre el evento</div>
+        <ul>
+          <li>La muerte súbita en Brugada ocurre predominantemente <b>durante el sueño y en reposo</b>, por predominio vagal nocturno.</li>
+          <li>Los episodios de tormenta eléctrica son más frecuentes <b>en la madrugada</b>.</li>
+          <li>Tenerlo en cuenta al interpretar un Holter y al planificar el seguimiento: un registro diurno normal no tranquiliza.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brman')"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-brman">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-brman">
+      <ul class="arr-ul">
+        <li><b>DAI (Clase I, evidencia B):</b> sobreviviente de parada cardiorrespiratoria por FV, o TV sostenida documentada.</li>
+        <li><b>DAI (Clase IIa):</b> síncope inexplicado de probable origen arrítmico en paciente con diagnóstico de Brugada.</li>
+        <li><b>Quinidina (Clase IIa):</b> en tormenta eléctrica (≥3 episodios de FV/TV en 24 h) como tratamiento de rescate. También en portadores de DAI con choques repetidos, o como alternativa al DAI en quienes lo rechazan teniendo síncope.</li>
+        <li><b>Isoproterenol IV:</b> en tormenta eléctrica aguda, como puente — aumenta la corriente de calcio y contrarresta el desequilibrio responsable del patrón.</li>
+        <li><b>Ablación con catéter del epicardio del tracto de salida del VD:</b> opción emergente en centros especializados, para tormenta eléctrica refractaria o recurrencias frecuentes en portadores de DAI. Sin indicación establecida fuera de centros de referencia.</li>
+        <li><b>Asintomático con patrón tipo 1 espontáneo</b>, sin historia familiar ni síntomas: las guías ESC 2022 no recomiendan DAI de rutina. Observación y discusión individual.</li>
+      </ul>
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">✅ Conducta recomendada al alta</div>
+        <ul>
+          <li>Entregar al paciente y a su familia la <b>lista de fármacos contraindicados</b> (<a href="https://www.brugadadrugs.org" target="_blank" rel="noopener noreferrer" style="color:var(--ok);font-weight:700">brugadadrugs.org ↗</a>).</li>
+          <li>Instrucción escrita sobre el <b>manejo agresivo de la fiebre</b>.</li>
+          <li>Plan de acción ante síncope o palpitaciones, y a quién consultar.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 2 · QT LARGO ══════════════ -->
+  <div class="aco-sec-title">⏱️ 2 · Síndrome de QT Largo congénito (SQTL)</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtlpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y subtipos</span><span id="ecgr-a-qtlpat">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-qtlpat">
+      <ul class="arr-ul">
+        <li><b>Criterio diagnóstico (ESC 2022), independiente del sexo:</b> QTc <b>≥480 ms</b> en ECG de 12 derivaciones repetidos, con o sin síntomas · <b>o</b> QTc ≥460 ms con <b>síncope arrítmico</b> · <b>o</b> score de Schwartz &gt;3 · <b>o</b> mutación patogénica conocida, cualquiera sea la duración del QT. Todo ello en ausencia de causas secundarias (fármacos, electrolitos, hipotiroidismo).</li>
+        <li>El umbral es el <b>mismo para hombres y mujeres</b>. Los cortes distintos por sexo que circulan (&gt;470 ♂ / &gt;480 ♀) provienen de la definición de «QTc prolongado» poblacional y del cribado en atletas, no del criterio diagnóstico de SQTL: usarlos para diagnosticar <b>subdiagnostica a las mujeres</b>.</li>
+        <li>Preferir <b>Fridericia</b> (QTc = QT / RR<sup>1/3</sup>) sobre Bazett (QT / √RR): Bazett sobreestima el QTc a frecuencias altas y lo subestima a frecuencias bajas.</li>
+      </ul>
+      <div class="arr-ok-box" style="margin-top:10px">
+        <div class="arr-alert-h" style="color:var(--ok)">🧮 Calculadora integrada</div>
+        <ul>
+          <li>CardioSalud ya calcula el QTc por Bazett, Fridericia, Framingham y Hodges — no hace falta hacerlo a mano.</li>
+          <li><b>Ojo con la categoría que devuelve</b> («Normal», «Borderline», «Prolongado», «Crítico»): se calcula <b>sobre Bazett</b> y con umbrales <b>de adulto</b>, que no son los del criterio diagnóstico de arriba. Los cuatro valores en ms sí son los cuatro; la etiqueta es una sola y no lo aclara.</li>
+        </ul>
+        <button type="button" onclick="abrirCalcQTc()" style="margin-top:8px;padding:9px 14px;background:var(--ok);color:#fff;border:none;border-radius:7px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit;min-height:44px">⏱️ Abrir la calculadora de QTc</button>
+      </div>
+      <div class="arr-care-t" style="margin-top:14px">Morfología de la onda T por subtipo</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:16%">Subtipo</th><th style="width:20%">Gen / corriente</th><th style="width:28%">Onda T</th><th style="width:24%">Desencadenante</th><th style="width:12%">Frecuencia</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">LQT1</td><td>KCNQ1 — I<sub>Ks</sub></td><td>Base ancha, sin escotadura</td><td>Ejercicio, sobre todo <b>natación</b></td><td>~50%</td></tr>
+            <tr><td class="aco-ind">LQT2</td><td>KCNH2/HERG — I<sub>Kr</sub></td><td>Bífida o de baja amplitud, con escotadura</td><td>Emociones bruscas, <b>ruidos súbitos</b> (alarma, teléfono)</td><td>~35–40%</td></tr>
+            <tr><td class="aco-ind">LQT3</td><td>SCN5A — I<sub>Na</sub></td><td>Inicio tardío, con ST largo e isoeléctrico</td><td><b>Sueño o reposo</b> (predominio bradicárdico)</td><td>~5–10%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:.75rem;color:var(--txt2);margin-top:8px;line-height:1.5">El <b>LQT3</b> tiene mayor mortalidad por evento que LQT1 y LQT2, aunque los eventos sean menos frecuentes.</div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtlschw')"><span><span class="vlv-acc-ic">🧾</span> Score de Schwartz</span><span id="ecgr-a-qtlschw">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-qtlschw">
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:26%">Categoría</th><th style="width:56%">Criterio</th><th style="width:18%">Puntos</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind" rowspan="7">ECG</td><td>QTc ≥480 ms</td><td>+3</td></tr>
+            <tr><td>QTc 460–479 ms</td><td>+2</td></tr>
+            <tr><td>QTc 450–459 ms en hombre</td><td>+1</td></tr>
+            <tr><td>Torsade de pointes</td><td>+2</td></tr>
+            <tr><td>Alternancia de onda T</td><td>+1</td></tr>
+            <tr><td>Onda T mellada en 3 derivaciones</td><td>+1</td></tr>
+            <tr><td>Bradicardia para la edad</td><td>+0,5</td></tr>
+            <tr><td class="aco-ind" rowspan="2">Clínica</td><td>Síncope con estrés</td><td>+2</td></tr>
+            <tr><td>Síncope sin estrés</td><td>+1</td></tr>
+            <tr><td class="aco-ind" rowspan="2">Familiar</td><td>Familiar con SQTL definitivo</td><td>+1</td></tr>
+            <tr><td>Muerte súbita inexplicada en familiar &lt;30 años</td><td>+0,5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-care-t" style="margin-top:12px">Interpretación</div>
+      <ul class="arr-ul">
+        <li><b>≥3,5 puntos</b> — alta probabilidad.</li>
+        <li><b>1,5–3 puntos</b> — probabilidad intermedia.</li>
+        <li><b>≤1 punto</b> — baja probabilidad.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtlman')"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-qtlman">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-qtlman">
+      <ul class="arr-ul">
+        <li><b>Betabloqueantes</b> — Clase I en LQT1 y LQT2, Clase IIa en LQT3. <b>Nadolol</b> (preferido: una toma diaria, sin efecto pico-valle) o <b>propranolol</b>. Atenolol es menos eficaz en LQT1. Dosis de nadolol: 1–2 mg/kg/día. <b>No</b> usar betabloqueantes cardioselectivos solos — preferir los no cardioselectivos.</li>
+        <li><b>Restricción deportiva (Clase I):</b> las guías recomiendan evitar deportes de competición en todos los subtipos. En LQT1 la <b>natación</b> es el desencadenante de mayor riesgo — restricción sin supervisión.</li>
+        <li><b>DAI (Clase I):</b> sobreviviente de parada cardiorrespiratoria.</li>
+        <li><b>DAI (Clase IIa):</b> síncope recurrente con betabloqueante a dosis máxima tolerada.</li>
+        <li><b>Mexiletina:</b> añadida en LQT3 — bloquea la corriente de sodio persistente responsable del subtipo y puede acortar el QTc.</li>
+        <li><b>Denervación simpática cardíaca izquierda:</b> en pacientes con choques repetidos del DAI o intolerancia a betabloqueantes.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Fármacos a evitar</div>
+      <ul class="arr-ul">
+        <li>Todos los prolongadores del QT. Verificar antes de prescribir en
+          <a href="https://www.crediblemeds.org" target="_blank" rel="noopener noreferrer" style="color:var(--p);font-weight:700">crediblemeds.org ↗</a></li>
+        <li><b>Alto riesgo:</b> antipsicóticos (haloperidol, quetiapina), antibióticos (azitromicina, ciprofloxacino), antifúngicos (fluconazol), antieméticos (ondansetrón, domperidona), antiarrítmicos de clase IA y III.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Electrolitos</div>
+        <ul>
+          <li>Corregir <b>siempre</b> hipopotasemia e hipomagnesemia: potencian el riesgo de torsade.</li>
+          <li>Objetivo <b>K⁺ &gt;4 mEq/L</b> en pacientes con SQTL.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 3 · QT CORTO ══════════════ -->
+  <div class="aco-sec-title">⚡ 3 · Síndrome de QT Corto (SQTC)</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtcpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y diagnóstico</span><span id="ecgr-a-qtcpat">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-qtcpat">
+      <ul class="arr-ul">
+        <li><b>QTc &lt;340 ms</b> en adulto — diagnóstico confirmado.</li>
+        <li><b>QTc 340–360 ms</b> con historia familiar de muerte súbita, síncope, o FV/TV documentada — diagnóstico probable.</li>
+        <li><b>Morfología:</b> segmento ST prácticamente ausente, onda T picuda y simétrica de inicio precoz — el QRS parece «seguido inmediatamente» por la onda T. Puede simular hiperpotasemia, pero con el QT corto en lugar de largo.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Fisiopatología</div>
+      <ul class="arr-ul">
+        <li>Canalopatías de <b>ganancia de función</b> en canales de potasio (KCNH2, KCNQ1, KCNJ2): la repolarización es más rápida de lo normal.</li>
+        <li>El período refractario ventricular muy corto es lo que aumenta el riesgo de FV.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Epidemiología</div>
+      <ul class="arr-ul">
+        <li>Enfermedad rara — menos del 1% de los síndromes arrítmicos hereditarios.</li>
+        <li><b>Alta mortalidad:</b> la muerte súbita puede ser la primera manifestación.</li>
+        <li>La FA es frecuente y aparece a edades jóvenes: ante una <b>FA del joven</b>, pensar siempre en SQTC.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Se puede pasar por alto</div>
+        <ul>
+          <li>El SQTC puede ser <b>invisible en un ECG hecho durante taquicardia sinusal</b>: la FC alta acorta el QT fisiológicamente y enmascara el diagnóstico.</li>
+          <li>Medir el QTc a <b>FC &lt;80 lpm</b>, o con una corrección adecuada a la frecuencia.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtcman')"><span><span class="vlv-acc-ic">💊</span> Manejo</span><span id="ecgr-a-qtcman">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-qtcman">
+      <ul class="arr-ul">
+        <li><b>DAI:</b> tratamiento de elección en todo paciente sintomático (síncope, parada cardiorrespiratoria). En asintomáticos con historia familiar de muerte súbita, se sugiere discutir individualmente: la evidencia es limitada por la rareza de la enfermedad.</li>
+        <li><b>Quinidina:</b> el único antiarrítmico con evidencia de prolongar el QT en SQTC y reducir la inducibilidad de FV en el estudio electrofisiológico. Puede considerarse como alternativa al DAI en asintomáticos, o como complemento en portadores con choques repetidos.</li>
+        <li><b>Flecainida:</b> con efecto en algunas formas genéticas.</li>
+        <li><b>Evitar</b> los fármacos que acortan el QT: digital, catecolaminas en dosis altas.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════ 4 · WPW ══════════════ -->
+  <div class="aco-sec-title">🔀 4 · Wolff-Parkinson-White (WPW)</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('wpwpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y fisiopatología</span><span id="ecgr-a-wpwpat">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-wpwpat">
+      <div class="arr-care-t">Patrón clásico</div>
+      <ul class="arr-ul">
+        <li><b>PR corto</b> (&lt;120 ms, con frecuencia &lt;100 ms).</li>
+        <li><b>Onda delta:</b> deflexión inicial empastada del QRS — la porción de ventrículo que se activa por la vía accesoria antes que por el nodo AV.</li>
+        <li><b>QRS ancho</b> (&gt;120 ms) y cambios secundarios de repolarización (ST-T discordante con el QRS).</li>
+        <li><b>Pseudonecrosis:</b> la onda delta genera ondas Q en derivaciones inferiores o laterales que simulan un infarto antiguo. No confundir con necrosis real.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Localización de la vía por el ECG</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:56%">Onda delta</th><th style="width:44%">Vía accesoria</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Positiva en I y aVL</td><td>Izquierda lateral</td></tr>
+            <tr><td class="aco-ind">Negativa en II, III y aVF (simula necrosis inferior)</td><td>Posteroseptal</td></tr>
+            <tr><td class="aco-ind">Negativa en V1 y positiva en V4–V6</td><td>Anteroseptal derecha</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-care-t" style="margin-top:12px">De dónde sale el riesgo</div>
+      <ul class="arr-ul">
+        <li>La vía accesoria (haz de Kent) conecta el miocardio auricular con el ventricular <b>salteando el nodo AV</b>: conduce más rápido en ritmo sinusal, pero con período refractario variable.</li>
+        <li>El riesgo de muerte súbita aparece con la <b>FA conducida rápidamente por la vía accesoria</b> (FA preexcitada), que puede degenerar en FV.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('wpwries')"><span><span class="vlv-acc-ic">📊</span> Estratificación de riesgo</span><span id="ecgr-a-wpwries">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-wpwries">
+      <div class="arr-care-t" style="color:var(--err)">Criterios de alto riesgo</div>
+      <ul class="arr-ul">
+        <li>Período refractario efectivo de la vía accesoria <b>&lt;250 ms</b> en el estudio electrofisiológico — conducción anterógrada rápida.</li>
+        <li>Intervalo RR más corto <b>&lt;250 ms</b> en FA preexcitada espontánea: el equivalente clínico, observable en Holter o en urgencias.</li>
+        <li>Vías accesorias <b>múltiples</b>.</li>
+        <li>Antecedente de síncope o parada cardiorrespiratoria.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px;color:var(--ok)">Criterios de bajo riesgo</div>
+      <ul class="arr-ul">
+        <li><b>Pérdida intermitente de la preexcitación</b>: el patrón aparece y desaparece en el mismo ECG o entre registros sucesivos.</li>
+        <li><b>Pérdida brusca de la preexcitación con el ejercicio</b> en la ergometría.</li>
+        <li>Ambos sugieren un período refractario largo de la vía, o sea conducción anterógrada lenta.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">🚨 FA preexcitada — emergencia</div>
+        <ul>
+          <li><b>Reconocerla:</b> FA con QRS ancho, irregular, frecuencia ventricular altísima (&gt;200 lpm) y morfología que <b>cambia latido a latido</b> (mezcla de conducción por la vía y por el nodo AV).</li>
+          <li><b>Tratamiento:</b> cardioversión eléctrica si hay inestabilidad hemodinámica. Farmacológico: <b>procainamida</b> IV o <b>ibutilida</b>.</li>
+          <li><b>CONTRAINDICADOS: verapamil, diltiazem, adenosina y digoxina.</b> Bloquean el nodo AV y pueden acelerar la conducción por la vía accesoria, facilitando la degeneración a FV.</li>
+          <li><b>Evitar también amiodarona IV y betabloqueantes IV</b> en este escenario, por el mismo motivo. Es lo que indica la tab <b>Arritmias</b> de esta app; conviene tenerlo presente porque la amiodarona es el reflejo habitual ante una FA rápida.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('wpwman')"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-wpwman">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-wpwman">
+      <ul class="arr-ul">
+        <li><b>Ablación con catéter (Clase I, evidencia B):</b> paciente sintomático — TSV recurrente, FA preexcitada, síncope. Es el tratamiento definitivo, con éxito &gt;95% en vías laterales izquierdas.</li>
+        <li><b>Ablación (Clase IIa):</b> asintomático con patrón de alto riesgo — período refractario efectivo de la vía &lt;250 ms en el estudio electrofisiológico, o RR mínimo &lt;250 ms en FA preexcitada. <b>La preexcitación que persiste</b> a frecuencias altas en la ergometría es lo que preocupa; la que <b>desaparece bruscamente</b> con el esfuerzo indica lo contrario (ver los criterios de bajo riesgo del acordeón anterior).</li>
+        <li><b>Estudio electrofisiológico (Clase IIa):</b> en asintomáticos, para estratificar el riesgo — sobre todo si practican deporte de alto nivel, tienen profesión de riesgo (pilotos, conductores) o historia familiar de muerte súbita.</li>
+      </ul>
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">✅ Conducta recomendada</div>
+        <ul>
+          <li>Todo paciente con WPW sintomático o de alto riesgo debería derivarse a un centro con capacidad de ablación.</li>
+          <li>Con la disponibilidad actual de la técnica, el seguimiento expectante sin ablación en pacientes sintomáticos no está justificado.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 5 · CAVD ══════════════ -->
+  <div class="aco-sec-title">🫀 5 · Cardiomiopatía Arritmogénica del VD (CAVD)</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('cavdpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y criterios Task Force 2010</span><span id="ecgr-a-cavdpat">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-cavdpat">
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:26%">Hallazgo</th><th style="width:52%">Descripción</th><th style="width:22%">Criterio</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Onda épsilon</td><td>Pequeña deflexión positiva al final del QRS en V1–V3 — activación tardía del miocardio reemplazado por tejido fibrograso</td><td>Mayor, si es claramente identificable</td></tr>
+            <tr><td class="aco-ind">Inversión de onda T</td><td>En V1–V3 o más allá, en ausencia de bloqueo completo de rama derecha</td><td>Mayor si es en ≥3 precordiales derechas · menor si es solo V1–V2</td></tr>
+            <tr><td class="aco-ind">QRS prolongado</td><td>Relación QRS (V1+V2+V3) / (V4+V5+V6) &gt;1,2</td><td>Menor</td></tr>
+            <tr><td class="aco-ind">Potenciales tardíos</td><td>Señal promediada (SAECG): QRS filtrado &gt;114 ms, dV/dt &lt;40 µV en los últimos 40 ms, o RMS40 &lt;20 µV</td><td>Menor, con ≥1 de los 3</td></tr>
+            <tr><td class="aco-ind">Arritmias</td><td>TV con morfología de bloqueo de rama izquierda (origen en el VD). Lo que separa mayor de menor es el <b>eje</b>, no la cantidad</td><td><b>Mayor:</b> TV sostenida o no sostenida con eje <b>superior o indeterminado</b> · <b>Menor:</b> TV con eje inferior, o <b>&gt;500 extrasístoles ventriculares/24 h</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-care-t" style="margin-top:12px">Categorías diagnósticas (Task Force 2010)</div>
+      <ul class="arr-ul">
+        <li><b>Definitivo:</b> 2 criterios mayores · o 1 mayor + 2 menores · o 4 menores, de categorías distintas.</li>
+        <li><b>Probable:</b> 1 mayor + 1 menor · o 3 menores de categorías distintas.</li>
+        <li><b>Posible:</b> 1 mayor · o 2 menores de categorías distintas.</li>
+      </ul>
+      <div style="font-size:.75rem;color:var(--txt2);margin-top:6px;line-height:1.5">Quedarse sólo con «definitivo» deja sin nombre a un paciente que el propio Task Force clasifica como probable — y que igual necesita seguimiento y cribado familiar. Los mismos criterios están desarrollados en la tab <b>Miocardiopatías</b>.</div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('cavdman')"><span><span class="vlv-acc-ic">🏃</span> Diferenciación del atleta y manejo</span><span id="ecgr-a-cavdman">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-cavdman">
+      <div class="arr-care-t">Diagnóstico diferencial con el VD del atleta</div>
+      <ul class="arr-ul">
+        <li>El VD se dilata fisiológicamente en deportistas de resistencia: el remodelado por entrenamiento es real y puede confundir.</li>
+        <li><b>Orientan a CAVD:</b> disfunción <i>regional</i> del VD (acinesia, discinesia, aneurisma), realce tardío de gadolinio en RMC (fibrosis), TV con morfología de bloqueo de rama izquierda, y mutaciones desmosomales (PKP2, DSP, DSG2, DSC2, JUP).</li>
+        <li>La <b>RMC es el estudio de referencia</b> para la morfología del VD y la detección de fibrosis.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Manejo según guías ESC 2022</div>
+      <ul class="arr-ul">
+        <li><b>Restricción deportiva (Clase I):</b> el ejercicio acelera la progresión de la enfermedad y aumenta el riesgo de arritmias.</li>
+        <li><b>Betabloqueantes:</b> primera línea para el control de síntomas y arritmias.</li>
+        <li><b>DAI (Clase I):</b> sobreviviente de parada cardiorrespiratoria por FV, o TV sostenida con inestabilidad hemodinámica.</li>
+        <li><b>DAI (Clase IIa):</b> TV sostenida sin inestabilidad, o síncope de probable origen arrítmico con función del VD severamente comprometida.</li>
+        <li><b>Ablación con catéter:</b> para TV refractaria a antiarrítmicos en portadores de DAI con choques repetidos. <b>No es curativa</b> — es paliativa.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Estudiar a los familiares de primer grado</div>
+        <ul>
+          <li>La CAVD tiene <b>penetrancia variable</b> y expresión fenotípica dependiente del ejercicio.</li>
+          <li>Los familiares de primer grado deben estudiarse con ECG, ecocardiograma, RMC, Holter, ergometría y estudio genético si se identificó la mutación.</li>
+          <li>El cribado familiar puede identificar portadores asintomáticos <b>antes del primer evento</b>: no conviene diferirlo.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 6 · TVPC ══════════════ -->
+  <div class="aco-sec-title">🏃‍♂️ 6 · TV Polimórfica Catecolaminérgica (TVPC)</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('tvpcpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y diagnóstico</span><span id="ecgr-a-tvpcpat">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-tvpcpat">
+      <div class="arr-alert">
+        <div class="arr-alert-h">⚠️ El ECG basal es NORMAL</div>
+        <ul>
+          <li>QTc normal, sin preexcitación, sin alteraciones estructurales — a diferencia del resto de los síndromes arrítmicos hereditarios.</li>
+          <li>Un <b>ECG basal completamente normal en un paciente con síncope de esfuerzo</b> debe hacer sospechar TVPC, no tranquilizar.</li>
+        </ul>
+      </div>
+      <div class="arr-care-t" style="margin-top:12px">Patrón durante el esfuerzo o el estrés adrenérgico</div>
+      <ul class="arr-ul">
+        <li>Extrasistolia ventricular de morfología de bloqueo de rama derecha, que aparece progresivamente al aumentar la FC durante la ergometría.</li>
+        <li>A frecuencias mayores: bigeminismo, <b>TV bidireccional</b> —alternancia latido a latido de la morfología del QRS, uno con eje superior y el siguiente con eje inferior—, TV polimórfica y FV.</li>
+        <li>La <b>TV bidireccional es el hallazgo patognomónico</b>.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Cómo se diagnostica</div>
+      <ul class="arr-ul">
+        <li><b>Ergometría</b> o test de infusión de adrenalina (1 mg IV progresivo).</li>
+        <li><b>Estudio genético:</b> RYR2 (receptor de rianodina) en 60–70% de los casos, CASQ2 (calsecuestrina) en ~5%, de forma recesiva y con fenotipo más severo.</li>
+        <li>La <b>ausencia de mutación identificada no excluye</b> el diagnóstico.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('tvpcman')"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-tvpcman">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-tvpcman">
+      <ul class="arr-ul">
+        <li><b>Betabloqueantes (Clase I):</b> nadolol —no cardioselectivo, vida media larga— o propranolol en dosis altas. El objetivo es que la TV <b>no aparezca en la ergometría de control</b>.</li>
+        <li><b>Restricción deportiva (Clase I):</b> todos los deportes de competición y los ejercicios que elevan la adrenalina. Es una de las pocas indicaciones absolutas de restricción deportiva en cardiología.</li>
+        <li><b>Flecainida (Clase IIa, añadida):</b> tiene efecto sobre el receptor de rianodina, independiente de su acción antiarrítmica de clase IC. Se agrega al betabloqueante cuando persisten las arritmias con dosis máxima tolerada.</li>
+        <li><b>DAI + betabloqueante (Clase I):</b> sobreviviente de parada cardiorrespiratoria.</li>
+        <li><b>Denervación simpática cardíaca izquierda:</b> en tormenta eléctrica refractaria, o como complemento al DAI en pacientes con choques repetidos.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⛔ El DAI solo, sin betabloqueante, está contraindicado</div>
+        <ul>
+          <li>Los choques del DAI generan una descarga adrenérgica que puede desencadenar nueva FV: se entra en una tormenta eléctrica <b>inducida por los propios choques</b>.</li>
+          <li>El betabloqueante no es un complemento del DAI en TVPC — es la base sobre la que el DAI puede funcionar.</li>
+        </ul>
+      </div>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Estudiar a los familiares, incluidos los niños</div>
+        <ul>
+          <li>La TVPC sin tratamiento tiene una mortalidad del <b>30–50% a los 35 años</b>.</li>
+          <li>Estudiar con <b>ergometría</b> a todos los familiares de primer grado del caso índice. El ECG basal normal no sirve para descartar.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 7 · PEDIATRÍA ══════════════ -->
+  <div class="aco-sec-title">👶 7 · Patrones pediátricos de riesgo</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedqtc')"><span><span class="vlv-acc-ic">📏</span> Valores normales de QTc por edad</span><span id="ecgr-a-pedqtc">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-pedqtc">
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:30%">Edad</th><th style="width:35%">QTc normal</th><th style="width:35%">QTc patológico</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Neonatos (0–30 días)</td><td>&lt;460 ms</td><td>≥460 ms</td></tr>
+            <tr><td class="aco-ind">Lactantes (1–12 meses)</td><td>&lt;450 ms</td><td>≥450 ms</td></tr>
+            <tr><td class="aco-ind">Niños (1–15 años)</td><td>&lt;440 ms (♂) · &lt;450 ms (♀)</td><td>≥440 ms (♂) · ≥450 ms (♀)</td></tr>
+            <tr><td class="aco-ind">Adolescentes (&gt;15 años)</td><td>&lt;470 ms (♂) · &lt;480 ms (♀)</td><td>Umbral de SQTL: &gt;480 ms (♂) · &gt;500 ms (♀)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">💡 Corregir por frecuencia, siempre</div>
+        <ul>
+          <li>La FC es mucho más alta en neonatos y lactantes. Un QT «visualmente largo» en un neonato con FC de 150 lpm <b>puede ser normal</b> una vez corregido.</li>
+          <li>Usar Fridericia o Bazett con la corrección adecuada — la calculadora de la app hace las cuatro fórmulas.</li>
+        </ul>
+      </div>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ La calculadora de la app NO sirve para categorizar a un niño</div>
+        <ul>
+          <li>Sus umbrales son <b>de adulto</b> y no pide la edad: un lactante con QTc 455 ms —<b>patológico</b> según la tabla de arriba— sale rotulado como <b>«Normal»</b>.</li>
+          <li>Se puede usar para obtener los <b>valores en ms</b>, pero la categoría hay que sacarla de la tabla de esta sección, no de la etiqueta de color.</li>
+        </ul>
+        <button type="button" onclick="abrirCalcQTc()" style="margin-top:8px;padding:9px 14px;background:var(--err);color:#fff;border:none;border-radius:7px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit;min-height:44px">⏱️ Abrir la calculadora — usar sólo los ms</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedneo')"><span><span class="vlv-acc-ic">🍼</span> QT largo neonatal</span><span id="ecgr-a-pedneo">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-pedneo">
+      <div class="arr-care-t">Cuándo sospecharlo</div>
+      <ul class="arr-ul">
+        <li>Síncope neonatal, pausas, bradicardia sinusal sostenida.</li>
+        <li>Muerte súbita del lactante en un hermano previo.</li>
+        <li>Historia familiar de SQTL o de muerte súbita.</li>
+        <li>Hacer ECG a <b>todo neonato con síncope o ALTE</b> (<i>Apparent Life-Threatening Event</i>).</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Manejo</div>
+      <ul class="arr-ul">
+        <li><b>Betabloqueantes desde el diagnóstico</b> — propranolol, por disponibilidad en presentación pediátrica líquida.</li>
+        <li>En LQT3 neonatal grave (mutaciones SCN5A <i>de novo</i>, QTc &gt;600 ms y bloqueo AV 2:1): <b>mexiletina o ranolazina</b> pueden salvar la vida.</li>
+        <li><b>Evitar la bradicardia</b> — marcapasos en casos refractarios con pausas sinusales.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">🚨 Emergencia neonatal</div>
+        <ul>
+          <li>El LQT3 neonatal <i>de novo</i> con QTc muy prolongado y bloqueo 2:1 tiene alta mortalidad sin tratamiento agresivo.</li>
+          <li>Derivación <b>urgente</b> a centro de referencia pediátrico con capacidad de estimulación y de ECMO si hiciera falta.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedwpw')"><span><span class="vlv-acc-ic">🔀</span> WPW pediátrico</span><span id="ecgr-a-pedwpw">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-pedwpw">
+      <div class="arr-care-t">Cómo se presenta</div>
+      <ul class="arr-ul">
+        <li>En neonatos y lactantes, como <b>TSV de inicio súbito</b> — taquicardia de QRS estrecho si la conducción anterógrada va por el nodo AV, que es lo más frecuente.</li>
+        <li><b>FA preexcitada:</b> más rara, pero posible incluso en lactantes.</li>
+        <li>La mayoría son sintomáticos en los primeros meses: episodios de llanto brusco, palidez, taquicardia y mala perfusión.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Resolución espontánea</div>
+      <ul class="arr-ul">
+        <li>Muchos WPW pediátricos —sobre todo los diagnosticados en el primer año— tienen <b>resolución espontánea de la vía antes de los 5 años</b>.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Ablación</div>
+      <ul class="arr-ul">
+        <li>Se considera <b>a partir de los 5 años</b> en pacientes sintomáticos con TSV recurrente o FA preexcitada.</li>
+        <li>En menores de 5 años, preferir tratamiento farmacológico (propranolol o flecainida) hasta alcanzar el peso mínimo para una ablación segura — alrededor de <b>15 kg</b> en centros con experiencia.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedmioc')"><span><span class="vlv-acc-ic">🦠</span> Miocarditis en niños — cambios ECG</span><span id="ecgr-a-pedmioc">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-pedmioc">
+      <div class="arr-care-t">Hallazgos ECG sugestivos</div>
+      <ul class="arr-ul">
+        <li><b>Elevación del ST difusa</b>, no territorial — compromete derivaciones de múltiples territorios a la vez, a diferencia del infarto.</li>
+        <li>Inversión de onda T difusa en la fase de resolución.</li>
+        <li><b>Taquicardia sinusal persistente desproporcionada</b> para la fiebre.</li>
+        <li>Bloqueos de conducción: rama derecha, rama izquierda, bloqueo AV.</li>
+        <li>Arritmias ventriculares: extrasistolia, TV.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">🏥 Umbral de internación bajo</div>
+        <ul>
+          <li>Hospitalizar a todo niño con sospecha de miocarditis y <b>uno</b> de: bloqueo AV de cualquier grado, arritmias ventriculares, elevación del ST, troponina elevada, o función ventricular comprometida en el eco.</li>
+          <li>La miocarditis pediátrica puede progresar rápidamente a fallo circulatorio.</li>
+        </ul>
+      </div>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ El ECG normal no descarta miocarditis</div>
+        <ul>
+          <li>La troponina ultrasensible y el BNP son mejores marcadores de daño miocárdico en la fase aguda.</li>
+          <li>Con alta sospecha clínica y ECG normal, solicitar <b>RMC</b>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedcanal')"><span><span class="vlv-acc-ic">🧬</span> Canalopatías pediátricas específicas</span><span id="ecgr-a-pedcanal">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-pedcanal">
+      <div class="arr-care-t">TVPC pediátrica</div>
+      <ul class="arr-ul">
+        <li>Puede presentarse en la primera infancia con síncopes de esfuerzo o emocionales.</li>
+        <li>El ECG basal es normal: el diagnóstico se hace por <b>ergometría o test de adrenalina</b>.</li>
+        <li>Tratar con nadolol desde el diagnóstico y restringir el deporte de competición. Sin tratamiento, el pronóstico en niños es muy grave.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Síndrome de Timothy (LQT8)</div>
+      <ul class="arr-ul">
+        <li>Mutación <b>CACNA1C</b> (canal de calcio).</li>
+        <li>QTc extremadamente prolongado (&gt;550 ms), <b>sindactilia</b> como marcador extracardíaco, y autismo con frecuencia.</li>
+        <li>Raro, con altísima mortalidad en la infancia.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">QT corto pediátrico</div>
+      <ul class="arr-ul">
+        <li>Puede presentarse como <b>FA del lactante</b> o como muerte súbita en la primera infancia.</li>
+        <li>Todo neonato con FA <b>sin cardiopatía estructural</b> debe estudiarse para SQTC.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════ 8 · PRE-PARTICIPACIÓN ══════════════ -->
+  <div class="aco-sec-title">🏅 8 · Evaluación pre-participación deportiva — criterios ECG</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('seattle')"><span><span class="vlv-acc-ic">📋</span> Normal en el atleta vs. hallazgo que exige estudio</span><span id="ecgr-a-seattle">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-seattle">
+      <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">La interpretación del ECG del atleta se apoya en tres documentos sucesivos: las <b>recomendaciones de Lausanne (ESC, 2005)</b>, los <b>criterios de Seattle (2013)</b> y los <b>Criterios Internacionales (2017)</b>, que consolidan y actualizan a los anteriores y son hoy el estándar de referencia. La evaluación se completa con el cuestionario AHA/ACC de 14 ítems y la exploración física.</div>
+
+      <div class="arr-care-t" style="color:var(--ok)">Hallazgos normales en el atleta — no requieren estudio adicional</div>
+      <ul class="arr-ul">
+        <li>Bradicardia sinusal (FC ≥30 lpm), arritmia sinusal, ritmo de escape de la unión.</li>
+        <li>Bloqueo AV de primer grado (PR &gt;200 ms).</li>
+        <li>Bloqueo AV de segundo grado Mobitz I (Wenckebach).</li>
+        <li>Bloqueo de rama derecha incompleto — patrón rsR' en V1 con QRS &lt;120 ms.</li>
+        <li>Repolarización precoz: elevación del punto J ≥1 mm en derivaciones inferiores o laterales.</li>
+        <li>Voltajes aumentados de QRS <b>aislados</b> — criterios de hipertrofia por voltaje, sin ningún otro criterio acompañante.</li>
+        <li>Inversión de onda T aislada en V1–V2. En atletas de raza negra puede extenderse a V3–V4 como variante normal.</li>
+        <li>Ondas Q septales menores (&lt;40 ms de duración, &lt;3 mm de profundidad) en I, aVL, V5–V6.</li>
+      </ul>
+
+      <div class="arr-alert" style="margin-top:14px">
+        <div class="arr-alert-h">⚠️ Hallazgos que requieren estudio adicional</div>
+        <ul>
+          <li>Inversión de onda T en ≥2 derivaciones contiguas distintas de V1–V2 (si llega a V3–V4 o más allá: estudiar).</li>
+          <li>Depresión del ST en ≥2 derivaciones contiguas.</li>
+          <li>Onda Q patológica (&gt;3 mm de profundidad o &gt;40 ms de duración) en ≥2 derivaciones, excepto aVR y V1.</li>
+          <li>Bloqueo completo de rama izquierda.</li>
+          <li>Eje del QRS marcadamente desviado (&gt;+120° o &lt;−30°).</li>
+          <li>QTc prolongado: &gt;470 ms en hombres, &gt;480 ms en mujeres.</li>
+          <li>QTc corto: &lt;340 ms, o 340–360 ms con síntomas.</li>
+          <li>Preexcitación: onda delta, PR corto.</li>
+          <li>Bloqueo AV de segundo grado Mobitz II o de tercer grado.</li>
+          <li>Taquicardia ventricular no sostenida (≥3 complejos a ≥120 lpm).</li>
+          <li>Fibrilación o flutter auricular.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('algo')"><span><span class="vlv-acc-ic">🧭</span> Algoritmo de decisión posterior al ECG</span><span id="ecgr-a-algo">▼</span></button>
+    <div class="vlv-acc-b" id="ecgr-b-algo">
+      <div class="arr-care-t">Paso 1 — Evaluación inicial</div>
+      <ul class="arr-ul">
+        <li>ECG de 12 derivaciones, junto con el cuestionario AHA/ACC de 14 ítems y la exploración física.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Paso 2 — Clasificar el ECG</div>
+      <ul class="arr-ul">
+        <li>Según los criterios del acordeón anterior: ¿normal en el atleta, o con hallazgos que requieren estudio adicional?</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Paso 3a — ECG normal</div>
+      <ul class="arr-ul">
+        <li>Si el cuestionario y la exploración también son normales, la evaluación no aporta hallazgos que sugieran derivación. Seguimiento periódico según edad y nivel competitivo.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Paso 3b — ECG con hallazgo patológico: estudios dirigidos</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:42%">Hallazgo</th><th style="width:58%">Estudios sugeridos</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">QTc prolongado</td><td>Score de Schwartz · estudio genético si el score es ≥3,5 · Holter · ergometría</td></tr>
+            <tr><td class="aco-ind">Onda delta / PR corto</td><td>Estudio electrofisiológico para estratificar el riesgo de la vía accesoria</td></tr>
+            <tr><td class="aco-ind">Inversión de T en V1–V4</td><td>Ecocardiograma + RMC — descartar CAVD, MCH e hipertensión pulmonar</td></tr>
+            <tr><td class="aco-ind">QRS aumentado asimétrico</td><td>Ecocardiograma — descartar MCH</td></tr>
+            <tr><td class="aco-ind">TV no sostenida</td><td>Holter de 24 h · ecocardiograma · RMC · ergometría</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-care-t" style="margin-top:12px">Paso 4 — Integrar los resultados</div>
+      <ul class="arr-ul">
+        <li><b>Sin cardiopatía:</b> la evaluación no aporta elementos que sugieran restricción.</li>
+        <li><b>Cardiopatía identificada:</b> se sugiere evaluación con el especialista para el deporte concreto que practica, según la entidad y su severidad.</li>
+        <li><b>Entidades con restricción recomendada por guías</b> (CAVD, TVPC, SQTL en competición): ver la sección correspondiente de este módulo.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Paso 5 — Documentar</div>
+      <ul class="arr-ul">
+        <li>Dejar registro de la evaluación completa. La decisión sobre la participación deportiva es del médico tratante o del especialista, con el contexto clínico completo del atleta.</li>
+      </ul>
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">✅ Conducta recomendada</div>
+        <ul>
+          <li>El ECG de pre-participación tiene <b>falsos positivos</b> en atletas por los cambios fisiológicos del entrenamiento.</li>
+          <li>Interpretarlo siempre en el contexto del nivel de entrenamiento, el deporte practicado y los hallazgos clínicos.</li>
+          <li><b>No apartar a un atleta de la competición basándose sólo en el ECG</b>, sin haber completado el algoritmo diagnóstico.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:.72rem;color:var(--txt2);margin-top:16px;line-height:1.5;padding-top:10px;border-top:1px solid var(--border)">⚕️ Módulo educativo y de referencia clínica, basado en ESC 2022 y AHA/ACC. Las decisiones de implante de DAI, ablación, restricción deportiva y manejo farmacológico corresponden al médico tratante con el contexto clínico completo del paciente.</div>
 </div>
 
 <div class="tab-content" id="tab-arritmias" style="display:none">
@@ -12349,6 +13009,58 @@ function vwzEvalEdm(){
 /* Acordeones de la tab Rehabilitación. Función propia con prefijo «rehab-» en vez de un
    listener delegado sobre document: así el scope queda acotado a esta tab y no puede
    colisionar con los ids de Valvulopatías ni de Endocarditis, que usan el mismo patrón. */
+/* Acordeones de la tab ECG de Riesgo. Prefijo propio «ecgr-», igual que toggleVlvAcc,
+   toggleEndoAcc y toggleRehabAcc: el scope queda acotado a esta tab y no puede colisionar
+   con los ids de las otras. */
+function toggleEcgrAcc(id){
+  var b=document.getElementById('ecgr-b-'+id), a=document.getElementById('ecgr-a-'+id);
+  if(!b) return;
+  var on=b.classList.toggle('on');
+  if(a) a.textContent = on ? '▲' : '▼';
+}
+/* Abre la calculadora de QTc que YA existe en el panel de calculadoras, en vez de duplicar
+   las fórmulas en esta tab. Dos copias de un cálculo clínico se separan sin que se note.
+   No se usa toggleCalcPanel() ni toggleCpSec(5) a secas porque ambas ALTERNAN: si el panel
+   ya estaba abierto en QTc, el botón lo habría cerrado. */
+function abrirCalcQTc(){
+  /* El índice de la sección se DERIVA del propio campo del QTc en vez de cablear un 5.
+     Con `toggleCpSec(5)` fijo, insertar o reordenar una calculadora hacía que el botón
+     abriera otra —Función Renal, por ejemplo— sin ningún error: el guard pasaba igual y el
+     focus también, porque #qtc-qt sigue existiendo en otro lado. Falla en silencio y se ve
+     como si el botón anduviera. */
+  var q=document.getElementById('qtc-qt');
+  var cuerpo=q && q.closest ? q.closest('.calc-sec-b') : null;
+  var m=cuerpo && /^cps(\d+)$/.exec(cuerpo.id||'');
+  if(!q || !m){ return; }   // si no está la calculadora, no abrir un panel vacío
+  var p=document.getElementById('calc-panel');
+  if(p){
+    /* .panel-maximized sobrevive al cierre con ✕: sin esto, un panel que quedó maximizado
+       se reabre a pantalla completa (inset:0, z-index 2000) tapando la tab que se estaba
+       leyendo, y por encima del selector de instituciones. */
+    p.classList.remove('panel-maximized');
+    p.classList.add('open');
+  }
+  var s=document.getElementById(m[0]);
+  if(s && !s.classList.contains('on') && typeof toggleCpSec==='function') toggleCpSec(+m[1]);
+  /* Traer el encabezado de la sección a la vista. toggleCpSec pone scrollTop=0, que deja
+     arriba las cuatro calculadoras anteriores; y si la sección YA estaba abierta no se
+     llama, con lo que el panel conserva el scroll al fondo que dejó calcQTc y los campos
+     de entrada quedan fuera de la pantalla, por arriba. */
+  var enc=s && s.previousElementSibling;
+  if(enc && enc.scrollIntoView) try{ enc.scrollIntoView({block:'start'}); }catch(e){}
+  /* Se limpia en vez de dejar los valores del paciente ANTERIOR. El panel se cierra con ✕
+     pero conserva lo tipeado, así que al reabrirlo desde acá aparecían un QTc y una
+     categoría de color de OTRO paciente, indistinguibles de los actuales. Y al tipear el
+     dígito se AGREGABA («420» + «3» = 4203): eso cae fuera del rango válido y calcQTc
+     esconde el cuadro de resultados sin decir por qué.
+     No se usa select(): en un input[type=number] las API de selección no aplican
+     —setSelectionRange lanza InvalidStateError y selectionStart devuelve null—, así que no
+     hay forma de comprobar que haya seleccionado. Limpiar sí se puede verificar. */
+  var fc=document.getElementById('qtc-fc'), res=document.getElementById('qtc-res');
+  q.value=''; if(fc) fc.value='';
+  if(res) res.style.cssText='display:none';
+  try{ q.focus({preventScroll:true}); }catch(e){ q.focus(); }
+}
 function toggleRehabAcc(id){
   var b=document.getElementById('rehab-b-'+id), a=document.getElementById('rehab-a-'+id);
   if(!b) return;
@@ -12848,7 +13560,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ var o=doc
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
-var MAIN_TABS=['prevencion','embarazo','preop','ic','rehab','miocardiopatias','valvulopatias','endocarditis','cardioonc','arritmias','dispositivos','anticoag','ref','trials'];
+var MAIN_TABS=['prevencion','embarazo','preop','ic','rehab','miocardiopatias','valvulopatias','endocarditis','cardioonc','ecgriesgo','arritmias','dispositivos','anticoag','ref','trials'];
 function showMainTab(tab){
   var main=document.querySelector('main');
   if(main)main.style.display=(tab==='inicio')?'':'none';
