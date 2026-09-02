@@ -938,6 +938,7 @@ main{padding-bottom:100px}
   <button class="mtab" data-tab="embarazo" onclick="showMainTab('embarazo')"><span class="mtab-ic">👶</span>Embarazo</button>
   <button class="mtab" data-tab="preop" onclick="showMainTab('preop')"><span class="mtab-ic">🏥</span>Preoperatorio</button>
   <button class="mtab" data-tab="ic" onclick="showMainTab('ic')"><span class="mtab-ic">🫀</span>IC</button>
+  <button class="mtab" data-tab="rehab" onclick="showMainTab('rehab')"><span class="mtab-ic">🏃</span>Rehabilitación</button>
   <button class="mtab" data-tab="miocardiopatias" onclick="showMainTab('miocardiopatias')"><span class="mtab-ic">🧠</span>Miocardiopatías</button>
   <button class="mtab" data-tab="valvulopatias" onclick="showMainTab('valvulopatias')"><span class="mtab-ic">🫀</span>Valvulopatías</button>
   <button class="mtab" data-tab="endocarditis" onclick="showMainTab('endocarditis')"><span class="mtab-ic">🦠</span>Endocarditis</button>
@@ -1677,6 +1678,494 @@ main{padding-bottom:100px}
     </ul>
   </div>
 </div>
+<div class="tab-content" id="tab-rehab" style="display:none">
+  <div class="co-note" style="font-size:.82rem;color:var(--txt2);margin-bottom:14px;line-height:1.5">🏃 <b>Rehabilitación cardiovascular</b> — post-IAM, post-cirugía cardíaca e insuficiencia cardíaca, según <b>ESC 2020/2021</b> y <b>AHA/ACC</b>. Toque cada encabezado para expandir. Los tiempos y umbrales son <b>orientativos</b>: individualizar según el paciente.</div>
+
+  <!-- ══════════════ SECCIÓN 1 · POST-IAM ══════════════ -->
+  <div class="aco-sec-title">❤️‍🩹 1 · Rehabilitación Post-IAM</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('riesgo')"><span><span class="vlv-acc-ic">📊</span> Estratificación de riesgo</span><span id="rehab-a-riesgo">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-riesgo">
+      <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">Clasificación en tres niveles según criterios <b>ESC 2020</b> y <b>AHA/ACC</b>. El estrato determina la intensidad permitida y el nivel de supervisión.</div>
+      <div class="arr-care-t" style="color:var(--ok)">Bajo riesgo</div>
+      <ul class="arr-ul">
+        <li>FEVI &gt;50%.</li>
+        <li>Sin arritmias complejas.</li>
+        <li>Sin isquemia residual.</li>
+        <li>Capacidad funcional &gt;7 METs.</li>
+        <li>Sin síntomas en reposo.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px;color:var(--warn)">Riesgo moderado</div>
+      <ul class="arr-ul">
+        <li>FEVI 40–49%.</li>
+        <li>Arritmias controladas.</li>
+        <li>Isquemia residual leve.</li>
+        <li>Capacidad funcional 5–7 METs.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px;color:var(--err)">Alto riesgo</div>
+      <ul class="arr-ul">
+        <li>FEVI &lt;40%.</li>
+        <li>Arritmias ventriculares complejas.</li>
+        <li>Isquemia residual significativa.</li>
+        <li>Capacidad funcional &lt;5 METs.</li>
+        <li>Episodio de paro cardíaco previo.</li>
+        <li>Insuficiencia cardíaca descompensada.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('fases')"><span><span class="vlv-acc-ic">📅</span> Fases de rehabilitación</span><span id="rehab-a-fases">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-fases">
+      <div class="arr-care-t">Fase I — Hospitalaria</div>
+      <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:6px">Movilización precoz supervisada.</div>
+      <ul class="arr-ul">
+        <li><b>Inicio</b> cuando el paciente esté hemodinámicamente estable: &gt;24 h sin dolor, sin signos de IC activa, FC &lt;100 lpm en reposo, TA &gt;90/60 mmHg.</li>
+        <li><b>Incluye:</b> sentar al borde de la cama, bipedestación asistida, caminata por el pasillo.</li>
+        <li><b>Siempre supervisada</b> por personal de salud.</li>
+        <li><b>Criterio de alta de fase I:</b> deambulación de 100–200 m sin síntomas ni cambios significativos en FC/TA.</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:12px">Fase II — Ambulatoria</div>
+      <ul class="arr-ul">
+        <li><b>Duración:</b> 8–12 semanas. <b>Frecuencia:</b> 3–5 sesiones por semana.</li>
+        <li><b>Intensidad por FC objetivo (fórmula de Karvonen):</b><br>
+          <span style="display:inline-block;margin-top:5px;padding:7px 11px;background:var(--bg);border-left:3px solid var(--p);border-radius:5px;font-size:.82rem">FC objetivo = FC reposo + (FC máxima − FC reposo) × intensidad</span><br>
+          <span style="font-size:.79rem;color:var(--txt2)">60–80% en riesgo bajo/moderado · 50–60% en alto riesgo.</span></li>
+        <li><b>Supervisión</b> según estrato de riesgo (ver el acordeón siguiente).</li>
+        <li><b>Modalidades:</b> caminata, bicicleta estática, natación en etapas avanzadas.</li>
+        <li><b>Progresión:</b> aumentar primero la <i>duración</i> y recién después la <i>intensidad</i>.</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:12px">Fase III — Mantenimiento</div>
+      <ul class="arr-ul">
+        <li>Domiciliaria o comunitaria.</li>
+        <li><b>Criterios de ingreso:</b> completar la fase II sin eventos, FC objetivo estable, paciente entrenado en el reconocimiento de señales de alarma.</li>
+        <li><b>Objetivo:</b> mantener el nivel de aptitud cardiovascular de por vida.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('superv')"><span><span class="vlv-acc-ic">👨‍⚕️</span> Supervisión según estrato de riesgo</span><span id="rehab-a-superv">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-superv">
+      <div class="arr-care-t" style="color:var(--err)">Alto riesgo</div>
+      <ul class="arr-ul">
+        <li>Supervisión <b>médica directa</b> con monitoreo ECG continuo durante toda la fase II.</li>
+        <li><b>Desfibrilador disponible en el sitio</b> de ejercicio.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px;color:var(--warn)">Riesgo moderado</div>
+      <ul class="arr-ul">
+        <li>Fisioterapeuta o kinesiólogo en las primeras sesiones (mínimo 8–10).</li>
+        <li>Luego puede continuar con licenciado en educación física con formación cardiovascular.</li>
+        <li>Monitoreo ECG intermitente.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px;color:var(--ok)">Bajo riesgo</div>
+      <ul class="arr-ul">
+        <li>Licenciado en educación física con formación cardiovascular desde el inicio.</li>
+        <li>Fase III domiciliaria con instrucción de automonitoreo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('wear')"><span><span class="vlv-acc-ic">⌚</span> Wearables y smartwatch en rehabilitación</span><span id="rehab-a-wear">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-wear">
+      <div class="arr-care-t">Qué miden</div>
+      <ul class="arr-ul">
+        <li>Frecuencia cardíaca continua.</li>
+        <li>SpO<sub>2</sub>.</li>
+        <li>Detección de fibrilación auricular — validada para ritmo en Apple Watch Series 4+ y Samsung Galaxy Watch 4+.</li>
+        <li>Variabilidad de la frecuencia cardíaca.</li>
+        <li>Pasos y distancia.</li>
+        <li>Análisis del sueño.</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:10px">Evidencia</div>
+      <ul class="arr-ul">
+        <li>El monitoreo remoto con wearable <b>mejora la adherencia</b> a la rehabilitación domiciliaria: RCT de smartwatch en cardiopatía coronaria (<i>JMIR mHealth</i> 2025) con mejoría de adherencia y de VO<sub>2</sub> pico, y RCT de wearable con coaching remoto en enfermedad coronaria (<i>JMIR mHealth</i> 2025).</li>
+        <li>La <b>declaración científica AHA 2022</b> sobre wearables cardiovasculares respalda su uso como <b>herramienta complementaria</b> en fase III y en fase II domiciliaria de bajo riesgo.</li>
+        <li style="color:var(--txt2);font-size:.79rem">Nota: la evidencia es de <b>adherencia y capacidad funcional</b>, no de mortalidad. Ningún trial de wearables mostró reducción de eventos duros.</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:10px">Cuándo usarlos</div>
+      <ul class="arr-ul">
+        <li>Fase III (mantenimiento domiciliario).</li>
+        <li>Fase II domiciliaria en pacientes de <b>bajo riesgo</b>, como complemento al plan supervisado.</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:10px">Limitaciones importantes</div>
+      <ul class="arr-ul">
+        <li>Los wearables de consumo <b>no son dispositivos médicos certificados</b>.</li>
+        <li>La detección de FA por smartwatch <b>requiere confirmación con ECG de 12 derivaciones</b> antes de tomar cualquier decisión clínica.</li>
+        <li>La FC medida por fotopletismografía puede tener un error de <b>±5–10 lpm</b> en ejercicio intenso.</li>
+      </ul>
+
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ No sustituyen la supervisión</div>
+        <ul>
+          <li><b>NO recomendados como única herramienta de monitoreo</b> en pacientes de alto riesgo.</li>
+          <li>No reemplazan la supervisión médica ni el monitoreo ECG en la fase II de alto riesgo.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('alarma')"><span><span class="vlv-acc-ic">🚨</span> Señales de alarma para detener el ejercicio</span><span id="rehab-a-alarma">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-alarma">
+      <div class="arr-alert">
+        <div class="arr-alert-h">🛑 Detener el ejercicio de inmediato ante</div>
+        <ul>
+          <li>Dolor o presión precordial.</li>
+          <li>Disnea desproporcionada al esfuerzo.</li>
+          <li>Mareos o presíncope.</li>
+          <li>Palpitaciones de inicio súbito.</li>
+          <li>Palidez o sudoración fría.</li>
+          <li>FC que no cede con el cese del ejercicio.</li>
+          <li>Caída de la TA &gt;10 mmHg durante el ejercicio.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('nutriiam')"><span><span class="vlv-acc-ic">🥗</span> Nutrición post-IAM</span><span id="rehab-a-nutriiam">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-nutriiam">
+      <ul class="arr-ul">
+        <li><b>Dieta mediterránea</b> como patrón base — evidencia nivel <b>I-A</b> (ESC 2021, Prevención).</li>
+        <li><b>Omega-3:</b> pescado azul 2–3 veces por semana, o suplemento de 1 g/día en hipertrigliceridemia.</li>
+        <li><b>Sodio:</b> restricción a &lt;5 g/día de sal (2 g de Na).</li>
+        <li><b>Alcohol:</b> máximo 1 unidad/día en mujeres y 2 en hombres. Desaconsejar si hay IC asociada.</li>
+        <li><b>Grasas:</b> reemplazar las saturadas por insaturadas — aceite de oliva, frutos secos.</li>
+        <li>Evitar ultraprocesados y bebidas azucaradas.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════ SECCIÓN 2 · POST-CIRUGÍA CARDÍACA ══════════════ -->
+  <div class="aco-sec-title">🫀 2 · Rehabilitación Post-Cirugía Cardíaca</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('faja')"><span><span class="vlv-acc-ic">🩹</span> Faja esternal</span><span id="rehab-a-faja">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-faja">
+      <div class="arr-care-t">Cuándo usarla</div>
+      <ul class="arr-ul">
+        <li>Desde el alta hospitalaria, en <b>todos</b> los pacientes operados por esternotomía media (bypass, reemplazo valvular, etc.).</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Cómo colocarla</div>
+      <ul class="arr-ul">
+        <li>Ajustada pero <b>no compresiva</b>, sobre la ropa interior.</li>
+        <li>Cubriendo el esternón completo, cerrada con velcro y sin pliegues.</li>
+        <li>El paciente <b>debe poder respirar profundo</b> con la faja puesta.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Tiempo de uso</div>
+      <ul class="arr-ul">
+        <li>Mínimo <b>6–8 semanas</b> de forma continua, incluyendo para dormir.</li>
+        <li>Retirar sólo para la higiene personal, con asistencia.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Qué evitar con la faja</div>
+        <ul>
+          <li>No ajustarla tan fuerte que limite la expansión torácica.</li>
+          <li>No usarla sobre una herida con secreciones sin cobertura.</li>
+          <li><b>No usarla sólo cuando duele</b> — la faja se usa siempre, no a demanda.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('tos')"><span><span class="vlv-acc-ic">😮‍💨</span> Tos y maniobra de Valsalva</span><span id="rehab-a-tos">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-tos">
+      <div class="arr-care-t">Técnica de tos post-esternotomía</div>
+      <ul class="arr-ul">
+        <li>Apoyar una <b>almohada pequeña o toalla enrollada</b> firmemente sobre el esternón, con ambas manos.</li>
+        <li>Toser con la almohada conteniendo el esternón (<b>tos contenida</b>).</li>
+        <li>Reduce el dolor y el estrés mecánico sobre la esternotomía.</li>
+        <li><b>Practicarla con el paciente antes del alta.</b></li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Qué evitar</div>
+        <ul>
+          <li>Esfuerzo defecatorio con Valsalva no asistido — indicar ablandadores de materia fecal si hace falta.</li>
+          <li>Levantar objetos de <b>&gt;2–3 kg</b> en las primeras 6–8 semanas.</li>
+          <li>Empujar o traccionar con los brazos: abrir puertas pesadas, levantarse de la silla haciendo fuerza con los brazos.</li>
+        </ul>
+      </div>
+      <div class="arr-care-t" style="margin-top:12px">Riesgo de dehiscencia</div>
+      <ul class="arr-ul">
+        <li>Mayor en las <b>primeras 6 semanas</b>.</li>
+        <li>Mayor en pacientes con osteoporosis, obesidad o EPOC (tos crónica).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('prog')"><span><span class="vlv-acc-ic">📈</span> Progresión de actividad por semanas</span><span id="rehab-a-prog">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-prog">
+      <div class="arr-care-t">Semanas 1–2</div>
+      <ul class="arr-ul">
+        <li>Caminata en plano de 5–10 minutos, 2–3 veces por día.</li>
+        <li>Sin levantar objetos de &gt;2 kg. Sin conducir.</li>
+        <li>Reposo la mayor parte del día.</li>
+        <li>Levantarse de la silla sin empujar con los brazos.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Semanas 3–4</div>
+      <ul class="arr-ul">
+        <li>Caminata de 15–20 minutos.</li>
+        <li>Subir escaleras despacio, con pausa si es necesario.</li>
+        <li>Higiene y cuidado personal sin asistencia.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Semanas 5–6</div>
+      <ul class="arr-ul">
+        <li>Caminata de 30 minutos sin pausa.</li>
+        <li>Actividades livianas del hogar: cocinar, doblar ropa.</li>
+        <li>Sin levantar &gt;5 kg todavía.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Semanas 7–8</div>
+      <ul class="arr-ul">
+        <li>Actividad moderada según la tolerancia individual.</li>
+        <li>Inicio del programa formal de rehabilitación cardíaca (fase II), si no se inició antes.</li>
+      </ul>
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">💡 Consejo</div>
+        <ul>
+          <li>Estas fechas son <b>orientativas</b>. El ritmo de progresión debe individualizarse según la complejidad de la cirugía, las comorbilidades y el estado funcional previo.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('laboral')"><span><span class="vlv-acc-ic">💼</span> Vuelta a la vida laboral y actividades cotidianas</span><span id="rehab-a-laboral">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-laboral">
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:52%">Actividad</th><th style="width:48%">Tiempo orientativo</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Trabajo sedentario (oficina, escritorio)</td><td>4–6 semanas post-alta</td></tr>
+            <tr><td class="aco-ind">Trabajo de esfuerzo moderado (caminata prolongada, carga liviana)</td><td>8–12 semanas</td></tr>
+            <tr><td class="aco-ind">Trabajo físico intenso (construcción, carga pesada)</td><td>3–6 meses, con evaluación funcional previa</td></tr>
+            <tr><td class="aco-ind">Conducir vehículo</td><td>4–6 semanas</td></tr>
+            <tr><td class="aco-ind">Actividad sexual</td><td>6–8 semanas, cuando pueda subir 2 pisos de escaleras sin síntomas</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">💡 Consejo</div>
+        <ul>
+          <li>Para <b>conducir</b>, verificar además la normativa local vigente. En Uruguay, consultar con el médico tratante y con la compañía aseguradora.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('herida')"><span><span class="vlv-acc-ic">🧼</span> Cuidados de la herida quirúrgica</span><span id="rehab-a-herida">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-herida">
+      <div class="arr-care-t">Higiene</div>
+      <ul class="arr-ul">
+        <li>Lavar suavemente con agua y jabón neutro; secar sin frotar.</li>
+        <li>No aplicar antisépticos directamente, salvo indicación médica.</li>
+        <li><b>No sumergir en agua</b> (baño de inmersión, pileta) hasta el cierre completo.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Signos de infección — consultar de inmediato</div>
+        <ul>
+          <li>Enrojecimiento con calor local.</li>
+          <li>Secreción purulenta o serosa persistente.</li>
+          <li>Dehiscencia (apertura de la herida).</li>
+          <li>Fiebre &gt;38 °C.</li>
+          <li>Dolor que <b>aumenta</b> en lugar de mejorar.</li>
+        </ul>
+      </div>
+      <div class="arr-care-t" style="margin-top:12px">Cuidado del esternón</div>
+      <ul class="arr-ul">
+        <li>No hay que hacer nada especial además de la faja y de evitar esfuerzos.</li>
+        <li>La <b>consolidación ósea tarda 6–8 semanas</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('nutriqx')"><span><span class="vlv-acc-ic">🍗</span> Nutrición post-cirugía cardíaca</span><span id="rehab-a-nutriqx">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-nutriqx">
+      <ul class="arr-ul">
+        <li><b>Proteínas para cicatrización:</b> 1,2–1,5 g/kg/día en el post-quirúrgico inmediato (primeras 6–8 semanas). Fuentes: carnes magras, huevo, lácteos, legumbres.</li>
+        <li><b>Vitamina C:</b> 500 mg/día, como suplemento o mediante cítricos, kiwi y pimientos — cofactor esencial para la síntesis de colágeno.</li>
+        <li><b>Zinc:</b> si hay déficit nutricional, suplementar 15–30 mg/día — participa en la cicatrización y en la función inmune.</li>
+        <li><b>Hierro:</b> suplementar si la hemoglobina post-quirúrgica es &lt;10 g/dL (frecuente tras bypass). Dosis según el déficit estimado.</li>
+        <li><b>Hidratación:</b> 1,5–2 L/día, salvo restricción por IC.</li>
+        <li><b>Sodio:</b> &lt;5 g/día de sal; &lt;2 g/día si hay IC asociada.</li>
+      </ul>
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">💡 Consejo</div>
+        <ul>
+          <li>La <b>malnutrición previa y el déficit proteico</b> son los principales factores modificables que retrasan la cicatrización. En este período, priorizar las proteínas por sobre cualquier otro macronutriente.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('supcx')"><span><span class="vlv-acc-ic">🩺</span> Supervisión y señales de alarma post-cirugía</span><span id="rehab-a-supcx">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-supcx">
+      <div class="arr-care-t">Supervisión</div>
+      <ul class="arr-ul">
+        <li><b>Fisioterapeuta especializado</b> para ejercicios respiratorios: espirometría incentivada, tos asistida, expansión costal.</li>
+        <li>Movilización de hombros y evaluación de la esternotomía.</li>
+        <li>Al menos <b>2–3 sesiones</b> en la primera semana post-alta.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">🚨 Señales de alarma — consultar con urgencia</div>
+        <ul>
+          <li>Fiebre &gt;38 °C.</li>
+          <li>Dolor esternal que aumenta, o <b>crepitación al palpar el esternón</b>.</li>
+          <li>Secreción por la herida.</li>
+          <li>Disnea de reposo o con mínimo esfuerzo.</li>
+          <li>Edemas en miembros inferiores que empeoran.</li>
+          <li>Palpitaciones sostenidas.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SECCIÓN 3 · INSUFICIENCIA CARDÍACA ══════════════ -->
+  <div class="aco-sec-title">💧 3 · Rehabilitación en Insuficiencia Cardíaca</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('fevi')"><span><span class="vlv-acc-ic">📉</span> Ejercicio según FEVI</span><span id="rehab-a-fevi">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-fevi">
+      <div class="arr-care-t" style="color:var(--err)">FEVI reducida (&lt;40%)</div>
+      <ul class="arr-ul">
+        <li><b>Inicio siempre supervisado.</b></li>
+        <li>Intensidad baja-moderada: <b>40–60% de la FC de reserva</b> (Karvonen).</li>
+        <li><b>Evitar ejercicios isométricos</b> (pesas, isometría de grandes grupos musculares) — aumentan la postcarga.</li>
+        <li>Modalidad preferida: caminata y bicicleta estática.</li>
+        <li>Progresar muy gradualmente, vigilando síntomas y respuesta hemodinámica.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px;color:var(--warn)">FEVI levemente reducida (40–49%)</div>
+      <ul class="arr-ul">
+        <li>Similar al grupo de FEVI reducida, pero con mayor margen para progresar una vez estabilizado.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px;color:var(--ok)">FEVI preservada (≥50%)</div>
+      <ul class="arr-ul">
+        <li>Énfasis en ejercicio <b>aeróbico moderado</b>: 60–70% de la FC de reserva.</li>
+        <li>Control intensivo de factores de riesgo: HTA, DM, FA, obesidad.</li>
+        <li>El ejercicio en ICFEp tiene evidencia creciente de beneficio en <b>calidad de vida</b>, aunque no en mortalidad.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('monit')"><span><span class="vlv-acc-ic">⚖️</span> Monitoreo diario del paciente</span><span id="rehab-a-monit">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-monit">
+      <div class="arr-care-t">Peso diario en ayunas</div>
+      <ul class="arr-ul">
+        <li>Pesarse siempre a la <b>misma hora</b>, antes del desayuno, después de orinar, con la misma ropa (o sin ropa).</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Consultar ante un aumento de peso de</div>
+        <ul>
+          <li><b>&gt;2 kg en 2 días</b> consecutivos, o</li>
+          <li><b>&gt;3 kg en 1 semana.</b></li>
+          <li>Sugiere retención hídrica y posible reagudización <b>antes</b> de los síntomas clínicos.</li>
+        </ul>
+      </div>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">🚨 Síntomas que requieren contacto médico el mismo día</div>
+        <ul>
+          <li>Disnea en reposo o con mínimo esfuerzo.</li>
+          <li>Ortopnea nueva o que empeora.</li>
+          <li>Edemas en las piernas que aumentan.</li>
+          <li>Sensación de plenitud abdominal (congestión hepática).</li>
+          <li>Disminución marcada de la diuresis.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('supdom')"><span><span class="vlv-acc-ic">🏠</span> Programa supervisado vs. domiciliario</span><span id="rehab-a-supdom">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-supdom">
+      <div class="arr-care-t">Evidencia</div>
+      <ul class="arr-ul">
+        <li>El trial <b>HF-ACTION</b> (N=2.331, <i>NEJM</i> 2009) demostró que el ejercicio aeróbico supervisado reduce las hospitalizaciones cardiovasculares y la mortalidad por todas las causas en IC con FEVI reducida — reducción relativa de ~11% (p=0,03 en el análisis ajustado).</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Supervisado obligatorio</div>
+      <ul class="arr-ul">
+        <li>FEVI &lt;35%.</li>
+        <li>Clase funcional NYHA III.</li>
+        <li>Arritmias ventriculares complejas.</li>
+        <li>Historia de síncope de esfuerzo.</li>
+        <li>IC descompensada reciente (&lt;3 meses).</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Domiciliario con wearable (complemento, no reemplazo)</div>
+      <ul class="arr-ul">
+        <li>FEVI 35–50%.</li>
+        <li>Clase funcional NYHA I–II estable.</li>
+        <li>Sin arritmias complejas.</li>
+        <li>El wearable permite verificar que el paciente cumple la intensidad y la duración prescriptas.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⛔ El ejercicio NO está indicado en</div>
+        <ul>
+          <li>IC aguda descompensada.</li>
+          <li>Miocarditis activa.</li>
+          <li>Estenosis aórtica severa sintomática no tratada.</li>
+          <li>Angina inestable.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('hidrico')"><span><span class="vlv-acc-ic">🧂</span> Restricción hídrica y sódica</span><span id="rehab-a-hidrico">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-hidrico">
+      <div class="arr-care-t">Sodio</div>
+      <ul class="arr-ul">
+        <li><b>&lt;2 g de Na/día</b> (equivale a &lt;5 g de sal) en IC sintomática (NYHA II–IV).</li>
+        <li>En IC compensada asintomática: restricción moderada, &lt;5 g de sal/día.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Restricción hídrica</div>
+      <ul class="arr-ul">
+        <li><b>Indicada</b> en hiponatremia dilucional (&lt;135 mEq/L) o en congestión refractaria a diuréticos.</li>
+        <li><b>Límite:</b> 1,5–2 L/día de <i>todos</i> los líquidos — incluye sopas, helados y frutas con alto contenido de agua.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ No indicar de rutina</div>
+        <ul>
+          <li>La restricción hídrica <b>no</b> se indica de rutina en IC compensada euvolémica: puede aumentar la sed y empeorar la adherencia.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('nutriic')"><span><span class="vlv-acc-ic">🥄</span> Nutrición en insuficiencia cardíaca</span><span id="rehab-a-nutriic">▼</span></button>
+    <div class="vlv-acc-b" id="rehab-b-nutriic">
+      <ul class="arr-ul">
+        <li><b>Sodio y líquidos:</b> ver el acordeón anterior.</li>
+        <li><b>Alcohol:</b> evitarlo por completo en miocardiopatía alcohólica — la disfunción puede revertir si se abstiene precozmente. En otras etiologías: máximo 1 unidad/día en mujeres y 1–2 en hombres, con tendencia a desaconsejarlo en IC moderada-severa.</li>
+        <li><b>Cafeína:</b> no contraindicada en dosis moderadas (2–3 tazas de café/día), salvo arritmias documentadas asociadas a la cafeína.</li>
+        <li><b>CoQ10:</b> evidencia limitada y heterogénea — algunos estudios muestran reducción de eventos, sin impacto confirmado en mortalidad total.</li>
+        <li><b>Omega-3 (PUFA):</b> el estudio <b>GISSI-HF</b> mostró reducción de mortalidad y hospitalizaciones con 1 g/día en IC. Considerarlo especialmente en miocardiopatía isquémica.</li>
+        <li>No recomendar otros suplementos sin evidencia robusta.</li>
+      </ul>
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">💡 Consejo</div>
+        <ul>
+          <li>La <b>caquexia cardíaca</b> (pérdida de masa muscular en IC avanzada) es un factor independiente de mal pronóstico. En estos pacientes, priorizar el aporte calórico y proteico adecuado <b>antes</b> que las restricciones dietéticas.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:.72rem;color:var(--txt2);margin-top:16px;line-height:1.5;padding-top:10px;border-top:1px solid var(--border)">⚕️ Contenido orientativo basado en ESC 2020/2021 y AHA/ACC. No reemplaza el juicio clínico ni la prescripción individualizada de ejercicio. Los tiempos de progresión y los umbrales deben ajustarse a cada paciente.</div>
+</div>
+
 <div class="tab-content" id="tab-arritmias" style="display:none">
   <div class="arr-tabs">
     <button class="arr-tab active" data-arr="fa" onclick="switchArrTab('fa',this)">🫀 FA</button>
@@ -11857,6 +12346,15 @@ function vwzEvalEdm(){
 // ══════════════════════════════════════════════════════════════════
 // ENDOCARDITIS — acordeones + buscador de antibióticos
 // ══════════════════════════════════════════════════════════════════
+/* Acordeones de la tab Rehabilitación. Función propia con prefijo «rehab-» en vez de un
+   listener delegado sobre document: así el scope queda acotado a esta tab y no puede
+   colisionar con los ids de Valvulopatías ni de Endocarditis, que usan el mismo patrón. */
+function toggleRehabAcc(id){
+  var b=document.getElementById('rehab-b-'+id), a=document.getElementById('rehab-a-'+id);
+  if(!b) return;
+  var on=b.classList.toggle('on');
+  if(a) a.textContent = on ? '▲' : '▼';
+}
 function toggleEndoAcc(id){
   var b=document.getElementById('endo-b-'+id), a=document.getElementById('endo-a-'+id);
   if(!b) return;
@@ -12350,7 +12848,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ var o=doc
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
-var MAIN_TABS=['prevencion','embarazo','preop','ic','miocardiopatias','valvulopatias','endocarditis','cardioonc','arritmias','dispositivos','anticoag','ref','trials'];
+var MAIN_TABS=['prevencion','embarazo','preop','ic','rehab','miocardiopatias','valvulopatias','endocarditis','cardioonc','arritmias','dispositivos','anticoag','ref','trials'];
 function showMainTab(tab){
   var main=document.querySelector('main');
   if(main)main.style.display=(tab==='inicio')?'':'none';
