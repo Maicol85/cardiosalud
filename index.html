@@ -938,9 +938,9 @@ main{padding-bottom:100px}
   <button class="mtab" data-tab="embarazo" onclick="showMainTab('embarazo')"><span class="mtab-ic">👶</span>Embarazo</button>
   <button class="mtab" data-tab="preop" onclick="showMainTab('preop')"><span class="mtab-ic">🏥</span>Preoperatorio</button>
   <button class="mtab" data-tab="ic" onclick="showMainTab('ic')"><span class="mtab-ic">🫀</span>IC</button>
-  <button class="mtab" data-tab="rehab" onclick="showMainTab('rehab')"><span class="mtab-ic">🏃</span>Rehabilitación</button>
   <button class="mtab" data-tab="miocardiopatias" onclick="showMainTab('miocardiopatias')"><span class="mtab-ic">🧠</span>Miocardiopatías</button>
   <button class="mtab" data-tab="valvulopatias" onclick="showMainTab('valvulopatias')"><span class="mtab-ic">🫀</span>Valvulopatías</button>
+  <button class="mtab" data-tab="rehab" onclick="showMainTab('rehab')"><span class="mtab-ic">🏃</span>Rehabilitación</button>
   <button class="mtab" data-tab="endocarditis" onclick="showMainTab('endocarditis')"><span class="mtab-ic">🦠</span>Endocarditis</button>
   <button class="mtab" data-tab="cardioonc" onclick="showMainTab('cardioonc')"><span class="mtab-ic">🎯</span>Cardio-oncología</button>
   <button class="mtab" data-tab="ecgriesgo" onclick="showMainTab('ecgriesgo')"><span class="mtab-ic">⚡</span>ECG de Riesgo</button>
@@ -13560,7 +13560,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ var o=doc
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
-var MAIN_TABS=['prevencion','embarazo','preop','ic','rehab','miocardiopatias','valvulopatias','endocarditis','cardioonc','ecgriesgo','arritmias','dispositivos','anticoag','ref','trials'];
+var MAIN_TABS=['prevencion','embarazo','preop','ic','miocardiopatias','valvulopatias','rehab','endocarditis','cardioonc','ecgriesgo','arritmias','dispositivos','anticoag','ref','trials'];
 function showMainTab(tab){
   var main=document.querySelector('main');
   if(main)main.style.display=(tab==='inicio')?'':'none';
