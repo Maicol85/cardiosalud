@@ -936,6 +936,7 @@ main{padding-bottom:100px}
   <button class="mtab active" data-tab="inicio" onclick="showMainTab('inicio')"><span class="mtab-ic">🏠</span>Inicio</button>
   <button class="mtab" data-tab="prevencion" onclick="showMainTab('prevencion')"><span class="mtab-ic">🛡️</span>Prevención</button>
   <button class="mtab" data-tab="embarazo" onclick="showMainTab('embarazo')"><span class="mtab-ic">👶</span>Embarazo</button>
+  <button class="mtab" data-tab="deporte" onclick="showMainTab('deporte')"><span class="mtab-ic">⚽</span>Deporte</button>
   <button class="mtab" data-tab="preop" onclick="showMainTab('preop')"><span class="mtab-ic">🏥</span>Preoperatorio</button>
   <button class="mtab" data-tab="ic" onclick="showMainTab('ic')"><span class="mtab-ic">🫀</span>IC</button>
   <button class="mtab" data-tab="miocardiopatias" onclick="showMainTab('miocardiopatias')"><span class="mtab-ic">🧠</span>Miocardiopatías</button>
@@ -5310,6 +5311,520 @@ main{padding-bottom:100px}
   <div id="tri-counter"></div>
   <div id="tri-container"></div>
 </div>
+<div class="tab-content" id="tab-deporte" style="display:none">
+  <div class="co-note" style="font-size:.82rem;color:var(--txt2);margin-bottom:14px;line-height:1.5">⚽ <b>Cardiología del deporte</b> — evaluación pre-participación, clasificación de deportes, corazón del deportista, muerte súbita, vuelta al deporte y nutrición, según <b>ESC 2020</b> y <b>AHA/ACC</b>. Toque cada encabezado para expandir. <b>Material educativo y de referencia:</b> no emite juicios de aptitud. La decisión sobre la participación deportiva corresponde al médico tratante con el contexto clínico completo del paciente.</div>
+
+  <!-- ══════════════ 1 · PRE-PARTICIPACIÓN ══════════════ -->
+  <div class="aco-sec-title">📋 1 · Evaluación pre-participación deportiva</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('cuest')"><span><span class="vlv-acc-ic">📝</span> Cuestionario AHA/ACC de 14 ítems (Clase I-C)</span><span id="dep-a-cuest">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-cuest">
+      <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">El siguiente cuestionario está basado en las recomendaciones <b>AHA/ACC</b> para evaluación pre-participación. Una respuesta positiva en cualquier ítem sugiere <b>derivación cardiológica</b> para evaluación completa. Es material de referencia, no una herramienta diagnóstica: <b>este listado no se completa ni se guarda en la app</b> — es para tener los 14 ítems a mano durante la consulta, y el registro va en la historia del paciente.</div>
+
+      <div class="arr-care-t">Bloque A — Antecedentes personales</div>
+      <ul class="arr-ul">
+        <li><b>1.</b> ¿Ha tenido dolor, presión, opresión o molestia en el pecho durante el ejercicio?</li>
+        <li><b>2.</b> ¿Ha presentado desmayos o casi-desmayos durante o después del ejercicio?</li>
+        <li><b>3.</b> ¿Experimenta disnea o fatiga desproporcionada al esfuerzo, comparado con sus pares?</li>
+        <li><b>4.</b> ¿Le han detectado algún soplo cardíaco?</li>
+        <li><b>5.</b> ¿Tiene presión arterial elevada conocida?</li>
+        <li><b>6.</b> ¿Tiene alguna cardiopatía conocida?</li>
+        <li><b>7.</b> ¿Ha sido operado del corazón?</li>
+        <li><b>8.</b> ¿Está tomando alguna medicación cardíaca actualmente?</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:12px">Bloque B — Antecedentes familiares</div>
+      <ul class="arr-ul">
+        <li><b>9.</b> ¿Algún familiar falleció de muerte súbita o inesperada antes de los 50 años?</li>
+        <li><b>10.</b> ¿Algún familiar tuvo una enfermedad cardíaca incapacitante antes de los 50 años?</li>
+        <li><b>11.</b> ¿Hay antecedentes familiares de síndrome de Marfan?</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:12px">Bloque C — Exploración física (requiere evaluación médica)</div>
+      <ul class="arr-ul">
+        <li><b>12. Soplo cardíaco</b> — auscultación sistemática.</li>
+        <li><b>13. Pulsos femorales</b> — para descartar coartación de aorta.</li>
+        <li><b>14. Estigmas de Marfan</b> — hábito marfanoide, hiperlaxitud, aracnodactilia, paladar ojival, escoliosis.</li>
+        <li><b>Además:</b> medición de PA en <b>ambos brazos</b> — una diferencia &gt;20 mmHg sugiere coartación.</li>
+      </ul>
+
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">✅ Cómo se interpreta</div>
+        <ul>
+          <li>Cualquier respuesta positiva en los bloques <b>A</b> o <b>B</b>, o un hallazgo anormal en el bloque <b>C</b>, sugiere <b>derivación al cardiólogo</b> para evaluación completa antes de considerar la participación deportiva.</li>
+          <li>La decisión final es del <b>médico tratante</b>, con el contexto clínico completo. Este cuestionario orienta a quién estudiar, no resuelve el caso.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('estudios')"><span><span class="vlv-acc-ic">🔬</span> Estudios complementarios según hallazgos</span><span id="dep-a-estudios">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-estudios">
+      <div class="arr-care-t">ECG de 12 derivaciones</div>
+      <ul class="arr-ul">
+        <li>Recomendado como parte de la evaluación pre-participación en deportistas de competición — <b>ESC 2020, Clase IIa</b>.</li>
+        <li>Se interpreta con criterios específicos del atleta, que distinguen los cambios fisiológicos del entrenamiento de los hallazgos patológicos. La lista completa —normales y los que exigen estudio— está en la tab <b>⚡ ECG de Riesgo</b>, sección 8; acá abajo va el resumen en «Adaptaciones fisiológicas normales del atleta».</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Ecocardiograma</div>
+      <ul class="arr-ul">
+        <li>Indicado ante soplo patológico, sospecha de miocardiopatía hipertrófica o arritmogénica del VD, cardiopatía congénita no operada, o ECG con hallazgos patológicos.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Ergometría</div>
+      <ul class="arr-ul">
+        <li>Indicada en deportistas &gt;35 años con múltiples factores de riesgo cardiovascular, síntomas de isquemia, o para evaluar la respuesta presora y las arritmias inducidas por el esfuerzo.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Resonancia magnética cardíaca</div>
+      <ul class="arr-ul">
+        <li>Estudio de referencia para diferenciar miocardiopatía hipertrófica del corazón del deportista, para la cardiomiopatía arritmogénica del VD y para la miocarditis subclínica.</li>
+        <li>El <b>realce tardío de gadolinio</b> (fibrosis) es además un marcador pronóstico.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════ 2 · CLASIFICACIÓN DE DEPORTES ══════════════ -->
+  <div class="aco-sec-title">🏅 2 · Clasificación de deportes</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('mitchell')"><span><span class="vlv-acc-ic">📊</span> Clasificación de Mitchell — componente estático y dinámico</span><span id="dep-a-mitchell">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-mitchell">
+      <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">Los deportes se clasifican según el porcentaje de <b>contracción muscular máxima voluntaria</b> (componente estático) y el porcentaje del <b>VO<sub>2</sub>máx</b> utilizado (componente dinámico). La combinación determina qué carga cardiovascular predomina.</div>
+
+      <div class="arr-care-t">Componente estático</div>
+      <ul class="arr-ul">
+        <li><b>I — bajo</b> (&lt;30% MVC): billar, bolos, golf, tiro.</li>
+        <li><b>II — moderado</b> (30–70%): equitación, motociclismo, gimnasia artística, artes marciales, surf.</li>
+        <li><b>III — alto</b> (&gt;70%): bobsled, escalada, ciclismo de pista, lucha, halterofilia.</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:12px">Componente dinámico</div>
+      <ul class="arr-ul">
+        <li><b>A — bajo</b> (&lt;40% VO<sub>2</sub>máx): billar, bolos, criquet, golf, tiro.</li>
+        <li><b>B — moderado</b> (40–70%): beisbol, fútbol americano, artes marciales, squash, natación sincronizada.</li>
+        <li><b>C — alto</b> (&gt;70%): boxeo, ciclismo, remo, esquí de fondo, atletismo de fondo, natación, triatlón.</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:12px">Deportes comunes</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:32%">Deporte</th><th style="width:20%">Estático</th><th style="width:20%">Dinámico</th><th style="width:28%">Carga CV predominante</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Fútbol</td><td>II</td><td>C</td><td>Alta mixta</td></tr>
+            <tr><td class="aco-ind">Básquetbol</td><td>I</td><td>C</td><td>Alta dinámica</td></tr>
+            <tr><td class="aco-ind">Tenis</td><td>II</td><td>B</td><td>Moderada mixta</td></tr>
+            <tr><td class="aco-ind">Natación</td><td>I</td><td>C</td><td>Alta dinámica</td></tr>
+            <tr><td class="aco-ind">Ciclismo de ruta</td><td>I</td><td>C</td><td>Alta dinámica</td></tr>
+            <tr><td class="aco-ind">Halterofilia</td><td>III</td><td>A</td><td>Alta estática</td></tr>
+            <tr><td class="aco-ind">Atletismo de fondo</td><td>I</td><td>C</td><td>Alta dinámica</td></tr>
+            <tr><td class="aco-ind">Golf</td><td>I</td><td>A</td><td>Baja</td></tr>
+            <tr><td class="aco-ind">Artes marciales</td><td>II</td><td>B</td><td>Moderada mixta</td></tr>
+            <tr><td class="aco-ind">Remo</td><td>III</td><td>C</td><td>Alta mixta</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ La tabla de arriba es una simplificación</div>
+        <ul>
+          <li>La clasificación de referencia es la de <b>Mitchell / 36.ª Conferencia de Bethesda</b>, y varias celdas de este resumen son más benignas que el original — el <b>ciclismo de ruta</b> y el <b>remo</b> son de <b>alto componente estático (III)</b> pese a percibirse como deportes de resistencia pura.</li>
+          <li>Importa justo por lo que dice el acordeón siguiente: el componente estático es el que genera los picos de presión, y subestimarlo es el error que cuenta en un paciente con cardiopatía estructural o HTA.</li>
+          <li>Ante la duda con un deporte concreto, verificar contra la tabla original antes de decidir.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('riesgocv')"><span><span class="vlv-acc-ic">⚠️</span> Deportes según riesgo cardiovascular</span><span id="dep-a-riesgocv">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-riesgocv">
+      <div class="arr-care-t" style="color:var(--ok)">Bajo riesgo CV</div>
+      <ul class="arr-ul">
+        <li>Golf, bolos, billar, tiro deportivo.</li>
+        <li>Carga hemodinámica mínima; bajo riesgo de muerte súbita atribuible al esfuerzo en sí.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px;color:var(--warn)">Riesgo moderado CV</div>
+      <ul class="arr-ul">
+        <li>Tenis, básquetbol, fútbol, artes marciales.</li>
+        <li>Carga dinámica importante, con picos de esfuerzo.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px;color:var(--err)">Alto riesgo CV</div>
+      <ul class="arr-ul">
+        <li>Ciclismo de ruta, triatlón, atletismo de fondo, remo, natación competitiva.</li>
+        <li>Demanda aeróbica máxima sostenida. En deportistas con cardiopatía, se sugiere <b>evaluación especializada</b> antes de considerar la participación.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Carga estática alta — picos de presión extremos</div>
+        <ul>
+          <li>La halterofilia y la lucha generan picos de PA <b>&gt;300/150 mmHg</b> durante la maniobra de Valsalva.</li>
+          <li>En cardiopatía estructural o HTA no controlada, se sugiere <b>restricción o evaluación especializada</b> antes de participar.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 3 · CORAZÓN DEL DEPORTISTA ══════════════ -->
+  <div class="aco-sec-title">🫀 3 · Corazón del deportista vs. miocardiopatías</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('adapta')"><span><span class="vlv-acc-ic">💪</span> Adaptaciones fisiológicas normales del atleta</span><span id="dep-a-adapta">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-adapta">
+      <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">El entrenamiento sostenido produce un remodelado cardíaco fisiológico —el «corazón del deportista»— que <b>puede simular patología</b> en el ECG y en el ecocardiograma.</div>
+
+      <div class="arr-care-t">Ecocardiograma — hallazgos normales del atleta</div>
+      <ul class="arr-ul">
+        <li><b>Hipertrofia ventricular izquierda fisiológica:</b> grosor parietal 12–15 mm (rara vez &gt;15 mm), patrón concéntrico o excéntrico según predomine el componente estático o el dinámico. FEVI normal o supranormal. Función diastólica normal o mejorada (E/A &gt;1, E/e' &lt;8).</li>
+        <li><b>Dilatación de cavidades:</b> DTDVI hasta 65 mm en hombres y 60 mm en mujeres como límite orientativo. La dilatación es <b>proporcional</b> al grosor parietal.</li>
+        <li><b>Aurícula izquierda:</b> puede estar dilatada, hasta 45 mm, por el aumento crónico del retorno venoso.</li>
+        <li><b>Ventrículo derecho:</b> puede estar dilatado en deportistas de resistencia. Si hay sospecha de cardiomiopatía arritmogénica, evaluar la función con los criterios del Task Force.</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:12px">ECG — cambios normales del atleta</div>
+      <ul class="arr-ul">
+        <li>Bradicardia sinusal — se considera normal en el atleta hasta <b>FC ≥30 lpm</b>; lo habitual es encontrar 40–50 lpm.</li>
+        <li>Bloqueo AV de primer grado (PR &gt;200 ms).</li>
+        <li>Bloqueo AV de segundo grado Mobitz I (Wenckebach) — típicamente desaparece con el ejercicio.</li>
+        <li>Bloqueo de rama derecha incompleto.</li>
+        <li>Repolarización precoz (elevación del punto J).</li>
+        <li>Voltajes aumentados de QRS por hipertrofia del VI, <b>aislados</b> y sin otros criterios acompañantes.</li>
+        <li>Inversión de onda T en V1–V2; en atletas de raza negra puede extenderse a V3–V4 como variante normal.</li>
+      </ul>
+
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">📍 La lista completa vive en otra tab</div>
+        <ul>
+          <li>Los criterios detallados —los normales con sus umbrales exactos, y los <b>patológicos que siempre exigen estudio adicional</b>— están en la tab <b>⚡ ECG de Riesgo</b>, sección 8.</li>
+          <li>Están ahí y no repetidos acá <b>a propósito</b>: dos copias de la misma lista se separan con el tiempo y nadie se entera hasta que dicen cosas distintas.</li>
+          <li>Sobre las fuentes: las recomendaciones de <b>Lausanne son de 2005</b> (ESC), los <b>criterios de Seattle de 2013</b>, y los <b>Criterios Internacionales de 2017</b> los consolidan y son hoy el estándar de referencia.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('ddx')"><span><span class="vlv-acc-ic">🔍</span> Diagnóstico diferencial con miocardiopatías</span><span id="dep-a-ddx">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-ddx">
+      <div class="arr-care-t">Miocardiopatía hipertrófica (MCH)</div>
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:50%">A favor de MCH</th><th style="width:50%">A favor de corazón del deportista</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Grosor parietal &gt;15 mm, sobre todo <b>asimétrico</b> (septo &gt;13 mm con relación septo/pared posterior &gt;1,3)</td>
+              <td>Hipertrofia <b>simétrica</b></td>
+            </tr>
+            <tr>
+              <td>Obstrucción del tracto de salida del VI</td>
+              <td>FEVI normal</td>
+            </tr>
+            <tr>
+              <td>Patrón de llenado restrictivo (E/A &lt;1 o E/e' &gt;15)</td>
+              <td>Función diastólica conservada o mejorada</td>
+            </tr>
+            <tr>
+              <td>Antecedentes familiares de MCH o muerte súbita · mutación causante identificada</td>
+              <td>Regresión con <b>desentrenamiento de 3 meses</b> · sin antecedentes familiares</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="arr-care-t" style="margin-top:14px">Cardiomiopatía arritmogénica del VD (CAVD / DAVD)</div>
+      <ul class="arr-ul">
+        <li>Se diagnostica con los <b>criterios del Task Force 2010</b>, que combinan categorías: morfología (dilatación o aneurismas del VD, alteración de la motilidad <i>regional</i>), histología (fibrosis y grasa en la biopsia), repolarización (inversión de T en V1–V3 o más, en ausencia de bloqueo de rama derecha), despolarización (onda épsilon, QRS ensanchado en precordiales derechas), arritmias (TV con morfología de bloqueo de rama izquierda) e historia familiar.</li>
+        <li>La <b>RMC es el estudio de referencia</b> para la morfología y para el realce tardío (fibrosis).</li>
+        <li><b>Ojo:</b> los deportistas de resistencia pueden tener el VD dilatado de forma fisiológica. La diferenciación requiere evaluación especializada, y lo que orienta a enfermedad es la disfunción <b>regional</b>, no la dilatación global.</li>
+        <li>Los criterios desarrollados, con sus categorías mayor/menor y los umbrales exactos, están en la tab <b>⚡ ECG de Riesgo</b> (sección 5) y en <b>🧠 Miocardiopatías</b>.</li>
+      </ul>
+
+      <div class="arr-care-t" style="margin-top:14px">Miocardiopatía dilatada (MCD)</div>
+      <ul class="arr-ul">
+        <li><b>A favor de MCD:</b> FEVI &lt;50%, dilatación del VI desproporcionada al espesor parietal, función diastólica alterada, y —lo decisivo— <b>no mejora con el desentrenamiento</b>.</li>
+        <li>El desentrenamiento de 3 meses es la prueba que separa: el corazón del deportista reduce sus dimensiones, la MCD no.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('herram')"><span><span class="vlv-acc-ic">🧰</span> Herramientas de diferenciación</span><span id="dep-a-herram">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-herram">
+      <ul class="arr-ul">
+        <li><b>Ecocardiograma</b> — primera línea. Dimensiones, grosor parietal, función sistólica y diastólica, Doppler tisular. El <b>E/e' &lt;8</b> orienta a fisiológico y <b>&gt;15</b> a patológico.</li>
+        <li><b>Resonancia magnética cardíaca</b> — estudio de referencia. Detecta el <b>realce tardío de gadolinio</b> (fibrosis miocárdica), presente en MCH, CAVD y MCD y <b>ausente</b> en el corazón del deportista fisiológico. Evalúa el VD con una precisión que el eco no alcanza.</li>
+        <li><b>Prueba de desentrenamiento de 3 meses</b> — en casos dudosos, suspender el entrenamiento intenso y repetir el ecocardiograma. Si las dimensiones y el grosor se reducen de forma significativa, orienta a corazón del deportista; si persisten, a cardiopatía estructural.</li>
+        <li><b>Estudio genético</b> — considerar en MCH (genes del sarcómero: MYH7, MYBPC3), Marfan (FBN1), QT largo y Brugada, y CAVD (desmosomales: PKP2, DSP, DSG2). <b>No es de primera línea:</b> se indica cuando lo clínico, el eco y la RMC no resultan concluyentes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════ 4 · MUERTE SÚBITA ══════════════ -->
+  <div class="aco-sec-title">🚨 4 · Muerte súbita en atletas</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('causas')"><span><span class="vlv-acc-ic">📉</span> Causas principales según la edad</span><span id="dep-a-causas">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-causas">
+      <div class="arr-care-t">Menores de 35 años</div>
+      <ul class="arr-ul">
+        <li>La causa más frecuente es la <b>cardiopatía estructural no diagnosticada</b>.</li>
+        <li>Miocardiopatía hipertrófica — 36% de los casos en EE.UU., con porcentaje menor en Europa.</li>
+        <li>Cardiomiopatía arritmogénica del VD.</li>
+        <li><b>Anomalías congénitas de las coronarias</b> — origen anómalo de la coronaria izquierda en el seno de Valsalva derecho.</li>
+        <li>Miocarditis.</li>
+        <li>Canalopatías: QT largo, Brugada, TV polimórfica catecolaminérgica.</li>
+        <li><b>Commotio cordis</b> — golpe directo en el precordio durante el período vulnerable del ciclo cardíaco, sin cardiopatía de base.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Mayores de 35 años</div>
+      <ul class="arr-ul">
+        <li>Predomina la <b>enfermedad coronaria aterosclerótica</b> — más del 80% de los casos.</li>
+        <li>La placa inestable puede romperse durante el esfuerzo máximo, en personas con enfermedad coronaria previa conocida o no diagnosticada.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('prev')"><span><span class="vlv-acc-ic">🫁</span> Prevención y respuesta</span><span id="dep-a-prev">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-prev">
+      <div class="arr-care-t">Desfibrilador automático externo (DEA)</div>
+      <ul class="arr-ul">
+        <li>La desfibrilación en los primeros <b>3–5 minutos</b> alcanza <b>supervivencias del 50–70%</b> en la FV presenciada. Es una tasa de supervivencia lograda, no una reducción relativa de la mortalidad — la diferencia importa si el dato se cita.</li>
+        <li>Se recomienda contar con DEA en estadios, gimnasios, pistas de atletismo y piscinas.</li>
+        <li>El personal debe conocer <b>dónde está y cómo se usa</b> — un DEA que nadie sabe ubicar no cuenta.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">RCP básica</div>
+      <ul class="arr-ul">
+        <li>La RCP inmediata por testigos <b>duplica o triplica</b> las posibilidades de supervivencia.</li>
+        <li>Se recomienda capacitación en RCP básica para entrenadores, árbitros y personal de las instalaciones.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">🚨 Atleta que colapsa en el campo</div>
+        <ul>
+          <li><b>Asumir siempre FV</b> hasta demostrar lo contrario.</li>
+          <li>Iniciar RCP de inmediato y buscar el DEA.</li>
+          <li><b>No perder tiempo palpando el pulso</b> si está inconsciente y no respira normalmente. La duda sobre el pulso es el retraso más frecuente y el más caro.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('habil')"><span><span class="vlv-acc-ic">📖</span> Participación deportiva según cardiopatía — ESC 2020</span><span id="dep-a-habil">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-habil">
+      <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">Referencia educativa. La decisión sobre la participación deportiva es del <b>médico tratante</b>, con el contexto clínico completo del paciente.</div>
+      <div class="arr-alert" style="margin-bottom:12px">
+        <div class="arr-alert-h">⚠️ Entidades con restricción de competición recomendada como Clase I</div>
+        <ul>
+          <li><b>Síndrome de QT largo</b> — en <b>todos</b> los subtipos.</li>
+          <li><b>Cardiomiopatía arritmogénica del VD</b> — desde la <b>sospecha</b>, no desde la confirmación.</li>
+          <li><b>TV polimórfica catecolaminérgica</b> — es de las pocas restricciones <b>absolutas</b> de la cardiología.</li>
+          <li>Estas tres no son «caso a caso». El detalle está en la tab <b>⚡ ECG de Riesgo</b>, secciones 2, 5 y 6.</li>
+        </ul>
+      </div>
+      <ul class="arr-ul">
+        <li><b>Miocardiopatía hipertrófica:</b> las guías ESC 2020 sugieren que puede considerarse deporte recreativo de baja a moderada intensidad. Para competición, la tab <b>🧠 Miocardiopatías</b> recomienda <b>evitar los deportes de competición de alta intensidad</b>; el resto se evalúa caso a caso por especialista, considerando fenotipo, síntomas, arritmias y FEVI.</li>
+        <li><b>CAVD:</b> las guías ESC 2020 recomiendan <b>restringir</b> los deportes de competición e intensivos, con <b>Clase I</b>, y la restricción se aplica <b>ante la sospecha diagnóstica</b> —no hace falta esperar la confirmación—, porque el ejercicio acelera la progresión del fenotipo. Para deporte recreativo de baja intensidad, discutir caso a caso.</li>
+        <li><b>TV polimórfica catecolaminérgica (TVPC):</b> <b>restricción Clase I</b> de todos los deportes de competición y de los ejercicios que elevan la adrenalina. Faltaba en esta lista y es la restricción más terminante de todas.</li>
+        <li><b>Post-IAM:</b> ver la tab <b>🏃 Rehabilitación</b>, con los criterios y plazos detallados, y el acordeón «Post-IAM» de la sección 5 de esta tab.</li>
+        <li><b>Post-miocarditis:</b> ver el acordeón correspondiente en la sección 5 de esta tab.</li>
+        <li><b>Síndrome de QT largo:</b> <b>restricción de deportes de competición en todos los subtipos, Clase I</b>. El genotipo (LQT1, LQT2, LQT3) y el tratamiento modulan el riesgo y el manejo, pero no eliminan la restricción. En <b>LQT1 la natación es el desencadenante de mayor riesgo</b> — restricción sin supervisión. Evaluación especializada obligatoria. Detalle en la tab <b>⚡ ECG de Riesgo</b>, sección 2.</li>
+        <li><b>Síndrome de Brugada:</b> los deportes que elevan la temperatura corporal pueden <b>desenmascarar el patrón</b>. Evaluación especializada y estudio electrofisiológico antes de considerar la participación. Detalle en <b>⚡ ECG de Riesgo</b>, sección 1.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════ 5 · VUELTA AL DEPORTE ══════════════ -->
+  <div class="aco-sec-title">🔄 5 · Vuelta al deporte tras un evento cardíaco</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('iam')"><span><span class="vlv-acc-ic">❤️‍🩹</span> Post-IAM</span><span id="dep-a-iam">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-iam">
+      <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">Sigue los mismos principios de la rehabilitación cardíaca — el protocolo completo está en la tab <b>🏃 Rehabilitación</b>.</div>
+      <div class="arr-care-t">Criterios para considerar la vuelta al deporte recreativo (ESC 2020)</div>
+      <ul class="arr-ul">
+        <li>FEVI recuperada <b>≥50%</b>.</li>
+        <li>Sin isquemia residual documentada.</li>
+        <li>Sin arritmias complejas en el seguimiento.</li>
+        <li>Ergometría sin signos de isquemia ni respuesta presora anormal.</li>
+        <li>Haber completado la <b>fase II</b> de rehabilitación cardíaca.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Plazos orientativos</div>
+      <ul class="arr-ul">
+        <li><b>Actividad física de baja intensidad:</b> a partir de las 4–6 semanas post-IAM en pacientes de bajo riesgo. <b>Ojo con la secuencia:</b> la fase II dura 8–12 semanas (ver <b>🏃 Rehabilitación</b>), así que a las 4–6 semanas todavía no está completa. Ese plazo corresponde a la progresión <i>dentro</i> de la rehabilitación, no a la vuelta al deporte recreativo, que requiere haberla terminado.</li>
+        <li><b>Deporte de competición:</b> mínimo 3–6 meses, con evaluación especializada.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('mioc')"><span><span class="vlv-acc-ic">🦠</span> Post-miocarditis</span><span id="dep-a-mioc">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-mioc">
+      <ul class="arr-ul">
+        <li>Las guías ESC 2020 recomiendan <b>restringir toda actividad deportiva</b> durante la fase activa y durante al menos <b>3–6 meses</b> tras la resolución.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Criterios para considerar el retorno</div>
+      <ul class="arr-ul">
+        <li>Normalización de la función ventricular — FEVI ≥50%.</li>
+        <li>Resolución de las arritmias: Holter de 24 h sin TV sostenida ni TV no sostenida de alto grado.</li>
+        <li>Normalización de los marcadores inflamatorios: PCR y troponinas.</li>
+        <li>RMC <b>sin realce tardío de gadolinio</b>, o sea sin fibrosis activa.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ No forzar los plazos</div>
+        <ul>
+          <li>El retorno prematuro al deporte tras una miocarditis es la <b>principal causa prevenible</b> de muerte súbita en atletas jóvenes.</li>
+          <li>Que el paciente <b>se sienta bien</b> no es criterio: la sensación subjetiva mejora mucho antes que la fibrosis se resuelva.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('ablacion')"><span><span class="vlv-acc-ic">⚡</span> Post-ablación</span><span id="dep-a-ablacion">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-ablacion">
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:30%">Arritmia ablacionada</th><th style="width:26%">Plazo orientativo</th><th style="width:44%">Consideraciones</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Fibrilación auricular</td><td>4–8 semanas</td><td>Evaluar recurrencia a los 3 meses. Los deportistas de resistencia tienen <b>mayor tasa de recurrencia</b> — conviene discutir expectativas reales antes del procedimiento</td></tr>
+            <tr><td class="aco-ind">Flutter auricular</td><td>2–4 semanas</td><td>Retorno más precoz si la ablación fue exitosa y sin complicaciones</td></tr>
+            <tr><td class="aco-ind">TSV paroxística · WPW</td><td>2–4 semanas</td><td>En WPW, <b>documentar la ablación completa</b> de la vía accesoria antes de considerar deportes de alta intensidad</td></tr>
+            <tr><td class="aco-ind">Taquicardia ventricular</td><td>Evaluación especializada obligatoria</td><td>El retorno depende del <b>sustrato arritmogénico subyacente</b>, no del procedimiento en sí</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('disp')"><span><span class="vlv-acc-ic">🔧</span> Post-implante de dispositivo (DAI / marcapasos)</span><span id="dep-a-disp">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-disp">
+      <div class="arr-care-t">Marcapasos</div>
+      <ul class="arr-ul">
+        <li>En general no hay restricción para deportes de baja a moderada intensidad.</li>
+        <li>Evitar deportes de contacto que puedan traumatizar el generador: artes marciales, rugby, fútbol americano.</li>
+        <li>Evitar campos electromagnéticos intensos que puedan interferir con el dispositivo, como la soldadura de arco.</li>
+        <li>Natación y ciclismo <b>recreativos</b> habitualmente permitidos. No así en su versión competitiva: la natación de competición y el ciclismo de ruta están en la categoría de <b>alto riesgo CV</b> de la sección 2 de esta tab, y ahí ya no aplica el «baja a moderada intensidad».</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">DAI (desfibrilador automático implantable)</div>
+      <ul class="arr-ul">
+        <li>Las guías ESC 2020 recomiendan <b>evaluación individualizada</b>.</li>
+        <li>Históricamente se restringían los deportes de competición, pero la evidencia más reciente —registro <b>INHERIT</b> y <b>ICD Sports Safety Registry</b>— muestra que los choques apropiados del DAI no se asocian a mayor mortalidad en atletas que siguen entrenando.</li>
+        <li>La decisión es del especialista, con el paciente informado.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Deportes de contacto con cualquier dispositivo implantado</div>
+        <ul>
+          <li>Los deportes con riesgo de trauma sobre el generador —criquet, hockey, artes marciales— <b>se desaconsejan en todos los portadores</b> de dispositivo implantable, sea marcapasos o DAI.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 6 · NUTRICIÓN ══════════════ -->
+  <div class="aco-sec-title">🥗 6 · Nutrición en el deporte</div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('kcal')"><span><span class="vlv-acc-ic">🔥</span> Requerimientos calóricos según intensidad</span><span id="dep-a-kcal">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-kcal">
+      <div class="aco-tbl-wrap">
+        <table class="aco-tbl">
+          <thead><tr><th style="width:46%">Perfil</th><th style="width:26%">Volumen</th><th style="width:28%">Aporte</th></tr></thead>
+          <tbody>
+            <tr><td class="aco-ind">Deportista recreativo</td><td>3–5 h/semana</td><td>30–35 kcal/kg/día</td></tr>
+            <tr><td class="aco-ind">Deportista amateur</td><td>5–10 h/semana</td><td>40–45 kcal/kg/día</td></tr>
+            <tr><td class="aco-ind">Alto rendimiento</td><td>&gt;10 h/semana</td><td>50–80 kcal/kg/día según intensidad</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arr-care-t" style="margin-top:12px">Distribución de macronutrientes — deportista de resistencia</div>
+      <ul class="arr-ul">
+        <li><b>Carbohidratos:</b> 55–65%.</li>
+        <li><b>Proteínas:</b> 15–20% (1,2–1,8 g/kg/día).</li>
+        <li><b>Grasas:</b> 20–30%, preferentemente insaturadas.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px">Deportista con cardiopatía</div>
+      <ul class="arr-ul">
+        <li>Los requerimientos calóricos son <b>los mismos</b> que corresponden a la intensidad de ejercicio que realiza.</li>
+        <li>No hay restricción calórica específica por la cardiopatía. La <b>caquexia cardíaca</b> de la IC avanzada va en la dirección contraria: es motivo para <b>aumentar</b> el aporte calórico y proteico, no para restringirlo — ver la tab <b>🏃 Rehabilitación</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('hidrat')"><span><span class="vlv-acc-ic">💧</span> Hidratación</span><span id="dep-a-hidrat">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-hidrat">
+      <div class="arr-care-t">Antes del ejercicio</div>
+      <ul class="arr-ul">
+        <li>Asegurar euhidratación — orina de color <b>amarillo pálido</b>.</li>
+        <li>400–600 ml de agua en las 2–3 horas previas.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Durante el ejercicio</div>
+      <ul class="arr-ul">
+        <li>150–250 ml cada 15–20 minutos.</li>
+        <li>En esfuerzos &gt;60 minutos, agregar bebida isotónica: sodio 400–1100 mg/L, carbohidratos 30–60 g/h.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:10px">Después del ejercicio</div>
+      <ul class="arr-ul">
+        <li>Reponer el <b>150% del peso perdido</b> — si perdió 1 kg, tomar 1,5 L.</li>
+        <li><b>No esperar a tener sed:</b> la sed es un indicador tardío de deshidratación.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⚠️ Hiponatremia dilucional</div>
+        <ul>
+          <li>Beber agua en exceso <b>sin reponer sodio</b> es un riesgo real en eventos de ultra-resistencia.</li>
+          <li>En maratones, triatlones y ultra-trails: <b>bebidas isotónicas, no sólo agua</b>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('suplem')"><span><span class="vlv-acc-ic">💊</span> Suplementación</span><span id="dep-a-suplem">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-suplem">
+      <div class="arr-care-t" style="color:var(--ok)">Con evidencia suficiente</div>
+      <ul class="arr-ul">
+        <li><b>Creatina monohidrato</b> — mejora el rendimiento en deportes de fuerza y sprints repetidos. No está contraindicada en pacientes cardíacos sin insuficiencia renal. Dosis de mantenimiento 3–5 g/día. A dosis habituales no aumenta el riesgo de arritmias ni tiene efectos cardiotóxicos conocidos.</li>
+        <li><b>Beta-alanina</b> — mejora la tolerancia al lactato en esfuerzos de alta intensidad de 1 a 4 minutos. Sin contraindicaciones cardíacas conocidas. Efecto secundario: parestesias («hormigueo») inofensivas.</li>
+        <li><b>Cafeína</b> — mejora el rendimiento aeróbico y cognitivo. Dosis efectiva 3–6 mg/kg, 60 minutos antes del ejercicio. En pacientes con arritmias documentadas (FA paroxística, TSV) evaluar caso por caso, porque puede ser gatillo en susceptibles; en el resto de los cardíacos no está contraindicada a dosis moderadas.</li>
+      </ul>
+      <div class="arr-care-t" style="margin-top:12px;color:var(--warn)">Sin evidencia suficiente</div>
+      <ul class="arr-ul">
+        <li><b>HMB</b> (beta-hidroxi-beta-metilbutirato), <b>glutamina</b> y <b>aminoácidos ramificados (BCAA)</b> — evidencia inconsistente para rendimiento. Sin riesgo cardíaco conocido, pero tampoco beneficio demostrado en población general.</li>
+        <li><b>Cafeína en dosis altas</b> (&gt;6 mg/kg) — aumenta FC, PA y el riesgo de arritmias. Evitar en pacientes con cardiopatía.</li>
+      </ul>
+      <div class="arr-alert" style="margin-top:12px">
+        <div class="arr-alert-h">⛔ Contraindicados en cardiopatía</div>
+        <ul>
+          <li><b>Estimulantes adrenérgicos</b> — efedrina, pseudoefedrina, DMAA (1,3-dimetilamilamina), sinefrina, octodrina. Producen aumentos agudos de FC y PA y vasoconstricción coronaria, y son gatillos documentados de infarto, arritmias ventriculares y muerte súbita. Muchos vienen en «pre-entrenos», «fat burners» y suplementos para bajar de peso: <b>revisar siempre la composición completa</b>.</li>
+          <li><b>Hormona del crecimiento y anabólicos esteroideos</b> — asociados a miocardiopatía, HTA, dislipemia y muerte súbita.</li>
+          <li><b>Diuréticos usados para «secar» o bajar peso rápido</b> — generan hipovolemia y alteraciones electrolíticas (hipopotasemia, hipomagnesemia) que aumentan el riesgo de arritmias.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vlv-acc">
+    <button class="vlv-acc-h" onclick="toggleDepAcc('nutricard')"><span><span class="vlv-acc-ic">🫀</span> Nutrición en el atleta con cardiopatía</span><span id="dep-a-nutricard">▼</span></button>
+    <div class="vlv-acc-b" id="dep-b-nutricard">
+      <ul class="arr-ul">
+        <li>En cuanto a macronutrientes, el atleta con cardiopatía tiene <b>los mismos requerimientos</b> que el deportista sano para el nivel de actividad que realiza. Las restricciones dependen de la cardiopatía de base, no del hecho de entrenar.</li>
+        <li><b>Dieta mediterránea</b> como base.</li>
+        <li>Reducción de ultraprocesados y de grasas saturadas.</li>
+        <li><b>Sodio según la cardiopatía de base</b> — las cifras están en la tab <b>🏃 Rehabilitación</b>: &lt;5 g/día de sal (2 g de Na) como pauta general, y &lt;2 g de Na/día en IC sintomática (NYHA II–IV).</li>
+        <li>Evitar suplementos no analizados o de origen dudoso, por el riesgo de contaminación con sustancias no declaradas.</li>
+      </ul>
+      <div class="arr-ok-box" style="margin-top:12px">
+        <div class="arr-alert-h" style="color:var(--ok)">💡 Consejo</div>
+        <ul>
+          <li>Revisar siempre la <b>lista completa de ingredientes</b> de cualquier suplemento.</li>
+          <li>La contaminación con sustancias no declaradas —estimulantes, anabólicos— es frecuente en suplementos deportivos de bajo costo, y es la vía por la que un paciente cardiópata termina tomando efedrina sin saberlo.</li>
+          <li>Preferir marcas con <b>certificación antidopaje</b> o análisis de terceros.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:.72rem;color:var(--txt2);margin-top:16px;line-height:1.5;padding-top:10px;border-top:1px solid var(--border)">⚕️ Módulo educativo y de referencia, basado en ESC 2020 y AHA/ACC. <b>No emite juicios de aptitud deportiva.</b> La decisión sobre la participación corresponde al médico tratante, con el contexto clínico completo del paciente.</div>
+</div>
+
 <div class="tab-content" id="tab-preop" style="display:none"></div>
 
 <script>
@@ -13012,6 +13527,15 @@ function vwzEvalEdm(){
 /* Acordeones de la tab ECG de Riesgo. Prefijo propio «ecgr-», igual que toggleVlvAcc,
    toggleEndoAcc y toggleRehabAcc: el scope queda acotado a esta tab y no puede colisionar
    con los ids de las otras. */
+/* Acordeones de la tab Deporte. Prefijo propio «dep-», el mismo patrón que toggleVlvAcc,
+   toggleEndoAcc, toggleRehabAcc y toggleEcgrAcc: el scope queda acotado a esta tab y no
+   puede colisionar con los ids de las otras cuatro. */
+function toggleDepAcc(id){
+  var b=document.getElementById('dep-b-'+id), a=document.getElementById('dep-a-'+id);
+  if(!b) return;
+  var on=b.classList.toggle('on');
+  if(a) a.textContent = on ? '▲' : '▼';
+}
 function toggleEcgrAcc(id){
   var b=document.getElementById('ecgr-b-'+id), a=document.getElementById('ecgr-a-'+id);
   if(!b) return;
@@ -13560,7 +14084,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ var o=doc
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
-var MAIN_TABS=['prevencion','embarazo','preop','ic','miocardiopatias','valvulopatias','rehab','endocarditis','cardioonc','ecgriesgo','arritmias','dispositivos','anticoag','ref','trials'];
+var MAIN_TABS=['prevencion','embarazo','deporte','preop','ic','miocardiopatias','valvulopatias','rehab','endocarditis','cardioonc','ecgriesgo','arritmias','dispositivos','anticoag','ref','trials'];
 function showMainTab(tab){
   var main=document.querySelector('main');
   if(main)main.style.display=(tab==='inicio')?'':'none';
