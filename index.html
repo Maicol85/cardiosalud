@@ -872,6 +872,15 @@ main{padding-bottom:100px}
 @media print{
   body>*:not(#print-area){display:none!important}
   #print-area{display:block!important;font-family:Arial,sans-serif;font-size:11pt;color:#000}
+  /* La copia de una tab lleva las clases de la app, que pintan texto con var(--txt) sobre
+     var(--surf). En tema oscuro eso sale texto claro sobre papel blanco: ilegible. Se fuerza
+     negro sobre blanco dentro del área de impresión y se despliegan los acordeones. */
+  #print-area .tab-content{display:block!important}
+  #print-area .vlv-acc-b{display:block!important}
+  #print-area .tab-content *{color:#000!important;background:transparent!important;box-shadow:none!important}
+  #print-area .tab-content .aco-tbl-wrap{overflow:visible!important}
+  #print-area .vlv-acc,#print-area .arr-alert,#print-area .arr-ok-box{border:1px solid #666!important;page-break-inside:avoid}
+  #print-area .vlv-acc-h{font-weight:bold;border-bottom:1px solid #999}
   .print-patient{page-break-after:always;padding:20px}
   .print-patient:last-child{page-break-after:avoid}
   .print-name{font-size:16pt;font-weight:bold;border-bottom:2px solid #000;margin-bottom:8px}
@@ -1683,11 +1692,16 @@ main{padding-bottom:100px}
 <div class="tab-content" id="tab-rehab" style="display:none">
   <div class="co-note" style="font-size:.82rem;color:var(--txt2);margin-bottom:14px;line-height:1.5">🏃 <b>Rehabilitación cardiovascular</b> — post-IAM, post-cirugía cardíaca e insuficiencia cardíaca, según <b>ESC 2020/2021</b> y <b>AHA/ACC</b>. Toque cada encabezado para expandir. Los tiempos y umbrales son <b>orientativos</b>: individualizar según el paciente.</div>
 
+  <div data-noprint style="margin:0 0 14px;">
+    <button type="button" data-noprint onclick="rehabImprimir()" style="padding:10px 16px;background:var(--p);color:#fff;border:none;border-radius:8px;font-size:.86rem;font-weight:700;cursor:pointer;font-family:inherit;min-height:44px">🖨️ Imprimir esta sección</button>
+    <span style="font-size:.74rem;color:var(--txt2);margin-left:10px">Imprime la sección completa con todos los acordeones desplegados, para entregar al paciente.</span>
+  </div>
+
   <!-- ══════════════ SECCIÓN 1 · POST-IAM ══════════════ -->
   <div class="aco-sec-title">❤️‍🩹 1 · Rehabilitación Post-IAM</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('riesgo')"><span><span class="vlv-acc-ic">📊</span> Estratificación de riesgo</span><span id="rehab-a-riesgo">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('riesgo')" aria-expanded="false" aria-controls="rehab-b-riesgo"><span><span class="vlv-acc-ic">📊</span> Estratificación de riesgo</span><span id="rehab-a-riesgo">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-riesgo">
       <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">Clasificación en tres niveles según criterios <b>ESC 2020</b> y <b>AHA/ACC</b>. El estrato determina la intensidad permitida y el nivel de supervisión.</div>
       <div class="arr-care-t" style="color:var(--ok)">Bajo riesgo</div>
@@ -1718,7 +1732,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('fases')"><span><span class="vlv-acc-ic">📅</span> Fases de rehabilitación</span><span id="rehab-a-fases">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('fases')" aria-expanded="false" aria-controls="rehab-b-fases"><span><span class="vlv-acc-ic">📅</span> Fases de rehabilitación</span><span id="rehab-a-fases">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-fases">
       <div class="arr-care-t">Fase I — Hospitalaria</div>
       <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:6px">Movilización precoz supervisada.</div>
@@ -1750,7 +1764,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('superv')"><span><span class="vlv-acc-ic">👨‍⚕️</span> Supervisión según estrato de riesgo</span><span id="rehab-a-superv">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('superv')" aria-expanded="false" aria-controls="rehab-b-superv"><span><span class="vlv-acc-ic">👨‍⚕️</span> Supervisión según estrato de riesgo</span><span id="rehab-a-superv">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-superv">
       <div class="arr-care-t" style="color:var(--err)">Alto riesgo</div>
       <ul class="arr-ul">
@@ -1772,7 +1786,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('wear')"><span><span class="vlv-acc-ic">⌚</span> Wearables y smartwatch en rehabilitación</span><span id="rehab-a-wear">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('wear')" aria-expanded="false" aria-controls="rehab-b-wear"><span><span class="vlv-acc-ic">⌚</span> Wearables y smartwatch en rehabilitación</span><span id="rehab-a-wear">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-wear">
       <div class="arr-care-t">Qué miden</div>
       <ul class="arr-ul">
@@ -1815,7 +1829,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('alarma')"><span><span class="vlv-acc-ic">🚨</span> Señales de alarma para detener el ejercicio</span><span id="rehab-a-alarma">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('alarma')" aria-expanded="false" aria-controls="rehab-b-alarma"><span><span class="vlv-acc-ic">🚨</span> Señales de alarma para detener el ejercicio</span><span id="rehab-a-alarma">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-alarma">
       <div class="arr-alert">
         <div class="arr-alert-h">🛑 Detener el ejercicio de inmediato ante</div>
@@ -1833,7 +1847,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('nutriiam')"><span><span class="vlv-acc-ic">🥗</span> Nutrición post-IAM</span><span id="rehab-a-nutriiam">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('nutriiam')" aria-expanded="false" aria-controls="rehab-b-nutriiam"><span><span class="vlv-acc-ic">🥗</span> Nutrición post-IAM</span><span id="rehab-a-nutriiam">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-nutriiam">
       <ul class="arr-ul">
         <li><b>Dieta mediterránea</b> como patrón base — evidencia nivel <b>I-A</b> (ESC 2021, Prevención).</li>
@@ -1850,7 +1864,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🫀 2 · Rehabilitación Post-Cirugía Cardíaca</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('faja')"><span><span class="vlv-acc-ic">🩹</span> Faja esternal</span><span id="rehab-a-faja">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('faja')" aria-expanded="false" aria-controls="rehab-b-faja"><span><span class="vlv-acc-ic">🩹</span> Faja esternal</span><span id="rehab-a-faja">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-faja">
       <div class="arr-care-t">Cuándo usarla</div>
       <ul class="arr-ul">
@@ -1879,7 +1893,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('tos')"><span><span class="vlv-acc-ic">😮‍💨</span> Tos y maniobra de Valsalva</span><span id="rehab-a-tos">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('tos')" aria-expanded="false" aria-controls="rehab-b-tos"><span><span class="vlv-acc-ic">😮‍💨</span> Tos y maniobra de Valsalva</span><span id="rehab-a-tos">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-tos">
       <div class="arr-care-t">Técnica de tos post-esternotomía</div>
       <ul class="arr-ul">
@@ -1905,7 +1919,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('prog')"><span><span class="vlv-acc-ic">📈</span> Progresión de actividad por semanas</span><span id="rehab-a-prog">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('prog')" aria-expanded="false" aria-controls="rehab-b-prog"><span><span class="vlv-acc-ic">📈</span> Progresión de actividad por semanas</span><span id="rehab-a-prog">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-prog">
       <div class="arr-care-t">Semanas 1–2</div>
       <ul class="arr-ul">
@@ -1941,7 +1955,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('laboral')"><span><span class="vlv-acc-ic">💼</span> Vuelta a la vida laboral y actividades cotidianas</span><span id="rehab-a-laboral">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('laboral')" aria-expanded="false" aria-controls="rehab-b-laboral"><span><span class="vlv-acc-ic">💼</span> Vuelta a la vida laboral y actividades cotidianas</span><span id="rehab-a-laboral">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-laboral">
       <div class="aco-tbl-wrap">
         <table class="aco-tbl">
@@ -1965,7 +1979,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('herida')"><span><span class="vlv-acc-ic">🧼</span> Cuidados de la herida quirúrgica</span><span id="rehab-a-herida">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('herida')" aria-expanded="false" aria-controls="rehab-b-herida"><span><span class="vlv-acc-ic">🧼</span> Cuidados de la herida quirúrgica</span><span id="rehab-a-herida">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-herida">
       <div class="arr-care-t">Higiene</div>
       <ul class="arr-ul">
@@ -1992,7 +2006,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('nutriqx')"><span><span class="vlv-acc-ic">🍗</span> Nutrición post-cirugía cardíaca</span><span id="rehab-a-nutriqx">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('nutriqx')" aria-expanded="false" aria-controls="rehab-b-nutriqx"><span><span class="vlv-acc-ic">🍗</span> Nutrición post-cirugía cardíaca</span><span id="rehab-a-nutriqx">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-nutriqx">
       <ul class="arr-ul">
         <li><b>Proteínas para cicatrización:</b> 1,2–1,5 g/kg/día en el post-quirúrgico inmediato (primeras 6–8 semanas). Fuentes: carnes magras, huevo, lácteos, legumbres.</li>
@@ -2012,7 +2026,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('supcx')"><span><span class="vlv-acc-ic">🩺</span> Supervisión y señales de alarma post-cirugía</span><span id="rehab-a-supcx">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('supcx')" aria-expanded="false" aria-controls="rehab-b-supcx"><span><span class="vlv-acc-ic">🩺</span> Supervisión y señales de alarma post-cirugía</span><span id="rehab-a-supcx">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-supcx">
       <div class="arr-care-t">Supervisión</div>
       <ul class="arr-ul">
@@ -2038,7 +2052,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">💧 3 · Rehabilitación en Insuficiencia Cardíaca</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('fevi')"><span><span class="vlv-acc-ic">📉</span> Ejercicio según FEVI</span><span id="rehab-a-fevi">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('fevi')" aria-expanded="false" aria-controls="rehab-b-fevi"><span><span class="vlv-acc-ic">📉</span> Ejercicio según FEVI</span><span id="rehab-a-fevi">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-fevi">
       <div class="arr-care-t" style="color:var(--err)">FEVI reducida (&lt;40%)</div>
       <ul class="arr-ul">
@@ -2062,7 +2076,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('monit')"><span><span class="vlv-acc-ic">⚖️</span> Monitoreo diario del paciente</span><span id="rehab-a-monit">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('monit')" aria-expanded="false" aria-controls="rehab-b-monit"><span><span class="vlv-acc-ic">⚖️</span> Monitoreo diario del paciente</span><span id="rehab-a-monit">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-monit">
       <div class="arr-care-t">Peso diario en ayunas</div>
       <ul class="arr-ul">
@@ -2090,7 +2104,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('supdom')"><span><span class="vlv-acc-ic">🏠</span> Programa supervisado vs. domiciliario</span><span id="rehab-a-supdom">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('supdom')" aria-expanded="false" aria-controls="rehab-b-supdom"><span><span class="vlv-acc-ic">🏠</span> Programa supervisado vs. domiciliario</span><span id="rehab-a-supdom">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-supdom">
       <div class="arr-care-t">Evidencia</div>
       <ul class="arr-ul">
@@ -2124,7 +2138,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('hidrico')"><span><span class="vlv-acc-ic">🧂</span> Restricción hídrica y sódica</span><span id="rehab-a-hidrico">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('hidrico')" aria-expanded="false" aria-controls="rehab-b-hidrico"><span><span class="vlv-acc-ic">🧂</span> Restricción hídrica y sódica</span><span id="rehab-a-hidrico">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-hidrico">
       <div class="arr-care-t">Sodio</div>
       <ul class="arr-ul">
@@ -2146,7 +2160,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleRehabAcc('nutriic')"><span><span class="vlv-acc-ic">🥄</span> Nutrición en insuficiencia cardíaca</span><span id="rehab-a-nutriic">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleRehabAcc('nutriic')" aria-expanded="false" aria-controls="rehab-b-nutriic"><span><span class="vlv-acc-ic">🥄</span> Nutrición en insuficiencia cardíaca</span><span id="rehab-a-nutriic">▼</span></button>
     <div class="vlv-acc-b" id="rehab-b-nutriic">
       <ul class="arr-ul">
         <li><b>Sodio y líquidos:</b> ver el acordeón anterior.</li>
@@ -2175,7 +2189,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🌊 1 · Síndrome de Brugada</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y fisiopatología</span><span id="ecgr-a-brpat">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brpat')" aria-expanded="false" aria-controls="ecgr-b-brpat"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y fisiopatología</span><span id="ecgr-a-brpat">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-brpat">
       <div class="arr-care-t">Patrón tipo 1 — el único diagnóstico</div>
       <ul class="arr-ul">
@@ -2194,7 +2208,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brdx')"><span><span class="vlv-acc-ic">🔬</span> Criterios diagnósticos y test de provocación</span><span id="ecgr-a-brdx">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brdx')" aria-expanded="false" aria-controls="ecgr-b-brdx"><span><span class="vlv-acc-ic">🔬</span> Criterios diagnósticos y test de provocación</span><span id="ecgr-a-brdx">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-brdx">
       <div class="arr-care-t">Diagnóstico confirmado</div>
       <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:6px">Patrón tipo 1 espontáneo en V1–V2 (en posición estándar, o con V1–V2 en 2.º o 3.er espacio intercostal) <b>más uno</b> de:</div>
@@ -2227,7 +2241,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brtrig')"><span><span class="vlv-acc-ic">🚫</span> Factores desencadenantes a evitar</span><span id="ecgr-a-brtrig">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brtrig')" aria-expanded="false" aria-controls="ecgr-b-brtrig"><span><span class="vlv-acc-ic">🚫</span> Factores desencadenantes a evitar</span><span id="ecgr-a-brtrig">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-brtrig">
       <div class="arr-care-t">Fármacos bloqueantes del canal de sodio</div>
       <ul class="arr-ul">
@@ -2258,7 +2272,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brman')"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-brman">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('brman')" aria-expanded="false" aria-controls="ecgr-b-brman"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-brman">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-brman">
       <ul class="arr-ul">
         <li><b>DAI (Clase I, evidencia B):</b> sobreviviente de parada cardiorrespiratoria por FV, o TV sostenida documentada.</li>
@@ -2283,7 +2297,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">⏱️ 2 · Síndrome de QT Largo congénito (SQTL)</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtlpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y subtipos</span><span id="ecgr-a-qtlpat">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtlpat')" aria-expanded="false" aria-controls="ecgr-b-qtlpat"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y subtipos</span><span id="ecgr-a-qtlpat">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-qtlpat">
       <ul class="arr-ul">
         <li><b>Criterio diagnóstico (ESC 2022), independiente del sexo:</b> QTc <b>≥480 ms</b> en ECG de 12 derivaciones repetidos, con o sin síntomas · <b>o</b> QTc ≥460 ms con <b>síncope arrítmico</b> · <b>o</b> score de Schwartz &gt;3 · <b>o</b> mutación patogénica conocida, cualquiera sea la duración del QT. Todo ello en ausencia de causas secundarias (fármacos, electrolitos, hipotiroidismo).</li>
@@ -2314,7 +2328,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtlschw')"><span><span class="vlv-acc-ic">🧾</span> Score de Schwartz</span><span id="ecgr-a-qtlschw">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtlschw')" aria-expanded="false" aria-controls="ecgr-b-qtlschw"><span><span class="vlv-acc-ic">🧾</span> Score de Schwartz</span><span id="ecgr-a-qtlschw">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-qtlschw">
       <div class="aco-tbl-wrap">
         <table class="aco-tbl">
@@ -2344,14 +2358,14 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtlman')"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-qtlman">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtlman')" aria-expanded="false" aria-controls="ecgr-b-qtlman"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-qtlman">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-qtlman">
       <ul class="arr-ul">
         <li><b>Betabloqueantes</b> — Clase I en LQT1 y LQT2, Clase IIa en LQT3. <b>Nadolol</b> (preferido: una toma diaria, sin efecto pico-valle) o <b>propranolol</b>. Atenolol es menos eficaz en LQT1. Dosis de nadolol: 1–2 mg/kg/día. <b>No</b> usar betabloqueantes cardioselectivos solos — preferir los no cardioselectivos.</li>
         <li><b>Restricción deportiva (Clase I):</b> las guías recomiendan evitar deportes de competición en todos los subtipos. En LQT1 la <b>natación</b> es el desencadenante de mayor riesgo — restricción sin supervisión.</li>
         <li><b>DAI (Clase I):</b> sobreviviente de parada cardiorrespiratoria.</li>
         <li><b>DAI (Clase IIa):</b> síncope recurrente con betabloqueante a dosis máxima tolerada.</li>
-        <li><b>Mexiletina:</b> añadida en LQT3 — bloquea la corriente de sodio persistente responsable del subtipo y puede acortar el QTc.</li>
+        <li><b>Mexiletina:</b> añadida en LQT3 — bloquea la corriente de sodio persistente responsable del subtipo y puede acortar el QTc. <b>Monitorizar el QRS</b> y suspender si se ensancha más del 25% respecto del basal.</li>
         <li><b>Denervación simpática cardíaca izquierda:</b> en pacientes con choques repetidos del DAI o intolerancia a betabloqueantes.</li>
       </ul>
       <div class="arr-care-t" style="margin-top:12px">Fármacos a evitar</div>
@@ -2374,7 +2388,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">⚡ 3 · Síndrome de QT Corto (SQTC)</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtcpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y diagnóstico</span><span id="ecgr-a-qtcpat">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtcpat')" aria-expanded="false" aria-controls="ecgr-b-qtcpat"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y diagnóstico</span><span id="ecgr-a-qtcpat">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-qtcpat">
       <ul class="arr-ul">
         <li><b>QTc &lt;340 ms</b> en adulto — diagnóstico confirmado.</li>
@@ -2403,7 +2417,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtcman')"><span><span class="vlv-acc-ic">💊</span> Manejo</span><span id="ecgr-a-qtcman">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('qtcman')" aria-expanded="false" aria-controls="ecgr-b-qtcman"><span><span class="vlv-acc-ic">💊</span> Manejo</span><span id="ecgr-a-qtcman">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-qtcman">
       <ul class="arr-ul">
         <li><b>DAI:</b> tratamiento de elección en todo paciente sintomático (síncope, parada cardiorrespiratoria). En asintomáticos con historia familiar de muerte súbita, se sugiere discutir individualmente: la evidencia es limitada por la rareza de la enfermedad.</li>
@@ -2418,7 +2432,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🔀 4 · Wolff-Parkinson-White (WPW)</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('wpwpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y fisiopatología</span><span id="ecgr-a-wpwpat">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('wpwpat')" aria-expanded="false" aria-controls="ecgr-b-wpwpat"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y fisiopatología</span><span id="ecgr-a-wpwpat">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-wpwpat">
       <div class="arr-care-t">Patrón clásico</div>
       <ul class="arr-ul">
@@ -2447,7 +2461,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('wpwries')"><span><span class="vlv-acc-ic">📊</span> Estratificación de riesgo</span><span id="ecgr-a-wpwries">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('wpwries')" aria-expanded="false" aria-controls="ecgr-b-wpwries"><span><span class="vlv-acc-ic">📊</span> Estratificación de riesgo</span><span id="ecgr-a-wpwries">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-wpwries">
       <div class="arr-care-t" style="color:var(--err)">Criterios de alto riesgo</div>
       <ul class="arr-ul">
@@ -2467,15 +2481,14 @@ main{padding-bottom:100px}
         <ul>
           <li><b>Reconocerla:</b> FA con QRS ancho, irregular, frecuencia ventricular altísima (&gt;200 lpm) y morfología que <b>cambia latido a latido</b> (mezcla de conducción por la vía y por el nodo AV).</li>
           <li><b>Tratamiento:</b> cardioversión eléctrica si hay inestabilidad hemodinámica. Farmacológico: <b>procainamida</b> IV o <b>ibutilida</b>.</li>
-          <li><b>CONTRAINDICADOS: verapamil, diltiazem, adenosina y digoxina.</b> Bloquean el nodo AV y pueden acelerar la conducción por la vía accesoria, facilitando la degeneración a FV.</li>
-          <li><b>Evitar también amiodarona IV y betabloqueantes IV</b> en este escenario, por el mismo motivo. Es lo que indica la tab <b>Arritmias</b> de esta app; conviene tenerlo presente porque la amiodarona es el reflejo habitual ante una FA rápida.</li>
+          <li><b>CONTRAINDICADOS: verapamil, diltiazem, adenosina, digoxina, amiodarona IV y betabloqueantes IV.</b> Contraindicados: pueden acelerar la conducción por la vía accesoria o provocar FV. La amiodarona entra en la lista aunque sea el reflejo habitual ante una FA rápida.</li>
         </ul>
       </div>
     </div>
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('wpwman')"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-wpwman">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('wpwman')" aria-expanded="false" aria-controls="ecgr-b-wpwman"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-wpwman">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-wpwman">
       <ul class="arr-ul">
         <li><b>Ablación con catéter (Clase I, evidencia B):</b> paciente sintomático — TSV recurrente, FA preexcitada, síncope. Es el tratamiento definitivo, con éxito &gt;95% en vías laterales izquierdas.</li>
@@ -2496,7 +2509,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🫀 5 · Cardiomiopatía Arritmogénica del VD (CAVD)</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('cavdpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y criterios Task Force 2010</span><span id="ecgr-a-cavdpat">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('cavdpat')" aria-expanded="false" aria-controls="ecgr-b-cavdpat"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y criterios Task Force 2010</span><span id="ecgr-a-cavdpat">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-cavdpat">
       <div class="aco-tbl-wrap">
         <table class="aco-tbl">
@@ -2521,7 +2534,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('cavdman')"><span><span class="vlv-acc-ic">🏃</span> Diferenciación del atleta y manejo</span><span id="ecgr-a-cavdman">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('cavdman')" aria-expanded="false" aria-controls="ecgr-b-cavdman"><span><span class="vlv-acc-ic">🏃</span> Diferenciación del atleta y manejo</span><span id="ecgr-a-cavdman">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-cavdman">
       <div class="arr-care-t">Diagnóstico diferencial con el VD del atleta</div>
       <ul class="arr-ul">
@@ -2552,7 +2565,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🏃‍♂️ 6 · TV Polimórfica Catecolaminérgica (TVPC)</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('tvpcpat')"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y diagnóstico</span><span id="ecgr-a-tvpcpat">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('tvpcpat')" aria-expanded="false" aria-controls="ecgr-b-tvpcpat"><span><span class="vlv-acc-ic">📈</span> Patrón ECG y diagnóstico</span><span id="ecgr-a-tvpcpat">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-tvpcpat">
       <div class="arr-alert">
         <div class="arr-alert-h">⚠️ El ECG basal es NORMAL</div>
@@ -2577,7 +2590,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('tvpcman')"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-tvpcman">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('tvpcman')" aria-expanded="false" aria-controls="ecgr-b-tvpcman"><span><span class="vlv-acc-ic">💊</span> Manejo según guías ESC 2022</span><span id="ecgr-a-tvpcman">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-tvpcman">
       <ul class="arr-ul">
         <li><b>Betabloqueantes (Clase I):</b> nadolol —no cardioselectivo, vida media larga— o propranolol en dosis altas. El objetivo es que la TV <b>no aparezca en la ergometría de control</b>.</li>
@@ -2607,7 +2620,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">👶 7 · Patrones pediátricos de riesgo</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedqtc')"><span><span class="vlv-acc-ic">📏</span> Valores normales de QTc por edad</span><span id="ecgr-a-pedqtc">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedqtc')" aria-expanded="false" aria-controls="ecgr-b-pedqtc"><span><span class="vlv-acc-ic">📏</span> Valores normales de QTc por edad</span><span id="ecgr-a-pedqtc">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-pedqtc">
       <div class="aco-tbl-wrap">
         <table class="aco-tbl">
@@ -2639,7 +2652,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedneo')"><span><span class="vlv-acc-ic">🍼</span> QT largo neonatal</span><span id="ecgr-a-pedneo">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedneo')" aria-expanded="false" aria-controls="ecgr-b-pedneo"><span><span class="vlv-acc-ic">🍼</span> QT largo neonatal</span><span id="ecgr-a-pedneo">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-pedneo">
       <div class="arr-care-t">Cuándo sospecharlo</div>
       <ul class="arr-ul">
@@ -2665,7 +2678,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedwpw')"><span><span class="vlv-acc-ic">🔀</span> WPW pediátrico</span><span id="ecgr-a-pedwpw">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedwpw')" aria-expanded="false" aria-controls="ecgr-b-pedwpw"><span><span class="vlv-acc-ic">🔀</span> WPW pediátrico</span><span id="ecgr-a-pedwpw">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-pedwpw">
       <div class="arr-care-t">Cómo se presenta</div>
       <ul class="arr-ul">
@@ -2686,7 +2699,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedmioc')"><span><span class="vlv-acc-ic">🦠</span> Miocarditis en niños — cambios ECG</span><span id="ecgr-a-pedmioc">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedmioc')" aria-expanded="false" aria-controls="ecgr-b-pedmioc"><span><span class="vlv-acc-ic">🦠</span> Miocarditis en niños — cambios ECG</span><span id="ecgr-a-pedmioc">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-pedmioc">
       <div class="arr-care-t">Hallazgos ECG sugestivos</div>
       <ul class="arr-ul">
@@ -2714,7 +2727,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedcanal')"><span><span class="vlv-acc-ic">🧬</span> Canalopatías pediátricas específicas</span><span id="ecgr-a-pedcanal">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('pedcanal')" aria-expanded="false" aria-controls="ecgr-b-pedcanal"><span><span class="vlv-acc-ic">🧬</span> Canalopatías pediátricas específicas</span><span id="ecgr-a-pedcanal">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-pedcanal">
       <div class="arr-care-t">TVPC pediátrica</div>
       <ul class="arr-ul">
@@ -2740,7 +2753,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🏅 8 · Evaluación pre-participación deportiva — criterios ECG</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('seattle')"><span><span class="vlv-acc-ic">📋</span> Normal en el atleta vs. hallazgo que exige estudio</span><span id="ecgr-a-seattle">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('seattle')" aria-expanded="false" aria-controls="ecgr-b-seattle"><span><span class="vlv-acc-ic">📋</span> Normal en el atleta vs. hallazgo que exige estudio</span><span id="ecgr-a-seattle">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-seattle">
       <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">La interpretación del ECG del atleta se apoya en tres documentos sucesivos: las <b>recomendaciones de Lausanne (ESC, 2005)</b>, los <b>criterios de Seattle (2013)</b> y los <b>Criterios Internacionales (2017)</b>, que consolidan y actualizan a los anteriores y son hoy el estándar de referencia. La evaluación se completa con el cuestionario AHA/ACC de 14 ítems y la exploración física.</div>
 
@@ -2776,7 +2789,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleEcgrAcc('algo')"><span><span class="vlv-acc-ic">🧭</span> Algoritmo de decisión posterior al ECG</span><span id="ecgr-a-algo">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleEcgrAcc('algo')" aria-expanded="false" aria-controls="ecgr-b-algo"><span><span class="vlv-acc-ic">🧭</span> Algoritmo de decisión posterior al ECG</span><span id="ecgr-a-algo">▼</span></button>
     <div class="vlv-acc-b" id="ecgr-b-algo">
       <div class="arr-care-t">Paso 1 — Evaluación inicial</div>
       <ul class="arr-ul">
@@ -2897,7 +2910,7 @@ main{padding-bottom:100px}
     </div>
     <div class="arr-alert">
       <div class="arr-alert-h">🚫 FA con preexcitación</div>
-      <div style="font-size:.82rem;line-height:1.6;color:var(--txt)">NO betabloqueantes IV, NO digoxina, NO verapamil/diltiazem → <b>cardioversión eléctrica o Procainamida</b>.</div>
+      <div style="font-size:.82rem;line-height:1.6;color:var(--txt)">NO verapamil/diltiazem, NO adenosina, NO digoxina, NO amiodarona IV, NO betabloqueantes IV. Contraindicados: pueden acelerar la conducción por la vía accesoria o provocar FV. → <b>cardioversión eléctrica o procainamida</b>.</div>
     </div>
 
     <div class="aco-sec-title">🎯 E · Ablación con catéter</div>
@@ -2977,7 +2990,7 @@ main{padding-bottom:100px}
         <thead><tr><th style="min-width:150px">Tipo</th><th>Tratamiento</th></tr></thead>
         <tbody>
           <tr><td class="aco-ind">TRIN</td><td><span class="arr-badge arr-b1">Clase I</span> Ablación si sintomática recurrente · Verapamil o betabloqueante crónico.</td></tr>
-          <tr><td class="aco-ind">TRAV (WPW)</td><td><span class="arr-badge arr-b1">Clase I</span> Ablación · evitar digoxina y verapamil en FA preexcitada.</td></tr>
+          <tr><td class="aco-ind">TRAV (WPW)</td><td><span class="arr-badge arr-b1">Clase I</span> Ablación · en FA preexcitada evitar verapamil, diltiazem, adenosina, digoxina, amiodarona IV y betabloqueantes IV.</td></tr>
           <tr><td class="aco-ind">Taquicardia auricular focal</td><td>Ablación · betabloqueante o verapamil.</td></tr>
           <tr><td class="aco-ind">Flutter auricular</td><td>Ablación del istmo cavotricuspídeo.</td></tr>
         </tbody>
@@ -3030,10 +3043,12 @@ main{padding-bottom:100px}
     <div class="arr-alert">
       <div class="arr-alert-h">⚠️ CONTRAINDICADOS en FA con preexcitación</div>
       <ul>
-        <li>Digoxina (acelera la conducción por la vía accesoria → FV)</li>
-        <li>Verapamil / Diltiazem</li>
-        <li>Amiodarona IV (evitar)</li>
+        <li>Verapamil · Diltiazem</li>
+        <li>Adenosina</li>
+        <li>Digoxina</li>
+        <li>Amiodarona IV</li>
         <li>Betabloqueantes IV</li>
+        <li><b>Contraindicados: pueden acelerar la conducción por la vía accesoria o provocar FV.</b></li>
       </ul>
     </div>
     <div class="arr-ok-box">
@@ -3048,7 +3063,7 @@ main{padding-bottom:100px}
     <ul class="arr-ul">
       <li><b>Alto riesgo:</b> intervalo RR preexcitado &lt;250 ms en FA, PRC de la vía accesoria &lt;250 ms, múltiples vías, TVRA inducible en EEF.</li>
       <li><b>Bajo riesgo:</b> pérdida brusca de preexcitación con ejercicio o procainamida.</li>
-      <li><span class="arr-badge arr-b1">Clase I</span> Asintomático de alto riesgo: ablación.</li>
+      <li><span class="arr-badge arr-b2a">Clase IIa</span> Asintomático de alto riesgo (período refractario efectivo de la vía &lt;250 ms, o RR mínimo &lt;250 ms en FA preexcitada): ablación. <b>ESC 2022 la sitúa en IIa</b>, no en I: en el asintomático la indicación depende de la estratificación, no del patrón.</li>
       <li><span class="arr-badge arr-b1">Clase I</span> Sintomático con TRAV o FA preexcitada: ablación.</li>
     </ul>
   </div>
@@ -5318,7 +5333,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">📋 1 · Evaluación pre-participación deportiva</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('cuest')"><span><span class="vlv-acc-ic">📝</span> Cuestionario AHA/ACC de 14 ítems (Clase I-C)</span><span id="dep-a-cuest">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('cuest')" aria-expanded="false" aria-controls="dep-b-cuest"><span><span class="vlv-acc-ic">📝</span> Cuestionario AHA/ACC de 14 ítems (Clase I-C)</span><span id="dep-a-cuest">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-cuest">
       <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">El siguiente cuestionario está basado en las recomendaciones <b>AHA/ACC</b> para evaluación pre-participación. Una respuesta positiva en cualquier ítem sugiere <b>derivación cardiológica</b> para evaluación completa. Es material de referencia, no una herramienta diagnóstica: <b>este listado no se completa ni se guarda en la app</b> — es para tener los 14 ítems a mano durante la consulta, y el registro va en la historia del paciente.</div>
 
@@ -5360,7 +5375,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('estudios')"><span><span class="vlv-acc-ic">🔬</span> Estudios complementarios según hallazgos</span><span id="dep-a-estudios">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('estudios')" aria-expanded="false" aria-controls="dep-b-estudios"><span><span class="vlv-acc-ic">🔬</span> Estudios complementarios según hallazgos</span><span id="dep-a-estudios">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-estudios">
       <div class="arr-care-t">ECG de 12 derivaciones</div>
       <ul class="arr-ul">
@@ -5387,7 +5402,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🏅 2 · Clasificación de deportes</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('mitchell')"><span><span class="vlv-acc-ic">📊</span> Clasificación de Mitchell — componente estático y dinámico</span><span id="dep-a-mitchell">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('mitchell')" aria-expanded="false" aria-controls="dep-b-mitchell"><span><span class="vlv-acc-ic">📊</span> Clasificación de Mitchell — componente estático y dinámico</span><span id="dep-a-mitchell">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-mitchell">
       <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">Los deportes se clasifican según el porcentaje de <b>contracción muscular máxima voluntaria</b> (componente estático) y el porcentaje del <b>VO<sub>2</sub>máx</b> utilizado (componente dinámico). La combinación determina qué carga cardiovascular predomina.</div>
 
@@ -5426,7 +5441,7 @@ main{padding-bottom:100px}
       <div class="arr-alert" style="margin-top:12px">
         <div class="arr-alert-h">⚠️ La tabla de arriba es una simplificación</div>
         <ul>
-          <li>La clasificación de referencia es la de <b>Mitchell / 36.ª Conferencia de Bethesda</b>, y varias celdas de este resumen son más benignas que el original — el <b>ciclismo de ruta</b> y el <b>remo</b> son de <b>alto componente estático (III)</b> pese a percibirse como deportes de resistencia pura.</li>
+          <li>La clasificación de referencia es la de <b>Mitchell</b> (<i>JACC</i> 1994), actualizada en <b>AHA/ACC 2015, Task Force 1</b>. Varias celdas de este resumen son <b>más benignas que el original</b>: el <b>remo</b> ya está corregido a III/C, y el <b>ciclismo de ruta</b> y el <b>básquetbol</b> quedan pendientes de cotejo — no se cambiaron porque no se pudo verificar la celda contra la fuente, y una corrección a medias dejaría la tabla incoherente.</li>
           <li>Importa justo por lo que dice el acordeón siguiente: el componente estático es el que genera los picos de presión, y subestimarlo es el error que cuenta en un paciente con cardiopatía estructural o HTA.</li>
           <li>Ante la duda con un deporte concreto, verificar contra la tabla original antes de decidir.</li>
         </ul>
@@ -5435,7 +5450,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('riesgocv')"><span><span class="vlv-acc-ic">⚠️</span> Deportes según riesgo cardiovascular</span><span id="dep-a-riesgocv">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('riesgocv')" aria-expanded="false" aria-controls="dep-b-riesgocv"><span><span class="vlv-acc-ic">⚠️</span> Deportes según riesgo cardiovascular</span><span id="dep-a-riesgocv">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-riesgocv">
       <div class="arr-care-t" style="color:var(--ok)">Bajo riesgo CV</div>
       <ul class="arr-ul">
@@ -5466,7 +5481,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🫀 3 · Corazón del deportista vs. miocardiopatías</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('adapta')"><span><span class="vlv-acc-ic">💪</span> Adaptaciones fisiológicas normales del atleta</span><span id="dep-a-adapta">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('adapta')" aria-expanded="false" aria-controls="dep-b-adapta"><span><span class="vlv-acc-ic">💪</span> Adaptaciones fisiológicas normales del atleta</span><span id="dep-a-adapta">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-adapta">
       <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">El entrenamiento sostenido produce un remodelado cardíaco fisiológico —el «corazón del deportista»— que <b>puede simular patología</b> en el ECG y en el ecocardiograma.</div>
 
@@ -5501,7 +5516,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('ddx')"><span><span class="vlv-acc-ic">🔍</span> Diagnóstico diferencial con miocardiopatías</span><span id="dep-a-ddx">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('ddx')" aria-expanded="false" aria-controls="dep-b-ddx"><span><span class="vlv-acc-ic">🔍</span> Diagnóstico diferencial con miocardiopatías</span><span id="dep-a-ddx">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-ddx">
       <div class="arr-care-t">Miocardiopatía hipertrófica (MCH)</div>
       <div class="aco-tbl-wrap">
@@ -5545,7 +5560,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('herram')"><span><span class="vlv-acc-ic">🧰</span> Herramientas de diferenciación</span><span id="dep-a-herram">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('herram')" aria-expanded="false" aria-controls="dep-b-herram"><span><span class="vlv-acc-ic">🧰</span> Herramientas de diferenciación</span><span id="dep-a-herram">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-herram">
       <ul class="arr-ul">
         <li><b>Ecocardiograma</b> — primera línea. Dimensiones, grosor parietal, función sistólica y diastólica, Doppler tisular. El <b>E/e' &lt;8</b> orienta a fisiológico y <b>&gt;15</b> a patológico.</li>
@@ -5560,7 +5575,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🚨 4 · Muerte súbita en atletas</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('causas')"><span><span class="vlv-acc-ic">📉</span> Causas principales según la edad</span><span id="dep-a-causas">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('causas')" aria-expanded="false" aria-controls="dep-b-causas"><span><span class="vlv-acc-ic">📉</span> Causas principales según la edad</span><span id="dep-a-causas">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-causas">
       <div class="arr-care-t">Menores de 35 años</div>
       <ul class="arr-ul">
@@ -5581,7 +5596,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('prev')"><span><span class="vlv-acc-ic">🫁</span> Prevención y respuesta</span><span id="dep-a-prev">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('prev')" aria-expanded="false" aria-controls="dep-b-prev"><span><span class="vlv-acc-ic">🫁</span> Prevención y respuesta</span><span id="dep-a-prev">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-prev">
       <div class="arr-care-t">Desfibrilador automático externo (DEA)</div>
       <ul class="arr-ul">
@@ -5606,7 +5621,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('habil')"><span><span class="vlv-acc-ic">📖</span> Participación deportiva según cardiopatía — ESC 2020</span><span id="dep-a-habil">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('habil')" aria-expanded="false" aria-controls="dep-b-habil"><span><span class="vlv-acc-ic">📖</span> Participación deportiva según cardiopatía — ESC 2020</span><span id="dep-a-habil">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-habil">
       <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">Referencia educativa. La decisión sobre la participación deportiva es del <b>médico tratante</b>, con el contexto clínico completo del paciente.</div>
       <div class="arr-alert" style="margin-bottom:12px">
@@ -5634,7 +5649,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🔄 5 · Vuelta al deporte tras un evento cardíaco</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('iam')"><span><span class="vlv-acc-ic">❤️‍🩹</span> Post-IAM</span><span id="dep-a-iam">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('iam')" aria-expanded="false" aria-controls="dep-b-iam"><span><span class="vlv-acc-ic">❤️‍🩹</span> Post-IAM</span><span id="dep-a-iam">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-iam">
       <div style="font-size:.79rem;color:var(--txt2);line-height:1.5;margin-bottom:10px">Sigue los mismos principios de la rehabilitación cardíaca — el protocolo completo está en la tab <b>🏃 Rehabilitación</b>.</div>
       <div class="arr-care-t">Criterios para considerar la vuelta al deporte recreativo (ESC 2020)</div>
@@ -5654,7 +5669,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('mioc')"><span><span class="vlv-acc-ic">🦠</span> Post-miocarditis</span><span id="dep-a-mioc">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('mioc')" aria-expanded="false" aria-controls="dep-b-mioc"><span><span class="vlv-acc-ic">🦠</span> Post-miocarditis</span><span id="dep-a-mioc">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-mioc">
       <ul class="arr-ul">
         <li>Las guías ESC 2020 recomiendan <b>restringir toda actividad deportiva</b> durante la fase activa y durante al menos <b>3–6 meses</b> tras la resolución.</li>
@@ -5677,7 +5692,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('ablacion')"><span><span class="vlv-acc-ic">⚡</span> Post-ablación</span><span id="dep-a-ablacion">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('ablacion')" aria-expanded="false" aria-controls="dep-b-ablacion"><span><span class="vlv-acc-ic">⚡</span> Post-ablación</span><span id="dep-a-ablacion">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-ablacion">
       <div class="aco-tbl-wrap">
         <table class="aco-tbl">
@@ -5694,7 +5709,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('disp')"><span><span class="vlv-acc-ic">🔧</span> Post-implante de dispositivo (DAI / marcapasos)</span><span id="dep-a-disp">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('disp')" aria-expanded="false" aria-controls="dep-b-disp"><span><span class="vlv-acc-ic">🔧</span> Post-implante de dispositivo (DAI / marcapasos)</span><span id="dep-a-disp">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-disp">
       <div class="arr-care-t">Marcapasos</div>
       <ul class="arr-ul">
@@ -5722,7 +5737,7 @@ main{padding-bottom:100px}
   <div class="aco-sec-title">🥗 6 · Nutrición en el deporte</div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('kcal')"><span><span class="vlv-acc-ic">🔥</span> Requerimientos calóricos según intensidad</span><span id="dep-a-kcal">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('kcal')" aria-expanded="false" aria-controls="dep-b-kcal"><span><span class="vlv-acc-ic">🔥</span> Requerimientos calóricos según intensidad</span><span id="dep-a-kcal">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-kcal">
       <div class="aco-tbl-wrap">
         <table class="aco-tbl">
@@ -5749,7 +5764,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('hidrat')"><span><span class="vlv-acc-ic">💧</span> Hidratación</span><span id="dep-a-hidrat">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('hidrat')" aria-expanded="false" aria-controls="dep-b-hidrat"><span><span class="vlv-acc-ic">💧</span> Hidratación</span><span id="dep-a-hidrat">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-hidrat">
       <div class="arr-care-t">Antes del ejercicio</div>
       <ul class="arr-ul">
@@ -5777,7 +5792,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('suplem')"><span><span class="vlv-acc-ic">💊</span> Suplementación</span><span id="dep-a-suplem">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('suplem')" aria-expanded="false" aria-controls="dep-b-suplem"><span><span class="vlv-acc-ic">💊</span> Suplementación</span><span id="dep-a-suplem">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-suplem">
       <div class="arr-care-t" style="color:var(--ok)">Con evidencia suficiente</div>
       <ul class="arr-ul">
@@ -5802,7 +5817,7 @@ main{padding-bottom:100px}
   </div>
 
   <div class="vlv-acc">
-    <button class="vlv-acc-h" onclick="toggleDepAcc('nutricard')"><span><span class="vlv-acc-ic">🫀</span> Nutrición en el atleta con cardiopatía</span><span id="dep-a-nutricard">▼</span></button>
+    <button class="vlv-acc-h" onclick="toggleDepAcc('nutricard')" aria-expanded="false" aria-controls="dep-b-nutricard"><span><span class="vlv-acc-ic">🫀</span> Nutrición en el atleta con cardiopatía</span><span id="dep-a-nutricard">▼</span></button>
     <div class="vlv-acc-b" id="dep-b-nutricard">
       <ul class="arr-ul">
         <li>En cuanto a macronutrientes, el atleta con cardiopatía tiene <b>los mismos requerimientos</b> que el deportista sano para el nivel de actividad que realiza. Las restricciones dependen de la cardiopatía de base, no del hecho de entrenar.</li>
@@ -6307,12 +6322,15 @@ main{padding-bottom:100px}
       <div class="gui-subtit">Canalopatías y Cardiopatías Específicas</div>
       <table class="gui-table">
         <tr><th>Indicación</th><th>ESC 2022</th><th>ACC/AHA 2022</th></tr>
-        <tr><td>Síndrome de Brugada con síncope o TV/FV documentada</td><td><span class="gui-badge gb-i">I C</span></td><td><span class="gui-badge gb-i">I B</span></td></tr>
-        <tr><td>SQTL con síncope/TV bajo BB o intolerancia a BB</td><td><span class="gui-badge gb-i">I B</span></td><td><span class="gui-badge gb-i">I B</span></td></tr>
+        <tr><td>Síndrome de Brugada — paro cardíaco recuperado o TV sostenida documentada</td><td><span class="gui-badge gb-i">I C</span></td><td><span class="gui-badge gb-i">I B</span></td></tr>
+        <tr><td>Síndrome de Brugada — patrón tipo 1 espontáneo con síncope arrítmico</td><td><span class="gui-badge gb-iia">IIa C</span></td><td><span class="gui-badge gb-iia">IIa B</span></td></tr>
+        <tr><td>SQTL — paro cardíaco recuperado</td><td><span class="gui-badge gb-i">I B</span></td><td><span class="gui-badge gb-i">I B</span></td></tr>
+        <tr><td>SQTL — síncope recurrente pese a BB a dosis máxima, o intolerancia a BB</td><td><span class="gui-badge gb-iia">IIa B</span></td><td><span class="gui-badge gb-iia">IIa B</span></td></tr>
         <tr><td>TVPC sintomática con síncope bajo BB</td><td><span class="gui-badge gb-i">I C</span></td><td><span class="gui-badge gb-i">I C</span></td></tr>
         <tr><td>MCH con ≥1 factor de riesgo mayor (MSD5)</td><td><span class="gui-badge gb-i">I B</span></td><td><span class="gui-badge gb-iia">IIa B</span></td></tr>
         <tr><td>Sarcoidosis cardíaca con FEVI ≤35% o TV sostenida</td><td><span class="gui-badge gb-iia">IIa B</span></td><td><span class="gui-badge gb-iia">IIa B</span></td></tr>
-        <tr><td>Displasia arritmogénica VD con TV sostenida o síncope</td><td><span class="gui-badge gb-i">I C</span></td><td><span class="gui-badge gb-i">I C</span></td></tr>
+        <tr><td>Miocardiopatía arritmogénica del VD — paro recuperado o TV sostenida con inestabilidad</td><td><span class="gui-badge gb-i">I C</span></td><td><span class="gui-badge gb-i">I C</span></td></tr>
+        <tr><td>Miocardiopatía arritmogénica del VD — TV sostenida tolerada, o síncope arrítmico</td><td><span class="gui-badge gb-iia">IIa C</span></td><td><span class="gui-badge gb-iia">IIa C</span></td></tr>
       </table>
       <div class="gui-nota">💡 <strong>TMO:</strong> Tratamiento médico óptimo. <strong>EEF:</strong> Estudio electrofisiológico. <strong>MCH MSD5:</strong> Score ESC de muerte súbita en MCH a 5 años ≥6% = Clase I; 4-6% = IIa; &lt;4% = IIb.</div>
       <div class="gui-warn">⚠️ Diferencia ESC vs ACC/AHA: ESC 2022 es más restrictiva en MCH (usa calculadora MSD5); ACC/AHA 2020 acepta criterios clínicos individuales más amplios. En FEVI ≤30% isquémica asintomática: ACC/AHA IIa vs ESC IIb.</div>
@@ -6670,6 +6688,7 @@ main{padding-bottom:100px}
               </div>
               <div id="qtc-cat" style="text-align:center;padding:6px 14px;border-radius:20px;font-size:.82rem;font-weight:700;display:inline-block;margin:0 auto"></div>
               <div id="qtc-rec" style="font-size:.78rem;color:var(--txt2);background:#F5F9FF;border-radius:7px;padding:9px 12px;line-height:1.6"></div>
+              <div style="font-size:.75rem;line-height:1.55;background:var(--warn-bg);border-left:3px solid var(--warn);border-radius:6px;padding:9px 12px;margin-top:8px;color:var(--txt)">⚠️ <b>La categoría de arriba se calcula sobre Bazett</b> (QTc = QT/√RR). Bazett <b>sobreestima</b> el QTc a frecuencias altas y lo <b>subestima</b> a frecuencias bajas. Para el diagnóstico de SQTL, las guías <b>ESC 2022</b> se apoyan en <b>Fridericia</b> (QTc = QT/RR<sup>1/3</sup>). Los umbrales mostrados son <b>de adulto</b> — la tabla pediátrica por edad está en la tab <b>⚡ ECG de Riesgo</b>, sección 7.</div>
               <div style="font-size:.7rem;color:var(--txt2);line-height:1.5;padding-top:4px;border-top:1px solid var(--border)">
                 <strong>Bazett:</strong> QTc = QT/√RR · <strong>Fridericia:</strong> QTc = QT/RR^(1/3) · <strong>Framingham:</strong> QTc = QT + 0.154×(1−RR) · <strong>Hodges:</strong> QTc = QT + 1.75×(FC−60)
               </div>
@@ -8264,12 +8283,15 @@ const DISP_DATA={
         {texto:'NYHA IV ambulatorio candidato a TRC, trasplante o DAV',esc:'IIa B',acc:'IIa C'}
       ]},
       {titulo:'Canalopatías y Cardiopatías Específicas',indicaciones:[
-        {texto:'Síndrome de Brugada con síncope o TV/FV documentada',esc:'I C',acc:'I B'},
-        {texto:'SQTL con síncope/TV bajo BB o intolerancia a BB',esc:'I B',acc:'I B'},
+        {texto:'Síndrome de Brugada — paro cardíaco recuperado o TV sostenida documentada',esc:'I C',acc:'I B'},
+        {texto:'Síndrome de Brugada — patrón tipo 1 espontáneo con síncope arrítmico',esc:'IIa C',acc:'IIa B'},
+        {texto:'SQTL — paro cardíaco recuperado',esc:'I B',acc:'I B'},
+        {texto:'SQTL — síncope recurrente pese a BB a dosis máxima, o intolerancia a BB',esc:'IIa B',acc:'IIa B'},
         {texto:'TVPC sintomática con síncope bajo BB',esc:'I C',acc:'I C'},
         {texto:'MCH con ≥1 factor de riesgo mayor (MSD5 ≥6%)',esc:'I B',acc:'IIa B'},
         {texto:'Sarcoidosis cardíaca con FEVI ≤35% o TV sostenida',esc:'IIa B',acc:'IIa B'},
-        {texto:'Displasia arritmogénica VD con TV sostenida o síncope',esc:'I C',acc:'I C'}
+        {texto:'Miocardiopatía arritmogénica del VD — paro recuperado o TV sostenida con inestabilidad',esc:'I C',acc:'I C'},
+        {texto:'Miocardiopatía arritmogénica del VD — TV sostenida tolerada, o síncope arrítmico',esc:'IIa C',acc:'IIa C'}
       ]}
     ],
     nota:'TMO: Tratamiento médico óptimo. MCH MSD5: Score ESC de muerte súbita en MCH a 5 años. ESC más restrictiva en MCH (calculadora MSD5) vs ACC/AHA (criterios clínicos individuales).'
@@ -10783,6 +10805,30 @@ const VAD_DRUGS=[
    inter:['Digoxina — duplica niveles','Warfarina — potencia anticoagulación','Amiodarona — QT aditivo'],
    perla:'Uso muy limitado actualmente. Nicho específico: Brugada sintomático cuando el CDI no es viable, y SQTC. Monitorizar QTc estrictamente.'},
 
+  {gen:'Nadolol',trade:'Corgard',clase:'Betabloqueante no selectivo',grupo:'Antiarrítmicos',
+   ind:['SQTL — primera línea en LQT1 y LQT2 (Clase I)','TVPC — primera línea, junto al DAI cuando está indicado','Preferido sobre propranolol por su vida media larga'],
+   contra:['Asma o EPOC con broncoespasmo (no selectivo)','BAV 2°-3° sin marcapaso','Bradicardia sintomática','IC descompensada','Vasoespasmo periférico severo'],
+   dosis:[{ind:'SQTL / TVPC',inicio:'0.5–1 mg/kg/día en 1 toma',mant:'1–2 mg/kg/día en 1 toma',max:'2.5 mg/kg/día'}],
+   ea:['Bradicardia','Fatiga','Broncoespasmo','Hipotensión','Trastornos del sueño (menos que propranolol)'],
+   inter:['Verapamil/diltiazem — bradicardia y BAV aditivos','AINE — reducen el efecto antihipertensivo','Insulina — enmascara la hipoglucemia'],
+   perla:'Ventaja sobre propranolol: una sola toma diaria y sin efecto pico-valle, o sea sin ventanas de desprotección entre dosis — que es justo lo que importa en SQTL y TVPC. Atenolol es menos eficaz en LQT1: no usar cardioselectivos solos. En TVPC el objetivo es que la TV no aparezca en la ergometría de control. NUNCA dejar un DAI sin betabloqueante en TVPC: los choques generan descarga adrenérgica y desencadenan nueva FV.'},
+
+  {gen:'Mexiletina',trade:'Mexitil',clase:'Antiarrítmico clase Ib (bloqueante del canal de sodio)',grupo:'Antiarrítmicos',
+   ind:['LQT3 — add-on sobre el betabloqueante','TVPC — add-on sobre nadolol','TV ventricular refractaria (uso off-label)'],
+   contra:['BAV 2°-3° sin marcapaso','Shock cardiogénico','Insuficiencia hepática severa (metabolismo hepático)'],
+   dosis:[{ind:'LQT3 / TVPC',inicio:'150 mg c/8h',mant:'150–300 mg c/8h',max:'1200 mg/día'}],
+   ea:['Náuseas y molestias gástricas (tomar con comida)','Temblor','Mareo, ataxia','Ensanchamiento del QRS','Hepatotoxicidad (rara)'],
+   inter:['Inhibidores de CYP1A2 (fluvoxamina, ciprofloxacino) — aumentan niveles','Fenitoína y rifampicina — reducen niveles','Cafeína — su depuración se enlentece'],
+   perla:'En LQT3 bloquea la corriente de sodio persistente, que es el defecto del subtipo: puede acortar el QTc, cosa que no hace ningún otro antiarrítmico de esta familia. MONITORIZAR EL QRS: suspender si se ensancha más del 25% respecto del basal. En el LQT3 neonatal grave con QTc >600 ms y bloqueo 2:1 puede salvar la vida.'},
+
+  {gen:'Ranolazina',trade:'Ranexa',clase:'Bloqueante de la corriente de sodio tardía',grupo:'Antiarrítmicos',
+   ind:['LQT3 — alternativa o add-on a mexiletina','Angina crónica refractaria','FA — rol adyuvante en investigación'],
+   contra:['Cirrosis hepática','Uso con inhibidores potentes de CYP3A4','QTc prolongado por otras causas (prolonga levemente el QT)','TFG <30 ml/min'],
+   dosis:[{ind:'LQT3 / angina',inicio:'500 mg c/12h',mant:'500–1000 mg c/12h',max:'1000 mg c/12h · TOPE 500 mg c/12h si hay un inhibidor MODERADO de CYP3A4 (diltiazem, verapamil, eritromicina)'}],
+   ea:['Mareo','Constipación','Náuseas','Cefalea','Prolongación leve del QT'],
+   inter:['Inhibidores de CYP3A4 (ketoconazol, claritromicina, diltiazem, verapamil, jugo de pomelo) — AUMENTAN los niveles','Inductores (rifampicina, fenitoína) — los reducen','Digoxina — aumenta sus niveles ~1.5×','Simvastatina — limitar a 20 mg/día'],
+   perla:'Mismo mecanismo que la mexiletina pero con mayor selectividad por la corriente tardía. Paradoja a tener presente: prolonga levemente el QT en el corazón sano y sin embargo lo ACORTA en LQT3, porque ahí la corriente tardía es el defecto. La interacción con CYP3A4 es la que manda: verapamil y diltiazem la elevan, y son fármacos frecuentes en el mismo paciente.'},
+
   {gen:'Procainamida',trade:'Pronestyl',clase:'Antiarrítmico clase Ia',grupo:'Antiarrítmicos',
    ind:['TV monomórfica sostenida hemodinámicamente estable (Clase I)','FA con preexcitación WPW (de elección en emergencia)','Cardioversión farmacológica de FA/Flutter (IV)'],
    contra:['LES activo o antecedente','Agranulocitosis previa por procainamida','BAV 2°-3° sin marcapaso','IC severa','QTc >500ms'],
@@ -11059,7 +11105,7 @@ const ECG_DATA={
     color:'#00838F',
     criterios:['PR corto <120ms','Onda delta (deflexión lenta inicial del QRS)','QRS ancho ≥120ms (preexcitación ventricular)','Alteraciones secundarias de repolarización (ST-T discordante)','Taquicardias paroxísticas (TSVP por reentrada AV)'],
     causas:['Congénito — vía accesoria auriculoventricular (haz de Kent)','Asociación con MCH (20%)','Anomalía de Ebstein (vías accesorias múltiples derechas)'],
-    clinica:'<div class="ecg-danger">⚠️ FA con preexcitación = EMERGENCIA. Respuesta ventricular muy rápida → FV. CONTRAINDICADOS: digoxina, verapamilo, diltiazem, adenosina (bloquean nodo AV y favorecen conducción por vía accesoria). Tratamiento: procainamida IV o cardioversión eléctrica.</div>',
+    clinica:'<div class="ecg-danger">⚠️ FA con preexcitación = EMERGENCIA. Respuesta ventricular muy rápida → FV. CONTRAINDICADOS: verapamilo, diltiazem, adenosina, digoxina, amiodarona IV y betabloqueantes IV. Contraindicados: pueden acelerar la conducción por la vía accesoria o provocar FV. Tratamiento: procainamida IV, ibutilida, o cardioversión eléctrica si hay inestabilidad.</div>',
     interactivo:true
   },
   brugada:{
@@ -11067,7 +11113,7 @@ const ECG_DATA={
     color:'#C62828',
     criterios:['Tipo 1 (diagnóstico): Elevación ST ≥2mm con morfología coved (convexa) en ≥1 derivación V1-V2 en posición estándar o intercostal superior (3°-4° espacio)','Tipo 2: Elevación ST ≥0.5mm con morfología saddleback (silla de montar) — NO diagnóstico por sí solo','Tipo 3: Elevación ST <1mm, saddle o coved — no diagnóstico','Diagnóstico definitivo: Tipo 1 espontáneo O Tipo 2/3 que se convierte en Tipo 1 con test de provocación (ajmalina, flecainida, procainamida)'],
     causas:['Mutación SCN5A (canal Nav1.5) en ~20%','Fiebre (puede desenmascarar patrón)','Fármacos: antiarrítmicos clase IC/IA, antidepresivos tricíclicos, cocaína','Hipertermia, hipopotasemia, hipercalcemia'],
-    clinica:'<div class="ecg-danger">⚠️ Indicaciones de CDI: síncope inexplicado + patrón Tipo 1 espontáneo (Clase I) · TV/FV documentada (Clase I) · Patrón inducido con síntomas (Clase IIa). Quinidina: opción en Brugada sintomático sin CDI o tormentas arrítmicas.</div>',
+    clinica:'<div class="ecg-danger">⚠️ Indicaciones de CDI (ESC 2022): TV/FV documentada o paro recuperado (Clase I) · síncope arrítmico con patrón Tipo 1 espontáneo (Clase <b>IIa</b>, no I). Quinidina: opción en Brugada sintomático sin CDI o en tormenta arrítmica.</div>',
     extra:'<div class="ecg-nota">Derivaciones V1-V2 en posición alta (2°-3° espacio intercostal) aumentan sensibilidad diagnóstica. Realizar siempre si sospecha.</div>'
   },
   sqtl:{
@@ -13530,17 +13576,91 @@ function vwzEvalEdm(){
 /* Acordeones de la tab Deporte. Prefijo propio «dep-», el mismo patrón que toggleVlvAcc,
    toggleEndoAcc, toggleRehabAcc y toggleEcgrAcc: el scope queda acotado a esta tab y no
    puede colisionar con los ids de las otras cuatro. */
+/* Impresión de la tab Rehabilitación.
+   Ctrl+P sobre cualquier tab da hoja en blanco: la regla @media print de la línea ~873
+   —body>*:not(#print-area){display:none!important}— las oculta todas. No se toca esa regla
+   porque de ella depende la impresión de pacientes; se usa el mismo camino que preopPrintNota:
+   volcar a #print-area, imprimir, y limpiar.
+   Los cuerpos de los acordeones se despliegan EN LA COPIA: .vlv-acc-b nace display:none, así
+   que sin forzarlo se imprimiría una lista de encabezados y ningún contenido —que es la falla
+   silenciosa que este botón viene a evitar, no a repetir—. Se clona el nodo, así que el estado
+   abierto o cerrado en pantalla no altera lo que sale en el papel. */
+function rehabImprimir(){
+  var sec=document.getElementById('tab-rehab'); if(!sec) return;
+  var pa=document.getElementById('print-area'); if(!pa) return;
+  var esc2=(typeof esc==='function')?esc:function(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var med=((document.getElementById('hdr-doctor-lbl')||{}).textContent||'').replace('✏️','').trim();
+  var centro=(typeof activeInst!=='undefined'&&activeInst)?activeInst.label:'';
+  var fecha=new Date().toLocaleDateString('es-UY',{day:'2-digit',month:'2-digit',year:'numeric'});
+
+  var copia=sec.cloneNode(true);
+  copia.style.display='';
+  /* Los chevrones se sacan por id ANTES de borrar los ids. Con '.vlv-acc-h span:last-child'
+     también matcheaba el span del icono —:last-child cuenta elementos, no nodos de texto—,
+     y sólo se salvaba por comparar el textContent. */
+  copia.querySelectorAll('[id^="rehab-a-"]').forEach(function(s){ s.remove(); });
+  /* El botón de imprimir no va al papel. Se marca con data-noprint en vez de subir por
+     parentNode: si alguien saca el botón de su contenedor, parentNode pasa a ser la copia entera
+     y el impreso sale vacío, sin error. */
+  copia.querySelectorAll('[data-noprint]').forEach(function(e){ e.remove(); });
+  /* Sacar TODOS los ids del clon. Mientras la copia vive, habría 36 ids duplicados en el
+     documento; hoy no rompe porque #print-area está después de #tab-rehab y getElementById
+     devuelve el primero, pero eso es una garantía posicional que nadie escribió y que se
+     pierde si alguien mueve #print-area. Se despliega por clase, que no depende de ids. */
+  copia.querySelectorAll('[id]').forEach(function(e){ e.removeAttribute('id'); });
+  copia.removeAttribute('id');
+  copia.querySelectorAll('.vlv-acc-b').forEach(function(b){ b.style.display='block'; });
+
+  var enc='<div style="text-align:center;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:14px">'+
+    '<div style="font-size:17pt;font-weight:bold">'+esc2(med||'CardioSalud')+'</div>'+
+    '<div style="font-size:11pt">Cardiólogo</div>'+
+    (centro?('<div style="font-size:11pt">'+esc2(centro)+'</div>'):'')+
+    '<div style="font-size:10pt;color:#555;margin-top:4px">Rehabilitación cardiovascular · '+fecha+'</div>'+
+    '<div style="font-size:10pt;font-weight:bold;margin-top:6px">MATERIAL DE REFERENCIA — no es una indicación individualizada</div></div>';
+  pa.innerHTML='';
+  var cont=document.createElement('div');
+  cont.className='print-patient';
+  cont.innerHTML=enc;                 // sólo la cabecera, con médico y centro escapados
+  cont.appendChild(copia);            // el contenido va como NODO, no como cadena
+  /* El mismo disclaimer que usa la exportación de pacientes. Sin esto, la hoja lleva el
+     nombre del médico, el centro y la fecha —el formato de una nota firmada— pero ningún
+     paciente y ninguna salvedad: el paciente la lee como indicación personal. */
+  var dis=document.createElement('div');
+  dis.className='ceibo-print-disc';
+  dis.textContent='Esta herramienta es de apoyo clínico. No reemplaza el juicio médico ni constituye una recomendación diagnóstica o terapéutica. CeiboMed © 2026';
+  cont.appendChild(dis);
+  pa.appendChild(cont);
+  /* Limpiar con onafterprint y no con un timeout ciego. window.print() bloquea el hilo en
+     escritorio, pero NO en iOS Safari (hoja AirPrint asincrónica): ahí un timer de 600 ms
+     borra el contenido antes de que el motor lo capture y sale una hoja en blanco, que es
+     exactamente la falla que este botón viene a resolver. El timeout queda de respaldo,
+     largo, por si el navegador no emite el evento. */
+  var limpiar=function(){ pa.innerHTML=''; window.removeEventListener('afterprint',limpiar); clearTimeout(_rehabPrintT); };
+  window.addEventListener('afterprint',limpiar);
+  clearTimeout(_rehabPrintT);
+  window.print();
+  _rehabPrintT=setTimeout(limpiar,8000);
+}
+var _rehabPrintT=null;
 function toggleDepAcc(id){
   var b=document.getElementById('dep-b-'+id), a=document.getElementById('dep-a-'+id);
   if(!b) return;
   var on=b.classList.toggle('on');
   if(a) a.textContent = on ? '▲' : '▼';
+  /* El chevrón es la única señal de estado y un lector de pantalla lo lee como
+     «triángulo negro apuntando hacia abajo» o no lo lee. aria-expanded lo dice. */
+  var btn=b.previousElementSibling;
+  if(btn && btn.classList.contains('vlv-acc-h')) btn.setAttribute('aria-expanded', on ? 'true' : 'false');
 }
 function toggleEcgrAcc(id){
   var b=document.getElementById('ecgr-b-'+id), a=document.getElementById('ecgr-a-'+id);
   if(!b) return;
   var on=b.classList.toggle('on');
   if(a) a.textContent = on ? '▲' : '▼';
+  /* El chevrón es la única señal de estado y un lector de pantalla lo lee como
+     «triángulo negro apuntando hacia abajo» o no lo lee. aria-expanded lo dice. */
+  var btn=b.previousElementSibling;
+  if(btn && btn.classList.contains('vlv-acc-h')) btn.setAttribute('aria-expanded', on ? 'true' : 'false');
 }
 /* Abre la calculadora de QTc que YA existe en el panel de calculadoras, en vez de duplicar
    las fórmulas en esta tab. Dos copias de un cálculo clínico se separan sin que se note.
@@ -13590,6 +13710,10 @@ function toggleRehabAcc(id){
   if(!b) return;
   var on=b.classList.toggle('on');
   if(a) a.textContent = on ? '▲' : '▼';
+  /* El chevrón es la única señal de estado y un lector de pantalla lo lee como
+     «triángulo negro apuntando hacia abajo» o no lo lee. aria-expanded lo dice. */
+  var btn=b.previousElementSibling;
+  if(btn && btn.classList.contains('vlv-acc-h')) btn.setAttribute('aria-expanded', on ? 'true' : 'false');
 }
 function toggleEndoAcc(id){
   var b=document.getElementById('endo-b-'+id), a=document.getElementById('endo-a-'+id);
@@ -14084,7 +14208,25 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ var o=doc
 <footer style="text-align:center;padding:16px 12px;font-size:.72rem;color:var(--txt2);line-height:1.5;">© 2026 Dr. M. D. S. y col. · CardioSalud · Todos los derechos reservados · Uso clínico exclusivo</footer>
 <script>
 /* ═══════════ NAVEGACIÓN PRINCIPAL POR TABS ═══════════ */
-var MAIN_TABS=['prevencion','embarazo','deporte','preop','ic','miocardiopatias','valvulopatias','rehab','endocarditis','cardioonc','ecgriesgo','arritmias','dispositivos','anticoag','ref','trials'];
+/* MAIN_TABS se DERIVA de la barra en vez de mantenerse a mano. Como copia manual, agregar
+   una tab y olvidar el array daba pantalla en blanco sin error en consola: showMainTab
+   escondía <main> y las tabs conocidas, y nunca mostraba la nueva.
+   Se excluyen 'inicio' —que muestra el <main> y no tiene contenedor propio— y 'laboratorio',
+   cuyo botón llama a openAudit() y tampoco tiene contenedor. Sin ese filtro el array traería
+   dos nombres sin destino: hoy sería inocuo por el guard `if(el)`, pero es un array que dice
+   contener tabs de contenido y no las contendría todas.
+   Este bloque de script está después de la barra de tabs, así que el DOM ya existe cuando corre. */
+var MAIN_TABS=Array.prototype.map.call(
+  document.querySelectorAll('#main-tabs .mtab'),
+  function(b){ return b.getAttribute('data-tab'); }
+).filter(function(t){
+  if(!t || t==='inicio' || t==='laboratorio') return false;
+  /* Se avisa en vez de descartar en silencio. Filtrar sin más reintroducía la misma falla
+     muda que este cambio venía a eliminar: un contenedor renombrado sacaba la tab del array
+     y el botón dejaba de hacer nada, sin error. showMainTab ya tiene su propio guard. */
+  if(!document.getElementById('tab-'+t)) console.warn('[tabs] «'+t+'» no tiene contenedor #tab-'+t);
+  return true;
+});
 function showMainTab(tab){
   var main=document.querySelector('main');
   if(main)main.style.display=(tab==='inicio')?'':'none';
