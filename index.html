@@ -894,6 +894,16 @@ main{padding-bottom:100px}
   /* Los paneles de sub-tab nacen display:none igual que .vlv-acc-b. rehabImprimir()
      les pone .active en la copia; esto es el respaldo por clase, que no depende de ids. */
   #print-area .rehab-tc,#print-area .dep-tc,#print-area .ecgr-tc{display:block!important}
+  /* data-noprint era una convención honrada por UNA sola función: rehabImprimir la saca del
+     clon a mano. Las barras de sub-tab de Deporte y ECG de riesgo también la llevan, pero
+     ahí no hacía nada. La trampa es para el próximo: copiar rehabImprimir para otra tab
+     parece seguro porque el markup «ya tiene data-noprint», y si se omite esa línea la barra
+     de botones sale impresa en la hoja del paciente, sin error. Con esta regla el atributo
+     significa lo que dice su nombre en todas partes.
+     El #print-area va DUPLICADO a propósito: con uno solo la especificidad empata con la
+     regla de .rehab-tc/.dep-tc/.ecgr-tc de arriba y sólo gana por orden de aparición, así
+     que reordenar el bloque devolvía las barras de sub-tab a la hoja del paciente. */
+  #print-area #print-area [data-noprint]{display:none!important}
   #print-area .tab-content *{color:#000!important;background:transparent!important;box-shadow:none!important}
   #print-area .tab-content .aco-tbl-wrap{overflow:visible!important}
   #print-area .vlv-acc,#print-area .arr-alert,#print-area .arr-ok-box{border:1px solid #666!important;page-break-inside:avoid}
@@ -1710,8 +1720,8 @@ main{padding-bottom:100px}
   <div class="co-note" style="font-size:.82rem;color:var(--txt2);margin-bottom:14px;line-height:1.5">🏃 <b>Rehabilitación cardiovascular</b> — post-IAM, post-cirugía cardíaca e insuficiencia cardíaca, según <b>ESC 2020/2021</b> y <b>AHA/ACC</b>. Toque cada encabezado para expandir. Los tiempos y umbrales son <b>orientativos</b>: individualizar según el paciente.</div>
 
   <div data-noprint style="margin:0 0 14px;">
-    <button type="button" data-noprint onclick="rehabImprimir()" style="padding:10px 16px;background:var(--p);color:#fff;border:none;border-radius:8px;font-size:.86rem;font-weight:700;cursor:pointer;font-family:inherit;min-height:44px">🖨️ Imprimir esta sección</button>
-    <span style="font-size:.74rem;color:var(--txt2);margin-left:10px">Imprime la sección completa con todos los acordeones desplegados, para entregar al paciente.</span>
+    <button type="button" data-noprint onclick="rehabImprimir()" style="padding:10px 16px;background:var(--p);color:#fff;border:none;border-radius:8px;font-size:.86rem;font-weight:700;cursor:pointer;font-family:inherit;min-height:44px">🖨️ Imprimir las 3 secciones</button>
+    <span style="font-size:.74rem;color:var(--txt2);margin-left:10px">Imprime Post-IAM, Post-Cirugía e Insuficiencia Cardíaca completas —no sólo la solapa que estás viendo— con todos los acordeones desplegados.</span>
   </div>
 
   <div class="rehab-tabs" data-noprint>
@@ -12457,24 +12467,90 @@ function closeHelp(){var m=document.getElementById('cs-help-modal');if(m)m.style
 /* Bloqueo de ESTA pestaña. Se separa de logout() para que el handler de 'storage' pueda
    bloquear sin volver a emitir la señal: si el handler llamara a logout(), cada pestaña
    reemitiría al recibir y las pestañas rebotarían la señal entre sí. */
-function csLockLocal(){try{sessionStorage.removeItem('cs_auth');}catch(e){}try{if(typeof csActionsClose==='function')csActionsClose();}catch(e){}closeHelp();closeLegalNotice();var ls=document.getElementById('login-screen');if(ls)ls.style.display='flex';var li=document.getElementById('login-input');if(li){li.value='';setTimeout(function(){try{li.focus();}catch(e){}},120);}}
+/* #print-area se vacía acá y no es opcional. La regla de impresión es
+   body>*:not(#print-area){display:none!important}, y #login-screen es hijo directo de
+   <body>: al imprimir, la cortina se oculta y #print-area se muestra. La exportación de
+   pacientes (csExportarPDF) vuelca el informe ahí y NO lo limpia —no engancha afterprint,
+   a diferencia de rehabImprimir—, así que queda en el DOM hasta que se recargue. Sin este
+   vaciado, un Ctrl+P con la app BLOQUEADA imprime el último informe: nombre, CI, consultas
+   e imágenes. No hace falta consola: alcanza la vista previa de impresión. */
+function csLockLocal(){try{sessionStorage.removeItem('cs_auth');}catch(e){}try{var pa=document.getElementById('print-area');if(pa)pa.innerHTML='';}catch(e){}try{if(typeof csActionsClose==='function')csActionsClose();}catch(e){}closeHelp();closeLegalNotice();var ls=document.getElementById('login-screen');if(ls)ls.style.display='flex';var li=document.getElementById('login-input');if(li){li.value='';setTimeout(function(){try{li.focus();}catch(e){}},120);}}
 /* sessionStorage es POR PESTAÑA, así que cerrar sesión dejaba las demás pestañas abiertas
    y —a diferencia del esquema viejo, donde la marca era compartida y se caían al recargar—
    ya no había forma de revocarlas. Con dos pestañas abiertas (una por institución, o una
    olvidada), cerrar la de adelante daba sensación de sesión cerrada y la de atrás seguía
    con toda la base y el botón Exportar a un clic.
-   localStorage se usa acá sólo como CANAL DE SEÑAL —un timestamp, ningún dato clínico—:
-   el evento 'storage' llega a las otras pestañas del mismo origen, nunca a la que escribe. */
-function logout(){csLockLocal();try{localStorage.setItem('cs_logout_at',String(Date.now()));}catch(e){}}
-/* Se exige newValue: un removeItem de esta clave llegaría como null y bloquearía pestañas
-   sanas sin que nadie haya cerrado sesión. Por eso, además, cs_logout_at NO se purga nunca. */
-window.addEventListener('storage',function(e){if(e.key==='cs_logout_at'&&e.newValue)csLockLocal();});
+   La revocación tiene DOS mitades, y con una sola no alcanza:
+   a) el evento 'storage' avisa a las pestañas VIVAS en ese instante;
+   b) el contador cs_logout_n las revoca de forma DURABLE.
+   Sin (b), una pestaña cerrada antes del logout y reabierta con Ctrl+Shift+T —o restaurada
+   por «continuar donde lo dejaste», o descartada por falta de memoria y recargada— vuelve
+   con su sessionStorage intacto, no recibió el evento, y entra sin contraseña.
+   Es un CONTADOR y no un timestamp por dos razones: setItem no emite 'storage' si el valor
+   es idéntico al guardado (dos logouts en el mismo milisegundo no avisaban a nadie), y en
+   (b) hay que comparar, así que un reloj que se atrasa —NTP, cambio manual— daría por
+   válida una sesión ya revocada. Un contador que sólo sube no tiene ninguno de los dos
+   problemas. localStorage se usa sólo como canal de señal: ningún dato clínico. */
+/* El clamp no es paranoia de laboratorio. Si algo escribe 'Infinity' o '1e400' en la clave,
+   csLogoutN() devuelve Infinity, el incremento da String(Infinity) —idéntico al valor
+   guardado, así que setItem NO emite 'storage'— y el sello Infinity>=Infinity valida toda
+   sesión restaurada, para siempre. Forjar cs_auth abre UNA pestaña una vez; envenenar el
+   contador desactiva la revocación de forma persistente y silenciosa. CardioSalud tiene un
+   XSS abierto y conocido, que es exactamente el escritor de una sola vez que hace falta. */
+function csLogoutN(){try{var n=+(localStorage.getItem('cs_logout_n')||0);return (Number.isFinite(n)&&n>=0&&n<=1e9)?Math.floor(n):0;}catch(e){return 0;}}
+function logout(){
+  csLockLocal();
+  try{
+    localStorage.setItem('cs_logout_n',String(csLogoutN()+1));
+    /* COMPATIBILIDAD DE DESPLIEGUE — quitar cuando no queden pestañas con la versión previa.
+       La versión anterior escucha 'cs_logout_at' y no conoce 'cs_logout_n'. Sin esta línea,
+       durante la ventana de actualización cerrar sesión en una pestaña nueva NO bloquea una
+       vieja: el evento llega con otra clave y el handler viejo lo ignora. La pestaña de
+       adelante se ve cerrada, la de atrás queda con toda la base y Exportar a un clic, y
+       nada falla — que es justo el falso éxito que este bloque existe para evitar.
+       GitHub Pages sirve el index con cache corto pero las pestañas del consultorio viven
+       días, así que la ventana es real. El valor no lo lee nadie del código nuevo. */
+    localStorage.setItem('cs_logout_at',String(Date.now()));
+  }catch(e){
+    /* El catch NO puede quedar mudo. csLockLocal() ya corrió, así que la pestaña de adelante
+       se ve cerrada igual y el usuario recibe la misma señal de éxito mientras las otras
+       siguen abiertas. setItem tira QuotaExceededError con el origen lleno —y esta app
+       guarda toda la base y las imágenes en localStorage, así que es un estado alcanzable—
+       o SecurityError con los datos de sitio bloqueados. */
+    /* El aviso nombra las DOS mitades que fallaron. La escritura que no entró es la misma
+       para el evento y para el contador, así que además de no avisar a las pestañas vivas,
+       las sesiones restauradas siguen validando: mañana un Ctrl+Shift+T entra sin
+       contraseña. Un mensaje que sólo dijera «cerralas a mano» haría creer que cerrando lo
+       visible queda resuelto. */
+    var msg='Sesión cerrada SÓLO en esta pestaña.\n\nEl navegador rechazó la escritura (probablemente sin espacio), así que no se pudo avisar a las otras pestañas abiertas ni revocar las sesiones que el navegador restaure más adelante.\n\nCerrá las otras pestañas a mano y liberá espacio (exportá y borrá imágenes) antes de volver a cerrar sesión.';
+    /* El banner va además del alert y no en su lugar: este archivo tiene ~29 alert(), y con
+       que el usuario haya tildado una vez «impedir que esta página cree más diálogos», TODO
+       alert posterior se descarta en silencio —incluido éste— y volvemos al catch mudo.
+       El banner vive en la cortina de login, así que sigue ahí cuando el usuario vuelve. */
+    try{
+      var le=document.getElementById('login-error');
+      if(le){le.textContent='⚠️ No se pudo avisar a las otras pestañas ni revocar las sesiones restauradas. Cerralas a mano y liberá espacio.';le.style.display='block';}
+    }catch(e2){}
+    try{alert(msg);}catch(e2){}
+  }
+}
+/* Se exige newValue porque un removeItem llegaría como null y bloquearía pestañas sanas.
+   Ese guard es, además, lo que haría segura una purga; aun así cs_logout_n NO se purga
+   nunca, y ahora por un motivo de fondo: es el estado que revoca las sesiones restauradas.
+   Borrarlo devolvería el contador a 0 y volvería a validar toda sesión vieja.
+   Se acepta también 'cs_logout_at' —la clave de la versión anterior— para que una pestaña
+   vieja pueda bloquear a una nueva durante la ventana de actualización. Va junto con la
+   escritura de compatibilidad en logout(); las dos se sacan a la vez. */
+window.addEventListener('storage',function(e){if((e.key==='cs_logout_n'||e.key==='cs_logout_at')&&e.newValue)csLockLocal();});
 window.showLegalNotice=showLegalNotice;window.closeLegalNotice=closeLegalNotice;window.openHelp=openHelp;window.closeHelp=closeHelp;window.logout=logout;
 /* El aviso legal se muestra ANTES de escribir la marca de sesión, y la escritura va en
    try/catch: el acceso a storage lanza SecurityError si el navegador bloquea datos de sitio,
    y en el orden anterior esa excepción levantaba la cortina de login sin mostrar nunca el
    disclaimer médico-legal. */
-function checkLogin(){const val=document.getElementById('login-input').value;if(val===APP_PASS){document.getElementById('login-screen').style.display='none';showLegalNotice();try{sessionStorage.setItem('cs_auth','1');}catch(e){}}else{document.getElementById('login-error').style.display='block';document.getElementById('login-input').value='';document.getElementById('login-input').focus();}}
+/* Se sella la sesión con el valor del contador de logout AL MOMENTO de entrar. Cualquier
+   logout posterior sube el contador por encima de este sello y deja la sesión revocada,
+   aunque la pestaña se restaure más tarde y no haya recibido el evento 'storage'. */
+function checkLogin(){const val=document.getElementById('login-input').value;if(val===APP_PASS){document.getElementById('login-screen').style.display='none';showLegalNotice();try{sessionStorage.setItem('cs_auth','1');sessionStorage.setItem('cs_auth_n',String(csLogoutN()));}catch(e){}}else{document.getElementById('login-error').style.display='block';document.getElementById('login-input').value='';document.getElementById('login-input').focus();}}
 /* La sesión vive en sessionStorage, no en localStorage: dura lo que dura la PESTAÑA, no la
    instalación. Antes, cualquier computadora donde alguien hubiera entrado una vez quedaba
    abierta para siempre.
@@ -12482,16 +12558,33 @@ function checkLogin(){const val=document.getElementById('login-input').value;if(
    duplicar una pestaña y lo RESTAURA la restauración de sesión del navegador. Así que con
    «continuar donde lo dejaste» (Chrome), «todas las ventanas de la última sesión» (Safari),
    Ctrl+Shift+T o la recuperación tras un cierre inesperado, la marca vuelve con la pestaña
-   y NO se vuelve a pedir la contraseña. Cerrar el navegador no es un bloqueo: el bloqueo
-   confiable es el botón Cerrar. Un auto-bloqueo por inactividad sería lo que realmente
-   cubre la máquina desatendida en el consultorio; hoy no existe.
+   y NO se vuelve a pedir la contraseña. Cerrar el navegador no es un bloqueo. Lo que SÍ
+   revoca esas sesiones restauradas es el contador de logout, que se compara acá abajo: una
+   pestaña que se restaura con un sello viejo entra bloqueada aunque traiga cs_auth.
+   Dos límites del contador, para no confiar de más:
+   · si nunca se apretó Cerrar no hay nada que comparar, y la sesión restaurada entra sola;
+   · Safari (ITP) borra el localStorage de primera parte tras ~7 días sin interacción, y con
+     él el contador: los sellos viejos vuelven a validar. En iPad/Mac la revocación durable
+     tiene fecha de vencimiento, y eso no se arregla del lado del cliente.
+   Un auto-bloqueo por inactividad sería lo que realmente cubre la máquina desatendida en el
+   consultorio; hoy no existe.
    El try/catch no es decorativo: esto es una sentencia de nivel superior del <script>, y si
    el acceso a storage lanza (navegador con datos de sitio bloqueados) la excepción aborta
    TODO lo que sigue —buildInstScreen, initSyntax, atbInit, initTrials—. Como las funciones
    se hoistean, la app arranca con la interfaz completa pero sin estado y sin error visible. */
 (function initLogin(){
   var ok=false;
-  try{ ok=sessionStorage.getItem('cs_auth')==='1'; }catch(e){ ok=false; }
+  /* Las dos condiciones van juntas y en el mismo try: la marca de esta pestaña, y que el
+     sello de la sesión no haya quedado por debajo del contador global de logout. El >= hace
+     que una sesión sin sello (sessionStorage restaurado de una versión anterior, sello 0)
+     quede revocada en cuanto exista cualquier logout: falla cerrado, que es el lado correcto.
+     Ojo con la ASIMETRÍA deliberada de los catch: acá ok=false (falla cerrado) pero
+     csLogoutN() devuelve 0 (falla abierto). Si localStorage tirara y sessionStorage no,
+     el sello>=0 sería siempre cierto y la revocación durable desaparecería en silencio,
+     dejando sólo la autenticación por pestaña. En la práctica los navegadores bloquean los
+     dos a la vez. No "unificar" las dos polaridades sin pensar cuál es el lado seguro
+     de cada una: no es la misma pregunta. */
+  try{ ok=sessionStorage.getItem('cs_auth')==='1' && (+(sessionStorage.getItem('cs_auth_n')||0)||0)>=csLogoutN(); }catch(e){ ok=false; }
   /* Purga del esquema viejo: la marca que quedó persistida en localStorage ya no la lee nadie,
      pero no tiene por qué seguir viviendo en la máquina del consultorio. */
   try{ localStorage.removeItem('cs_auth'); }catch(e){}
