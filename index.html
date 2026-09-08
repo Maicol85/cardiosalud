@@ -13618,7 +13618,72 @@ function calcTablaRapida() {
     + '</div></div>';
 }
 
-var sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]');
+/* ══ Punto único de lectura/escritura de cardiosalud_syntax ══
+   El store se parseaba en DOS lugares —acá y adentro de renderGuardados— y se escribía en
+   otros dos. Sanear sólo en el render parecía suficiente y no lo era: si el usuario nunca
+   toca el select de dominancia, renderGuardados no corre, y al guardar un cálculo nuevo se
+   hace unshift sobre el array SIN sanear y se vuelve a persistir el payload tal cual. Es la
+   misma trampa del «saneo una sola vez» que ya apareció con crd_d_*, donde loadInst sanea y
+   exportarCardioAnalytics no. Con sxLoad/sxSave hay un solo borde y los cuatro sitios pasan
+   por él.
+   El try/catch tampoco es decorativo: esto es una sentencia de nivel superior del <script>, y
+   un JSON roto acá abortaba TODO lo que sigue en el bloque —initSyntax, el vademécum de
+   antibióticos, los trials—, dejando módulos vacíos cuyas funciones existen (se hoistean) y
+   fallan al llamarlas, sin nada visible más que una traza. */
+function sxLoad(){
+  var a;
+  try{ a = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]'); }catch(e){ a = []; }
+  if(!Array.isArray(a)) return [];
+  /* [null] es JSON válido y hacía reventar el map del render con el panel ya desplegado. */
+  a = a.filter(function(r){ return r && typeof r === 'object'; });
+  /* Los id se REPARAN, no se descartan —mismo criterio que migrateAndSanitizePatients—, y se
+     reparan también los duplicados: eliminarGuardado filtra por id, así que dos registros con
+     el mismo id se borran los DOS de un clic, sin confirmación y sin deshacer. Con id numérico
+     garantizado, el onclick inline deja de ser un sink: ahí esc() no protege, porque el parser
+     decodifica la entidad antes de compilar el handler. */
+  var max = 0;
+  a.forEach(function(r){ var n = csNumId(r.id); if(n !== null && n > max) max = n; });
+  /* Si el máximo observado ya está cerca del límite de enteros seguros, ++max deja de avanzar
+     (max+1 === max) y todos los registros reparados reciben el MISMO id, además de uno que
+     csNumId rechaza — con lo cual su botón de borrar queda muerto para siempre. En ese caso se
+     renumera todo desde 1: se pierde el id original, que no significa nada para el usuario,
+     y no se pierde ningún registro. */
+  var renumerarTodo = !Number.isSafeInteger(max + a.length + 1);
+  if(renumerarTodo) max = 0;
+  var vistos = new Set();
+  a.forEach(function(r){
+    var n = renumerarTodo ? null : csNumId(r.id);
+    if(n === null || vistos.has(n)) n = ++max;
+    r.id = n; vistos.add(n);
+    ['paciente','fecha','vasos','dm','obs','categoria','dominancia','segmentos'].forEach(function(k){
+      if(typeof r[k] !== 'string') r[k] = String(r[k] == null ? '' : r[k]);
+    });
+    /* score a número o null. No es sólo prolijidad: el color se elige con r.score<=22, y un
+       score null pasaba esa comparación (null se convierte a 0) y pintaba VERDE —o sea
+       «SYNTAX bajo, angioplastia aceptable»— un registro sin score utilizable. Un
+       undefined caía en el otro extremo y pintaba rojo. El mismo dato roto daba lecturas
+       clínicas opuestas según cómo faltara. */
+    /* null, undefined y '' se descartan ANTES del Number(). Number(null) es 0 y Number('') es
+       0 —no NaN—, así que un score ausente se convertía en 0, pasaba el <=22 y volvía a
+       pintarse VERDE: exactamente lo que este bloque existe para evitar. Sólo undefined da
+       NaN por sí solo. Lo cazó la prueba con el store envenenado, no la lectura del código. */
+    /* Chequeo por TIPO, no por lista de valores a excluir. La versión anterior excluía
+       null/undefined/'' y seguía dejando pasar false, [], '  ' y '0x10' —Number() los
+       convierte en 0 o en 16, no en NaN— así que un score ausente volvía a pintarse VERDE,
+       que es justo lo que este bloque existe para evitar. El rango 0..100 descarta además
+       negativos y magnitudes imposibles: SYNTAX I no define valores por encima de ~100. */
+    var s = (typeof r.score === 'number') ? r.score
+          : (typeof r.score === 'string' && /^\s*-?\d+(\.\d+)?\s*$/.test(r.score)) ? Number(r.score)
+          : NaN;
+    r.score = (Number.isFinite(s) && s >= 0 && s <= 100) ? s : null;
+  });
+  return a;
+}
+function sxSave(a){
+  try{ localStorage.setItem('cardiosalud_syntax', JSON.stringify(a)); return true; }
+  catch(e){ return false; }   // cuota llena: el que llama avisa, no se finge éxito
+}
+var sx1Guardados = sxLoad();
 
 function guardarEnCardioSalud() {
   const segs = getSegs();
@@ -13656,13 +13721,22 @@ function guardarEnCardioSalud() {
     }).join(', ')
   };
 
+  /* Se relee antes del unshift por lo mismo que eliminarGuardado: sx1Guardados puede estar
+     desactualizado respecto del disco, y como sxSave reescribe el array entero, guardar
+     desde dos pestañas hacía desaparecer el registro de la otra sin aviso. */
+  sx1Guardados = sxLoad();
   sx1Guardados.unshift(registro);
-  localStorage.setItem('cardiosalud_syntax', JSON.stringify(sx1Guardados));
+  /* Si el navegador rechaza la escritura (cuota llena: esta app guarda toda la base y las
+     imágenes en el mismo origen) NO se muestra el ✅. Antes la excepción escapaba y el
+     usuario no veía ni éxito ni error, con el registro sólo en memoria. */
+  const guardado = sxSave(sx1Guardados);
 
   const msg = document.getElementById('syn-sx1-save-msg');
   if (msg) {
-    msg.textContent = '✅ Guardado en CardioSalud — ' + paciente;
-    setTimeout(() => msg.textContent = '', 3000);
+    msg.textContent = guardado
+      ? '✅ Guardado en CardioSalud — ' + paciente
+      : '⚠️ No se pudo guardar: el almacenamiento del navegador está lleno. Liberá espacio y volvé a intentar.';
+    setTimeout(() => msg.textContent = '', 6000);
   }
 
   renderGuardados();
@@ -13676,27 +13750,50 @@ function renderGuardados() {
   const contenedor = document.getElementById('syn-sx1-guardados');
   if (!lista || !contenedor) return;
 
-  sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]');
+  sx1Guardados = sxLoad();
   if (sx1Guardados.length === 0) { contenedor.style.display = 'none'; return; }
 
   contenedor.style.display = 'block';
   lista.innerHTML = sx1Guardados.slice(0, 5).map(r => {
-    const color = r.score <= 22 ? 'var(--green)' : r.score <= 32 ? 'var(--amber)' : 'var(--red)';
+    /* Sin score utilizable se pinta gris y se muestra «—»: la banda verde/ámbar/roja es una
+       señal de estrategia de revascularización, y un verde inventado sobre un dato ausente
+       se lee como «SYNTAX bajo». sxLoad ya dejó score en número o null. */
+    const okN = typeof r.score === 'number' && Number.isFinite(r.score);
+    const color = !okN ? 'var(--muted)' : r.score <= 22 ? 'var(--green)' : r.score <= 32 ? 'var(--amber)' : 'var(--red)';
     return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(26,107,74,.2)">'
-      + '<div style="font-size:20px;font-weight:900;color:' + color + ';min-width:36px">' + r.score + '</div>'
+      + '<div style="font-size:20px;font-weight:900;color:' + color + ';min-width:36px">' + (okN ? esc(r.score) : '—') + '</div>'
       + '<div style="flex:1">'
-      + '<div style="font-size:13px;font-weight:700">' + r.paciente + '</div>'
-      + '<div style="font-size:11px;color:var(--green)">' + r.fecha + ' · ' + r.vasos + ' · ' + r.dm + '</div>'
-      + (r.obs ? '<div style="font-size:11px;color:var(--muted)">' + r.obs + '</div>' : '')
+      + '<div style="font-size:13px;font-weight:700">' + esc(r.paciente) + '</div>'
+      + '<div style="font-size:11px;color:var(--green)">' + esc(r.fecha) + ' · ' + esc(r.vasos) + ' · ' + esc(r.dm) + '</div>'
+      + (r.obs ? '<div style="font-size:11px;color:var(--muted)">' + esc(r.obs) + '</div>' : '')
       + '</div>'
-      + '<button onclick="eliminarGuardado(' + r.id + ')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px">✕</button>'
+      /* r.id va sin comillas dentro del handler: lo que lo hace seguro NO es un escape sino
+         que sxLoad garantiza que es un entero. esc() acá habría dado falsa tranquilidad. */
+      + '<button onclick="eliminarGuardado(' + r.id + ')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px" aria-label="Eliminar cálculo guardado">✕</button>'
       + '</div>';
   }).join('');
 }
 
+/* Se relee con sxLoad antes de filtrar: sx1Guardados podía estar desactualizado respecto del
+   disco (otra pestaña guardó en el medio) y al reescribir el array entero se perdía lo del
+   otro. Y se borra UNA sola coincidencia: antes filtraba por !==, así que dos registros con
+   el mismo id se iban los dos de un clic —y con .slice(0,5) el segundo podía ni estar en
+   pantalla—. sxLoad ya repara duplicados, esto es el cinturón. */
 function eliminarGuardado(id) {
-  sx1Guardados = sx1Guardados.filter(r => r.id !== id);
-  localStorage.setItem('cardiosalud_syntax', JSON.stringify(sx1Guardados));
+  const n = csNumId(id);
+  if (n === null) return;
+  sx1Guardados = sxLoad();
+  const i = sx1Guardados.findIndex(r => r.id === n);
+  if (i === -1) {
+    /* No callar: el usuario apretó ✕, el registro sigue en pantalla y sin esto no hay
+       forma de saber por qué. Pasa si otra pestaña tocó el store entre el dibujado y el clic. */
+    renderGuardados();
+    const m = document.getElementById('syn-sx1-save-msg');
+    if (m) { m.textContent = 'El listado cambió en otra pestaña. Se actualizó — volvé a intentar.'; setTimeout(function(){ m.textContent=''; }, 6000); }
+    return;
+  }
+  sx1Guardados.splice(i, 1);
+  if (!sxSave(sx1Guardados)) alert('No se pudo actualizar el almacenamiento del navegador.');
   renderGuardados();
 }
 
@@ -13733,7 +13830,23 @@ function toggleAcoStep(n){
 // ── Curva INR (seguimiento por paciente, localStorage) ──
 function acoInrKey(pid){ return 'cardiosalud_inr_'+pid; }
 function acoInrCurrentPid(){ const s=document.getElementById('aco-inr-patient'); return s && s.value ? s.value : null; }
-function acoInrLoad(pid){ try{ return JSON.parse(localStorage.getItem(acoInrKey(pid))||'[]'); }catch(e){ return []; } }
+/* Mismo tratamiento que sxLoad. Antes devolvía lo que hubiera: un objeto en vez de array
+   hacía tirar el .sort de la curva y la pestaña de anticoagulación quedaba sin dibujar, y
+   date/inr llegaban crudos a innerHTML en la tabla y en el tooltip. Se coercionan los cuatro
+   campos y se descarta lo que no sea objeto. */
+function acoInrLoad(pid){
+  var a;
+  try{ a = JSON.parse(localStorage.getItem(acoInrKey(pid))||'[]'); }catch(e){ return []; }
+  if(!Array.isArray(a)) return [];
+  return a.filter(function(d){ return d && typeof d === 'object'; }).map(function(d){
+    ['date','dose','note'].forEach(function(k){ if(typeof d[k] !== 'string') d[k] = String(d[k] == null ? '' : d[k]); });
+    /* inr a número o null: el color de la fila se elige con d.inr<2 / d.inr>3, y un valor no
+       numérico caía en la banda verde «en rango» —la misma trampa que el score del SYNTAX—. */
+    var v = (d.inr === null || d.inr === undefined || d.inr === '') ? NaN : Number(d.inr);
+    d.inr = (Number.isFinite(v) && v >= 0 && v <= 20) ? v : null;
+    return d;
+  });
+}
 function acoInrSave(pid, arr){ localStorage.setItem(acoInrKey(pid), JSON.stringify(arr)); }
 
 function acoInrPopulatePatients(){
@@ -13786,9 +13899,10 @@ function acoInrRenderList(){
   if(!data.length){ cont.innerHTML='<div class="aco-empty">Sin registros de INR. Cargá el primero con el formulario de arriba.</div>'; return; }
   let h='<div class="aco-tbl-wrap"><table class="aco-tbl"><thead><tr><th>Fecha</th><th>INR</th><th>Dosis (mg)</th><th>Nota</th><th></th></tr></thead><tbody>';
   data.forEach((d,i)=>{
-    const col = d.inr<2 ? 'var(--warn)' : (d.inr>3 ? 'var(--err)' : 'var(--ok)');
-    h+='<tr><td>'+d.date+'</td>'
-     + '<td style="font-weight:800;color:'+col+'">'+d.inr+'</td>'
+    const okI = typeof d.inr === 'number' && Number.isFinite(d.inr);
+    const col = !okI ? 'var(--txt2)' : d.inr<2 ? 'var(--warn)' : (d.inr>3 ? 'var(--err)' : 'var(--ok)');
+    h+='<tr><td>'+esc(d.date)+'</td>'
+     + '<td style="font-weight:800;color:'+col+'">'+(okI?esc(d.inr):'—')+'</td>'
      + '<td>'+(d.dose?esc(d.dose):'—')+'</td>'
      + '<td>'+(d.note?esc(d.note):'—')+'</td>'
      + '<td><button class="aco-btn aco-btn-sec" style="padding:3px 9px;font-size:.8rem" onclick="acoInrDelete('+i+')">✕</button></td></tr>';
@@ -13900,7 +14014,7 @@ function acoInrCanvasMove(e){
   let hit=null, best=120;
   canvas._points.forEach(p=>{ const dx=p.px-mx, dy=p.py-my, d2=dx*dx+dy*dy; if(d2<best){ best=d2; hit=p; } });
   if(!hit){ tip.style.display='none'; return; }
-  let html='📅 '+hit.d.date+'<br>INR: <b>'+hit.d.inr+'</b>';
+  let html='📅 '+esc(hit.d.date)+'<br>INR: <b>'+esc(hit.d.inr)+'</b>';
   if(hit.d.dose!=='' && hit.d.dose!=null) html+='<br>Dosis: '+esc(String(hit.d.dose))+' mg';
   if(hit.doseChanged) html+='<br>⚠️ Cambio de dosis'+(hit.prev && hit.prev.dose!=='' && hit.prev.dose!=null ? ' (antes '+esc(String(hit.prev.dose))+' mg)' : '');
   if(hit.d.note) html+='<br>📝 '+esc(hit.d.note);
