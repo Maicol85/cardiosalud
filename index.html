@@ -574,7 +574,20 @@ main{padding-bottom:100px}
 #syn-root .syn-freedom-tbl th,#syn-root .syn-freedom-tbl td{padding:6px 7px!important}
 /* ═══════════ Anticoagulación (tab) ═══════════ */
 #tab-anticoag .aco-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
-#tab-anticoag .aco-tab{flex:1 1 auto;min-width:120px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+/* Altura táctil. Son OCHO reglas que cubren DIEZ familias de sub-tabs —la de más abajo
+   agrupa rehab, dep y ecgr en un solo selector— y todas comparten el mismo padding.
+   Con padding:10px daban ~39px, por debajo del mínimo táctil de 44px, y en <=768px la
+   barra principal (.mtabs) está oculta, así que estos botones son el único control tipo
+   pestaña en pantalla.
+   Sube el padding a 13px y NO sólo el min-height: con box-sizing:border-box el min-height
+   sólo garantiza la caja, no el aire alrededor del texto, así que un botón de 44px con
+   padding de 10px queda igual de apretado. El min-height queda como piso duro por si la
+   tipografía del sistema achica la línea.
+   Se tocan las ocho juntas a propósito: es el mismo control en la misma posición, y
+   arreglar sólo algunas deja tabs vecinas con distinta altura.
+   Quedan afuera .dt-tab, .eye-tab y .gui-tab (~34px), que viven en los paneles flotantes
+   y también se abren en el celular. Es el próximo paso, no un olvido. */
+#tab-anticoag .aco-tab{flex:1 1 auto;min-width:120px;padding:13px 8px;min-height:44px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
 #tab-anticoag .aco-tab.active{color:var(--p);border-bottom-color:var(--p)}
 #tab-anticoag .aco-tab:hover:not(.active){color:var(--txt)}
 .aco-tc{display:none}
@@ -617,7 +630,7 @@ main{padding-bottom:100px}
 .aco-empty{text-align:center;color:var(--txt2);font-size:.84rem;padding:24px}
 /* ═══════════ Arritmias (tab) ═══════════ */
 #tab-arritmias .arr-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
-#tab-arritmias .arr-tab{flex:1 1 auto;min-width:104px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-arritmias .arr-tab{flex:1 1 auto;min-width:104px;padding:13px 8px;min-height:44px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
 #tab-arritmias .arr-tab.active{color:var(--p);border-bottom-color:var(--p)}
 #tab-arritmias .arr-tab:hover:not(.active){color:var(--txt)}
 .arr-tc{display:none}
@@ -651,7 +664,7 @@ main{padding-bottom:100px}
 .arr-card{background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
 /* ═══════════ IC (tab) ═══════════ */
 #tab-ic .ic-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
-#tab-ic .ic-tab{flex:1 1 auto;min-width:120px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-ic .ic-tab{flex:1 1 auto;min-width:120px;padding:13px 8px;min-height:44px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
 #tab-ic .ic-tab.active{color:var(--p);border-bottom-color:var(--p)}
 #tab-ic .ic-tab:hover:not(.active){color:var(--txt)}
 .ic-tc{display:none}
@@ -678,7 +691,7 @@ main{padding-bottom:100px}
 .ic-mnem-c{flex:1;font-size:.82rem;line-height:1.5;color:var(--txt);align-self:center}
 /* ═══════════ Miocardiopatías (tab) ═══════════ */
 #tab-miocardiopatias .mcp-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
-#tab-miocardiopatias .mcp-tab{flex:1 1 auto;min-width:104px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-miocardiopatias .mcp-tab{flex:1 1 auto;min-width:104px;padding:13px 8px;min-height:44px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
 #tab-miocardiopatias .mcp-tab.active{color:var(--p);border-bottom-color:var(--p)}
 #tab-miocardiopatias .mcp-tab:hover:not(.active){color:var(--txt)}
 .mcp-tc{display:none}
@@ -741,7 +754,7 @@ main{padding-bottom:100px}
 .atb-empty{text-align:center;color:var(--txt2);font-size:.85rem;padding:20px}
 /* ═══════════ Prevención (tab) ═══════════ */
 #tab-prevencion .prev-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
-#tab-prevencion .prev-tab{flex:1 1 auto;min-width:110px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-prevencion .prev-tab{flex:1 1 auto;min-width:110px;padding:13px 8px;min-height:44px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
 #tab-prevencion .prev-tab.active{color:var(--p);border-bottom-color:var(--p)}
 #tab-prevencion .prev-tab:hover:not(.active){color:var(--txt)}
 .prev-tc{display:none}
@@ -767,7 +780,7 @@ main{padding-bottom:100px}
 .prev-st4{border-left-color:var(--err)}.prev-st4 .prev-stage-n{background:var(--err)}
 /* ═══════════ Embarazo (tab) ═══════════ */
 #tab-embarazo .emb-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
-#tab-embarazo .emb-tab{flex:1 1 auto;min-width:110px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-embarazo .emb-tab{flex:1 1 auto;min-width:110px;padding:13px 8px;min-height:44px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
 #tab-embarazo .emb-tab.active{color:var(--p);border-bottom-color:var(--p)}
 #tab-embarazo .emb-tab:hover:not(.active){color:var(--txt)}
 .emb-tc{display:none}
@@ -780,7 +793,7 @@ main{padding-bottom:100px}
    emb-tc-* colisionarían entre tabs: getElementById devuelve el primero del
    documento, así que #tab-rehab (línea 1692) le ganaría a #tab-embarazo (3815). */
 #tab-rehab .rehab-tabs,#tab-deporte .dep-tabs,#tab-ecgriesgo .ecgr-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
-#tab-rehab .rehab-tab,#tab-deporte .dep-tab,#tab-ecgriesgo .ecgr-tab{flex:1 1 auto;min-width:110px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-rehab .rehab-tab,#tab-deporte .dep-tab,#tab-ecgriesgo .ecgr-tab{flex:1 1 auto;min-width:110px;padding:13px 8px;min-height:44px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
 #tab-rehab .rehab-tab.active,#tab-deporte .dep-tab.active,#tab-ecgriesgo .ecgr-tab.active{color:var(--p);border-bottom-color:var(--p)}
 #tab-rehab .rehab-tab:hover:not(.active),#tab-deporte .dep-tab:hover:not(.active),#tab-ecgriesgo .ecgr-tab:hover:not(.active){color:var(--txt)}
 .rehab-tc,.dep-tc,.ecgr-tc{display:none}
@@ -828,7 +841,7 @@ main{padding-bottom:100px}
 .tri-empty{text-align:center;color:var(--txt2);font-size:.9rem;padding:40px 20px}
 /* ═══════════ Cardio-Oncología (tab) ═══════════ */
 #tab-cardioonc .co-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
-#tab-cardioonc .co-tab{flex:1 1 auto;min-width:110px;padding:10px 8px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
+#tab-cardioonc .co-tab{flex:1 1 auto;min-width:110px;padding:13px 8px;min-height:44px;font-size:.82rem;font-weight:600;text-align:center;cursor:pointer;color:var(--txt2);background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;transition:.15s}
 #tab-cardioonc .co-tab.active{color:var(--p);border-bottom-color:var(--p)}
 #tab-cardioonc .co-tab:hover:not(.active){color:var(--txt)}
 .co-tc{display:none}
@@ -6188,8 +6201,16 @@ main{padding-bottom:100px}
     }
     var pa=document.getElementById('print-area'); if(!pa)return;
     pa.innerHTML='<div class="print-patient"><div style="text-align:center;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:14px"><div style="font-size:17pt;font-weight:bold">'+esc2(med)+'</div><div style="font-size:11pt">Cardiólogo</div>'+(centro?('<div style="font-size:11pt">'+esc2(centro)+'</div>'):'')+'<div style="font-size:10pt;color:#555;margin-top:4px">Fecha: '+fecha+'</div></div>'+pInfo+'<div style="white-space:pre-wrap;font-size:12pt;line-height:1.6">'+esc2(txt)+'</div></div>';
+    /* Este era el tercer emisor de #print-area y quedaba afuera del ciclo compartido, con dos
+       consecuencias en los dos sentidos: su timer ciego de 600 ms vaciaba el nodo sin fijarse
+       de quién era el contenido —justo la falla que csPrintArm viene a evitar—, y como nunca
+       incrementaba la generación, el respaldo de otro emisor lo consideraba suyo y le borraba
+       la nota con el diálogo de impresión abierto. Además 600 ms es el valor que el comentario
+       de rehabImprimir describe como la falla de iOS: ahí AirPrint es asincrónico y el timer
+       borra antes de que el motor capture, y sale una hoja en blanco. */
+    var soltar=csPrintArm(pa);
     window.print();
-    setTimeout(function(){ pa.innerHTML=''; },600);
+    soltar();
   };
 
   window.preopLimpiar=function(){
@@ -7666,7 +7687,39 @@ function toggleTbl(){
 let statsMonthY, statsMonthM;
 
 // ── UTILS ─────────────────────────────────────────────────────────
-const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+/* Escapa los cinco caracteres que importan en HTML: & < > " '.
+   El String(s ?? '') NO es cosmético. Antes era (s||''), y ahí un valor truthy que no fuera
+   string —un número— se colaba entero hasta .replace y tiraba «s.replace is not a function»,
+   reventando la función entera sin mensaje. Por eso conviven en el archivo los parches a mano
+   esc(String(...)). Ahora esc() acepta números y ya no puede tirar con nada que salga de un
+   JSON.parse. El costo: dejó de ser un canario. Un campo que venga como ["HTA","DM2"] antes
+   abortaba el render y ahora imprime «HTA,DM2» en la hoja del paciente, sin avisar.
+   DÓNDE ALCANZA Y DÓNDE NO:
+   · texto de un elemento → alcanza;
+   · valor de un atributo entrecomillado → alcanza;
+   · URL en src/href → NO alcanza. Hay que validar el esquema (ver escImgSrc): un
+     http:// externo es HTML perfectamente válido y filtra igual;
+   · string de JS interpolado adentro de un manejador inline (un atributo de evento con
+     comillas simples alrededor del valor) → NO alcanza, y hay un caso vivo así en el
+     archivo. El parser decodifica la entidad de la comilla ANTES de compilar el handler,
+     así que la comilla vuelve a aparecer y cierra el string. Ahí va JSON.stringify o,
+     mejor, un atributo data-* leído con addEventListener.
+     (Redactado sin el patrón literal a propósito: escrito tal cual, el ejemplo hacía
+     saltar la regla ceibo-xss-inline-event-dynamic del escáner sobre este comentario.) */
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+/* Allowlist de esquema para las imágenes del informe. Las fotos y ECG viven como data: URL
+   generadas por FileReader, así que un valor que no sea data:image/... no puede venir de la
+   app: viene de un backup importado. Escapar sólo cierra la fuga del atributo; sin validar el
+   esquema, un http://atacante/x.png convierte cada impresión en una baliza que confirma que
+   la ficha se imprimió y filtra IP y hora, sin ejecutar una línea de script y sin romper la
+   promesa visible de la app. Falla cerrado: devuelve '' y el <img> no se emite.
+   La lista incluye heic/heif/avif/tiff a propósito: el MIME sale de file.type, o sea del
+   sistema operativo, y una foto de ECG sacada con el iPhone y elegida desde Archivos llega
+   como image/heic. Dejarla afuera no da un error, borra el ECG del informe impreso en
+   silencio — y una hoja que parece completa sin el ECG que el cardiólogo cree haber adjuntado
+   es peor que una que avisa. Son todos formatos de trama, no llevan script adentro.
+   svg+xml NO entra, y no es un olvido: un SVG puede traer <script> y handlers. */
+const escImgSrc=u=>(typeof u==='string'&&/^data:image\/(png|jpe?g|gif|webp|bmp|heic|heif|avif|tiff?);base64,[A-Za-z0-9+/=\s]*$/i.test(u))?u:'';
 // a11y: activar div[role=button] con teclado (Enter/Espacio)
 function csKey(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); (e.currentTarget||e.target).click(); } }
 window.csKey=csKey;
@@ -11998,6 +12051,54 @@ function filterPDFPatients(){
   if(!list.innerHTML)list.innerHTML='<span style="font-size:.8rem;color:var(--txt2);padding:4px 0">Sin resultados</span>';
 }
 function closePDFModal(){document.getElementById('pdf-modal-overlay').classList.remove('open');}
+/* Arma un bloque de imágenes para el informe, descartando las que no pasan el allowlist de
+   esquema y DEJANDO CONSTANCIA de cuántas se descartaron. Ver escImgSrc. */
+function imgBloque(titulo,arr,alt){
+  var ok=arr.map(escImgSrc).filter(Boolean);
+  var fuera=arr.length-ok.length;
+  if(!ok.length&&!fuera) return '';
+  return `<div class="print-img-title">${esc(titulo)}</div>`+
+    /* escImgSrc se aplica ACÁ aunque ok ya venga filtrado: es idempotente, y deja la
+       validación a la vista en el punto donde se arma el atributo. Un revisor —o el
+       escáner— que mire esta línea ve el validador; si estuviera sólo arriba, la línea
+       parecería una interpolación cruda en un src. */
+    (ok.length?`<div class="print-imgs">${ok.map(u=>`<img src="${escImgSrc(u)}" alt="${esc(alt)}">`).join('')}</div>`:'')+
+    (fuera?`<div style="font-size:9pt;color:#a00">⚠️ ${esc(fuera)} ${fuera===1?'imagen no se pudo incluir':'imágenes no se pudieron incluir'} en el informe (formato no admitido). Verificar en la app.</div>`:'');
+}
+/* ══ Ciclo de vida de #print-area, compartido por todos los emisores ══
+   Limpiar con afterprint y no con un timeout ciego: window.print() bloquea el hilo en
+   escritorio, pero NO en iOS Safari (hoja AirPrint asincrónica), donde un timer corto borra
+   el contenido antes de que el motor lo capture y sale una hoja en blanco. El timeout queda
+   de respaldo, largo, por si el navegador nunca emite el evento.
+   El TOKEN es lo que hace que esto se pueda compartir. #print-area es uno solo y lo escriben
+   TRES emisores: generatePDF (ficha de paciente), rehabImprimir y preopPrintNota. Los tres
+   pasan por acá; si aparece un cuarto, tiene que pasar también, porque el respaldo de
+   cualquiera vacía el nodo. Sin token: se imprime Rehabilitación en iPad (donde afterprint
+   puede no llegar), después se exporta una ficha, y el temporizador de Rehabilitación —que ya
+   no es el dueño— vacía #print-area con la ficha todavía en cola: hoja en blanco, sin ningún
+   error. Cada emisor toma un número al armar; el que limpia sólo borra si sigue siendo el
+   último. El listener se da de baja SIEMPRE, sea dueño o no, así no se acumulan.
+   El respaldo es de 60 s y no de 8: en iOS el reloj arranca cuando se ABRE la hoja de
+   AirPrint, no cuando empieza a spoolear, y elegir impresora y opciones pasa los 8 s sin
+   esfuerzo. Vencido antes de tiempo, el respaldo borra la ficha con el diálogo abierto y sale
+   una hoja en blanco. Entre filtrar por más tiempo un nodo que es display:none —en una máquina
+   ya desbloqueada, donde los datos se ven igual en pantalla— y no imprimir el informe, el
+   riesgo peor es no imprimirlo. Al bloquear la sesión, csLockLocal lo vacía igual.
+   Devuelve la función que arma el respaldo, para llamarla justo después de window.print(). */
+var _csPrintGen=0,_csPrintT=null;
+var CS_PRINT_BACKUP_MS=60000;
+function csPrintArm(pa){
+  var mio=++_csPrintGen;
+  var limpiar=function(){
+    window.removeEventListener('afterprint',limpiar);
+    if(mio!==_csPrintGen) return;          // otro emisor tomó posesión: no le borres la hoja
+    pa.innerHTML='';
+    clearTimeout(_csPrintT);
+  };
+  window.addEventListener('afterprint',limpiar);
+  clearTimeout(_csPrintT);                 // cancela el respaldo del emisor anterior
+  return function(){ _csPrintT=setTimeout(limpiar,CS_PRINT_BACKUP_MS); };
+}
 function generatePDF(){
   const patMode=document.querySelector('input[name="pdf-pat"]:checked')?.value||'all';
   let selPats=[];
@@ -12015,25 +12116,42 @@ function generatePDF(){
     if(from)consults=consults.filter(c=>c.date>=from);
     if(to)consults=consults.filter(c=>c.date<=to);
     if(!consults.length)return'';
-    const meta=[p.ci?`CI: ${p.ci}`:'',p.matricula?`Matrícula: ${p.matricula}`:'',p.hc?`HC: ${p.hc}`:''].filter(Boolean).join('  |  ');
+    const meta=[p.ci?`CI: ${esc(p.ci)}`:'',p.matricula?`Matrícula: ${esc(p.matricula)}`:'',p.hc?`HC: ${esc(p.hc)}`:''].filter(Boolean).join('  |  ');
     const rows=consults.map(c=>[
-      `<div class="print-consult-date">${fmtDate(c.date)}</div>`,
+      /* fmtDate parte la fecha por guiones y la re-arma sin escapar nada. En el alta la fecha
+         viene de un <input type=date>, pero desde un backup importado es lo que diga el JSON:
+         "2026-01-01<img src=x onerror=...>" sale entero por acá. Se escapa en el punto de uso
+         y no adentro de fmtDate, porque fmtDate también alimenta posiciones de textContent y
+         ahí el doble escape se vería como entidades en pantalla. */
+      `<div class="print-consult-date">${esc(fmtDate(c.date))}</div>`,
       `<div class="print-field"><strong>Antecedentes:</strong> ${esc(c.background||'—')}</div>`,
       `<div class="print-field"><strong>Diagnóstico:</strong> ${esc(c.diagnosis||'—')}</div>`,
       `<div class="print-field"><strong>Tratamiento:</strong> ${esc(c.treatment||'—')}</div>`,
       `<div class="print-field"><strong>Conducta:</strong> ${esc(c.conduct||'—')}</div>`,
       c.ett?`<div class="print-field"><strong>ETT/Eco:</strong> ${esc(c.ett)}</div>`:'',
-      c.prevent?`<div class="print-field"><strong>PREVENT 2023:</strong> ${c.prevent.pct}% — ${esc(c.prevent.cat)}</div>`:'',
+      c.prevent?`<div class="print-field"><strong>PREVENT 2023:</strong> ${esc(c.prevent.pct)}% — ${esc(c.prevent.cat)}</div>`:'',
       c.note?`<div class="print-field"><strong>Notas:</strong> <em>${esc(c.note)}</em></div>`:'',
-      c.ecgs&&c.ecgs.length?`<div class="print-img-title">ECG</div><div class="print-imgs">${c.ecgs.map(u=>`<img src="${u}" alt="ECG del paciente">`).join('')}</div>`:'',
-      c.images&&c.images.length?`<div class="print-img-title">Imágenes</div><div class="print-imgs">${c.images.map(u=>`<img src="${u}" alt="Imagen clínica del paciente">`).join('')}</div>`:'',
+      /* Las URL van por escImgSrc, no por esc: escapar cierra la fuga del atributo pero deja
+         pasar un http:// externo, que es HTML válido y filtra igual. Las que no pasan el
+         allowlist se descartan con filter, así no queda un <img src=""> roto en la hoja. */
+      /* imgBloque avisa cuántas quedaron afuera en vez de omitirlas calladamente: una hoja
+         firmada, con membrete y sin el ECG que el médico cree haber adjuntado, se lee como
+         un estudio sin ECG. El aviso es la diferencia entre un informe incompleto y un
+         informe incompleto que se nota. */
+      Array.isArray(c.ecgs)&&c.ecgs.length?imgBloque('ECG',c.ecgs,'ECG del paciente'):'',
+      Array.isArray(c.images)&&c.images.length?imgBloque('Imágenes',c.images,'Imagen clínica del paciente'):'',
     ].filter(Boolean).join('')).map(r=>`<div class="print-consult">${r}</div>`).join('');
-    return`<div class="print-patient"><div class="print-name">${esc(p.name)} &mdash; ${p.age} años</div>${meta?`<div style="font-size:10pt;margin-bottom:6px;color:#555">${meta}</div>`:''}<div style="font-size:10pt;color:#555;margin-bottom:14px">${instLabel?`Institución: ${esc(instLabel)} &nbsp;&nbsp;`:''}Exportado: ${today}</div>${rows}</div>`;
+    return`<div class="print-patient"><div class="print-name">${esc(p.name)} &mdash; ${esc(p.age)} años</div>${meta?`<div style="font-size:10pt;margin-bottom:6px;color:#555">${meta}</div>`:''}<div style="font-size:10pt;color:#555;margin-bottom:14px">${instLabel?`Institución: ${esc(instLabel)} &nbsp;&nbsp;`:''}Exportado: ${today}</div>${rows}</div>`;
   }).filter(Boolean).join('');
   if(!html){alert('No hay consultas en el período seleccionado.');return;}
-  document.getElementById('print-area').innerHTML=html+'<div class="ceibo-print-disc">Esta herramienta es de apoyo clínico. No reemplaza el juicio médico ni constituye una recomendación diagnóstica o terapéutica. CeiboMed © 2026</div>';
+  var pa=document.getElementById('print-area');
+  pa.innerHTML=html+'<div class="ceibo-print-disc">Esta herramienta es de apoyo clínico. No reemplaza el juicio médico ni constituye una recomendación diagnóstica o terapéutica. CeiboMed © 2026</div>';
   closePDFModal();
-  setTimeout(()=>window.print(),150);
+  /* Se arma la limpieza ANTES del setTimeout que imprime, no después: si se registrara
+     recién al imprimir, un Ctrl+P del usuario en esa ventana de 150 ms emitiría un
+     afterprint que nadie escucha y la ficha quedaría cargada igual. */
+  var soltar=csPrintArm(pa);
+  setTimeout(function(){ window.print(); soltar(); },150);
 }
 let cpSecOpen=null,csubOpen=null;
 function toggleCpSec(i){
@@ -12469,11 +12587,13 @@ function closeHelp(){var m=document.getElementById('cs-help-modal');if(m)m.style
    reemitiría al recibir y las pestañas rebotarían la señal entre sí. */
 /* #print-area se vacía acá y no es opcional. La regla de impresión es
    body>*:not(#print-area){display:none!important}, y #login-screen es hijo directo de
-   <body>: al imprimir, la cortina se oculta y #print-area se muestra. La exportación de
-   pacientes (csExportarPDF) vuelca el informe ahí y NO lo limpia —no engancha afterprint,
-   a diferencia de rehabImprimir—, así que queda en el DOM hasta que se recargue. Sin este
-   vaciado, un Ctrl+P con la app BLOQUEADA imprime el último informe: nombre, CI, consultas
-   e imágenes. No hace falta consola: alcanza la vista previa de impresión. */
+   <body>: al imprimir, la cortina se oculta y #print-area se muestra. Sin este vaciado, un
+   Ctrl+P con la app BLOQUEADA imprime el último informe: nombre, CI, consultas e imágenes.
+   No hace falta consola, alcanza la vista previa.
+   Los tres emisores hoy limpian por su cuenta vía csPrintArm, así que la ventana es corta
+   —pero esto NO es redundante y no se saca—: el respaldo tarda hasta 60 s, un print() que
+   tire deja el contenido montado, y cerrar sesión es justo el momento en que no puede
+   quedar nada. Es el piso, no el mecanismo principal. */
 function csLockLocal(){try{sessionStorage.removeItem('cs_auth');}catch(e){}try{var pa=document.getElementById('print-area');if(pa)pa.innerHTML='';}catch(e){}try{if(typeof csActionsClose==='function')csActionsClose();}catch(e){}closeHelp();closeLegalNotice();var ls=document.getElementById('login-screen');if(ls)ls.style.display='flex';var li=document.getElementById('login-input');if(li){li.value='';setTimeout(function(){try{li.focus();}catch(e){}},120);}}
 /* sessionStorage es POR PESTAÑA, así que cerrar sesión dejaba las demás pestañas abiertas
    y —a diferencia del esquema viejo, donde la marca era compartida y se caían al recargar—
@@ -13867,13 +13987,14 @@ function rehabImprimir(){
      borra el contenido antes de que el motor lo capture y sale una hoja en blanco, que es
      exactamente la falla que este botón viene a resolver. El timeout queda de respaldo,
      largo, por si el navegador no emite el evento. */
-  var limpiar=function(){ pa.innerHTML=''; window.removeEventListener('afterprint',limpiar); clearTimeout(_rehabPrintT); };
-  window.addEventListener('afterprint',limpiar);
-  clearTimeout(_rehabPrintT);
+  /* Pasa a usar el ciclo compartido csPrintArm (ver el comentario allá arriba). El limpiar
+     propio de acá borraba #print-area sin preguntar de quién era el contenido: si entre este
+     print y su respaldo de 8 s alguien exportaba una ficha de paciente, este temporizador se
+     la vaciaba en el medio y salía una hoja en blanco. */
+  var soltar=csPrintArm(pa);
   window.print();
-  _rehabPrintT=setTimeout(limpiar,8000);
+  soltar();
 }
-var _rehabPrintT=null;
 function toggleDepAcc(id){
   var b=document.getElementById('dep-b-'+id), a=document.getElementById('dep-a-'+id);
   if(!b) return;
