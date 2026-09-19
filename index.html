@@ -8513,7 +8513,17 @@ function exportBackup(){
       data[inst.id]= b ? Object.assign({}, b.crudo, {patients:b.patients, nextPid:b.nextPid, nextCid:b.nextCid})
                        : {patients:[],nextPid:11,nextCid:200};
     });
-    var obj={app:'CardioSalud',version:1,exported:new Date().toISOString(),insts:insts,data:data};
+    /* `syntax` y `doctor` entran al respaldo. Sin ellos, los cálculos SYNTAX guardados —que
+       llevan NOMBRE DE PACIENTE y observaciones clínicas— no estaban en ningún backup: se
+       perdían al resetear el navegador y no había forma de recuperarlos.
+       `sxLoad()` y no `localStorage.getItem`: es el punto único de lectura del store y además
+       sanea (repara ids, descarta entradas que no sean objeto). Se respalda lo saneado, que es
+       lo que la app usa.
+       version 2: el import acepta las dos. Un backup v1 no trae estas claves y se maneja abajo;
+       uno v2 abierto por una versión vieja de la app simplemente las ignora. */
+    var obj={app:'CardioSalud',version:2,exported:new Date().toISOString(),insts:insts,data:data,
+             syntax:(typeof sxLoad==='function'?sxLoad():[]),
+             doctor:(function(){try{return localStorage.getItem('cardiosalud_doctor')||'';}catch(e){return '';}})()};
     var blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
     var url=URL.createObjectURL(blob);
     var a=document.createElement('a');
@@ -8535,7 +8545,10 @@ function handleImportFile(file){
       alert('El archivo no es un backup válido de CardioSalud (faltan las claves "insts" y "data").');
       return;
     }
-    if(!confirm('Esto va a REEMPLAZAR TODAS las instituciones y pacientes guardados en este navegador por los del archivo importado.\n\nEs una acción IRREVERSIBLE. ¿Continuar?')) return;
+    /* El aviso NOMBRA los cálculos SYNTAX. Antes decía «instituciones y pacientes» y no los
+       mencionaba — y ahora sí se reemplazan, así que callarlo sería pedir permiso para menos
+       de lo que se va a destruir, en una acción declarada irreversible. */
+    if(!confirm('Esto va a REEMPLAZAR TODAS las instituciones, pacientes y cálculos SYNTAX guardados en este navegador por los del archivo importado.\n\nEs una acción IRREVERSIBLE. ¿Continuar?')) return;
     try{
       saveInsts(obj.insts); // escribe crd_insts
       // quita la lista legada para que getInsts() use la importada (ids consistentes con data)
@@ -8543,9 +8556,41 @@ function handleImportFile(file){
       Object.keys(obj.data).forEach(function(id){
         localStorage.setItem('crd_d_'+id, JSON.stringify(obj.data[id]));
       });
+      /* SYNTAX: se reemplaza SIEMPRE, y si el backup no lo trae se VACÍA. Es la mitad que
+         faltaba del «reemplazar todo»: hasta ahora el import no tocaba este store, así que
+         después de importar otro dataset la lista seguía mostrando los NOMBRES DE PACIENTE del
+         anterior. Un backup v1 no trae la clave, y dejarla intacta sería conservar justamente
+         los datos que el usuario acaba de pedir reemplazar.
+         Por `sxSave`, que es el punto único de escritura; `sxLoad` sanea al leer. */
+      /* Con respaldo directo si `sxSave` no estuviera: saltear el vaciado en silencio
+         reintroduciría exactamente la filtración que esto viene a cerrar, así que ante la duda
+         se borra la clave. Fallar cerrado. */
+      if(typeof sxSave==='function') sxSave(Array.isArray(obj.syntax)?obj.syntax:[]);
+      else { console.error('[import] sxSave no disponible; se vacía cardiosalud_syntax directo');
+             try{ localStorage.removeItem('cardiosalud_syntax'); }catch(e){} }
+      if(typeof sx1Guardados!=='undefined') sx1Guardados=(typeof sxLoad==='function')?sxLoad():[];
+      /* El médico sólo se repone si el backup lo trae. NO se borra cuando falta: es la
+         identidad del operador, no del dataset — la misma categoría que el tema y cs_auth, que
+         este import deja deliberadamente en paz. Borrarlo al importar un backup viejo le
+         vaciaría el encabezado del informe firmado sin que lo haya pedido. */
+      if(typeof obj.doctor==='string' && obj.doctor.trim()){
+        try{ localStorage.setItem('cardiosalud_doctor',obj.doctor); }catch(e){}
+        /* Con el ' ✏️' al final, igual que `loadDoctorName` y `editDoctorName`: es el
+           indicador de que el nombre se edita con un clic. Sin él, el encabezado quedaba
+           correcto pero el usuario perdía la señal de que era editable. */
+        var _lbl=document.getElementById('hdr-doctor-lbl');
+        if(_lbl) _lbl.textContent=obj.doctor+' ✏️';
+      }
       activeInst=null;
+      /* El panel de SYNTAX se repinta: su lista vive en el DOM desde antes del import y, sin
+         esto, seguía mostrando los registros del dataset anterior hasta recargar la página. */
+      try{ if(typeof renderGuardados==='function') renderGuardados(); }catch(e){}
       buildInstScreen();
-      alert('Importación completada: '+obj.insts.length+' institución(es) cargada(s).');
+      /* Se declara TAMBIÉN el recuento de SYNTAX, incluido el 0. Decir sólo las instituciones
+         dejaba invisible que el import vació —o repuso— la otra mitad de los datos. */
+      var _nSx=(typeof sx1Guardados!=='undefined'&&Array.isArray(sx1Guardados))?sx1Guardados.length:0;
+      alert('Importación completada: '+obj.insts.length+' institución(es) y '+_nSx+' cálculo(s) SYNTAX.'
+            + (obj.version===1||obj.syntax===undefined ? '\n\nEl archivo es de una versión anterior y no incluía cálculos SYNTAX: esa lista quedó vacía.' : ''));
     }catch(e){ alert('Error al aplicar el backup: '+(e&&e.message?e.message:e)); }
   };
   reader.readAsText(file);
