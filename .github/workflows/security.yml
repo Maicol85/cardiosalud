@@ -47,13 +47,14 @@ jobs:
       #   almacenado. Un gate que cubre un archivo de dos no es un gate.
       #   Con el bucle, un .html nuevo entra solo: no hay que acordarse de nada.
       #
-      # · Uno por invocación, y no `scan.py a.html b.html`: scan.py escribe el JS
-      #   extraído en un temporal cuyo nombre sale del DIRECTORIO, no del archivo.
-      #   Dos .html de la misma app colisionan y el segundo PISA al primero.
-      #   Medido: pasarle los dos juntos reportaba 16 hallazgos —los de la
-      #   calculadora— y los 103 de index.html desaparecían con un ✅ verde.
-      #   Su propia guarda de denominador no lo caza, porque al pisarse el archivo
-      #   el mapeo colapsa al mismo tamaño y la comparación da falso.
+      # · Uno por invocación. Nació como rodeo de un bug de scan.py —el temporal se
+      #   nombraba por el DIRECTORIO, así que dos .html de la misma app colisionaban
+      #   y el segundo pisaba al primero: pasarle los dos juntos reportaba 16 y los
+      #   103 de index.html desaparecían con un ✅—. ESE BUG YA ESTÁ ARREGLADO: hoy
+      #   `scan.py a.html b.html` reporta los dos por separado.
+      #   El bucle se conserva por otra razón: AÍSLA. Si Semgrep se cae con un
+      #   archivo, los demás igual se escanean y el reporte dice cuál falló, en vez
+      #   de perderse la corrida entera.
       - name: Escanear TODOS los .html con las reglas CeiboMed
         run: |
           set -u
