@@ -8354,13 +8354,38 @@ function renderCal(){
 
 // ── INSTITUCIONES ────────────────────────────────────────────────
 const DEFAULT_INSTS=[{id:'mutualista',label:'Centro 1',icon:'🏥'},{id:'hospital',label:'Centro 2',icon:'🏨'},{id:'particulares',label:'Centro 3',icon:'👤'}];
+/* Los DOS parseos van con guarda, y el resultado se valida por forma. Esta función es de lo
+   que depende TODO: la pantalla de instituciones, el export, la exportación a Analytics, el
+   resumen del buscador y el panel de auditoría la llaman. Un `crd_insts` truncado —una
+   escritura a medias, un backup editado a mano— hacía que lanzara acá y la app se quedaba sin
+   pantalla de inicio, sin más rastro que una traza en consola.
+   Y no alcanzaba con el try: `centros.some(c=>c.trim())` revienta igual si lo parseado no es
+   un array, o si sus elementos no son strings. Lo mismo del otro lado: un `crd_insts` que
+   parsee a objeto pasaba el `||` —un objeto es truthy— y el `.map` de los llamadores tiraba
+   después, lejos de acá, que es donde cuesta encontrarlo. */
 function getInsts(){
-  const centros=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null');
-  if(centros&&centros.some(c=>c.trim())){
+  let centros=null;
+  try{ centros=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null'); }
+  catch(e){ console.error('[getInsts] cardiosalud_centros ilegible', e); }
+  if(Array.isArray(centros)&&centros.some(c=>typeof c==='string'&&c.trim())){
     const icons=['🏥','🏨','👤','🏢'];
-    return centros.reduce((a,c,i)=>{if(c.trim())a.push({id:'centro_'+i,label:c.trim(),icon:icons[i]});return a;},[]);
+    return centros.reduce((a,c,i)=>{if(typeof c==='string'&&c.trim())a.push({id:'centro_'+i,label:c.trim(),icon:icons[i]||'🏥'});return a;},[]);
   }
-  return JSON.parse(localStorage.getItem('crd_insts')||'null')||DEFAULT_INSTS.map(i=>({...i}));
+  let insts=null;
+  try{ insts=JSON.parse(localStorage.getItem('crd_insts')||'null'); }
+  catch(e){ console.error('[getInsts] crd_insts ilegible', e); }
+  if(Array.isArray(insts)){
+    /* Se filtra por forma y se DECLARA lo descartado. Una institución sin id rompe
+       `crd_d_`+id —la clave del bloque de pacientes— así que dejarla pasar equivale a perder
+       su historia; descartarla en silencio, a no saber por qué desapareció. */
+    const ok=insts.filter(x=>x&&typeof x==='object'&&typeof x.id==='string'&&x.id.trim());
+    if(ok.length!==insts.length) console.error('[getInsts] se descartaron '+(insts.length-ok.length)+' institución(es) sin id utilizable');
+    /* Un array VACÍO se devuelve vacío y no cae al default: el usuario puede haber borrado
+       todas a propósito, y repoblarle los tres centros de fábrica sería deshacerle una
+       decisión. Al default se cae sólo si la clave falta o no es un array. */
+    return ok;
+  }
+  return DEFAULT_INSTS.map(i=>({...i}));
 }
 function saveInsts(a){localStorage.setItem('crd_insts',JSON.stringify(a));}
 function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JSON.stringify({patients,nextPid,nextCid}));}
@@ -8452,7 +8477,12 @@ function csAvisoReparacion(n){try{
   if(t)t.textContent=msg; else el.textContent=msg;   // textContent, nunca innerHTML
   el.style.display='';
   console.warn('[CardioSalud] '+msg);                // además queda el rastro para depurar
-}catch(e){}}
+}catch(e){
+  /* El aviso de reparación es lo único que le dice al médico que la base que acaba de abrir no
+     estaba sana. Si el banner no se puede construir, el hecho no puede perderse también: se
+     baja a consola, que es peor canal pero no es ninguno. */
+  console.error('[csAvisoReparacion] no se pudo mostrar el aviso de reparación de '+n+' identificador(es)', e);
+}}
 // Exporta TODAS las instituciones + sus pacientes a un unico JSON. Usa getInsts()
 // (fuente real de la lista) y lee el bloque crd_d_<id> de cada una. No incluye cs_auth.
 // Exporta para CeiboAnalytics: aplana TODAS las instituciones -> pacientes -> consultas
@@ -12921,7 +12951,15 @@ window.showLegalNotice=showLegalNotice;window.closeLegalNotice=closeLegalNotice;
 /* Se sella la sesión con el valor del contador de logout AL MOMENTO de entrar. Cualquier
    logout posterior sube el contador por encima de este sello y deja la sesión revocada,
    aunque la pestaña se restaure más tarde y no haya recibido el evento 'storage'. */
-function checkLogin(){const val=document.getElementById('login-input').value;if(val===APP_PASS){document.getElementById('login-screen').style.display='none';showLegalNotice();try{sessionStorage.setItem('cs_auth','1');sessionStorage.setItem('cs_auth_n',String(csLogoutN()));}catch(e){}}else{document.getElementById('login-error').style.display='block';document.getElementById('login-input').value='';document.getElementById('login-input').focus();}}
+function checkLogin(){const val=document.getElementById('login-input').value;if(val===APP_PASS){document.getElementById('login-screen').style.display='none';showLegalNotice();try{sessionStorage.setItem('cs_auth','1');sessionStorage.setItem('cs_auth_n',String(csLogoutN()));}catch(e){
+  /* Este catch NO es best-effort como los del foco o el scroll: si el sello no se escribe, el
+     usuario entra igual —la pantalla ya se ocultó— pero la próxima carga o pestaña lo manda de
+     vuelta al login sin explicación, porque csAuthOk() no encuentra la marca. Pasa con el
+     almacenamiento bloqueado (modo privado de algunos navegadores, cuota llena). Al menos que
+     quede la traza: sin ella, el síntoma es «la app me pide la clave todo el tiempo» y no hay
+     por dónde empezar a mirar. */
+  console.error('[checkLogin] no se pudo sellar la sesión en sessionStorage', e);
+}}else{document.getElementById('login-error').style.display='block';document.getElementById('login-input').value='';document.getElementById('login-input').focus();}}
 /* La sesión vive en sessionStorage, no en localStorage: dura lo que dura la PESTAÑA, no la
    instalación. Antes, cualquier computadora donde alguien hubiera entrado una vez quedaba
    abierta para siempre.
@@ -13048,8 +13086,13 @@ function calcHESTIA(){
 
 // ── Editar centros ────────────────────────────────────────────
 function openCentrosModal(){
-  const saved=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null');
-  const vals=saved||(DEFAULT_INSTS.slice(0,3).map(i=>i.label).concat(['']));
+  /* Mismo criterio que getInsts: con guarda y exigiendo array. Sin esto, un valor corrupto
+     lanzaba al ABRIR el modal, así que el usuario no podía ni entrar a corregir los centros
+     —justamente la pantalla que sirve para arreglarlos—. */
+  let saved=null;
+  try{ saved=JSON.parse(localStorage.getItem('cardiosalud_centros')||'null'); }
+  catch(e){ console.error('[openCentrosModal] cardiosalud_centros ilegible', e); }
+  const vals=Array.isArray(saved)?saved:(DEFAULT_INSTS.slice(0,3).map(i=>i.label).concat(['']));
   for(let i=1;i<=4;i++)document.getElementById('ct'+i).value=vals[i-1]||'';
   document.getElementById('centros-modal-overlay').style.display='flex';
   setTimeout(()=>document.getElementById('ct1').focus(),50);
@@ -14872,7 +14915,11 @@ function calcMcpHcm(){
 <script>
 /* ═══ Auditoría individual — estadísticas desde localStorage (crd_insts + crd_d_<id>) ═══ */
 function csAuditPatients(){
-  try{ if(typeof saveInst==='function') saveInst(); }catch(e){}   // persistir institución activa antes de leer
+  /* Si este guardado falla, la auditoría se calcula sobre lo que hay EN DISCO, que es anterior
+     a lo que el médico tiene en pantalla — y el panel lo presenta como el estado actual. No se
+     aborta (un panel con datos de hace un minuto sigue siendo útil), pero deja de ser mudo. */
+  try{ if(typeof saveInst==='function') saveInst(); }
+  catch(e){ console.error('[csAuditPatients] no se pudo persistir la institución activa; la auditoría puede no reflejar los últimos cambios', e); }
   var insts=[];
   try{ insts=(typeof getInsts==='function')?getInsts():(JSON.parse(localStorage.getItem('crd_insts')||'null')||[]); }catch(e){ insts=[]; }
   if(!insts.length && typeof DEFAULT_INSTS!=='undefined') insts=DEFAULT_INSTS;
