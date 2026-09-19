@@ -7898,13 +7898,12 @@ function updateSearchStats(q){
   const fieldCounts=fieldDefs.map(f=>({label:f.label,n:new Set(queryRows.filter(r=>f.fn(r)).map(r=>r.pid)).size})).filter(f=>f.n>0);
   const insts=getInsts();
   const instData=insts.map(inst=>{
-    const raw=localStorage.getItem('crd_d_'+inst.id);if(!raw)return null;
-    let d;try{d=JSON.parse(raw);}catch(e){return null;}
-    /* Guardas equivalentes a las de loadInst. Este es el SEGUNDO lector de crd_d_*, y corre
-     desde render() antes de escribir la tabla: sin Array.isArray, un patients que no sea
-     array —o un paciente sin consultations— tiraba acá y la tabla no se dibujaba en
-     NINGUNA institución, sin más rastro que una traza en consola. */
-  const pats=Array.isArray(d.patients)?d.patients:[];if(!pats.length)return null;
+    /* Por `readInstBlob`, que parsea CON GUARDA y sanea. Antes parseaba crudo y las guardas
+       se repetían acá a mano — y aun así faltaba la que importa en esta función: un `p.name`
+       que no fuera string hacía reventar el `.toLowerCase()` de tres líneas más abajo, y la
+       tabla no se dibujaba en NINGUNA institución. */
+    const b=readInstBlob(inst.id);if(!b)return null;
+    const pats=b.patients;if(!pats.length)return null;
     const rows2=[];pats.forEach(p=>(Array.isArray(p&&p.consultations)?p.consultations:[]).forEach(c=>rows2.push({name:p.name,pid:p.id,ci:p.ci||'',hc:p.hc||'',...c})));
     const mPids=new Set(rows2.filter(r=>
       r.name.toLowerCase().includes(qLow)||(r.diagnosis||'').toLowerCase().includes(qLow)||
@@ -8365,6 +8364,38 @@ function getInsts(){
 }
 function saveInsts(a){localStorage.setItem('crd_insts',JSON.stringify(a));}
 function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JSON.stringify({patients,nextPid,nextCid}));}
+/* ══ PUNTO ÚNICO DE LECTURA DE crd_d_* ═══════════════════════════════════════════════════════
+   Había CINCO lectores del blob y sólo uno saneaba. `loadInst` pasaba por
+   `migrateAndSanitizePatients`; el resumen del buscador, `exportarCardioAnalytics`,
+   `exportBackup` y `csAuditPatients` parseaban crudo. O sea que un id hostil o una forma
+   corrupta sobrevivían por cuatro caminos — y el primero de ellos manda los datos a
+   CeiboAnalytics, que es OTRA frontera de confianza.
+
+   El daño no es XSS: `migrateAndSanitizePatients` repara ids y FORMA, no escapa HTML (de eso
+   se ocupa `esc()` al pintar). Lo que evita es concreto: un `p.name` que no sea string hace
+   reventar el `.toLowerCase()` del buscador y del panel de auditoría, y un id inválido viaja
+   como identificador a otra app.
+
+   Además parsea CON GUARDA. `loadInst` hacía `JSON.parse` pelado: con el store corrupto
+   lanzaba ahí y la institución no abría, sin más rastro que una traza en consola.
+
+   Devuelve `crudo` para que `exportBackup` pueda conservar claves que esta función no conoce:
+   hoy `saveInst` escribe sólo las tres, pero un backup importado puede traer otras y perderlas
+   en la exportación siguiente sería una pérdida silenciosa. */
+function readInstBlob(instId){
+  var raw=null;
+  try{ raw=localStorage.getItem('crd_d_'+instId); }catch(e){ console.error('[readInstBlob] storage', e); return null; }
+  if(!raw) return null;
+  var d=null;
+  try{ d=JSON.parse(raw); }catch(e){ console.error('[readInstBlob] JSON ilegible en crd_d_'+instId, e); return null; }
+  if(!d || typeof d!=='object' || Array.isArray(d)) return null;
+  var pats=Array.isArray(d.patients)?d.patients:[];
+  /* Sanea SIEMPRE, también para los lectores de sólo lectura: el objeto viene de un parseo
+     fresco, así que mutarlo no toca el estado de la app ni lo que hay en disco. */
+  var reparados=migrateAndSanitizePatients(pats);
+  return { patients:pats, nextPid:csNumId(d.nextPid), nextCid:csNumId(d.nextCid),
+           reparados:reparados, crudo:d };
+}
 /* migrateAndSanitizePatients corrige EN EL LUGAR y devuelve cuántos id tuvo que reparar, no
    una lista nueva. Se hizo así a propósito: una función que mutara y además devolviera un
    array filtrado deja al que la llama sin asignar con los datos a medio sanear —ids corregidos
@@ -8373,10 +8404,14 @@ function saveInst(){if(activeInst)localStorage.setItem('crd_d_'+activeInst.id,JS
    nextPid/nextCid también se sanean acá: salen del mismo blob importado, y si llegan como
    texto el id siguiente pasa a ser una concatenación ("11"+1 = "111") y envenena la
    generación de id de forma permanente, sin ningún error. */
-function loadInst(inst){activeInst=inst;const d=JSON.parse(localStorage.getItem('crd_d_'+inst.id)||'null');
-  if(d){patients=Array.isArray(d.patients)?d.patients:[];nextPid=csNumId(d.nextPid);nextCid=csNumId(d.nextCid);}
-  else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;}
-  const reparados=migrateAndSanitizePatients(patients);
+function loadInst(inst){activeInst=inst;const b=readInstBlob(inst.id);
+  let reparados;
+  if(b){patients=b.patients;nextPid=b.nextPid;nextCid=b.nextCid;reparados=b.reparados;}
+  /* El saneo de la rama SAMPLE se conserva acá y no se delega: `readInstBlob` sólo ve lo que
+     hay en disco, y esta rama arma los datos de ejemplo en memoria. Sin esta llamada, los
+     contadores de abajo leerían ids que nadie garantizó que fueran números. */
+  else{patients=inst.id==='mutualista'?SAMPLE.map(p=>({...p,consultations:p.consultations.map(c=>({...c}))})):[];nextPid=11;nextCid=200;
+       reparados=migrateAndSanitizePatients(patients);}
   /* Los contadores son un PISO, no un respaldo. Antes sólo se recalculaban cuando venían
      corruptos, pero un contador VÁLIDO y demasiado bajo —"nextPid":1 sobre una base con ids
      1..50, que es lo que pasa al fusionar dos backups a mano— pasa el saneo intacto y el
@@ -8427,9 +8462,12 @@ function exportarCardioAnalytics(){
     var insts=getInsts();
     var estudios=[];
     insts.forEach(function(inst){
-      var raw=localStorage.getItem('crd_d_'+inst.id);
-      var d= raw ? JSON.parse(raw) : null;
-      var patients=(d && Array.isArray(d.patients)) ? d.patients : [];
+      /* Por `readInstBlob`: ésta es la frontera hacia CeiboAnalytics, o sea el lector donde
+         un id sin sanear deja de ser un problema local y se convierte en el identificador con
+         el que OTRA app va a guardar el estudio. Además el JSON.parse iba sin guarda: un blob
+         corrupto en una institución cualquiera tiraba y se perdía la exportación entera. */
+      var b=readInstBlob(inst.id);
+      var patients= b ? b.patients : [];
       patients.forEach(function(p){
         var cons=(p && Array.isArray(p.consultations)) ? p.consultations : [];
         cons.forEach(function(c){
@@ -8465,8 +8503,15 @@ function exportBackup(){
     var insts=getInsts();
     var data={};
     insts.forEach(function(inst){
-      var raw=localStorage.getItem('crd_d_'+inst.id);
-      data[inst.id]= raw ? JSON.parse(raw) : {patients:[],nextPid:11,nextCid:200};
+      /* Por `readInstBlob`, así el respaldo guarda los ids YA REPARADOS: son los mismos que la
+         app muestra en pantalla, porque `loadInst` aplica la misma reparación al abrir. Un
+         backup con los ids corruptos se reimporta y vuelve a repararse distinto.
+         Se preserva `crudo` con spread para no perder claves que esta función no conozca: hoy
+         `saveInst` escribe sólo las tres, pero un backup importado puede traer otras y
+         descartarlas en la exportación siguiente sería una pérdida silenciosa. */
+      var b=readInstBlob(inst.id);
+      data[inst.id]= b ? Object.assign({}, b.crudo, {patients:b.patients, nextPid:b.nextPid, nextCid:b.nextCid})
+                       : {patients:[],nextPid:11,nextCid:200};
     });
     var obj={app:'CardioSalud',version:1,exported:new Date().toISOString(),insts:insts,data:data};
     var blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
@@ -14789,9 +14834,12 @@ function csAuditPatients(){
   var all=[];
   insts.forEach(function(inst){
     try{
-      var raw=localStorage.getItem('crd_d_'+inst.id); if(!raw)return;
-      var d=JSON.parse(raw); var ps=(d&&Array.isArray(d.patients))?d.patients:[];
-      ps.forEach(function(p){ all.push(p); });
+      /* Por `readInstBlob`. El catch de abajo se conserva, pero ya no es la única red: antes
+         un blob corrupto en UNA institución se tragaba en silencio y el panel de auditoría
+         calculaba sobre las demás como si estuvieran todas — un denominador incompleto
+         presentado como completo. Ahora el parseo falla adentro, deja traza y devuelve null. */
+      var b=readInstBlob(inst.id); if(!b)return;
+      b.patients.forEach(function(p){ all.push(p); });
     }catch(e){}
   });
   return all;
