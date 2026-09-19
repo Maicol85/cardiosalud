@@ -1,0 +1,81 @@
+name: CeiboMed Security (Semgrep)
+
+# Se ejecuta en cada push (cualquier rama) y permite corrida manual desde la pestaña Actions.
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read   # mínimo indispensable; el workflow solo lee el código
+
+jobs:
+  semgrep:
+    name: Escaneo Semgrep (reglas CeiboMed)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar Semgrep (misma versión que local)
+        run: pip install semgrep==1.172.0
+
+      # ⚠️ `.ceibomed-security/` es una COPIA de la herramienta de la suite, que vive
+      # en ~/Desktop/APLICACIONES/.ceibomed-security/. Cada app es su propio repo, así
+      # que cada una necesita la suya — y por eso se desincronizan.
+      # Ya pasó: la copia de esta app se quedó en agosto, con 13 reglas contra 21 y sin
+      # `--max-target-bytes`. Le faltaban justo las dos que se agregaron en septiembre
+      # para que el XSS cerrado no volviera. Medido: reportaba 89 hallazgos donde la
+      # canónica reporta 103 — un gate más flojo que el chequeo local, que es la peor
+      # forma de tenerlo, porque pasa en verde lo que localmente falla.
+      # Al tocar reglas o scan.py en la suite, volver a copiarlos acá.
+      - name: Verificar que la herramienta está presente
+        run: |
+          test -f .ceibomed-security/scan.py || { echo "❌ Falta .ceibomed-security/scan.py"; exit 1; }
+          test -f .ceibomed-security/ceibomed-rules.yml || { echo "❌ Falta el ruleset"; exit 1; }
+          echo "Reglas en el ruleset: $(grep -c '^  - id:' .ceibomed-security/ceibomed-rules.yml)"
+
+      # TODOS los .html, UNO POR INVOCACIÓN. Las dos cosas son a propósito:
+      #
+      # · Todos, y no "index.html": la app tenía una segunda página publicada
+      #   ("syntax calculator.html") que quedaba fuera del escaneo. Nadie la miró
+      #   durante meses y llegó a producción sin compuerta de sesión y con XSS
+      #   almacenado. Un gate que cubre un archivo de dos no es un gate.
+      #   Con el bucle, un .html nuevo entra solo: no hay que acordarse de nada.
+      #
+      # · Uno por invocación, y no `scan.py a.html b.html`: scan.py escribe el JS
+      #   extraído en un temporal cuyo nombre sale del DIRECTORIO, no del archivo.
+      #   Dos .html de la misma app colisionan y el segundo PISA al primero.
+      #   Medido: pasarle los dos juntos reportaba 16 hallazgos —los de la
+      #   calculadora— y los 103 de index.html desaparecían con un ✅ verde.
+      #   Su propia guarda de denominador no lo caza, porque al pisarse el archivo
+      #   el mapeo colapsa al mismo tamaño y la comparación da falso.
+      - name: Escanear TODOS los .html con las reglas CeiboMed
+        run: |
+          set -u
+          shopt -s nullglob
+          archivos=(*.html)
+          # Sin denominador no hay resultado: un bucle sobre cero archivos termina
+          # en verde y se lee como "no hay hallazgos".
+          if [ ${#archivos[@]} -eq 0 ]; then
+            echo "❌ No se encontró ningún .html en la raíz del repo."
+            exit 1
+          fi
+          echo "Archivos a escanear: ${#archivos[@]}"
+          fallo=0
+          for f in "${archivos[@]}"; do
+            echo "──────── $f ────────"
+            # Sin `|| fallo=1` el `set -e` implícito del runner cortaría en el primer
+            # archivo con ERROR y los siguientes no se escanearían: el reporte diría
+            # menos de lo que hay.
+            python3 .ceibomed-security/scan.py "$f" || fallo=1
+          done
+          exit $fallo
+        # scan.py sale 1 si hay hallazgos ERROR y 2 si no pudo escanear (Semgrep
+        # ausente, JSON ilegible, archivos omitidos). Cualquiera de los dos deja el
+        # job en rojo y dispara el mail de "workflow run failed".
+        # Los WARNING se listan y pasan en verde: son la línea base, no la alarma.

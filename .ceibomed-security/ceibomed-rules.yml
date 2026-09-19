@@ -1,0 +1,408 @@
+rules:
+  # ───────── XSS (equivalente p/xss, OWASP A03) ─────────
+  - id: ceibo-xss-innerhtml-concat
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      innerHTML asignado con concatenacion/template de variables. Riesgo de XSS
+      si el dato proviene del usuario. Escapar con esc()/escHtml o usar textContent.
+    metadata: { category: security, owasp: "A03:2021", cwe: "CWE-79" }
+    patterns:
+      - pattern-either:
+          - pattern: $EL.innerHTML = `...${$X}...`
+          - pattern: $EL.innerHTML = $A + $B
+          - pattern: $EL.innerHTML += `...${$X}...`
+          - pattern: $EL.innerHTML += $A + $B
+  - id: ceibo-xss-insertadjacenthtml
+    languages: [javascript]
+    severity: WARNING
+    message: insertAdjacentHTML con dato dinamico - posible XSS. Validar/escapar la entrada.
+    metadata: { category: security, owasp: "A03:2021", cwe: "CWE-79" }
+    pattern: $EL.insertAdjacentHTML($POS, $HTML)
+  - id: ceibo-xss-document-write
+    languages: [javascript]
+    severity: WARNING
+    message: document.write() es un sink de XSS y esta desaconsejado.
+    metadata: { category: security, owasp: "A03:2021", cwe: "CWE-79" }
+    pattern-either:
+      - pattern: document.write(...)
+      - pattern: document.writeln(...)
+  - id: ceibo-xss-outerhtml
+    languages: [javascript]
+    severity: WARNING
+    message: outerHTML asignado con dato dinamico - posible XSS.
+    metadata: { category: security, owasp: "A03:2021", cwe: "CWE-79" }
+    patterns:
+      - pattern-either:
+          - pattern: $EL.outerHTML = `...${$X}...`
+          - pattern: $EL.outerHTML = $A + $B
+  - id: ceibo-xss-inline-event-dynamic
+    languages: [generic]
+    severity: WARNING
+    message: Atributo de evento HTML construido con datos dinámicos; usar data-* y addEventListener.
+    metadata: { category: security, owasp: "A03:2021", cwe: "CWE-79" }
+    pattern-regex: '(?i)on(?:click|change|input|submit|focus|blur|load|error|mouseover|mouseenter|mouseleave|keydown|keyup)[^\n]{0,200}(?:\\["'']["'']?\s*\+\s*[A-Za-z_$]|\$\{)'
+  - id: ceibo-xss-event-property-dynamic
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      Propiedad de evento asignada con una CADENA: el navegador la compila como código.
+      Asignar una referencia a funcion (el.onclick = miHandler) o addEventListener.
+    metadata: { category: security, owasp: "A03:2021", cwe: "CWE-79" }
+    # Afinada 2026-09-09. La version anterior marcaba cualquier valor y daba 22 de 22 falsos
+    # positivos en la suite entera: `canc.onclick = cerrar`, `img.onerror = reject`,
+    # `i.onload = ()=>res(i)`, `$("mYes").onclick = null`. O sea que penalizaba justo el
+    # idioma correcto —asignar una REFERENCIA— y hasta el de limpiar un handler con null.
+    # Excluia la funcion inline pero no la referencia con nombre, que es la forma mas comun.
+    #
+    # El riesgo real es asignar una CADENA: eso el navegador lo compila. Se marca solo eso.
+    # Es un estrechamiento puro: no puede perder senal que la version anterior tuviera.
+    patterns:
+      - pattern-either:
+          - pattern: $EL.onclick = $VALUE
+          - pattern: $EL.onchange = $VALUE
+          - pattern: $EL.oninput = $VALUE
+          - pattern: $EL.onsubmit = $VALUE
+          - pattern: $EL.onerror = $VALUE
+          - pattern: $EL.onload = $VALUE
+      - pattern-either:
+          - pattern: $EL.$EVENT = "..."
+          - pattern: $EL.$EVENT = `...`
+          - pattern: $EL.$EVENT = `...${$X}...`
+          - pattern: $EL.$EVENT = $A + $B
+      - pattern-not: $EL.$EVENT = function (...) { ... }
+      - pattern-not: $EL.$EVENT = (...) => ...
+  - id: ceibo-xss-setattribute-event
+    languages: [javascript]
+    severity: WARNING
+    message: setAttribute crea un manejador inline dinámico; usar addEventListener.
+    metadata: { category: security, owasp: "A03:2021", cwe: "CWE-79" }
+    pattern-either:
+      - pattern: $EL.setAttribute("onclick", $VALUE)
+      - pattern: $EL.setAttribute("onchange", $VALUE)
+      - pattern: $EL.setAttribute("oninput", $VALUE)
+      - pattern: $EL.setAttribute("onsubmit", $VALUE)
+      - pattern: $EL.setAttribute("onerror", $VALUE)
+      - pattern: $EL.setAttribute("onload", $VALUE)
+  # ───────── Code injection (equivalente p/javascript, OWASP A03) ─────────
+  - id: ceibo-eval-use
+    languages: [javascript]
+    severity: ERROR
+    message: eval() ejecuta codigo arbitrario - evitar. Usar JSON.parse u otra alternativa.
+    metadata: { category: security, owasp: "A03:2021", cwe: "CWE-95" }
+    pattern: eval(...)
+  - id: ceibo-new-function
+    languages: [javascript]
+    severity: WARNING
+    message: new Function(...) equivale a eval - evitar construir codigo desde strings.
+    metadata: { category: security, owasp: "A03:2021", cwe: "CWE-95" }
+    pattern: new Function(...)
+  - id: ceibo-settimeout-string
+    languages: [javascript]
+    severity: WARNING
+    message: setTimeout/setInterval con string se evalua como codigo - pasar una funcion.
+    metadata: { category: security, cwe: "CWE-95" }
+    pattern-either:
+      - pattern: setTimeout("...", ...)
+      - pattern: setInterval("...", ...)
+  # ───────── Secrets (equivalente p/secrets, OWASP A07) ─────────
+  - id: ceibo-hardcoded-anthropic-key
+    languages: [generic]
+    severity: ERROR
+    message: Clave de API de Anthropic hardcodeada en el codigo fuente. Nunca commitear claves.
+    metadata: { category: security, owasp: "A07:2021", cwe: "CWE-798" }
+    pattern-regex: sk-ant-[A-Za-z0-9_\-]{12,}
+  - id: ceibo-hardcoded-generic-secret
+    languages: [generic]
+    severity: WARNING
+    message: Posible credencial/secreto asignado en el codigo (api key / password / token / secret).
+    metadata: { category: security, owasp: "A07:2021", cwe: "CWE-798" }
+    patterns:
+      - pattern-regex: (?i)(api[_-]?key|password|passwd|secret|token)\s*[:=]\s*["'][^"'\s]{12,}["']
+      - pattern-not-regex: (?i)(placeholder|example|your[_-]?key|xxxx|sk-ant-\.\.\.)
+  # ───────── Almacenamiento inseguro de secretos (OWASP A07) ─────────
+  - id: ceibo-secret-in-localstorage
+    languages: [generic]
+    severity: WARNING
+    message: >
+      Posible secreto (api key/token) guardado en localStorage: persiste en disco y es
+      accesible a cualquier script. Preferir sessionStorage o no persistir.
+    metadata: { category: security, owasp: "A07:2021", cwe: "CWE-522" }
+    pattern-regex: localStorage\.setItem\(\s*["'][^"']*(api[_-]?key|token|secret|password)[^"']*["']
+
+  # ───────── Estado de sesión persistido en disco (OWASP A07) ─────────
+  # La regla anterior mira SECRETOS; ésta mira el ESTADO DE LOGIN, que es otro defecto:
+  # no expone una credencial, deja la app abierta. Calibrada 2026-09-07 contra las 27
+  # apps de la suite: 0 falsos positivos, y detecta el bug de CardioSalud tal como estaba
+  # antes del arreglo (cs_auth en localStorage), además de resistsmart_auth y ts_auth.
+  - id: ceibo-auth-flag-in-localstorage
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      Marca de sesión/autenticación guardada o leída en localStorage. localStorage persiste
+      en disco y sobrevive al cierre del navegador: cualquier computadora donde alguien haya
+      entrado una vez queda abierta para siempre, sin volver a pedir la contraseña. Usar
+      sessionStorage, que dura lo que dura la pestaña. Ojo: sessionStorage se copia al
+      duplicar una pestaña y lo restaura la restauración de sesión del navegador, así que
+      tampoco equivale a "se cierra al cerrar el navegador"; el bloqueo confiable es el
+      botón de cerrar sesión, propagado entre pestañas con el evento 'storage'.
+      localStorage.removeItem() sobre estas claves NO se marca: borrar sólo puede bloquear
+      de más — es la corrección, no el defecto.
+    metadata:
+      category: security
+      owasp: "A07:2021"
+      cwe: "CWE-539"
+      references:
+        - https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html
+    patterns:
+      - pattern-either:
+          - pattern: localStorage.setItem($KEY, ...)
+          - pattern: localStorage.getItem($KEY)
+          - pattern: window.localStorage.setItem($KEY, ...)
+          - pattern: window.localStorage.getItem($KEY)
+      # El vocabulario va en INGLÉS a propósito. Estas apps están escritas en español, y ahí
+      # "sesion/sesiones" nombra la sesión clínica o el turno de trabajo —datos, no
+      # autenticación—: incluirlo marcaba sut_sesiones en triage, que es una colección de
+      # registros. Las marcas de auth de la suite caen todas por "auth", así que sacar
+      # "sesion" no pierde ningún verdadero positivo.
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: (?i)^["'](?!.*(theme|logo|color|idioma|lang)).*(auth|session|logged|login|signin|token)
+      # Segunda línea de defensa: una marca de sesión es un escalar ('1', true, un token).
+      # Un JSON.stringify es una colección de datos del dominio, no el estado de login.
+      - pattern-not: localStorage.setItem($KEY, JSON.stringify(...))
+
+  # ───────── URL en src/href sin validar el esquema (OWASP A03) ─────────
+  # Complementa a ceibo-xss-innerhtml-concat, que mira la concatenación en general.
+  # Ésta mira el caso que el escape NO cubre: escapar cierra la fuga del atributo, pero
+  # un http:// externo es HTML válido y filtra igual, sin ejecutar script.
+  # Calibrada 2026-09-07 contra las 27 apps: detecta los dos sinks del export de PDF de
+  # CardioSalud tal como estaban antes del arreglo, y 18 más repartidos en 8 apps.
+  - id: ceibo-url-sin-validar-esquema
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      URL interpolada en un atributo src/href sin validar el ESQUEMA. Escapar HTML no alcanza
+      acá: cierra la fuga del atributo, pero un http:// externo es HTML perfectamente válido y
+      convierte cada render en una baliza que confirma que la ficha se abrió y filtra IP y
+      hora, sin ejecutar una línea de script. En estas apps las imágenes son data: URL
+      generadas por FileReader, así que cualquier otra cosa viene de un backup importado.
+      Validar con una allowlist tipo escImgSrc y descartar lo que no pase. Excluir svg+xml,
+      que puede traer <script> adentro.
+    metadata:
+      category: security
+      owasp: "A03:2021"
+      cwe: "CWE-79"
+      confidence: MEDIUM
+    patterns:
+      - pattern-regex: (?i)\b(src|href)\s*=\s*"\$\{(?P<EXPR>[^}]*)\}"
+      # ya validada por una allowlist de esquema conocida
+      - pattern-not-regex: (?i)\b(src|href)\s*=\s*"\$\{[^}]*\b(escImgSrc|safeUrl|safeImgSrc|sanitizeUrl|validarUrl)\s*\(
+      # URL propias de la app, no atacante-controladas
+      - pattern-not-regex: (?i)\b(src|href)\s*=\s*"\$\{[^}]*\b(location\.origin|window\.location)\b
+
+  # ───────── Interpolación dentro de un string de JS en un handler inline (OWASP A03) ─────────
+  # El caso que esc() NO cubre y que por eso da falsa tranquilidad. Distinta de
+  # ceibo-xss-inline-event-dynamic, que marca cualquier interpolación en un on*: ésta marca
+  # sólo la que cae DENTRO de comillas simples, que es donde el escape es inútil.
+  # Severidad WARNING y no ERROR a propósito: quedan 7 casos preexistentes en CardioSalud que
+  # interpolan constantes de la app ('ecgs'/'images', fechas generadas internamente). En ERROR
+  # bloquearían todos los push por hallazgos benignos, y una regla que grita siempre se ignora.
+  # Cada hallazgo hay que triarlo: si el valor viene de datos del paciente, es explotable.
+  # Calibrada 2026-09-07: detecta el caso real de selectEyePatient tal como estaba antes del
+  # arreglo, y 70 en 9 apps de la suite.
+  - id: ceibo-interp-en-string-de-handler
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      Valor interpolado DENTRO de un string de JavaScript, adentro de un manejador inline
+      (onclick="f('${x}')"). Acá esc() no protege: el parser HTML decodifica &#39; ANTES de
+      compilar el handler, así que la comilla vuelve a aparecer, cierra el string y lo que
+      sigue se ejecuta. Un paciente llamado x');alert(1);// dispara al hacer clic — y el
+      escape además rompe cualquier apellido tipo O'Brien.
+      Solución: pasar el valor por un atributo data-* y leerlo con this.dataset (nunca se
+      parsea como código), o JSON.stringify si tiene que ir sí o sí en el handler.
+      Si el valor es una constante de la app y no dato del paciente, es un falso positivo.
+    metadata:
+      category: security
+      owasp: "A03:2021"
+      cwe: "CWE-79"
+      confidence: MEDIUM
+    patterns:
+      - pattern-regex: (?i)\son[a-z]+\s*=\s*"[^"]*'\$\{[^}]*\}'
+      - pattern-not-regex: (?i)\son[a-z]+\s*=\s*"[^"]*\bthis\.dataset\b
+
+  # ───────── JSON.parse de storage sin try/catch (fiabilidad) ─────────
+  # Causó dos defectos reales el 2026-09-08: el parse de cardiosalud_syntax era una
+  # sentencia de nivel superior y un JSON roto abortaba el resto del bloque —initSyntax,
+  # el vademécum de antibióticos y los trials quedaban sin inicializar—; y acoInrLoad
+  # devolvía lo que hubiera, así que un objeto en vez de array hacía tirar el .sort de la
+  # curva de INR. Calibrada contra las 27 apps: 9 hallazgos en 2 apps, sin falsos positivos.
+
+  - id: ceibo-jsonparse-storage-sin-guarda
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      JSON.parse sobre localStorage/sessionStorage sin try/catch. Un valor corrupto —una
+      escritura truncada, datos de otra app del mismo origen, un backup editado a mano— lanza
+      SyntaxError. Si esto está en una sentencia de nivel superior del <script>, la excepción
+      aborta TODO lo que sigue en el bloque: los módulos posteriores quedan sin inicializar,
+      sus funciones existen igual porque se hoistean, y la app arranca con la interfaz completa
+      y sin estado, sin más rastro que una traza en consola.
+      Envolver en try/catch con un valor por defecto. Y aprovechar el borde para sanear: si lo
+      parseado se espera array, verificar Array.isArray (un objeto hace tirar .map/.sort/.filter
+      más adelante, lejos de acá), y coercionar los campos que después van a innerHTML o a una
+      comparación numérica que decide una banda clínica.
+    metadata:
+      category: reliability
+      cwe: "CWE-248"
+      confidence: MEDIUM
+    patterns:
+      - pattern-either:
+          - pattern: JSON.parse($S.getItem(...))
+          - pattern: JSON.parse($S.getItem(...) || ...)
+          - pattern: JSON.parse(... || $S.getItem(...))
+      - metavariable-regex:
+          metavariable: $S
+          regex: ^(localStorage|sessionStorage|window\.localStorage|window\.sessionStorage)$
+      - pattern-not-inside: |
+          try { ... } catch($E) { ... }
+
+
+  # Agregada 2026-09-08 tras el selector de métodos de AVm de EcoSmart. El defecto llegó a
+  # estar escrito y verificado «en verde»: la prueba de extremo a extremo pasaba porque venía
+  # de correr calcEM(), que dejaba disabled=false. Sólo apareció al reimprimir DESPUÉS de un
+  # «Nuevo estudio». Es el mismo error de denominador que ya se pagó otras veces en esta suite.
+
+  - id: ceibo-checked-gateado-por-disabled
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      Se está gateando `.checked` —que SÍ se persiste con el estudio (patrón `<id>__chk`)— con
+      `.disabled`, que NO se persiste: no está en el HTML, guardarInforme no lo guarda y ninguna
+      ruta de restauración lo repone. Al reabrir o reimprimir un estudio, `.checked` vuelve con
+      el valor del paciente correcto y `.disabled` se queda con el del paciente ANTERIOR, así que
+      la condición da falso y el contenido desaparece del informe sin ningún aviso. Un informe
+      reimpreso deja de coincidir con el que se firmó.
+      Es especialmente traicionero porque la función que baja `disabled` suele ser un recálculo
+      (calcX) que NO corre en las rutas de reimpresión: ahí los campos se llenan asignando
+      `.value`, y eso no dispara `oninput`.
+      Gatear por el DATO (¿hay valor calculado?), no por el estado visual del control. `disabled`
+      es afford de interfaz, no estado del informe.
+    metadata:
+      category: correctness
+      cwe: "CWE-665"
+      confidence: MEDIUM
+    pattern-either:
+      - pattern: "$C.checked && !$C.disabled"
+      - pattern: "!$C.disabled && $C.checked"
+      # La cadena con guarda de existencia es la forma REAL en que aparece en esta suite
+      # (`!!(c && c.checked && !c.disabled)`), y `&&` asocia a la izquierda: el operando
+      # izquierdo pasa a ser `(c && c.checked)`, así que los dos patrones de arriba NO la
+      # matchean. Se descubrió porque la primera versión de esta regla no encontró el defecto
+      # que la motivó. Verificar SIEMPRE una regla nueva contra el código que la originó.
+      - pattern: "$A && $C.checked && !$C.disabled"
+      - pattern: "$A && !$C.disabled && $C.checked"
+      - pattern: "$C.checked === true && $C.disabled === false"
+      - pattern: "$C.disabled === false && $C.checked === true"
+
+  # Agregada 2026-09-08 tras la auditoría de la capa de imágenes. `guardar()` hacía
+  # `this.borrar(uuid).then(() => true)`: el borrado podía fallar y la función cantaba éxito,
+  # así que las imágenes que el médico había descartado reaparecían al reabrir el estudio.
+  # Es el mismo error que ya se pagó con `_persistir`, que devolvía true en el acto porque la
+  # escritura a IndexedDB es asíncrona.
+
+  - id: ceibo-then-descarta-resultado
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      El `.then()` descarta el resultado de la operación asíncrona y devuelve un literal fijo.
+      Si la operación falla —cuota llena, transacción abortada, base bloqueada por otra pestaña,
+      timeout de apertura— el llamador recibe «éxito» igual y canta un toast de confirmación
+      sobre algo que no ocurrió. En esta suite eso ya se tradujo dos veces en pérdida silenciosa:
+      un borrado que no borró deja el dato clínico vivo y reapareciendo, y un guardado que no
+      guardó deja al médico creyendo que el estudio está a salvo.
+      Propagar el resultado real (`.then(r => r)` o directamente devolver la promesa) y que el
+      llamador decida qué avisar.
+    metadata:
+      category: correctness
+      cwe: "CWE-252"
+      confidence: MEDIUM
+    pattern-either:
+      - pattern: "$P.then(() => true)"
+      - pattern: "$P.then(() => false)"
+      - pattern: "$P.then(function() { return true; })"
+      - pattern: "$P.then(function() { return false; })"
+      - pattern: "$P.then($X => true)"
+      - pattern: "$P.then($X => false)"
+
+  # Agregada 2026-09-08 con el selector de calidad de imagen. `imgSlots` pasó a llevar `_orig`
+  # —el dataURL SIN comprimir, varios MB— que vive sólo en memoria. Lo único que impide que
+  # llegue a IndexedDB es que CeiboImg.guardar mapee con allowlist explícita; un `{...slot}`
+  # ahí metería megabytes por imagen sin ningún síntoma salvo la barra de Config.
+
+  - id: ceibo-spread-hacia-persistencia
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      Se persiste un objeto con spread en vez de una allowlist explícita de campos. Lo que se
+      guarda pasa a ser «todo lo que el objeto tenga hoy», y basta con que alguien agregue un
+      campo de trabajo —un original sin comprimir, un blob, una referencia al DOM— para que
+      viaje a disco sin que nada lo avise. En esta suite el patrón sostiene una garantía
+      concreta: `_orig` de imgSlots son varios MB por imagen que NO deben salir de memoria.
+      Enumerar los campos: `{ a: o.a, b: o.b }`. La lista explícita es la documentación de qué
+      se persiste, y falla del lado seguro cuando el objeto crece.
+    metadata:
+      category: correctness
+      cwe: "CWE-212"
+      confidence: LOW
+    pattern-either:
+      - pattern: $OS.put({..., ...$O, ...})
+      - pattern: $OS.add({..., ...$O, ...})
+      - pattern: localStorage.setItem($K, JSON.stringify({..., ...$O, ...}))
+      - pattern: sessionStorage.setItem($K, JSON.stringify({..., ...$O, ...}))
+
+  # Agregadas 2026-09-09 en la auditoría de la subtab ETE del Laboratorio. Las dos salieron del
+  # mismo hallazgo: los gráficos del Laboratorio cuentan con `{}` indexado por un valor del
+  # estudio, y traducen ese valor a etiqueta con `MAPA[k] || 'Otro'`. Con datos que entraron por
+  # un backup JSON importado, `k` no está bajo control de la app.
+  # Medido en el navegador antes de escribir las reglas, no supuesto:
+  #   const o = {}; o['__proto__'] = (o['__proto__']||0)+1; Object.keys(o).length  → 0
+  #   ({balon:'x'})['constructor']  → "function Object() { [native code] }"
+
+  - id: ceibo-contador-objeto-literal-con-clave-de-dato
+    languages: [javascript]
+    severity: WARNING
+    message: >
+      Acumulador `{}` indexado por un valor que viene de los datos. Si esa clave llega a ser
+      `__proto__`, la asignación NO crea propiedad: el setter de __proto__ descarta los valores
+      que no son objetos y lo hace en silencio. Object.keys/Object.entries nunca ven la entrada,
+      así que el caso desaparece del gráfico y el resultado queda internamente coherente con un
+      estudio de menos — que es peor que romperse, porque no hay nada que mirar. Usar
+      `Object.create(null)`, donde `__proto__` es una clave más.
+    metadata:
+      category: correctness
+      cwe: "CWE-1321"
+      confidence: LOW
+    patterns:
+      - pattern: $O[$K] = ($O[$K] || 0) + $N
+      # El ruido se acota exigiendo que $O se haya declarado como literal vacío en el mismo
+      # scope. Con Object.create(null) la regla NO dispara, que es exactamente la corrección.
+      - pattern-inside: |
+          $O = {};
+          ...
+
+  # NO se agrega regla para el segundo hallazgo de esa auditoría —`MAPA[k] || 'fallback'`, que
+  # con k='constructor' devuelve la función Object en vez de caer al fallback, porque es truthy—.
+  # Se intentó y se descartó midiendo, no por pereza:
+  #   · `$MAPA[$K] || "..."`  → 43 hits en ecosmart/index.html, ~12 reales. El resto son
+  #     `c['med-nombre'] || ''` y `labels[proy] || ''`, que no son allowlists de etiquetas.
+  #     Al 30% de precisión, en un ruleset que corre en cada commit, entierra a las tres de XSS.
+  #   · Acotarla a mapas literales inline (`{...}[$K] || "..."`) la deja en 0 hits: no matchea
+  #     NI el código que la motivó, porque ahí el mapa tiene nombre (MORF_L, PRO_L).
+  # No hay forma intermedia expresable en Semgrep: el discriminante real es «el mapa es una
+  # allowlist de etiquetas y la clave viene del estudio», que es semántico. Y el impacto es
+  # cosmético —medido: String(Object) no trae `<`, así que no es XSS—.
+  # Queda como trampa escrita en ecosmart/CLAUDE.md, con el helper `_lblDe` como la forma
+  # correcta. Una regla que no se puede afinar lo suficiente para actuar sobre ella es peor
+  # que una trampa anotada: enseña a ignorar el reporte.
