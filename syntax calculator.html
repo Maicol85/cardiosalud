@@ -197,6 +197,26 @@
 </head>
 <body>
 
+<!-- ═══ COMPUERTA DE SESIÓN ═══════════════════════════════════════════════════════════════════
+     Mismo contrato que index.html: sello `cs_auth` por pestaña + contador durable `cs_logout_n`.
+     Nace VISIBLE (display:flex) a propósito: si el script no corre, la pantalla queda puesta. Un
+     overlay que naciera oculto y se mostrara por JS deja el contenido a la vista justo cuando
+     algo falló — fallar cerrado es el lado correcto de esta pregunta.
+     Igual que en index.html, esto NO es seguridad: con devtools se saltea en segundos. Frena a un
+     segundo usuario del mismo equipo, que es exactamente para lo que existe. ══════════════════ -->
+<div id="login-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#0D47A1,#1976D2);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px">
+  <div style="background:rgba(4,16,38,.72);border:1px solid rgba(79,195,247,.28);border-radius:14px;padding:30px 26px;width:100%;max-width:330px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.4)">
+    <div style="font-size:1.7rem;font-weight:800;letter-spacing:-.5px;color:#4FC3F7;text-shadow:0 0 22px rgba(79,195,247,.55);margin-bottom:4px">CardioSalud</div>
+    <div style="font-size:.9rem;color:#fff;font-weight:600;margin-bottom:20px">SYNTAX Score</div>
+    <input type="password" id="login-input" autocomplete="off" placeholder="••••••••"
+           style="width:100%;padding:11px 14px;background:rgba(6,20,45,.5);border:1.5px solid rgba(79,195,247,.32);border-radius:8px;font-size:.95rem;outline:none;margin-bottom:12px;font-family:inherit;text-align:center;letter-spacing:2px;color:#eaf4ff"
+           onkeydown="if(event.key==='Enter')checkLogin()">
+    <button onclick="checkLogin()" style="width:100%;padding:11px;background:linear-gradient(135deg,#29B6F6,#0D47A1);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer">Ingresar</button>
+    <div id="login-error" style="color:#ff8a8a;font-size:.8rem;margin-top:6px;display:none">Contraseña incorrecta</div>
+    <div style="margin-top:16px;font-size:.78rem;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,.5)">CeiboMed</div>
+  </div>
+</div>
+
 <header>
   <div>
     <div class="logo">Cardio<span>Salud</span> <span class="logo-sub">· SYNTAX Score</span></div>
@@ -810,6 +830,64 @@
 </main>
 
 <script>
+// ══════════════════════════════════════════════════════
+// COMPUERTA DE SESIÓN — espejo de la de index.html
+// ══════════════════════════════════════════════════════
+/* Esta página comparte ORIGEN con index.html, así que comparte su localStorage: sin compuerta,
+   escribir la URL mostraba los cálculos guardados —nombre del paciente y observaciones— sin pedir
+   la contraseña. El alcance era acceso LOCAL (localStorage está acotado a origen + navegador, un
+   visitante remoto ve su propio almacén vacío), pero la contraseña existe justamente para eso.
+
+   ⚠️ LA CONTRASEÑA ESTÁ EN DOS ARCHIVOS. Al rotarla hay que cambiarla ACÁ y en index.html
+   (busca APP_PASS). Es el costo de conservar la herramienta aparte, y se deja escrito porque una
+   rotación a medias deja una de las dos puertas abierta con la clave vieja — y nada lo avisa.
+
+   Y no es seguridad: con devtools se saltea en segundos. Frena a un segundo usuario del equipo. */
+const APP_PASS='maicolcardio1';   // ⚠️ espejo de index.html — rotar en LOS DOS
+/* Contador durable de revocación, en localStorage (compartido entre pestañas). Falla ABIERTO a 0
+   a propósito: si localStorage tira, el sello de abajo sigue comparando contra 0 y la sesión de
+   la pestaña vale. La asimetría con el catch de csAuthOk es deliberada — ver index.html. */
+function csLogoutN(){try{var n=+(localStorage.getItem('cs_logout_n')||0);return (Number.isFinite(n)&&n>=0&&n<=1e9)?Math.floor(n):0;}catch(e){return 0;}}
+function csLockLocal(){
+  try{sessionStorage.removeItem('cs_auth');}catch(e){}
+  var ls=document.getElementById('login-screen'); if(ls) ls.style.display='flex';
+  var li=document.getElementById('login-input');
+  if(li){ li.value=''; setTimeout(function(){try{li.focus();}catch(e){}},120); }
+}
+function checkLogin(){
+  var li=document.getElementById('login-input');
+  if(li && li.value===APP_PASS){
+    var ls=document.getElementById('login-screen'); if(ls) ls.style.display='none';
+    try{sessionStorage.setItem('cs_auth','1');sessionStorage.setItem('cs_auth_n',String(csLogoutN()));}catch(e){}
+    /* La lista sólo se pinta DESPUÉS de entrar: renderGuardados lee los pacientes guardados, y
+       dibujarla al cargar dejaba los datos en el DOM por detrás del overlay. */
+    try{ if(typeof renderGuardados==='function') renderGuardados(); }catch(e){}
+  } else {
+    var er=document.getElementById('login-error'); if(er) er.style.display='block';
+    if(li){ li.value=''; li.focus(); }
+  }
+}
+/* Un logout en CUALQUIER pestaña revoca ésta. Se escuchan las dos claves —'cs_logout_n' y la
+   'cs_logout_at' de la versión anterior— igual que index.html, para que una pestaña vieja no
+   quede autenticada cuando la nueva cierra sesión. */
+window.addEventListener('storage',function(e){if((e.key==='cs_logout_n'||e.key==='cs_logout_at')&&e.newValue)csLockLocal();});
+(function(){
+  /* Falla CERRADO: si sessionStorage tira, ok=false y la pantalla queda puesta. Es la polaridad
+     opuesta a csLogoutN() y está pensada así — no unificarlas sin mirar cuál es el lado seguro
+     de cada pregunta. */
+  var ok=false;
+  try{ ok=sessionStorage.getItem('cs_auth')==='1' && (+(sessionStorage.getItem('cs_auth_n')||0)||0)>=csLogoutN(); }catch(e){ ok=false; }
+  if(ok){
+    var ls=document.getElementById('login-screen'); if(ls) ls.style.display='none';
+    /* Misma llamada que en checkLogin, para que la lista se vea igual por las dos vías de
+       entrada. `renderGuardados` está declarada más abajo pero es una declaración de función,
+       así que está izada; y el <script> va después del marcado, así que los contenedores
+       existen. Si faltara alguno, la función sale sola por su guarda. */
+    try{ if(typeof renderGuardados==='function') renderGuardados(); }catch(e){}
+  }
+  else { setTimeout(function(){try{document.getElementById('login-input').focus();}catch(e){}},300); }
+})();
+
 // ══════════════════════════════════════════════════════
 // SEGMENTOS CORONARIOS — pesos por dominancia
 // ══════════════════════════════════════════════════════
@@ -1451,7 +1529,15 @@ function calcTablaRapida() {
 // ══════════════════════════════════════════════════════
 // GUARDAR EN CARDIOSALUD (localStorage como puente)
 // ══════════════════════════════════════════════════════
-var sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]');
+/* Con guarda y a nivel superior: sin ella, un store corrupto -o un import con JSON invalido-
+   lanzaba ACA, o sea durante la carga del script, y se llevaba puesto todo lo que viene despues:
+   el listener de DOMContentLoaded no llegaba a registrarse y la calculadora quedaba muerta sin
+   mas rastro que una traza en consola. La compuerta de sesion esta ARRIBA de esta linea a
+   proposito, asi que aunque esto falle el login sigue puesto. */
+var sx1Guardados = [];
+try { sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]'); }
+catch (e) { console.error('[sx1Guardados] store ilegible al cargar', e); sx1Guardados = []; }
+if (!Array.isArray(sx1Guardados)) sx1Guardados = [];
 
 function guardarEnCardioSalud() {
   const segs = getSegs();
@@ -1505,25 +1591,45 @@ function guardarEnCardioSalud() {
   if(savePac && !savePac.value) savePac.value = paciente;
 }
 
+/* Escape de HTML, espejo del de index.html. `String(s??'')` y no `String(s||'')`: con un número
+   el segundo tira, y con 0 devolvía '' — acá entran scores, que son números. */
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+/* Id a entero seguro o null, espejo de csNumId de index.html. Hace falta porque el id se
+   interpola DENTRO de un manejador inline, y ahí esc() no protege: el parser decodifica la
+   entidad ANTES de compilar el handler, así que un id hostil se ejecutaría igual. */
+function sxNumId(v){const n=typeof v==='number'?v:(typeof v==='string'&&/^\d{1,15}$/.test(v.trim())?+v.trim():NaN);return Number.isSafeInteger(n)&&n>=1?n:null;}
+
 function renderGuardados() {
   const lista = document.getElementById('sx1-guardados-lista');
   const contenedor = document.getElementById('sx1-guardados');
   if (!lista || !contenedor) return;
 
-  sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]');
+  /* Con guarda: el store es localStorage y puede venir corrupto o de un import. Sin esto, un
+     JSON inválido tiraba acá y la sección entera dejaba de dibujarse sin más rastro que una
+     traza en consola. */
+  try { sx1Guardados = JSON.parse(localStorage.getItem('cardiosalud_syntax') || '[]'); }
+  catch (e) { console.error('[renderGuardados] store ilegible', e); sx1Guardados = []; }
+  if (!Array.isArray(sx1Guardados)) sx1Guardados = [];
   if (sx1Guardados.length === 0) { contenedor.style.display = 'none'; return; }
 
   contenedor.style.display = 'block';
   lista.innerHTML = sx1Guardados.slice(0, 5).map(r => {
-    const color = r.score <= 22 ? 'var(--green)' : r.score <= 32 ? 'var(--amber)' : 'var(--red)';
+    /* Sin score utilizable se pinta GRIS y se muestra «—». La banda verde/ámbar/roja es una
+       lectura clínica: `null <= 22` es cierto en JS, así que un registro sin score se pintaba
+       VERDE y se leía como «SYNTAX bajo, angioplastia aceptable». index.html ya lo corrigió. */
+    const okN = typeof r.score === 'number' && Number.isFinite(r.score);
+    const color = !okN ? 'var(--muted)' : r.score <= 22 ? 'var(--green)' : r.score <= 32 ? 'var(--amber)' : 'var(--red)';
+    const rid = sxNumId(r.id);
     return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(26,107,74,.2)">'
-      + '<div style="font-size:20px;font-weight:900;color:' + color + ';min-width:36px">' + r.score + '</div>'
+      + '<div style="font-size:20px;font-weight:900;color:' + color + ';min-width:36px">' + (okN ? esc(r.score) : '—') + '</div>'
       + '<div style="flex:1">'
-      + '<div style="font-size:13px;font-weight:700">' + r.paciente + '</div>'
-      + '<div style="font-size:11px;color:var(--green)">' + r.fecha + ' · ' + r.vasos + ' · ' + r.dm + '</div>'
-      + (r.obs ? '<div style="font-size:11px;color:var(--muted)">' + r.obs + '</div>' : '')
+      + '<div style="font-size:13px;font-weight:700">' + esc(r.paciente) + '</div>'
+      + '<div style="font-size:11px;color:var(--green)">' + esc(r.fecha) + ' · ' + esc(r.vasos) + ' · ' + esc(r.dm) + '</div>'
+      + (r.obs ? '<div style="font-size:11px;color:var(--muted)">' + esc(r.obs) + '</div>' : '')
       + '</div>'
-      + '<button onclick="eliminarGuardado(' + r.id + ')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px">✕</button>'
+      /* Sin id utilizable no se dibuja el botón: un handler con `null` adentro es un botón que
+         tira al tocarlo, y uno con el id crudo es el agujero que sxNumId viene a cerrar. */
+      + (rid !== null ? '<button onclick="eliminarGuardado(' + rid + ')" aria-label="Eliminar cálculo guardado" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px">✕</button>' : '')
       + '</div>';
   }).join('');
 }
